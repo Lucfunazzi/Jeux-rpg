@@ -23,8 +23,10 @@ import lancement.Menus.MenuRang;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuRecrutementRare;
 import lancement.Menus.MenuCompagnons;
+import lancement.Menus.MenuCreaturesSacrees;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
+import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
 import Joueur.*;
 import Personnage.*;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ public class Main {
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons = new GestionnaireCompagnons();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
+        ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
 
         // ── Menus ─────────────────────────────────────────────────────────
         MenuInventaire      menuInventaire      = new MenuInventaire();
@@ -66,6 +69,7 @@ public class Main {
         MenuQuetes          menuQuetes          = new MenuQuetes();
         MenuDonjon          menuDonjon          = new MenuDonjon();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();
+        MenuCreaturesSacrees menuCreaturesSacrees = new MenuCreaturesSacrees();
 
         // ── Pseudo & chargement ───────────────────────────────────────────
         System.out.println("========================================");
@@ -137,22 +141,24 @@ public class Main {
                     + "  |  Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  Rang : " + ctx.rangJoueur.getRangNom());
             System.out.println();
+            // Conditions de déblocage des menus
+            boolean chapitre2Fini      = ctx.chapitre2.getStagesReussis()[10];
+            boolean chapitre1EliteFini = ctx.chapitre1Elite.getStagesReussis()[10];
+
             System.out.println("1.  Histoire");
             System.out.println("2.  Formation");
-            if (ctx.joueur.getNiveau() >= 6)  System.out.println("3.  Recrutement");
+            if (ctx.joueur.getNiveau() >= 6)                                                   System.out.println("3.  Recrutement");
             System.out.println("4.  Inventaire");
             System.out.println("5.  Personnages");
             System.out.println("6.  Quetes");
-            System.out.println("7.  Recrutement Rare");
-            System.out.println("8.  Abilites");
-            System.out.println("9.  Rang & Titres");
-            if (ctx.joueur.getNiveau() >= 10) System.out.println("10. Ameliorations");
-            if (ctx.joueur.getNiveau() >= 10) System.out.println("11. Donjon de ressources");
-            if (areneDisponible)              System.out.println("13. Arene  ⚔");
-            else                              System.out.println("13. Arene  ⚔  (disponible au niveau 20)");
-            if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)
-                                              System.out.println("14. Compagnons");
-            else                              System.out.println("14. Compagnons  (disponible au niveau 25)");
+            if (chapitre2Fini)                                                                 System.out.println("7.  Recrutement Rare");
+            if (ctx.joueur.getNiveau() >= 3)                                                   System.out.println("8.  Abilites");
+            if (chapitre1EliteFini)                                                            System.out.println("9.  Rang & Titres");
+            if (ctx.joueur.getNiveau() >= 10)                                                  System.out.println("10. Ameliorations");
+            if (ctx.joueur.getNiveau() >= 10)                                                  System.out.println("11. Donjon de ressources");
+            if (areneDisponible)                                                               System.out.println("13. Arene  ⚔");
+            if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)            System.out.println("14. Compagnons");
+            if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE)      System.out.println("15. Créatures Sacrées");
             System.out.println("12. Sauvegarder");
             System.out.println("0.  Quitter");
             System.out.print("Votre choix : ");
@@ -164,27 +170,38 @@ public class Main {
                 case "4"  -> { menuInventaire.afficher(ctx, scanner);                      modifieDepuisSauvegarde = true; }
                 case "5"  -> { menuPersonnage.afficher(ctx, scanner, ctx.formation);       modifieDepuisSauvegarde = true; }
                 case "6"  -> { menuQuetes.afficher(ctx, scanner);                          modifieDepuisSauvegarde = true; }
-                case "7"  -> { menuRecrutementRare.afficher(ctx, scanner);                 modifieDepuisSauvegarde = true; }
-                case "8"  -> { menuAbilite.afficher(ctx, scanner);                         modifieDepuisSauvegarde = true; }
-                case "9"  -> { menuRang.afficher(ctx, scanner);                            modifieDepuisSauvegarde = true; }
-                case "10" -> { menuAmeliorations.afficher(ctx, scanner);                   modifieDepuisSauvegarde = true; }
-                case "11" -> { menuDonjon.afficher(ctx, scanner);                          modifieDepuisSauvegarde = true; }
+                case "7"  -> {
+                    if (ctx.chapitre2.getStagesReussis()[10]) { menuRecrutementRare.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "8"  -> {
+                    if (ctx.joueur.getNiveau() >= 3) { menuAbilite.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "9"  -> {
+                    if (ctx.chapitre1Elite.getStagesReussis()[10]) { menuRang.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "10" -> {
+                    if (ctx.joueur.getNiveau() >= 10) { menuAmeliorations.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "11" -> {
+                    if (ctx.joueur.getNiveau() >= 10) { menuDonjon.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
                 case "12" -> { ctx.sauvegarde.sauvegarder(ctx);                            modifieDepuisSauvegarde = false; }
                 case "13" -> {
-                    if (areneDisponible) {
-                        new MenuArene(ctx, scanner).afficher();
-                        modifieDepuisSauvegarde = true;
-                    } else {
-                        System.out.println("L'arene est disponible a partir du niveau 20 !");
-                    }
+                    if (areneDisponible) { new MenuArene(ctx, scanner).afficher(); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
                 }
                 case "14" -> {
-                    if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE) {
-                        menuCompagnons.afficher(ctx, scanner);
-                        modifieDepuisSauvegarde = true;
-                    } else {
-                        System.out.println("Les Compagnons sont disponibles a partir du niveau 25 !");
-                    }
+                    if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE) { menuCompagnons.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "15" -> {
+                    if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE) { menuCreaturesSacrees.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
                 }
                 case "0"  -> {
                     if (modifieDepuisSauvegarde) {

@@ -126,11 +126,15 @@ public class GestionnaireSauvegarde {
         copierTableaux(ctx.chapitre2.getStagesDebloques(), data.chapitre2Debloques);
         copierTableaux(ctx.chapitre2.getStagesReussis(),   data.chapitre2Reussis);
 
-        copierTableaux(ctx.chapitre2Elite.getStagesDebloques(), data.chapitre2EliteDebloques);
-        copierTableaux(ctx.chapitre2Elite.getStagesReussis(),   data.chapitre2EliteReussis);
+        if (ctx.chapitre2Elite != null) {
+            copierTableaux(ctx.chapitre2Elite.getStagesDebloques(), data.chapitre2EliteDebloques);
+            copierTableaux(ctx.chapitre2Elite.getStagesReussis(),   data.chapitre2EliteReussis);
+        }
 
-        copierTableaux(ctx.chapitre3.getStagesDebloques(), data.chapitre3Debloques);
-        copierTableaux(ctx.chapitre3.getStagesReussis(),   data.chapitre3Reussis);
+        if (ctx.chapitre3 != null) {
+            copierTableaux(ctx.chapitre3.getStagesDebloques(), data.chapitre3Debloques);
+            copierTableaux(ctx.chapitre3.getStagesReussis(),   data.chapitre3Reussis);
+        }
 
         // Parchemins
         data.parcheminC = ctx.menuRecrutement.getParcheminC();

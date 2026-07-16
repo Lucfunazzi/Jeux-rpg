@@ -114,67 +114,67 @@ public class GestionnaireQuetes {
         // XP progressive : 1100 / 2150 / 3250 / 4300 / 5400 / 6450 / 7550 / 8600 / 9700 / 10750
         quetesProgression.add(new QueteProgression("C1E1",
                 "L'eveil de l'elite", "Terminez le stage 1 du Chapitre 1 Elite.",
-                1, 1, true, 1100, 3000, 0));
+                1, 1, true, 200, 3000, 0));
         quetesProgression.add(new QueteProgression("C1E2",
                 "Elite confirmee", "Terminez le stage 2 du Chapitre 1 Elite.",
-                1, 2, true, 2150, 3500, 0));
+                1, 2, true, 400, 3500, 0));
         quetesProgression.add(new QueteProgression("C1E3",
                 "Rang superieur", "Terminez le stage 3 du Chapitre 1 Elite.",
-                1, 3, true, 3250, 4000, 0));
+                1, 3, true, 600, 4000, 0));
         quetesProgression.add(new QueteProgression("C1E4",
                 "Force brute", "Terminez le stage 4 du Chapitre 1 Elite.",
-                1, 4, true, 4300, 4500, 0));
+                1, 4, true, 800, 4500, 0));
         quetesProgression.add(new QueteProgression("C1E5",
                 "Demi-chemin elite", "Terminez le stage 5 du Chapitre 1 Elite.",
-                1, 5, true, 5400, 5000, 0));
+                1, 5, true, 900, 5000, 0));
         quetesProgression.add(new QueteProgression("C1E6",
                 "Survivant de l'ombre", "Terminez le stage 6 du Chapitre 1 Elite.",
-                1, 6, true, 6450, 5500, 0));
+                1, 6, true, 1000, 5500, 0));
         quetesProgression.add(new QueteProgression("C1E7",
                 "Predateur redoutable", "Terminez le stage 7 du Chapitre 1 Elite.",
-                1, 7, true, 7550, 6000, 0));
+                1, 7, true, 900, 6000, 0));
         quetesProgression.add(new QueteProgression("C1E8",
                 "Ombre parmi les ombres", "Terminez le stage 8 du Chapitre 1 Elite.",
-                1, 8, true, 8600, 6500, 0));
+                1, 8, true, 1100, 6500, 0));
         quetesProgression.add(new QueteProgression("C1E9",
                 "General des tenebres", "Terminez le stage 9 du Chapitre 1 Elite.",
-                1, 9, true, 9700, 7000, 0));
+                1, 9, true, 1100, 7000, 0));
         quetesProgression.add(new QueteProgression("C1E10",
                 "Dragon vaincu", "Terminez le stage 10 du Chapitre 1 Elite.",
-                1, 10, true, 10750, 9000, 0));
+                1, 10, true, 1000, 9000, 0));
 
         // ── Chapitre 2 Elite (niv 20 → 25 | total ~63 200 XP) ────────────
         // XP progressive : 1200 / 2300 / 3500 / 4600 / 5700 / 6900 / 8000 / 9200 / 10300 / 11500
         quetesProgression.add(new QueteProgression("C2E1",
                 "L'elite de l'Examen", "Terminez le stage 1 du Chapitre 2 Elite.",
-                2, 1, true, 1200, 3000, 0));
+                2, 1, true, 400, 3000, 0));
         quetesProgression.add(new QueteProgression("C2E2",
                 "Equipe 8 redoutable", "Terminez le stage 2 du Chapitre 2 Elite.",
-                2, 2, true, 2300, 3500, 0));
+                2, 2, true, 700, 3500, 0));
         quetesProgression.add(new QueteProgression("C2E3",
                 "L'Ombre elite", "Terminez le stage 3 du Chapitre 2 Elite.",
-                2, 3, true, 3500, 4000, 0));
+                2, 3, true, 900, 4000, 0));
         quetesProgression.add(new QueteProgression("C2E4",
                 "Equipe 7 au sommet", "Terminez le stage 4 du Chapitre 2 Elite.",
-                2, 4, true, 4600, 4500, 0));
+                2, 4, true, 1100, 4500, 0));
         quetesProgression.add(new QueteProgression("C2E5",
                 "Brouillard d'acier", "Terminez le stage 5 du Chapitre 2 Elite.",
-                2, 5, true, 5700, 5000, 0));
+                2, 5, true, 1300, 5000, 0));
         quetesProgression.add(new QueteProgression("C2E6",
                 "Sables implacables", "Terminez le stage 6 du Chapitre 2 Elite.",
-                2, 6, true, 6900, 5500, 0));
+                2, 6, true, 1500, 5500, 0));
         quetesProgression.add(new QueteProgression("C2E7",
                 "La Fureur de Gai", "Terminez le stage 7 du Chapitre 2 Elite.",
-                2, 7, true, 8000, 6000, 0));
+                2, 7, true, 1600, 6000, 0));
         quetesProgression.add(new QueteProgression("C2E8",
                 "Le Feu ne s'eteint pas", "Terminez le stage 8 du Chapitre 2 Elite.",
-                2, 8, true, 9200, 6500, 0));
+                2, 8, true, 1700, 6500, 0));
         quetesProgression.add(new QueteProgression("C2E9",
                 "L'Oeil acere de Kurenai", "Terminez le stage 9 du Chapitre 2 Elite.",
-                2, 9, true, 10300, 7000, 0));
+                2, 9, true, 1400, 7000, 0));
         quetesProgression.add(new QueteProgression("C2E10",
                 "Orochimaru — Forme Finale", "Terminez le stage 10 du Chapitre 2 Elite.",
-                2, 10, true, 11500, 10000, 200));
+                2, 10, true, 1400, 10000, 200));
 
         // ── Chapitre 3 normal (niv 25 → 35 | total ~82 500 XP) ───────────
         quetesProgression.add(new QueteProgression("C3S1",
