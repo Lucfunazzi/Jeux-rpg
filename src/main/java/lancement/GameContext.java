@@ -16,6 +16,7 @@ import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import lancement.Menus.MenuRecrutement;
 import java.util.ArrayList;
 
@@ -52,6 +53,7 @@ public class GameContext {
     public GestionnaireEtoiles    gestionnaireEtoiles;
     public GestionnaireCompagnons gestionnaireCompagnons;
     public GestionnaireCreaturesSacrees  gestionnaireCreaturesSacrees;
+    public GestionnaireClefsCelestes     gestionnaireClefsCelestes;
     public int                    coupons = 0;
     public String dernierCoffreArene = null;
 

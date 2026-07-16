@@ -59,6 +59,13 @@ public class Chapitre3 {
                         System.out.println(">> Stage " + (choix + 1) + " debloque !");
                     } else {
                         System.out.println(">> Vous avez remporte le Tournoi du Tenkaichi !");
+                        // Donner la Clef Celeste Taurus (une seule fois)
+                        if (estNouveau && ctx.gestionnaireClefsCelestes != null
+                                && ctx.gestionnaireClefsCelestes.debloquer(
+                                    lancement.Gestionnaires.ClefCeleste.TAURUS)) {
+                            System.out.println(">> Vous avez obtenu la Clef Celeste : Taurus !");
+                            System.out.println("   Activez-la depuis le menu Clefs Celestes.");
+                        }
                     }
 
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());

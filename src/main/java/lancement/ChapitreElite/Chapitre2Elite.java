@@ -105,6 +105,13 @@ public class Chapitre2Elite {
                             System.out.println(">> Vous avez obtenu un Oeuf de Creature Sacree !");
                             System.out.println("   Accessible depuis le menu Creatures Sacrees (niveau 30 requis).");
                         }
+                        // Donner la Clef Celeste Virgo (une seule fois)
+                        if (estNouveau && ctx.gestionnaireClefsCelestes != null
+                                && ctx.gestionnaireClefsCelestes.debloquer(
+                                    lancement.Gestionnaires.ClefCeleste.VIRGO)) {
+                            System.out.println(">> Vous avez obtenu la Clef Celeste : Virgo !");
+                            System.out.println("   Activez-la depuis le menu Clefs Celestes.");
+                        }
                     }
 
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());

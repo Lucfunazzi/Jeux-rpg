@@ -186,9 +186,24 @@ public class MenuArene {
         for (PersonnageBase p : equipeJoueur)  p.reinitialiserPourCombat();
         for (PersonnageBase p : equipeAdverse) p.reinitialiserPourCombat();
 
+        // Fortification des personnages adverses selon le rang
+        int fortAdv = rangVersNiveauFort(adversaire.getRang());
+        for (PersonnageBase p : equipeAdverse) appliquerFortificationArene(p, fortAdv);
+
+        // Clefs célestes
+        lancement.Gestionnaires.ClefCeleste clefAdv = null;
+        int niveauClefAdv = 1;
+        if (adversaire.isEstFauxJoueur()) {
+            java.util.Random rng = new java.util.Random(adversaire.getRang() * 17L);
+            clefAdv      = lancement.Gestionnaires.GestionnaireClefsCelestes.genererClefArene(adversaire.getRang(), rng);
+            niveauClefAdv = lancement.Gestionnaires.GestionnaireClefsCelestes.genererNiveauClefArene(adversaire.getRang(), rng);
+        }
+
         boolean victoire = Combat.lancerCombatArene(
             equipeJoueur, ctx.joueur,
             equipeAdverse, principalAdverse,
+            ctx.gestionnaireClefsCelestes,
+            clefAdv, niveauClefAdv,
             scanner
         );
 
@@ -296,6 +311,33 @@ public class MenuArene {
 
         System.out.print("\n  Appuie sur Entrée pour continuer...");
         scanner.nextLine();
+    }
+
+    // ── Fortification arène ───────────────────────────────────────────────
+
+    /** Niveau de fortification selon le rang (rang 1 = fort max, rang 100 = rien). */
+    private int rangVersNiveauFort(int rang) {
+        if (rang <= 1)  return 10;
+        if (rang <= 5)  return 8;
+        if (rang <= 10) return 6;
+        if (rang <= 25) return 4;
+        if (rang <= 50) return 2;
+        if (rang <= 75) return 1;
+        return 0;
+    }
+
+    /**
+     * Applique un bonus de stats à un personnage adverse simulant
+     * équipement fortifié + affiné selon le rang en arène.
+     * +3% ATK/DEF/PV/VIT par niveau de fort (max +30% au niveau 10).
+     */
+    private void appliquerFortificationArene(PersonnageBase p, int niveauFort) {
+        if (niveauFort <= 0) return;
+        double bonus = 0.03 * niveauFort;
+        p.setBonusLienATK(p.getAttaque() * bonus);
+        p.setBonusLienDEF(p.getDefense() * bonus);
+        p.setBonusLienPV(p.getVieMax() * bonus);
+        p.setBonusLienVIT(p.getVitesse() * bonus);
     }
 
     // ── Factory personnages ───────────────────────────────────────────────

@@ -76,6 +76,14 @@ public class Stage {
         // Combat
         double bonusTitre = ctx.gestionnaireTitres.getBonusActif();
         Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
+
+        // Clef Céleste active du joueur
+        if (ctx.gestionnaireClefsCelestes != null) {
+            lancement.Gestionnaires.ClefCeleste clefActive = ctx.gestionnaireClefsCelestes.getClefActive();
+            if (clefActive != null)
+                combat.setClefJoueur(clefActive, ctx.gestionnaireClefsCelestes.getNiveauClefActive());
+        }
+
         combat.lancerCombat();
 
         // Retirer BuffTitre après le combat

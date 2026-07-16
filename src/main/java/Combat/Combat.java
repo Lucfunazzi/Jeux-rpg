@@ -5,13 +5,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import Effets.*;
+import lancement.Gestionnaires.ClefCeleste;
+import lancement.Gestionnaires.GestionnaireClefsCelestes;
 
 public class Combat {
     private List<PersonnageBase> equipeJoueur;
     private List<PersonnageBase> equipeAdverse;
-    private double bonusTitre = 0.0;
-    private int toursUtilises = 0;
-    private boolean donnerXP  = true;  // false pour les combats d'arène
+    private double bonusTitre  = 0.0;
+    private int toursUtilises  = 0;
+    private boolean donnerXP   = true;
+    private ClefCeleste clefActive     = null;
+    private int         niveauClef     = 1;
+    // Clef adverse (arène) — peut être null
+    private ClefCeleste clefAdverse    = null;
+    private int         niveauClefAdv  = 1;
 
     public Combat(List<PersonnageBase> equipeJoueur,
                   List<PersonnageBase> equipeAdverse) {
@@ -34,6 +41,18 @@ public class Combat {
         this.equipeJoueur  = equipeJoueur;
         this.equipeAdverse = equipeAdverse;
         this.donnerXP      = donnerXP;
+    }
+
+    /** Définit la clef céleste du joueur active pour ce combat. */
+    public void setClefJoueur(ClefCeleste clef, int niveau) {
+        this.clefActive = clef;
+        this.niveauClef = niveau;
+    }
+
+    /** Définit la clef céleste adverse (arène). */
+    public void setClefAdverse(ClefCeleste clef, int niveau) {
+        this.clefAdverse   = clef;
+        this.niveauClefAdv = niveau;
     }
 
     // ORDRE ET UTILITAIRES
@@ -128,6 +147,16 @@ public class Combat {
             for (PersonnageBase perso : equipeJoueur) if (perso.estVivant()) perso.appliquerEffets(logEffets);
             for (PersonnageBase perso : equipeAdverse) if (perso.estVivant()) perso.appliquerEffets(logEffets);
             for (String ligne : logEffets) System.out.println(ligne);
+
+            // ── Invocations des Clefs Célestes ────────────────────────────
+            if (clefActive != null && clefActive.sInvoqueAuTour(numeroTour)
+                    && !equipeKO(equipeJoueur) && !equipeKO(equipeAdverse)) {
+                invoquerClef(clefActive, niveauClef, equipeJoueur, equipeAdverse);
+            }
+            if (clefAdverse != null && clefAdverse.sInvoqueAuTour(numeroTour)
+                    && !equipeKO(equipeJoueur) && !equipeKO(equipeAdverse)) {
+                invoquerClef(clefAdverse, niveauClefAdv, equipeAdverse, equipeJoueur);
+            }
 
             afficherRage(equipeJoueur);
             afficherRage(equipeAdverse);
@@ -455,6 +484,9 @@ public static boolean lancerCombatArene(
         PersonnageBase principalJoueur,
         List<PersonnageBase> equipeAdverse,
         PersonnageBase principalAdverse,
+        lancement.Gestionnaires.GestionnaireClefsCelestes gcClefs,
+        ClefCeleste clefAdverse,
+        int niveauClefAdverse,
         java.util.Scanner scanner) {
 
     System.out.println("\n╔══════════════════════════════════════╗");
@@ -466,10 +498,20 @@ public static boolean lancerCombatArene(
     System.out.println("  Adversaires : "
         + equipeAdverse.stream().map(PersonnageBase::getNom)
                        .collect(java.util.stream.Collectors.joining(", ")));
+    if (gcClefs != null && gcClefs.getClefActive() != null)
+        System.out.println("  Clef active  : " + gcClefs.getClefActive().nom
+                + " (Lv." + gcClefs.getNiveauClefActive() + ")");
+    if (clefAdverse != null)
+        System.out.println("  Clef adverse : " + clefAdverse.nom
+                + " (Lv." + niveauClefAdverse + ")");
     System.out.println("\nAppuie sur Entrée pour lancer le combat...");
     scanner.nextLine();
 
     Combat combat = new Combat(equipeJoueur, equipeAdverse, false);
+    if (gcClefs != null && gcClefs.getClefActive() != null)
+        combat.setClefJoueur(gcClefs.getClefActive(), gcClefs.getNiveauClefActive());
+    if (clefAdverse != null)
+        combat.setClefAdverse(clefAdverse, niveauClefAdverse);
     combat.lancerCombat();
 
     boolean victoire = combat.equipeKO(equipeAdverse);
@@ -481,8 +523,175 @@ public static boolean lancerCombatArene(
 
     return victoire;
 }
+    // ── CLEFS CÉLESTES ────────────────────────────────────────────────────
+
+    /**
+     * Invoque l'effet de la clef céleste.
+     * @param clef      la clef à invoquer
+     * @param niveau    son niveau (1-10)
+     * @param allies    équipe qui bénéficie des buffs/soins
+     * @param ennemis   équipe qui subit les dégâts/debuffs
+     */
+    private void invoquerClef(ClefCeleste clef, int niveau,
+                               List<PersonnageBase> allies,
+                               List<PersonnageBase> ennemis) {
+        // ATK moyenne de l'équipe alliée vivante
+        double atkmoy = allies.stream()
+                .filter(PersonnageBase::estVivant)
+                .mapToDouble(PersonnageBase::getAttaque)
+                .average().orElse(100.0);
+
+        double mult = ClefCeleste.getMultiplicateur(niveau);
+        double val  = atkmoy * mult;
+
+        List<String> log = new ArrayList<>();
+        log.add("\n✦ [CLEF CELESTE] " + clef.nom + " (Lv." + niveau + ") s'invoque !");
+
+        java.util.Random rng = new java.util.Random();
+
+        switch (clef) {
+            case TAURUS -> {
+                // Dégâts sur la cible avec le plus de PV + buff ATK équipe
+                PersonnageBase cible = ennemis.stream()
+                        .filter(PersonnageBase::estVivant)
+                        .max(java.util.Comparator.comparingDouble(PersonnageBase::getVie))
+                        .orElse(null);
+                if (cible != null) {
+                    appliquerDegatsAvecLog(null, cible, val, log);
+                    log.add("  Taurus frappe " + cible.getNom() + " !");
+                }
+                for (PersonnageBase a : allies)
+                    if (a.estVivant()) appliquerEffet(null, a, new BuffAttaque(0.05 + niveau * 0.005, 1), log);
+                log.add("  L'equipe gagne un leger boost d'ATK !");
+            }
+            case VIRGO -> {
+                // Soin sur l'allié avec le moins de PV
+                PersonnageBase cible = allies.stream()
+                        .filter(PersonnageBase::estVivant)
+                        .min(java.util.Comparator.comparingDouble(PersonnageBase::getVie))
+                        .orElse(null);
+                if (cible != null) {
+                    cible.recevoirSoin(val, log);
+                    log.add("  Virgo soigne " + cible.getNom() + " !");
+                }
+            }
+            case CANCER -> {
+                // Saignement sur une cible ennemie aléatoire
+                List<PersonnageBase> vivants = ennemis.stream()
+                        .filter(PersonnageBase::estVivant).collect(java.util.stream.Collectors.toList());
+                if (!vivants.isEmpty()) {
+                    PersonnageBase cible = vivants.get(rng.nextInt(vivants.size()));
+                    appliquerEffet(null, cible, new Saignement(2, 0.04 + niveau * 0.004), log);
+                    log.add("  Cancer inflige Saignement a " + cible.getNom() + " !");
+                }
+            }
+            case AQUARIUS -> {
+                // Dégâts AoE légers
+                for (PersonnageBase e : ennemis)
+                    if (e.estVivant()) appliquerDegatsAvecLog(null, e, val * 0.6, log);
+                log.add("  Aquarius deferle sur toute l'equipe ennemie !");
+            }
+            case SAGITTARIUS -> {
+                // Frappe la cible avec le plus de DEF + réduit sa DEF
+                PersonnageBase cible = ennemis.stream()
+                        .filter(PersonnageBase::estVivant)
+                        .max(java.util.Comparator.comparingDouble(PersonnageBase::getDefense))
+                        .orElse(null);
+                if (cible != null) {
+                    appliquerDegatsAvecLog(null, cible, val, log);
+                    appliquerEffet(null, cible, new ReductionDefense(0.08 + niveau * 0.008, 2), log);
+                    log.add("  Sagittarius vise " + cible.getNom() + " !");
+                }
+            }
+            case SCORPIO -> {
+                // Poison aléatoire
+                List<PersonnageBase> vivants = ennemis.stream()
+                        .filter(PersonnageBase::estVivant).collect(java.util.stream.Collectors.toList());
+                if (!vivants.isEmpty()) {
+                    PersonnageBase cible = vivants.get(rng.nextInt(vivants.size()));
+                    appliquerEffet(null, cible, new Poison(2, 0.04 + niveau * 0.004), log);
+                    log.add("  Scorpio empoisonne " + cible.getNom() + " !");
+                }
+            }
+            case LEO -> {
+                // Buff ATK + DEF équipe
+                for (PersonnageBase a : allies) {
+                    if (a.estVivant()) {
+                        appliquerEffet(null, a, new BuffAttaque(0.04 + niveau * 0.004, 1), log);
+                        appliquerEffet(null, a, new BuffDefense(0.04 + niveau * 0.004, 1), log);
+                    }
+                }
+                log.add("  Leo renforce toute l'equipe !");
+            }
+            case ARIES -> {
+                // Réduit ATK ennemi aléatoire + soin allié le plus bas
+                List<PersonnageBase> vivants = ennemis.stream()
+                        .filter(PersonnageBase::estVivant).collect(java.util.stream.Collectors.toList());
+                if (!vivants.isEmpty()) {
+                    PersonnageBase cible = vivants.get(rng.nextInt(vivants.size()));
+                    appliquerEffet(null, cible, new ReductionAttaque(0.06 + niveau * 0.006, 2), log);
+                    log.add("  Aries affaiblit " + cible.getNom() + " !");
+                }
+                PersonnageBase plusBas = allies.stream()
+                        .filter(PersonnageBase::estVivant)
+                        .min(java.util.Comparator.comparingDouble(PersonnageBase::getVie))
+                        .orElse(null);
+                if (plusBas != null) plusBas.recevoirSoin(val * 0.5, log);
+            }
+            case CAPRICORN -> {
+                // Frappe l'ennemi le plus fort + Marquage
+                PersonnageBase cible = ennemis.stream()
+                        .filter(PersonnageBase::estVivant)
+                        .max(java.util.Comparator.comparingDouble(PersonnageBase::getAttaque))
+                        .orElse(null);
+                if (cible != null) {
+                    appliquerDegatsAvecLog(null, cible, val, log);
+                    appliquerEffet(null, cible, new Marquage(2, 0.10 + niveau * 0.01), log);
+                    log.add("  Capricorn marque " + cible.getNom() + " !");
+                }
+            }
+            case GEMINI -> {
+                // Copie un effet buff aléatoire d'un allié sur toute l'équipe
+                // (simplifié : applique un BuffAttaque comme si copié)
+                for (PersonnageBase a : allies)
+                    if (a.estVivant()) appliquerEffet(null, a, new BuffAttaque(0.05 + niveau * 0.005, 1), log);
+                log.add("  Gemini copie la force alliee sur toute l'equipe !");
+            }
+            case PISCES -> {
+                // Dégâts + vol de vie sur une cible aléatoire
+                List<PersonnageBase> vivants = ennemis.stream()
+                        .filter(PersonnageBase::estVivant).collect(java.util.stream.Collectors.toList());
+                if (!vivants.isEmpty()) {
+                    PersonnageBase cible = vivants.get(rng.nextInt(vivants.size()));
+                    appliquerDegatsAvecLog(null, cible, val, log);
+                    PersonnageBase plusBas = allies.stream()
+                            .filter(PersonnageBase::estVivant)
+                            .min(java.util.Comparator.comparingDouble(PersonnageBase::getVie))
+                            .orElse(null);
+                    if (plusBas != null) plusBas.recevoirSoin(val * 0.4, log);
+                    log.add("  Pisces draine la vie de " + cible.getNom() + " !");
+                }
+            }
+            case OPHIUCHUS -> {
+                // AoE + debuff aléatoire sur tous les ennemis
+                for (PersonnageBase e : ennemis) {
+                    if (!e.estVivant()) continue;
+                    appliquerDegatsAvecLog(null, e, val * 0.8, log);
+                    int debuff = rng.nextInt(3);
+                    switch (debuff) {
+                        case 0 -> appliquerEffet(null, e, new ReductionAttaque(0.10, 2), log);
+                        case 1 -> appliquerEffet(null, e, new ReductionDefense(0.10, 2), log);
+                        case 2 -> appliquerEffet(null, e, new ReductionVitesse(0.10, 2), log);
+                    }
+                }
+                log.add("  Ophiuchus s'abat sur toute l'equipe ennemie !");
+            }
+        }
+
+        for (String ligne : log) System.out.println(ligne);
+    }
+
     // EXPERIENCE
-    
 
     private void donnerExperience() {
         PersonnageBase persoPrincipal = null;
