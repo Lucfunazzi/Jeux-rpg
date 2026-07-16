@@ -59,6 +59,7 @@ public class SauvegardeData {
     public List<EquipementData>  inventaireEquipements   = new ArrayList<>();
     public List<EquipementData>  joueurEquipementsPortes = new ArrayList<>();
     public List<ParcheminXPData> inventaireParcheminsXP  = new ArrayList<>();
+    public List<CarteOrData>     inventaireCartesOr      = new ArrayList<>();
 
     // ── Donnees personnage ────────────────────────────────────────────────
     public static class PersonnageData {
@@ -72,6 +73,17 @@ public class SauvegardeData {
         public PersonnageData(String nom, int niveau, int experience, int experienceMax) {
             this.nom = nom; this.niveau = niveau;
             this.experience = experience; this.experienceMax = experienceMax;
+        }
+    }
+
+    // ── Donnees carte d'or ────────────────────────────────────────────────
+    public static class CarteOrData {
+        public String niveau;   // nom de l'enum CarteOr (ex : "NIVEAU_1")
+        public int    quantite;
+        public CarteOrData() {}
+        public CarteOrData(String niveau, int quantite) {
+            this.niveau   = niveau;
+            this.quantite = quantite;
         }
     }
 

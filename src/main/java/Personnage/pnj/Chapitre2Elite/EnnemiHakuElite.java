@@ -22,10 +22,10 @@ public class EnnemiHakuElite extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 200.6 * mult * niv;
-        this.attaque =  70.6 * mult * niv;
-        this.defense =  55.9 * mult * niv;
-        this.vitesse =  120.6 * mult * vit;
+        this.vie     = 300.6 * mult * niv;
+        this.attaque =  110.6 * mult * niv;
+        this.defense = 80.9 * mult * niv;
+        this.vitesse =  150.6 * mult * vit;
 
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.30;

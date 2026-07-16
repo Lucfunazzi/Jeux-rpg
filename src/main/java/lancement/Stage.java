@@ -4,6 +4,7 @@ import Combat.Combat;
 import Effets.BuffTitre;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
+import Equipement.CarteOr;
 import Equipement.Equipement;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,21 @@ public class Stage {
             if (recompenseEquipement != null) {
                 ctx.inventaire.ajouterEquipement(recompenseEquipement);
                 System.out.println("   + Equipement obtenu : " + recompenseEquipement);
+            }
+
+            // ── Cartes d'or ──────────────────────────────────────────────
+            if (estNouveauStage) {
+                // Première réussite : 10 Cartes d'Or Lv.1 garanties
+                int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 10);
+                System.out.println("   + " + ajoute + "x " + CarteOr.NIVEAU_1.nom
+                        + " (premiere victoire) !");
+            } else {
+                // Replay : 50% de chance d'obtenir 1 Carte d'Or Lv.1
+                if (Math.random() < 0.50) {
+                    int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 1);
+                    if (ajoute > 0)
+                        System.out.println("   + 1x " + CarteOr.NIVEAU_1.nom + " !");
+                }
             }
 
             if (estNouveauStage) {

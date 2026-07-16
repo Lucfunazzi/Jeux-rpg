@@ -1,5 +1,6 @@
 package lancement.Menus;
 
+import Equipement.CarteOr;
 import Equipement.Equipement;
 import Equipement.Inventaire;
 import Personnage.PersonnageBase;
@@ -21,6 +22,7 @@ public class MenuInventaire {
             System.out.println("2. Equiper un personnage");
             System.out.println("3. Voir l'equipement d'un personnage");
             System.out.println("4. Equiper un set complet");
+            System.out.println("5. Utiliser des Cartes d'Or");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -29,6 +31,7 @@ public class MenuInventaire {
                 case "2" -> menuEquiper(ctx, scanner);
                 case "3" -> menuVoirEquipement(ctx, scanner);
                 case "4" -> menuEquiperSet(ctx, scanner);
+                case "5" -> menuCartesOr(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -255,6 +258,83 @@ public class MenuInventaire {
      * Les pièces non-armes sont toujours compatibles.
      * Les armes dépendent du type de classe du personnage.
      */
+    // ── Cartes d'or ───────────────────────────────────────────────────────
+    private void menuCartesOr(GameContext ctx, Scanner scanner) {
+        List<Inventaire.StackCarteOr> stacks = new ArrayList<>();
+        for (Inventaire.StackCarteOr s : ctx.inventaire.getCartesOr()) {
+            if (!s.estVide()) stacks.add(s);
+        }
+
+        if (stacks.isEmpty()) {
+            System.out.println("\nVous n'avez aucune Carte d'Or dans votre inventaire.");
+            return;
+        }
+
+        System.out.println("\n========================================");
+        System.out.println("         CARTES D'OR");
+        System.out.println("========================================");
+        System.out.printf("Or actuel : %,.0f or%n", ctx.joueur.getOr());
+        System.out.println();
+
+        for (int i = 0; i < stacks.size(); i++) {
+            Inventaire.StackCarteOr s = stacks.get(i);
+            System.out.printf("  [%d] %s%n", i + 1, s);
+        }
+        System.out.println("  [0] Retour");
+        System.out.print("Choisissez une carte a utiliser : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > stacks.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        Inventaire.StackCarteOr stackChoisi = stacks.get(choix - 1);
+        CarteOr carte    = stackChoisi.getCarte();
+        int     dispo    = stackChoisi.getQuantite();
+
+        System.out.printf("%nVous avez %d x %s (%,d or chacune).%n",
+                dispo, carte.nom, carte.valeurOr);
+        System.out.printf("Combien voulez-vous en utiliser ? (1-%d, 0 pour annuler) : ", dispo);
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (quantite == 0) return;
+        if (quantite < 1 || quantite > dispo) {
+            System.out.printf("Quantite invalide. Vous en avez %d.%n", dispo);
+            return;
+        }
+
+        long orGagne = (long) carte.valeurOr * quantite;
+        ctx.inventaire.retirerCartesOr(carte, quantite);
+        // ajouterOr prend un int ; on applique par tranches si nécessaire
+        long restant = orGagne;
+        while (restant > 0) {
+            int tranche = (int) Math.min(restant, Integer.MAX_VALUE);
+            ctx.joueur.ajouterOr(tranche);
+            restant -= tranche;
+        }
+        ctx.gestionnaireQuetes.notifierOrGagne((int) Math.min(orGagne, Integer.MAX_VALUE));
+
+        System.out.printf("%n>> Vous avez utilise %d x %s !%n", quantite, carte.nom);
+        System.out.printf("   + %,d or gagne !%n", orGagne);
+        System.out.printf("   Or total : %,.0f or%n", ctx.joueur.getOr());
+
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
     private boolean estCompatible(PersonnageBase cible, Equipement e) {
         if (e.getSlot() != Equipement.Slot.ARME) return true;
         return switch (cible.getType()) {

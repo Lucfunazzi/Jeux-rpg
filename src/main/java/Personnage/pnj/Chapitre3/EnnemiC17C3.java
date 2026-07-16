@@ -35,28 +35,66 @@ public class EnnemiC17C3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Rafale Android", "Barriere d'energie", "Infinite Energy"};
+        return new String[]{"Kikoha", "Boule d'energie a pleine puissance", "Flash Photonique"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-17 tire une Rafale Android sur " + cible.getNom() + " !");
+        log.add("C-17 utilise Kikoha sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-17 deploie une Barriere d'energie !");
-        double bouclier = this.getVieMax() * 0.30;
-        for (PersonnageBase a : equipeAlliee)
-            if (a.estVivant()) Combat.appliquerEffet(this, a, new Bouclier(bouclier), log);
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.50, log);
-    }
-    @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-17 active Infinite Energy et s'enchaine sur toute l'equipe !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) {
-                Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.40, log);
-                Combat.appliquerEffet(this, c, new ReductionVitesse(0.20, 2), log);
+        log.add("C-17 utilise Boule d'energie a pleine puissance !");
+        double degats = this.getAttaque() * 1.60;
+        boolean auMoinsUneCible = false;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equalsIgnoreCase("DPS")) {
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Marquage(2, 0.20), log);
+                auMoinsUneCible = true;
             }
+        }
+        if (!auMoinsUneCible) {
+            for (PersonnageBase ennemi : equipeEnnemie) {
+                if (ennemi.estVivant()) {
+                    Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                    Combat.appliquerEffet(this, ennemi, new Marquage(2, 0.20), log);
+                }
+            }
+        }
+        this.ajouterRage(30);
+        log.add("C-17 gagne 30 points de rage !");
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.getNom().equals("C-18") && allie.estVivant()) {
+                allie.ajouterRage(20);
+                log.add("C-18 gagne 20 points de rage (synergie) !");
+            }
+        }
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Rafale Android : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Barriere d'energie : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Infinite Energy : attaque ultime."); }
+
+    @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("C-17 utilise Flash Photonique !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) {
+            multiplicateurRage += (this.getRage() - 100) / 100.0;
+        }
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (ennemi.getRole().equalsIgnoreCase("DPS")) {
+                    Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.15, 2), log);
+                }
+            }
+        }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant() && allie.getRole().equalsIgnoreCase("DPS")) {
+                Combat.appliquerEffet(this, allie, new BuffAttaque(0.20, 2), log);
+            }
+        }
+    }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Kikoha : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Boule d'energie a pleine puissance : inflige 160% ATK a tous les DPS ennemis, applique Marquage 2 tours et gagne 30 rage. Donne 20 rage a C-18 si alliee."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Flash Photonique : inflige 160% ATK a tous les ennemis, ralentit les DPS ennemis de 15% et donne +20% ATK aux DPS allies pendant 2 tours."); }
 }

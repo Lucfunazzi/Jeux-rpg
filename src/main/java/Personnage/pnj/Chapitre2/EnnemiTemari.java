@@ -24,8 +24,8 @@ public class EnnemiTemari extends PersonnageBase {
         double mult = 1.20;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 143.6 * mult * niv;
-        this.attaque =  43.1 * mult * niv;
+        this.vie     = 250.6 * mult * niv;
+        this.attaque =  70.1 * mult * niv;
         this.defense =  32.3 * mult * niv;
         this.vitesse =  69.9 * mult * vit;
 

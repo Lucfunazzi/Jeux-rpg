@@ -22,10 +22,10 @@ public class EnnemiKabutoElite extends PersonnageBase {
         double mult = 1.50;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 183.2 * mult * niv;
-        this.attaque =  52.4 * mult * niv;
+        this.vie     = 450.2 * mult * niv;
+        this.attaque =  120.4 * mult * niv;
         this.defense =  50.2 * mult * niv;
-        this.vitesse =  78.7 * mult * vit;
+        this.vitesse =  220.7 * mult * vit;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;

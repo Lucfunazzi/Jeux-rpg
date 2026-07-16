@@ -22,10 +22,10 @@ public class EnnemiOrochimaru extends PersonnageBase {
         double mult = 1.50;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 148.8 * mult * niv;
-        this.attaque =  54.3 * mult * niv;
-        this.defense =  34.1 * mult * niv;
-        this.vitesse =  61.5 * mult * vit;
+        this.vie     = 300.8 * mult * niv;
+        this.attaque =  110.3 * mult * niv;
+        this.defense =  85.1 * mult * niv;
+        this.vitesse =  100.5 * mult * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.50;

@@ -23,8 +23,8 @@ public class EnnemiAsumaElite extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 205.1 * mult * niv;
-        this.attaque =  46.1 * mult * niv;
-        this.defense =  39.3 * mult * niv;
+        this.attaque =  110.1 * mult * niv;
+        this.defense =  70.3 * mult * niv;
         this.vitesse =  57.4 * mult * vit;
 
         this.taux_critiques    = 0.10;

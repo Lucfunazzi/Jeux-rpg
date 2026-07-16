@@ -26,10 +26,10 @@ public class EnnemiZabuzaElite extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 300.2 * mult * niv;
-        this.attaque =  120.3 * mult * niv;
-        this.defense =  60.5 * mult * niv;
-        this.vitesse =  80.2 * mult * vit;
+        this.vie     = 500.2 * mult * niv;
+        this.attaque =  200.3 * mult * niv;
+        this.defense =  90.5 * mult * niv;
+        this.vitesse =  120.2 * mult * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.50;

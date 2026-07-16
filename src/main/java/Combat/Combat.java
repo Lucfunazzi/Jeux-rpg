@@ -11,6 +11,7 @@ public class Combat {
     private List<PersonnageBase> equipeAdverse;
     private double bonusTitre = 0.0;
     private int toursUtilises = 0;
+    private boolean donnerXP  = true;  // false pour les combats d'arène
 
     public Combat(List<PersonnageBase> equipeJoueur,
                   List<PersonnageBase> equipeAdverse) {
@@ -24,6 +25,15 @@ public class Combat {
         this.equipeJoueur  = equipeJoueur;
         this.equipeAdverse = equipeAdverse;
         this.bonusTitre    = bonusTitre;
+    }
+
+    /** Constructeur pour les combats sans gain d'XP (arène). */
+    public Combat(List<PersonnageBase> equipeJoueur,
+                  List<PersonnageBase> equipeAdverse,
+                  boolean donnerXP) {
+        this.equipeJoueur  = equipeJoueur;
+        this.equipeAdverse = equipeAdverse;
+        this.donnerXP      = donnerXP;
     }
 
     // ORDRE ET UTILITAIRES
@@ -212,7 +222,7 @@ public class Combat {
         System.out.println("\n=== FIN DU COMBAT ===");
         if (equipeKO(equipeAdverse)) {
             System.out.println("Votre equipe a gagne !");
-            donnerExperience();
+            if (donnerXP) donnerExperience();
         } else if (equipeKO(equipeJoueur)) {
             System.out.println("Votre equipe a perdu !");
         } else {
@@ -459,7 +469,7 @@ public static boolean lancerCombatArene(
     System.out.println("\nAppuie sur Entrée pour lancer le combat...");
     scanner.nextLine();
 
-    Combat combat = new Combat(equipeJoueur, equipeAdverse);
+    Combat combat = new Combat(equipeJoueur, equipeAdverse, false);
     combat.lancerCombat();
 
     boolean victoire = combat.equipeKO(equipeAdverse);

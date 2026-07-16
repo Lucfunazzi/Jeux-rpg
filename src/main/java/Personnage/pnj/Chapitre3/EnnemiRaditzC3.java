@@ -35,24 +35,40 @@ public class EnnemiRaditzC3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Queue saiyan", "Vendredi Samedi", "Pluie de Ki"};
+        return new String[]{"Kikoha rapide", "Double dimanche", "Cadeau"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Raditz frappe " + cible.getNom() + " avec sa queue !");
+        log.add("Raditz lance un Kikoha rapide sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Raditz execute son attaque Vendredi Samedi !");
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.70, log);
-        Combat.appliquerEffet(this, cible, new ReductionDefense(0.20, 2), log);
+        log.add("Raditz utilise Double dimanche !");
+        double degats = this.getAttaque() * 1.10;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.10, 2), log);
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Raditz declenche une Pluie de Ki !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.20, log);
+        log.add("Raditz utilise Cadeau !");
+        PersonnageBase cible = null;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                if (cible == null || ennemi.getAttaque() > cible.getAttaque())
+                    cible = ennemi;
+            }
+        }
+        if (cible == null) return;
+        double degats = this.getAttaque() * 1.20;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, cible, new Brulure(2, 0.08), log);
+        if (Math.random() < 0.25) {
+            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+        }
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Queue saiyan : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Vendredi Samedi : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Pluie de Ki : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Kikoha rapide : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Double dimanche : inflige 110% ATK a une cible et augmente son taux critique de 10% pendant 2 tours."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Cadeau : inflige 120% ATK a l'ennemi avec la plus haute attaque, applique Brulure (8% PV/tour) 2 tours, 25% de chance d'etourdir 1 tour."); }
 }

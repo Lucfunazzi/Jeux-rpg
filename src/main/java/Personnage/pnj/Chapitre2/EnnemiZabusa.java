@@ -26,8 +26,8 @@ public class EnnemiZabusa extends PersonnageBase {
         double mult = 1.20;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 300.2 * mult * niv;
-        this.attaque =  120.3 * mult * niv;
+        this.vie     = 400.2 * mult * niv;
+        this.attaque =  150.3 * mult * niv;
         this.defense =  60.5 * mult * niv;
         this.vitesse =  80.2 * mult * vit;
 

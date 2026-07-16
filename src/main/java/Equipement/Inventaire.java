@@ -41,9 +41,32 @@ public class Inventaire {
         }
     }
 
-    private final ArrayList<StackEquipement> stacks       = new ArrayList<>();
-    private final ArrayList<Materiau>        materiaux    = new ArrayList<>();
-    private final ArrayList<StackParchemin>  parchemins   = new ArrayList<>();
+    public static class StackCarteOr {
+        private final CarteOr carte;
+        private int quantite;
+
+        public StackCarteOr(CarteOr carte, int quantite) {
+            this.carte    = carte;
+            this.quantite = quantite;
+        }
+
+        public CarteOr getCarte()           { return carte; }
+        public int getQuantite()            { return quantite; }
+        public void ajouterQuantite(int n)  { this.quantite = Math.min(CarteOr.STOCK_MAX, this.quantite + n); }
+        public void retirerQuantite(int n)  { this.quantite -= n; }
+        public boolean estVide()            { return quantite <= 0; }
+
+        @Override
+        public String toString() {
+            return carte.nom + " x" + quantite
+                    + "  [" + String.format("%,d", carte.valeurOr) + " or/carte]";
+        }
+    }
+
+    private final ArrayList<StackEquipement> stacks      = new ArrayList<>();
+    private final ArrayList<Materiau>        materiaux   = new ArrayList<>();
+    private final ArrayList<StackParchemin>  parchemins  = new ArrayList<>();
+    private final ArrayList<StackCarteOr>    cartesOr    = new ArrayList<>();
 
     // ── Équipements ───────────────────────────────────────────────────────
     public void ajouterEquipement(Equipement e) {
@@ -126,10 +149,6 @@ public class Inventaire {
         parchemins.add(new StackParchemin(rarete, quantite));
     }
 
-    /**
-     * Retire un parchemin XP de la rareté donnée.
-     * @return true si le retrait a réussi (stock suffisant)
-     */
     public boolean retirerParcheminXP(ParcheminXP.Rarete rarete) {
         for (int i = 0; i < parchemins.size(); i++) {
             StackParchemin s = parchemins.get(i);
@@ -151,9 +170,54 @@ public class Inventaire {
 
     public ArrayList<StackParchemin> getParchemins() { return parchemins; }
 
+    // ── Cartes d'or ───────────────────────────────────────────────────────
+
+    /**
+     * Ajoute des cartes d'or au stock (plafonné à 999 par niveau).
+     * @return le nombre de cartes réellement ajoutées (peut être < quantite si stock plein)
+     */
+    public int ajouterCartesOr(CarteOr niveau, int quantite) {
+        for (StackCarteOr s : cartesOr) {
+            if (s.getCarte() == niveau) {
+                int avant = s.getQuantite();
+                s.ajouterQuantite(quantite);
+                return s.getQuantite() - avant;
+            }
+        }
+        int ajoute = Math.min(quantite, CarteOr.STOCK_MAX);
+        cartesOr.add(new StackCarteOr(niveau, ajoute));
+        return ajoute;
+    }
+
+    /**
+     * Retire un certain nombre de cartes d'or du stock.
+     * @return true si le stock était suffisant
+     */
+    public boolean retirerCartesOr(CarteOr niveau, int quantite) {
+        for (int i = 0; i < cartesOr.size(); i++) {
+            StackCarteOr s = cartesOr.get(i);
+            if (s.getCarte() == niveau && s.getQuantite() >= quantite) {
+                s.retirerQuantite(quantite);
+                if (s.estVide()) cartesOr.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getQuantiteCartesOr(CarteOr niveau) {
+        for (StackCarteOr s : cartesOr) {
+            if (s.getCarte() == niveau) return s.getQuantite();
+        }
+        return 0;
+    }
+
+    public ArrayList<StackCarteOr> getCartesOr() { return cartesOr; }
+
     // ── Utilitaire global ─────────────────────────────────────────────────
     public boolean estVide() {
-        return stacks.isEmpty() && materiaux.isEmpty() && parchemins.isEmpty();
+        return stacks.isEmpty() && materiaux.isEmpty()
+                && parchemins.isEmpty() && cartesOr.isEmpty();
     }
 
     // ── Affichage ─────────────────────────────────────────────────────────
@@ -184,15 +248,18 @@ public class Inventaire {
         }
 
         System.out.println("\n[ Consommables ]");
-        if (parchemins.isEmpty()) {
+        boolean aucunConso = parchemins.isEmpty() && cartesOr.isEmpty();
+        if (aucunConso) {
             System.out.println("  Aucun consommable.");
         } else {
             for (StackParchemin s : parchemins) {
-                // Afficher sans le "x1" si quantité = 1 pour la lisibilité
-                String nom = new ParcheminXP(s.getRarete()).toString();
+                String nom  = new ParcheminXP(s.getRarete()).toString();
                 String ligne = "  " + nom;
                 if (s.getQuantite() > 1) ligne += " x" + s.getQuantite();
                 System.out.println(ligne);
+            }
+            for (StackCarteOr s : cartesOr) {
+                System.out.println("  " + s);
             }
         }
     }

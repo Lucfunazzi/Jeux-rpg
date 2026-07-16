@@ -23,9 +23,9 @@ public class EnnemiKurenaiElite extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 169.6 * mult * niv;
-        this.attaque =  45.2 * mult * niv;
+        this.attaque =  100.2 * mult * niv;
         this.defense =  41.5 * mult * niv;
-        this.vitesse =  74.7 * mult * vit;
+        this.vitesse =  110.7 * mult * vit;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.15;

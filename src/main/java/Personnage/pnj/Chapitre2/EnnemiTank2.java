@@ -9,7 +9,7 @@ import java.util.List;
 public class EnnemiTank2 extends PersonnageBase {
 
     public EnnemiTank2() {
-        this(8);
+        this(11);
     }
 
     public EnnemiTank2(int niveau) {

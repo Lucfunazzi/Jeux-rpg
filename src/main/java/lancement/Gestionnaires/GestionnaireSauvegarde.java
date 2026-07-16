@@ -18,6 +18,7 @@ import Personnage.FairyTail.*;
 
 
 
+import Equipement.CarteOr;
 import Equipement.Equipement;
 import Equipement.Inventaire;
 import Equipement.Materiau;
@@ -152,6 +153,11 @@ public class GestionnaireSauvegarde {
         for (Inventaire.StackParchemin s : ctx.inventaire.getParchemins())
             data.inventaireParcheminsXP.add(
                 new SauvegardeData.ParcheminXPData(s.getRarete().name(), s.getQuantite()));
+
+        // Cartes d'or
+        for (Inventaire.StackCarteOr s : ctx.inventaire.getCartesOr())
+            data.inventaireCartesOr.add(
+                new SauvegardeData.CarteOrData(s.getCarte().name(), s.getQuantite()));
 
         // Quêtes
         GestionnaireQuetes gq = ctx.gestionnaireQuetes;
@@ -360,6 +366,15 @@ public class GestionnaireSauvegarde {
             for (SauvegardeData.ParcheminXPData pd : data.inventaireParcheminsXP)
                 inventaire.ajouterParcheminXP(
                     ParcheminXP.Rarete.valueOf(pd.rarete), pd.quantite);
+
+        // Cartes d'or
+        if (data.inventaireCartesOr != null)
+            for (SauvegardeData.CarteOrData cd : data.inventaireCartesOr) {
+                try {
+                    CarteOr niveau = CarteOr.valueOf(cd.niveau);
+                    inventaire.ajouterCartesOr(niveau, cd.quantite);
+                } catch (IllegalArgumentException ignored) {}
+            }
     }
 
     public void restaurerQuetes(GestionnaireQuetes gq, SauvegardeData data) {

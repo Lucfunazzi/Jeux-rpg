@@ -35,23 +35,37 @@ public class EnnemiYamchaC3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Boule de feu du loup", "Fist du loup", "Kamehameha du loup"};
+        return new String[]{"Coup de pied", "Kamehameha", "Sokidan"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yamcha projette une boule de feu sur " + cible.getNom() + " !");
+        log.add("Yamcha utilise Coup de pied sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yamcha execute son Fist du loup !");
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.60, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
+        log.add("Yamcha utilise Kamehameha !");
+        double degats = this.getAttaque() * 1.10;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.10, 2), log);
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yamcha libere son Kamehameha du loup !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.10, log);
+        log.add("Yamcha utilise Sokidan !");
+        PersonnageBase cible = null;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                if (cible == null || ennemi.getVie() < cible.getVie())
+                    cible = ennemi;
+            }
+        }
+        if (cible == null) return;
+        double degats = this.getAttaque() * 1.10;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, cible, new Brulure(2, 0.08), log);
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Boule de feu du loup : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Fist du loup : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Kamehameha du loup : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Coup de pied : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Kamehameha : inflige 110% ATK a une cible et gagne +10% taux critique pendant 2 tours."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Sokidan : inflige 110% ATK a l'ennemi avec le moins de PV et applique Brulure (8% PV/tour) pendant 2 tours."); }
 }

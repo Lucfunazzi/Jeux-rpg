@@ -35,30 +35,76 @@ public class EnnemiC18C3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Frappe Android", "Soin Android", "Duo Lethal"};
+        return new String[]{"Kikoha", "Vague d'energie a haute pression", "Balle cosmique"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-18 frappe " + cible.getNom() + " !");
+        log.add("C-18 utilise Kikoha sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-18 repare son equipe avec un Soin Android !");
-        for (PersonnageBase a : equipeAlliee)
-            if (a.estVivant()) {
-                double soin = this.getAttaque() * 0.70;
-                a.recevoirSoin(soin, log);
+        log.add("C-18 utilise Vague d'energie a haute pression !");
+        double degats = this.getAttaque() * 1.30;
+        boolean auMoinsUneCible = false;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equalsIgnoreCase("Support")) {
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Marquage(2, 0.20), log);
+                auMoinsUneCible = true;
             }
+        }
+        if (!auMoinsUneCible) {
+            for (PersonnageBase ennemi : equipeEnnemie) {
+                if (ennemi.estVivant()) {
+                    Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                    Combat.appliquerEffet(this, ennemi, new Marquage(2, 0.20), log);
+                }
+            }
+        }
+        PersonnageBase cibleSoin = null;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                if (cibleSoin == null || allie.getVie() < cibleSoin.getVie())
+                    cibleSoin = allie;
+            }
+        }
+        if (cibleSoin != null) {
+            double soin = this.getAttaque() * 0.60;
+            cibleSoin.recevoirSoin(soin, log);
+            log.add("C-18 soigne " + cibleSoin.getNom() + " de " + String.format("%.1f", soin) + " PV !");
+        }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.getNom().equals("C-17") && allie.estVivant()) {
+                allie.ajouterRage(20);
+                log.add("C-17 gagne 20 points de rage (synergie) !");
+            }
+        }
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("C-17 et C-18 executent leur Duo Lethal !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) {
-                Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.60, log);
-                Combat.appliquerEffet(this, c, new Etourdissement(1), log);
+        log.add("C-18 utilise Balle cosmique !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) {
+            multiplicateurRage += (this.getRage() - 100) / 100.0;
+        }
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (ennemi.getRole().equalsIgnoreCase("Support")) {
+                    Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.15, 2), log);
+                }
             }
+        }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(this, allie, new BuffDefense(0.20, 2), log);
+            }
+        }
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Frappe Android : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Soin Android : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Duo Lethal : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Kikoha : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Vague d'energie a haute pression : inflige 130% ATK aux Supports ennemis, applique Marquage 2 tours et soigne l'allie le plus bas de 60% ATK. Donne 20 rage a C-17 si allie."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Balle cosmique : inflige 140% ATK a tous les ennemis, ralentit les Supports ennemis de 15% et donne +20% DEF a toute l'equipe alliee pendant 2 tours."); }
 }

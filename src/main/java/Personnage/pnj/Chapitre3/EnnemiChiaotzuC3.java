@@ -35,27 +35,40 @@ public class EnnemiChiaotzuC3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Telekinésie", "Paralysie mentale", "Benediction de l'equipe"};
+        return new String[]{"Onde psychique", "Paralysie mentale", "Sacrifice heroique"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Chiaotzu utilise la telekinésie sur " + cible.getNom() + " !");
+        log.add("Chiaotzu utilise Onde psychique sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Ralentissement(1,0.20), log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Chiaotzu paralyse " + cible.getNom() + " !");
-        Combat.appliquerEffet(this, cible, new Paralysie(2,0.20), log);
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.20, log);
+        log.add("Chiaotzu utilise Paralysie mentale sur " + cible.getNom() + " !");
+        if (Math.random() < 0.25) {
+            Combat.appliquerEffet(this, cible, new Sommeil(1), log);
+        } else {
+            Combat.appliquerEffet(this, cible, new ReductionAttaque(0.10, 1), log);
+        }
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Chiaotzu benit toute son equipe !");
-        for (PersonnageBase a : equipeAlliee)
-            if (a.estVivant()) {
-                a.recevoirSoin(this.getAttaque() * 0.60, log);
-                Combat.appliquerEffet(this, a, new BuffAttaque(0.10, 2), log);
+        log.add("Chiaotzu utilise Sacrifice heroique !");
+        PersonnageBase cibleSoin = null;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                if (cibleSoin == null || allie.getVie() < cibleSoin.getVie())
+                    cibleSoin = allie;
             }
+        }
+        if (cibleSoin != null) {
+            double soin = this.getAttaque() * 0.80;
+            cibleSoin.recevoirSoin(soin, log);
+            log.add("Chiaotzu soigne " + cibleSoin.getNom() + " de " + String.format("%.1f", soin) + " PV !");
+        }
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Telekinésie : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Paralysie mentale : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Benediction de l'equipe : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Onde psychique : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Paralysie mentale : 25% de chance d'endormir la cible 1 tour, sinon reduit son attaque de 10% pendant 1 tour."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Sacrifice heroique : soigne l'allie avec le moins de PV a hauteur de 80% ATK."); }
 }

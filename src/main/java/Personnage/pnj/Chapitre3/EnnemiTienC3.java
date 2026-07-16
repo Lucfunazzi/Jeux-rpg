@@ -35,27 +35,40 @@ public class EnnemiTienC3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Coup de Doigt", "Kikoho", "Shin Kikoho"};
+        return new String[]{"Poing de diamant", "Dodon Pa", "Canon Triplase"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tien assene un Coup de Doigt sur " + cible.getNom() + " !");
+        log.add("Tien utilise Poing de diamant sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, new BuffDefense(0.10, 1), log);
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tien tire son Kikoho sur " + cible.getNom() + " !");
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.80, log);
-        Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+        log.add("Tien utilise Dodon Pa !");
+        double degats = this.getAttaque() * 0.80;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, new BuffDefense(0.10, 2), log);
+        Combat.appliquerEffet(this, new BuffBlocage(0.10, 2), log);
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tien libere son Shin Kikoho devastateur !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) {
-                Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.30, log);
-                Combat.appliquerEffet(this, c, new ReductionAttaque(0.15, 2), log);
+        log.add("Tien utilise Canon Triplase !");
+        PersonnageBase cible = null;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                if (cible == null || ennemi.getVie() < cible.getVie())
+                    cible = ennemi;
             }
+        }
+        if (cible != null) {
+            double degats = this.getAttaque() * 1.00;
+            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        }
+        Combat.appliquerEffet(this, new Invincibilite(1), log);
+        Combat.appliquerEffet(this, new BuffDefense(0.10, 2), log);
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Coup de Doigt : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Kikoho : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Shin Kikoho : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Poing de diamant : inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Dodon Pa : inflige 80% ATK a une cible, renforce sa defense de 10% et son blocage de 10% pendant 2 tours."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Canon Triplase : inflige 100% ATK a l'ennemi avec le moins de PV, devient invincible 1 tour et gagne +10% DEF pendant 2 tours."); }
 }

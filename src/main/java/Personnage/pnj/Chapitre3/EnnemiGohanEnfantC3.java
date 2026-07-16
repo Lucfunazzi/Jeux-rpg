@@ -35,23 +35,53 @@ public class EnnemiGohanEnfantC3 extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Masenko", "Rage Saiyan", "Kamehameha de la Colere"};
+        return new String[]{"Masenko", "Rage Saiyan", "Eruption de puissance"};
     }
+
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Gohan tire un Masenko sur " + cible.getNom() + " !");
-        Combat.attaquer(this, cible, log);
+        log.add("Gohan utilise Masenko sur " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.10;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        this.ajouterRage(15);
+        log.add("Gohan gagne 15 points de rage !");
     }
+
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("La rage saiyan de Gohan explose !");
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.80, log);
-        Combat.appliquerEffet(this, new BuffAttaque(0.25, 2), log);
+        log.add("Gohan entre en Rage Saiyan !");
+        long alliesKO = equipeAlliee.stream().filter(a -> !a.estVivant()).count();
+        double bonusRage = 1.0 + (alliesKO * 0.20);
+        if (alliesKO > 0) {
+            log.add("Gohan est enrage ! +" + (int)(alliesKO * 20) + "% degats pour " + alliesKO + " allie(s) KO !");
+        }
+        double degats = (this.getAttaque() * 1.40) * bonusRage;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, this, new BuffDegatCritique(0.30, 2), log);
+        this.ajouterRage(20);
+        log.add("Gohan gagne 20 points de rage !");
     }
+
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Gohan libere un Kamehameha de la Colere !");
-        for (PersonnageBase c : equipeEnnemie)
-            if (c.estVivant()) Combat.appliquerDegatsAvecLog(this, c, this.getAttaque() * 1.40, log);
+        log.add("Gohan utilise Eruption de puissance !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) {
+            multiplicateurRage += (this.getRage() - 100) / 100.0;
+        }
+        long alliesKO = equipeAlliee.stream().filter(a -> !a.estVivant()).count();
+        double bonusKO = 1.0 + (alliesKO * 0.25);
+        if (alliesKO > 0) {
+            log.add("La douleur decuple sa puissance ! +" + (int)(alliesKO * 25) + "% degats !");
+        }
+        PersonnageBase cible = equipeEnnemie.stream()
+                .filter(PersonnageBase::estVivant)
+                .max(java.util.Comparator.comparingDouble(PersonnageBase::getVie))
+                .orElse(null);
+        if (cible != null) {
+            double degats = (this.getAttaque() * 1.80) * multiplicateurRage * bonusKO;
+            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        }
     }
-    @Override public void descriptionAttaqueBase()    { System.out.println("Masenko : attaque de base."); }
-    @Override public void descriptionAttaqueSpeciale(){ System.out.println("Rage Saiyan : attaque speciale."); }
-    @Override public void descriptionAttaqueUltime()  { System.out.println("Kamehameha de la Colere : attaque ultime."); }
+
+    @Override public void descriptionAttaqueBase()     { System.out.println("Masenko : inflige 110% ATK a une cible et gagne 15 rage."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Rage Saiyan : inflige 140% ATK a une cible (+20% par allie KO), gagne un buff critique de 30% pendant 2 tours et 20 rage."); }
+    @Override public void descriptionAttaqueUltime()   { System.out.println("Eruption de puissance : inflige 180% ATK a l'ennemi avec le plus de PV, amplifie par la rage et le nombre d'allies KO (+25% chacun)."); }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class EnnemiSoigneur1 extends PersonnageBase {
 
     public EnnemiSoigneur1() {
-        this(7);
+        this(12);
     }
 
     public EnnemiSoigneur1(int niveau) {

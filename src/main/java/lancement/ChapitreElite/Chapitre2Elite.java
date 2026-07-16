@@ -99,6 +99,12 @@ public class Chapitre2Elite {
                         // Débloquer l'arbre 2 des abilités
                         ctx.joueur.getArbreCompetences().setArbre2Debloque(true);
                         System.out.println(">> L'Arbre 2 des Abilités est maintenant accessible !");
+                        // Donner l'Oeuf de Créature Sacrée (une seule fois)
+                        if (estNouveau && !ctx.gestionnaireCreaturesSacrees.isOeufDebloque()) {
+                            ctx.gestionnaireCreaturesSacrees.debloquerOeuf();
+                            System.out.println(">> Vous avez obtenu un Oeuf de Creature Sacree !");
+                            System.out.println("   Accessible depuis le menu Creatures Sacrees (niveau 30 requis).");
+                        }
                     }
 
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());

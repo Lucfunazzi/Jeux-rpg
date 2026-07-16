@@ -12,21 +12,21 @@ public enum CompagnonsType {
 
     HAPPY(
         "Happy",
-        500,       // coût par niveau (1→10)
-        3_000,     // coût d'évolution vers Carla
-        0.3        // +0.3% par niveau
+        20_000,      // coût par niveau × palier → moyenne ~100 000 or par upgrade
+        500_000,     // coût d'évolution vers Carla
+        0.5         // +0.5% par niveau
     ),
     CARLA(
         "Carla",
-        1_200,     // coût par niveau (1→10)
-        8_000,     // coût d'évolution vers Panthère Lily
-        0.4        // +0.4% par niveau
+        100_000,     // coût par niveau × palier → moyenne ~500 000 or par upgrade
+        2_000_000,   // coût d'évolution vers Panthère Lily
+        0.8          // +0.8% par niveau
     ),
     PANTHERE_LILY(
         "Panthère Lily",
-        2_500,     // coût par niveau (1→10)
-        -1,        // pas d'évolution suivante (pour l'instant)
-        0.5        // +0.5% par niveau
+        200_000,     // coût par niveau × palier → moyenne ~1 000 000 or par upgrade
+        -1,          // pas d'évolution suivante (pour l'instant)
+        1          // +1% par niveau
     );
 
     public final String nom;

@@ -22,9 +22,9 @@ public class EnnemiGaaraElite extends PersonnageBase {
         double mult = 1.70;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 140.6 * mult * niv;
-        this.attaque =  26.7 * mult * niv;
-        this.defense =  33.7 * mult * niv;
+        this.vie     = 400.6 * mult * niv;
+        this.attaque =  45.7 * mult * niv;
+        this.defense =  120.7 * mult * niv;
         this.vitesse =  41.7 * mult * vit;
 
         this.taux_critiques    = 0.05;

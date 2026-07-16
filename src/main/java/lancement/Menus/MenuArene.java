@@ -356,6 +356,7 @@ public class MenuArene {
             // ── Rang S ──
             case "Itachi"           -> new perso_Itachi();
             case "Orochimaru"       -> new perso_Orochimaru();
+            case "Gaara"            -> new perso_Gaara();
             case "Erza"             -> new perso_Erza();
             case "Mirajane"         -> new perso_Mirajane();
             case "Sting"            -> new perso_Sting();
@@ -367,6 +368,8 @@ public class MenuArene {
             case "Natsu Etherion"   -> new perso_Natsu_Etherion();
             case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
             case "Sasori" -> new perso_Sasori();
+            // ── Rang SS ──
+            case "Lucas"            -> new perso_Lucas();
             default                 -> null;
         };
     }

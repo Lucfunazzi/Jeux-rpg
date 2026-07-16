@@ -23,9 +23,9 @@ public class EnnemiHaku extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 200.6 * mult * niv;
-        this.attaque =  70.6 * mult * niv;
-        this.defense =  55.9 * mult * niv;
-        this.vitesse =  120.6 * mult * vit;
+        this.attaque =  120.6 * mult * niv;
+        this.defense =  90.9 * mult * niv;
+        this.vitesse =  140.6 * mult * vit;
 
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.30;
