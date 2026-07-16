@@ -1,0 +1,59 @@
+package lancement;
+
+import Equipement.Inventaire;
+import Joueur.Personnage_principale;
+import Personnage.PersonnageBase;
+import lancement.Chapitres.Chapitre1;
+import lancement.Chapitres.Chapitre2;
+import lancement.Chapitres.Chapitre3;
+import lancement.ChapitreElite.Chapitre1Elite;
+import lancement.ChapitreElite.Chapitre2Elite;
+import lancement.Gestionnaires.GestionnaireDonjon;
+import lancement.Gestionnaires.GestionnaireEnergie;
+import lancement.Gestionnaires.GestionnaireQuetes;
+import lancement.Gestionnaires.GestionnaireSauvegarde;
+import lancement.Gestionnaires.GestionnaireTitres;
+import lancement.Gestionnaires.GestionnaireEtoiles;
+import lancement.Gestionnaires.GestionnaireCompagnons;
+import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Menus.MenuRecrutement;
+import java.util.ArrayList;
+
+/**
+ * Conteneur central passé à chaque chapitre, stage et menu.
+ * Ajouter un nouveau chapitre = ajouter un champ ici, c'est tout.
+ */
+public class GameContext {
+
+    // ── Joueur & équipe ───────────────────────────────────────────────────
+    public Personnage_principale       joueur;
+    public Formation                   formation;
+    public ArrayList<PersonnageBase>   personnagesRecruites;
+    public Inventaire                  inventaire;
+
+    // ── Chapitres normaux ─────────────────────────────────────────────────
+    public Chapitre1      chapitre1;
+    public Chapitre2      chapitre2;
+    public Chapitre3      chapitre3;
+    // Ajouter Chapitre3, Chapitre4... ici
+
+    // ── Chapitres élite ───────────────────────────────────────────────────
+    public Chapitre1Elite chapitre1Elite;
+    public Chapitre2Elite chapitre2Elite;
+
+    // ── Managers ──────────────────────────────────────────────────────────
+    public GestionnaireSauvegarde sauvegarde;
+    public GestionnaireQuetes     gestionnaireQuetes;
+    public GestionnaireEnergie    gestionnaireEnergie;
+    public GestionnaireTitres     gestionnaireTitres;
+    public GestionnaireDonjon     gestionnaireDonjon;
+    public RangJoueur             rangJoueur;
+    public MenuRecrutement        menuRecrutement;
+    public GestionnaireEtoiles    gestionnaireEtoiles;
+    public GestionnaireCompagnons gestionnaireCompagnons;
+    public GestionnaireCreaturesSacrees  gestionnaireCreaturesSacrees;
+    public int                    coupons = 0;
+    public String dernierCoffreArene = null;
+
+    public GameContext() {}
+}
