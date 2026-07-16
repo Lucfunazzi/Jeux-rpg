@@ -23,21 +23,24 @@ public class GestionnaireArene {
 
     private static final List<String> TANKS = List.of(
         "Naruto", "Iruka", "Choji", "Hinata", "Neji", "Hidan",
-        "Tien", "Erza"
+        "Tien", "Erza", "Nappa", "Gaara", "Cell", "Rogue"
     );
 
     private static final List<String> SUPPORTS = List.of(
         "Ino", "Kurenai", "Shikamaru", "Kabuto", "Temari", "Asuma",
         "Shino", "Haku", "Chiaotzu", "Krillin", "Evergreen", "Freed",
-        "Cana", "Lucy", "C-18"
+        "Cana", "Lucy", "C-18", "Yukino", "Piccolo", "Sasori",
+        "Jubia", "Wendy"
     );
 
     private static final List<String> DPS = List.of(
         "Sasuke", "Sakura", "Kakashi", "Lee", "Tenten", "Kiba",
         "Gai", "Itachi", "Orochimaru", "Kankuro", "Deidara", "Zabuza",
-        "Sangoku", "Raditz", "Yamcha", "C-17",
+        "Sangoku", "Raditz", "Yamcha", "C-17", "Vegeta", "Freezer",
+        "Gohan (enfant)",
         "Natsu", "Gray", "Elfman", "Loke", "Alzack", "Bisca",
-        "Bickslow", "Mirajane", "Mirajane Halphas", "Natsu Etherion"
+        "Bickslow", "Mirajane", "Mirajane Halphas", "Natsu Etherion",
+        "Sting", "Gajeel", "Angel"
     );
 
     private static final String[] CLASSES_IA = {"Mage", "Ninja", "Guerrier"};

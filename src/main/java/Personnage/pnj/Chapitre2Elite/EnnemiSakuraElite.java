@@ -69,7 +69,6 @@ public class EnnemiSakuraElite extends PersonnageBase {
         if (cibleSoin != null) {
             double soin = this.getAttaque() * 0.60;
             cibleSoin.recevoirSoin(soin, log);
-            log.add("Sakura soigne " + cibleSoin.getNom() + " de " + String.format("%.1f", soin) + " PV !");
         }
     }
 

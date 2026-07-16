@@ -43,7 +43,6 @@ public class EnnemiCellC3 extends PersonnageBase {
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         double soin = degats * 0.20;
         this.recevoirSoin(soin, log);
-        log.add("Cell recupere " + String.format("%.1f", soin) + " PV !");
     }
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cell libere un Kamehameha Parfait !");

@@ -52,8 +52,6 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     if (cibleSoin == null) return;
     double soin = this.getAttaque() * 1.00;
     cibleSoin.recevoirSoin(soin, log);
-    log.add("Cana soigne " + cibleSoin.getNom()
-            + " de " + String.format("%.1f", soin) + " PV !");
 }
 
 @Override

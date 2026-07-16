@@ -84,10 +84,7 @@ public class perso_Ino extends PersonnageBase {
         int soignes = 0;
         for (PersonnageBase cible : vivants) {
             if (soignes >= nbCibles) break;
-            cible.recevoirSoin(soin, log);
-            log.add(cible.getNom() + " est soigne par Ino pour "
-                    + String.format("%.0f", soin) + " PV !");
-            soignes++;
+            cible.recevoirSoin(soin, log);            soignes++;
         }
         Purification.purifierEquipe(equipeAlliee, 1, log);
     }

@@ -64,7 +64,6 @@ public class EnnemiIrukaElite extends PersonnageBase {
         Combat.appliquerEffet(this, new BuffDefense(0.05, 2), log);
         double soin = this.getAttaque() * 0.50;
         this.recevoirSoin(soin, log);
-        log.add(this.getNom() + " se soigne de " + String.format("%.1f", soin) + " PV !");
     }
 
     @Override public void descriptionAttaqueBase() {

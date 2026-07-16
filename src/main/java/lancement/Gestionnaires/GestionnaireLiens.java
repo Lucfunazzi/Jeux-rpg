@@ -105,6 +105,13 @@ public class GestionnaireLiens {
         // Ajouter de nouveaux liens ici :
         // liens.add(new Lien("Nom", "Description", new String[]{"Perso1","Perso2"}, atk, def, pv, vit));
 
+        liens.add(new Lien(
+            "Constellationnistes",
+            "Lucy, Yukino et Angel ensemble : toute l'equipe gagne +5% a toutes les stats",
+            new String[]{"Lucy", "Yukino", "Angel"},
+            0.05, 0.05, 0.05, 0.05
+        ));
+
         TOUS_LES_LIENS = Collections.unmodifiableList(liens);
     }
 

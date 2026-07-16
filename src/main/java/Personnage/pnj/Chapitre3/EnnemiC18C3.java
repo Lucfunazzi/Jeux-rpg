@@ -72,7 +72,6 @@ public class EnnemiC18C3 extends PersonnageBase {
         if (cibleSoin != null) {
             double soin = this.getAttaque() * 0.60;
             cibleSoin.recevoirSoin(soin, log);
-            log.add("C-18 soigne " + cibleSoin.getNom() + " de " + String.format("%.1f", soin) + " PV !");
         }
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("C-17") && allie.estVivant()) {

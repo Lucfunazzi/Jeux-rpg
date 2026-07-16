@@ -148,16 +148,6 @@ public class Combat {
             for (PersonnageBase perso : equipeAdverse) if (perso.estVivant()) perso.appliquerEffets(logEffets);
             for (String ligne : logEffets) System.out.println(ligne);
 
-            // ── Invocations des Clefs Célestes ────────────────────────────
-            if (clefActive != null && clefActive.sInvoqueAuTour(numeroTour)
-                    && !equipeKO(equipeJoueur) && !equipeKO(equipeAdverse)) {
-                invoquerClef(clefActive, niveauClef, equipeJoueur, equipeAdverse);
-            }
-            if (clefAdverse != null && clefAdverse.sInvoqueAuTour(numeroTour)
-                    && !equipeKO(equipeJoueur) && !equipeKO(equipeAdverse)) {
-                invoquerClef(clefAdverse, niveauClefAdv, equipeAdverse, equipeJoueur);
-            }
-
             afficherRage(equipeJoueur);
             afficherRage(equipeAdverse);
 
@@ -168,8 +158,28 @@ public class Combat {
                 System.out.println("- " + perso.getNom() + " (vitesse : " + perso.getVitesse() + ")");
             System.out.println();
 
+            // ── Déterminer qui invoque sa clef en premier selon l'initiative ──
+            // Le premier membre vivant de chaque équipe dans l'ordre détermine
+            // si la clef joueur ou adverse s'active en premier ce tour.
+            boolean clefJoueurDoitSInvoquer  = clefActive  != null && clefActive.sInvoqueAuTour(numeroTour);
+            boolean clefAdverseDoitSInvoquer = clefAdverse != null && clefAdverse.sInvoqueAuTour(numeroTour);
+            boolean clefJoueurInvoquee  = false;
+            boolean clefAdverseInvoquee = false;
+
             for (PersonnageBase attaquant : ordre) {
                 if (!attaquant.estVivant() || equipeKO(equipeJoueur) || equipeKO(equipeAdverse)) continue;
+
+                // Invoquer la clef de l'équipe de cet attaquant avant qu'il agisse
+                boolean estDuCoteJoueur = equipeJoueur.contains(attaquant);
+                if (estDuCoteJoueur && clefJoueurDoitSInvoquer && !clefJoueurInvoquee) {
+                    invoquerClef(clefActive, niveauClef, equipeJoueur, equipeAdverse);
+                    clefJoueurInvoquee = true;
+                    if (equipeKO(equipeJoueur) || equipeKO(equipeAdverse)) break;
+                } else if (!estDuCoteJoueur && clefAdverseDoitSInvoquer && !clefAdverseInvoquee) {
+                    invoquerClef(clefAdverse, niveauClefAdv, equipeAdverse, equipeJoueur);
+                    clefAdverseInvoquee = true;
+                    if (equipeKO(equipeJoueur) || equipeKO(equipeAdverse)) break;
+                }
 
                 if (attaquant.aEffet(Gel.class)) {
                     System.out.println("[GEL] " + attaquant.getNom() + " est gele et passe son tour !");
@@ -381,6 +391,7 @@ public class Combat {
                                                double degats, List<String> log) {
         double pvAvant = cible.getVie();
         PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats);
+        String nomSource = (source != null) ? source.getNom() : "Esprit Celeste";
 
         if (resultat.invincible) {
             log.add(cible.getNom() + " est invincible ! Degats bloques.");
@@ -394,14 +405,14 @@ public class Combat {
         }
 
         if (resultat.bloque) {
-            log.add(source.getNom() + " inflige " + String.format("%.1f", resultat.degatsAppliques)
+            log.add(nomSource + " inflige " + String.format("%.1f", resultat.degatsAppliques)
                     + " degats a " + cible.getNom()
                     + " (" + String.format("%.1f", pvAvant) + " → "
                     + cible.getNom() + " bloque ! Degats reduits a "
                     + String.format("%.1f", resultat.degatsAppliques) + " → "
                     + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
         } else {
-            log.add(source.getNom() + " inflige " + String.format("%.1f", resultat.degatsAppliques)
+            log.add(nomSource + " inflige " + String.format("%.1f", resultat.degatsAppliques)
                     + " degats a " + cible.getNom()
                     + " (" + String.format("%.1f", pvAvant) + " → "
                     + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
@@ -434,7 +445,7 @@ public class Combat {
         effet.appliquer(cible, log);
         // Fallback générique si l'effet n'a rien loggé (ex: Brulure, Saignement)
         if (log.size() == tailleAvant) {
-            log.add("➤ " + source.getNom() + " applique [" + effet.getNom()
+            log.add("➤ " + (source != null ? source.getNom() : "Esprit Celeste") + " applique [" + effet.getNom()
                     + "] sur " + cible.getNom() + " !");
         }
     }

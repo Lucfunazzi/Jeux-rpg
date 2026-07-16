@@ -208,7 +208,13 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         }
         Malediction malediction = getEffet(Malediction.class);
         if (malediction != null) montant = malediction.appliquerSurSoin(montant);
+        double pvAvant = this.vie;
         restaurerPv(montant);
+        double soinEffectif = this.vie - pvAvant;
+        if (soinEffectif > 0) {
+            log.add("💚 " + this.nom + " recupere " + String.format("%.1f", soinEffectif)
+                    + " PV (" + String.format("%.1f", pvAvant) + " → " + String.format("%.1f", this.vie) + " PV)");
+        }
     }
 
     public double getRage() { return this.rage; }

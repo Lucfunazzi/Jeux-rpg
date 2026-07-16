@@ -64,7 +64,6 @@ public class EnnemiInoElite extends PersonnageBase {
             if (allie.estVivant()) {
                 double soin = this.getAttaque() * 0.80;
                 allie.recevoirSoin(soin, log);
-                log.add(allie.getNom() + " est soigne par Ino pour " + String.format("%.0f", soin) + " PV !");
             }
         }
     }

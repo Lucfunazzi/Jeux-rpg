@@ -73,7 +73,6 @@ public class EnnemiSoigneur2 extends PersonnageBase {
             if (allie.estVivant()) {
                 double soin = this.getAttaque() * 0.70;
                 allie.recevoirSoin(soin, log);
-                log.add(allie.getNom() + " recoit " + String.format("%.1f", soin) + " PV !");
             }
         }
         PersonnageBase tank = null;

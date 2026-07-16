@@ -48,7 +48,6 @@ public class EnnemiSoigneurDBZ extends PersonnageBase {
         if (plusBas != null) {
             double soin = this.getAttaque() * 1.20;
             plusBas.recevoirSoin(soin, log);
-            log.add(this.nom + " soigne " + plusBas.getNom() + " de " + String.format("%.1f", soin) + " PV !");
         }
     }
     @Override public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {

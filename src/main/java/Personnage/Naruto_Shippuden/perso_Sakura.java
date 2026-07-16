@@ -58,10 +58,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     }
     if (cibleSoin != null) {
         double soin = this.getAttaque() * 0.60;
-        cibleSoin.recevoirSoin(soin, log);
-        log.add("Sakura soigne " + cibleSoin.getNom()
-                + " de " + String.format("%.1f", soin) + " PV !");
-        Purification.purifier(cibleSoin,2,log);
+        cibleSoin.recevoirSoin(soin, log);        Purification.purifier(cibleSoin,2,log);
     }
 }
     

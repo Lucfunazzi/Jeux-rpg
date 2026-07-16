@@ -65,8 +65,6 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     if (cibleSoin != null) {
         double soin = this.getAttaque() * 0.30;
         cibleSoin.recevoirSoin(soin, log);
-        log.add(cibleSoin.getNom() + " recoit "
-                + String.format("%.0f", soin) + " PV de soin !");
         Combat.appliquerEffet(this, cibleSoin, new BuffDefense(0.10, 2), log);
         Purification.purifier(cibleSoin,2,log);
     }
@@ -78,9 +76,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     for (PersonnageBase allie : equipeAlliee) {
         if (allie.estVivant()) {
             double soin = this.getAttaque() * 0.20;
-            allie.recevoirSoin(soin, log);
-            log.add(allie.getNom() + " recoit " + String.format("%.0f", soin) + " PV !");
-            Combat.appliquerEffet(this, allie, new BuffAttaque(0.10, 2), log);
+            allie.recevoirSoin(soin, log);            Combat.appliquerEffet(this, allie, new BuffAttaque(0.10, 2), log);
         }
     }
     Purification.purifierEquipe(equipeAlliee, 1, log);

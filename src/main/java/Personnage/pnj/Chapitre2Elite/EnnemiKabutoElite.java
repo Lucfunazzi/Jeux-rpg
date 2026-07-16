@@ -64,7 +64,6 @@ public class EnnemiKabutoElite extends PersonnageBase {
         if (cibleSoin != null) {
             double soin = this.getAttaque() * 0.30;
             cibleSoin.recevoirSoin(soin, log);
-            log.add(cibleSoin.getNom() + " recoit " + String.format("%.0f", soin) + " PV de soin !");
             Combat.appliquerEffet(this, cibleSoin, new BuffDefense(0.10, 2), log);
         }
     }
@@ -76,7 +75,6 @@ public class EnnemiKabutoElite extends PersonnageBase {
             if (allie.estVivant()) {
                 double soin = this.getAttaque() * 0.20;
                 allie.recevoirSoin(soin, log);
-                log.add(allie.getNom() + " recoit " + String.format("%.0f", soin) + " PV !");
                 Combat.appliquerEffet(this, allie, new BuffAttaque(0.10, 2), log);
             }
         }

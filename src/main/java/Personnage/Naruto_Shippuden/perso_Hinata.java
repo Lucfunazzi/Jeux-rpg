@@ -59,9 +59,7 @@ public class perso_Hinata extends PersonnageBase {
         Combat.appliquerEffet(this, new BuffTauxEsquive(0.10, 2), log);
 
         double soin = this.getAttaque() * 0.50;
-        this.recevoirSoin(soin, log);
-        log.add(this.getNom() + " se soigne de " + String.format("%.1f", soin) + " PV !");
-    }
+        this.recevoirSoin(soin, log);    }
 
     @Override
     public void descriptionAttaqueBase() {

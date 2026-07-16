@@ -69,10 +69,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     }
     if (cibleSoin != null) {
         double soin = this.getAttaque() * 0.60;
-        cibleSoin.recevoirSoin(soin, log);
-        log.add("C-18 soigne " + cibleSoin.getNom()
-                + " de " + String.format("%.1f", soin) + " PV !");
-    }
+        cibleSoin.recevoirSoin(soin, log);    }
     for (PersonnageBase allie : equipeAlliee) {
         if (allie.getNom().equals("C-17") && allie.estVivant()) {
             allie.ajouterRage(20);

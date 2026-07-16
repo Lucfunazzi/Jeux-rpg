@@ -64,7 +64,6 @@ public class EnnemiChiaotzuC3 extends PersonnageBase {
         if (cibleSoin != null) {
             double soin = this.getAttaque() * 0.80;
             cibleSoin.recevoirSoin(soin, log);
-            log.add("Chiaotzu soigne " + cibleSoin.getNom() + " de " + String.format("%.1f", soin) + " PV !");
         }
     }
 

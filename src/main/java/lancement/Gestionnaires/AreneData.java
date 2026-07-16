@@ -72,10 +72,36 @@ public class AreneData {
     // ── Utilitaire combat ─────────────────────────────────────────────────
 
     public List<PersonnageBase> construireEquipe(Function<String, PersonnageBase> factory) {
+        // Multiplicateur de stats selon le rang :
+        // Rang 1 = x2.5 | Rang 25 = x1.5 | Rang 50 = x1.0 | Rang 75 = x0.75 | Rang 100 = x0.55
+        double mult = rangVersMultiplicateur(rang);
+
         return equipeDefensiveNoms.stream()
                 .map(factory)
                 .filter(p -> p != null)
-                .collect(Collectors.toList());
+                .peek(p -> appliquerMultiplicateurArene(p, mult))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    /** Calcule le multiplicateur de stats selon le rang arène. */
+    private static double rangVersMultiplicateur(int rang) {
+        // Rang 1 = x1.80 | Rang 50 = x1.00 | Rang 100 = x0.50
+        if (rang <= 50) {
+            // Interpolation rang 1→50 : 1.80 → 1.00
+            return 1.80 - (1.80 - 1.00) * (rang - 1.0) / 49.0;
+        } else {
+            // Interpolation rang 50→100 : 1.00 → 0.50
+            return 1.00 - (1.00 - 0.50) * (rang - 50.0) / 50.0;
+        }
+    }
+
+    /** Applique un multiplicateur plat sur les stats brutes du personnage. */
+    private static void appliquerMultiplicateurArene(PersonnageBase p, double mult) {
+        // On surcharge via les bonus de lien pour ne pas toucher aux stats de base
+        p.setBonusLienATK(p.getAttaque() * (mult - 1.0));
+        p.setBonusLienDEF(p.getDefense() * (mult - 1.0));
+        p.setBonusLienPV(p.getVieMax() * (mult - 1.0));
+        p.setBonusLienVIT(p.getVitesse() * (mult - 1.0));
     }
 
     // ── Getters ───────────────────────────────────────────────────────────

@@ -55,8 +55,6 @@ public class EnnemiSoigneur1Elite extends PersonnageBase {
         if (cibleSoin != null) {
             double soin = this.getAttaque() * 1.00;
             cibleSoin.recevoirSoin(soin, log);
-            log.add(this.nom + " soigne " + cibleSoin.getNom()
-                    + " de " + String.format("%.1f", soin) + " PV !");
         }
     }
 
@@ -67,7 +65,6 @@ public class EnnemiSoigneur1Elite extends PersonnageBase {
             if (allie.estVivant()) {
                 double soin = this.getAttaque() * 0.80;
                 allie.recevoirSoin(soin, log);
-                log.add(allie.getNom() + " recoit " + String.format("%.1f", soin) + " PV !");
             }
         }
     }
