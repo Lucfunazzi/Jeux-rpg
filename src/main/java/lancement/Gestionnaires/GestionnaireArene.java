@@ -21,27 +21,24 @@ public class GestionnaireArene {
 
     // ── Listes par rôle ───────────────────────────────────────────────────
 
-    private static final List<String> TANKS = List.of(
-        "Naruto", "Iruka", "Choji", "Hinata", "Neji", "Hidan",
-        "Tien", "Erza", "Nappa", "Gaara", "Cell", "Rogue"
-    );
+    // ── Pools par rareté et rôle ──────────────────────────────────────────
 
-    private static final List<String> SUPPORTS = List.of(
-        "Ino", "Kurenai", "Shikamaru", "Kabuto", "Temari", "Asuma",
-        "Shino", "Haku", "Chiaotzu", "Krillin", "Evergreen", "Freed",
-        "Cana", "Lucy", "C-18", "Yukino", "Piccolo", "Sasori",
-        "Jubia", "Wendy"
-    );
+    private static final List<String> TANKS_C = List.of("Iruka", "Tien");
+    private static final List<String> TANKS_B = List.of("Choji", "Hinata", "Nappa");
+    private static final List<String> TANKS_A = List.of("Naruto", "Neji", "Hidan");
+    private static final List<String> TANKS_S = List.of("Erza", "Gaara", "Cell", "Rogue");
 
-    private static final List<String> DPS = List.of(
-        "Sasuke", "Sakura", "Kakashi", "Lee", "Tenten", "Kiba",
-        "Gai", "Itachi", "Orochimaru", "Kankuro", "Deidara", "Zabuza",
-        "Sangoku", "Raditz", "Yamcha", "C-17", "Vegeta", "Freezer",
-        "Gohan (enfant)",
-        "Natsu", "Gray", "Elfman", "Loke", "Alzack", "Bisca",
-        "Bickslow", "Mirajane", "Mirajane Halphas", "Natsu Etherion",
-        "Sting", "Gajeel", "Angel"
-    );
+    private static final List<String> SUPPORTS_C = List.of("Shino", "Chiaotzu");
+    private static final List<String> SUPPORTS_B = List.of("Ino", "Kabuto", "Haku", "Krillin", "Evergreen", "Cana", "Temari");
+    private static final List<String> SUPPORTS_A = List.of("Kurenai", "Shikamaru", "Asuma", "Lucy", "Piccolo", "Sasori", "Jubia", "Wendy", "Freed");
+    private static final List<String> SUPPORTS_S = List.of("C-18", "Yukino");
+    private static final List<String> SUPPORTS_SS = List.of("Lucas");
+
+    private static final List<String> DPS_C = List.of("Kiba", "Tenten", "Yamcha", "Alzack", "Bisca", "Elfman");
+    private static final List<String> DPS_B = List.of("Lee", "Kankuro", "Zabuza", "Raditz", "Gohan (enfant)", "Bickslow", "Loke");
+    private static final List<String> DPS_A = List.of("Sakura", "Deidara", "Natsu", "Gray", "Sangoku", "Vegeta", "Gajeel", "Angel");
+    private static final List<String> DPS_S = List.of("Sasuke", "Kakashi", "Gai", "Itachi", "Orochimaru", "C-17", "Freezer", "Mirajane", "Natsu Etherion", "Sting");
+    private static final List<String> DPS_SS = List.of("Mirajane Halphas");
 
     private static final String[] CLASSES_IA = {"Mage", "Ninja", "Guerrier"};
 
@@ -70,61 +67,90 @@ public class GestionnaireArene {
         Random rng = new Random(42L);
 
         for (int rang = 1; rang <= TAILLE_CLASSEMENT; rang++) {
-            List<String> equipe = genererEquipeEquilibree(rng);
-            String classeIA     = CLASSES_IA[rng.nextInt(CLASSES_IA.length)];
-            String principal    = "PP_" + classeIA;
-            int niveauMoyen     = 50 - (int)((rang - 1) * 0.4);
-            int points          = 10000 - (rang - 1) * 95;
+            int niveau;
+            List<String> poolTanks, poolSupports, poolDPS;
+
+            if (rang >= 90) {
+                niveau = 15 + rng.nextInt(6);
+                poolTanks = TANKS_C; poolSupports = SUPPORTS_C; poolDPS = DPS_C;
+            } else if (rang >= 80) {
+                niveau = 20 + rng.nextInt(6);
+                poolTanks = mix(rng, TANKS_C, TANKS_B, 0.6);
+                poolSupports = mix(rng, SUPPORTS_C, SUPPORTS_B, 0.6);
+                poolDPS = mix(rng, DPS_C, DPS_B, 0.6);
+            } else if (rang >= 60) {
+                niveau = 30 + rng.nextInt(11);
+                poolTanks = TANKS_B; poolSupports = SUPPORTS_B; poolDPS = DPS_B;
+            } else if (rang >= 40) {
+                niveau = 40 + rng.nextInt(16);
+                poolTanks = mix(rng, TANKS_B, TANKS_A, 0.5);
+                poolSupports = mix(rng, SUPPORTS_B, SUPPORTS_A, 0.5);
+                poolDPS = mix(rng, DPS_B, DPS_A, 0.5);
+            } else if (rang >= 20) {
+                niveau = 55 + rng.nextInt(21);
+                poolTanks = TANKS_A; poolSupports = SUPPORTS_A; poolDPS = DPS_A;
+            } else if (rang >= 10) {
+                niveau = 75 + rng.nextInt(11);
+                poolTanks = mix(rng, TANKS_A, TANKS_S, 0.5);
+                poolSupports = mix(rng, SUPPORTS_A, SUPPORTS_S, 0.5);
+                poolDPS = mix(rng, DPS_A, DPS_S, 0.5);
+            } else if (rang >= 5) {
+                niveau = 85 + rng.nextInt(6);
+                poolTanks = TANKS_S; poolSupports = SUPPORTS_S; poolDPS = DPS_S;
+            } else {
+                niveau = 90 + rng.nextInt(11);
+                poolTanks = TANKS_S;
+                poolSupports = mix(rng, SUPPORTS_S, SUPPORTS_SS, 0.4);
+                poolDPS = mix(rng, DPS_S, DPS_SS, 0.4);
+            }
+
+            List<String> equipe = genererEquipeParPools(rng, poolTanks, poolSupports, poolDPS);
+            String classeIA = CLASSES_IA[rng.nextInt(CLASSES_IA.length)];
+            String principal = "PP_" + classeIA;
+            int points = 10000 - (rang - 1) * 95;
 
             classement.add(new AreneData(
                 "CPU_RANG_" + rang,
                 genererPseudoIA(rang),
                 true, rang, points, 0,
-                equipe, principal, niveauMoyen,
+                equipe, principal, niveau,
                 System.currentTimeMillis()
             ));
         }
     }
 
-    /**
-     * Génère une équipe de 4 personnages équilibrée :
-     * - 1 tank obligatoire
-     * - 3 slots libres (DPS ou Support)
-     * Le 5ème slot est le personnage principal IA (géré dans MenuArene)
-     */
-   private List<String> genererEquipeEquilibree(Random rng) {
-    List<String> equipe = new ArrayList<>();
-
-    // 1 tank obligatoire
-    List<String> tanksDispo = new ArrayList<>(TANKS);
-    Collections.shuffle(tanksDispo, rng);
-    equipe.add(tanksDispo.get(0));
-
-    // 4 combinaisons DPS/Support pour les 3 slots restants
-    // Le personnage principal (DPS) compte déjà comme DPS obligatoire
-    int nbDPS;
-    int nbSupport;
-    switch (rng.nextInt(4)) {
-        case 0 -> { nbDPS = 0; nbSupport = 3; } // PP + 0DPS + 3S + 1Tank
-        case 1 -> { nbDPS = 1; nbSupport = 2; } // PP + 1DPS + 2S + 1Tank
-        case 2 -> { nbDPS = 2; nbSupport = 1; } // PP + 2DPS + 1S + 1Tank
-        default -> { nbDPS = 3; nbSupport = 0; } // PP + 3DPS + 0S + 1Tank
+    private List<String> mix(Random rng, List<String> primary, List<String> secondary, double probSecondaire) {
+        List<String> result = new ArrayList<>(primary);
+        for (String s : secondary) {
+            if (rng.nextDouble() < probSecondaire) result.add(s);
+        }
+        return result.isEmpty() ? primary : result;
     }
 
-    // Piocher les DPS
-    List<String> dpsDispo = new ArrayList<>(DPS);
-    Collections.shuffle(dpsDispo, rng);
-    for (int i = 0; i < nbDPS && i < dpsDispo.size(); i++)
-        equipe.add(dpsDispo.get(i));
+    private List<String> genererEquipeParPools(Random rng, List<String> tanks,
+                                                List<String> supports, List<String> dps) {
+        List<String> equipe = new ArrayList<>();
+        java.util.Set<String> deja = new java.util.HashSet<>();
 
-    // Piocher les Supports
-    List<String> supportsDispo = new ArrayList<>(SUPPORTS);
-    Collections.shuffle(supportsDispo, rng);
-    for (int i = 0; i < nbSupport && i < supportsDispo.size(); i++)
-        equipe.add(supportsDispo.get(i));
+        String tank = piocher(rng, tanks, deja);
+        if (tank != null) { equipe.add(tank); deja.add(tank); }
 
-    return equipe; // 4 membres — le 5ème = personnage principal IA
-}
+        String support = piocher(rng, supports, deja);
+        if (support != null) { equipe.add(support); deja.add(support); }
+
+        for (int i = 0; i < 2; i++) {
+            String d = piocher(rng, dps, deja);
+            if (d != null) { equipe.add(d); deja.add(d); }
+        }
+        return equipe;
+    }
+
+    private String piocher(Random rng, List<String> pool, java.util.Set<String> deja) {
+        List<String> dispo = new ArrayList<>(pool);
+        dispo.removeAll(deja);
+        if (dispo.isEmpty()) return null;
+        return dispo.get(rng.nextInt(dispo.size()));
+    }
 
     private static String genererPseudoIA(int rang) {
         Random rng    = new Random(rang * 31L);

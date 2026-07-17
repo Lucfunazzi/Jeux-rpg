@@ -253,6 +253,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     @Override public double getVie() { return this.vie; }
     public void setVie(double vie) { this.vie = vie; }
+    public void setVieMax(double vieMax) { this.vieMax = vieMax; }
+    public void setAttaqueBase(double v) { this.attaqueBase = v; this.attaque = v; }
+    public void setDefenseBase(double v) { this.defenseBase = v; this.defense = v; }
+    public void setVitesseBase(double v) { this.vitesseBase = v; this.vitesse = v; }
 
     @Override
     public double getAttaque() {
@@ -399,6 +403,24 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
                 + String.format("%.1f", this.attaque) + " ATK, "
                 + String.format("%.1f", this.defense) + " DEF, "
                 + String.format("%.1f", this.vitesse) + " VIT");
+    }
+
+    /** Même chose sans log console — utilisé pour les adversaires arène. */
+    public void monterDeNiveauSilencieux() {
+        this.niveau++;
+        this.experienceMax = (int)(this.experienceMax * 1.20);
+        this.vieMax   += this.vieMax   * 0.05;
+        this.vie       = getVieMax();
+        this.attaque  += this.attaque  * 0.05;
+        this.defense  += this.defense  * 0.05;
+        this.vitesse  += this.vitesse  * 0.03;
+        this.attaqueBase        = this.attaque;
+        this.defenseBase        = this.defense;
+        this.vitesseBase        = this.vitesse;
+        this.tauxCritiquesBase  = this.taux_critiques;
+        this.degatCritiquesBase = this.degat_critiques;
+        this.tauxEsquivesBase   = this.taux_esquives;
+        this.tauxBlocageBase    = this.taux_blocage;
     }
 
     public void ajouterEffet(Effet effet) {
