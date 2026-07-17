@@ -20,7 +20,7 @@ public class EnnemiTienC3 extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 520.0 * mult * niv;
-        this.attaque = 85.0 * mult * niv;
+        this.attaque = 60.0 * mult * niv;
         this.defense = 120.0 * mult * niv;
         this.vitesse = 75.0 * mult * vit;
 

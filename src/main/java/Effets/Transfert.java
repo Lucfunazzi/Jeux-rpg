@@ -1,14 +1,16 @@
 package Effets;
+
 import Personnage.PersonnageBase;
+import Combat.Combat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Transfert {
 
     /**
-     * Transfère tous les effets negatifs de soi vers ennemi.
-     * Passe par ajouterEffet() pour que appliquer() soit bien declenche sur la cible.
+     * Transfere tous les effets negatifs de soi vers ennemi.
      */
-    public void transfererEffetsNegatifs(PersonnageBase soi, PersonnageBase ennemi) {
+    public void transfererEffetsNegatifs(PersonnageBase soi, PersonnageBase ennemi, List<String> log) {
         ArrayList<Effet> aTransferer = new ArrayList<>();
 
         for (Effet effet : new ArrayList<>(soi.getEffetsActifs())) {
@@ -18,17 +20,21 @@ public class Transfert {
         }
 
         if (aTransferer.isEmpty()) {
-            System.out.println(soi.getNom() + " n'a aucun effet negatif a transferer.");
+            log.add(soi.getNom() + " n'a aucun effet negatif a transferer.");
             return;
         }
 
         for (Effet effet : aTransferer) {
             soi.getEffetsActifs().remove(effet);
-            ennemi.ajouterEffet(effet);
-            System.out.println(effet.getNom() + " transfere sur " + ennemi.getNom() + " !");
+            Combat.appliquerEffet(soi, ennemi, effet, log);
         }
 
-        System.out.println(aTransferer.size() + " effet(s) transfere(s) sur " + ennemi.getNom() + " !");
+        log.add(aTransferer.size() + " effet(s) transfere(s) sur " + ennemi.getNom() + " !");
+    }
+
+    /** Surcharge sans log pour compatibilite. */
+    public void transfererEffetsNegatifs(PersonnageBase soi, PersonnageBase ennemi) {
+        transfererEffetsNegatifs(soi, ennemi, new ArrayList<>());
     }
 
     private boolean estEffetNegatif(Effet effet) {

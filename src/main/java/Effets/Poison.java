@@ -53,7 +53,7 @@ public void tick(PersonnageBase cible) {
         if (toursRestant > 0) {
             double degats = cible.getVieMax() * pourcentageDegats * stacks;
             toursRestant--;
-            cible.retirerVie(degats);
+            cible.retirerVie(degats, log);
             log.add(cible.getNom() + " perd " + String.format("%.1f", degats)
                     + " PV (poison x" + stacks + ", " + toursRestant + " tours restants)");
         }

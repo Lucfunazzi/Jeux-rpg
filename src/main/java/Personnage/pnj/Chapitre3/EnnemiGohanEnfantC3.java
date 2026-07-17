@@ -19,7 +19,7 @@ public class EnnemiGohanEnfantC3 extends PersonnageBase {
         double mult = 1.3;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 480.0 * mult * niv;
+        this.vie     = 200.0 * mult * niv;
         this.attaque = 155.0 * mult * niv;
         this.defense = 90.0 * mult * niv;
         this.vitesse = 110.0 * mult * vit;

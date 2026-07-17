@@ -60,9 +60,7 @@ public class Stage {
 
         // Reset avant combat + snapshot des alliés vivants
         for (PersonnageBase perso : equipeAlliee) {
-            perso.setVie(perso.getVieMax());
-            perso.reinitialiserRage();
-            perso.getEffetsActifs().clear();
+            perso.reinitialiserPourCombat();
         }
 
         System.out.println("\n========================================");
@@ -97,9 +95,7 @@ public class Stage {
 
         if (victoire) {
             for (PersonnageBase perso : equipeAlliee) {
-                perso.setVie(perso.getVieMax());
-                perso.reinitialiserRage();
-                perso.getEffetsActifs().clear();
+                perso.reinitialiserPourCombat();
             }
 
             System.out.println("\n>> Recompenses :");

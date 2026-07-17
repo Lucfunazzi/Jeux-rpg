@@ -54,7 +54,7 @@ public class EnnemiNinja2 extends PersonnageBase {
         log.add(this.nom + " disparait et frappe tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.20;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

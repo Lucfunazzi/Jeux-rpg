@@ -181,6 +181,10 @@ public class Combat {
                     if (equipeKO(equipeJoueur) || equipeKO(equipeAdverse)) break;
                 }
 
+                if (attaquant.aEffet(Petrification.class)) {
+                    System.out.println("[PETRIFICATION] " + attaquant.getNom() + " est petrife et ne peut pas agir !");
+                    continue;
+                }
                 if (attaquant.aEffet(Gel.class)) {
                     System.out.println("[GEL] " + attaquant.getNom() + " est gele et passe son tour !");
                     continue;
@@ -206,7 +210,7 @@ public class Combat {
                 PersonnageBase cible;
 
                 if (confusion != null) {
-                    cible = confusion.redirigerVersAllie((ArrayList<PersonnageBase>) equipeAlliee, attaquant);
+                    cible = confusion.redirigerVersAllie(equipeAlliee, attaquant);
                     if (cible != null) {
                         ennemisVirtuels = equipeAlliee;
                         alliesVirtuels  = equipeEnnemie;
@@ -224,7 +228,7 @@ public class Combat {
 
                 if (attaquant.getRage() >= 100) {
                     System.out.println("\n[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
-                    attaquant.attaqueUltime((ArrayList<PersonnageBase>) alliesVirtuels, (ArrayList<PersonnageBase>) ennemisVirtuels, log);
+                    attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
                     attaquant.reinitialiserRage();
 
                 } else if (attaquant.getRage() >= 50 && !attaquant.getSpecialeUtilisee()) {
@@ -235,7 +239,7 @@ public class Combat {
                         attaquant.ajouterRage(20);
                     } else {
                         System.out.println("\n[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
-                        attaquant.attaqueSpeciale(cible, (ArrayList<PersonnageBase>) alliesVirtuels, (ArrayList<PersonnageBase>) ennemisVirtuels, log);
+                        attaquant.attaqueSpeciale(cible, alliesVirtuels, ennemisVirtuels, log);
                         attaquant.setSpecialeUtilisee(true);
                     }
                 } else {
@@ -328,7 +332,6 @@ public class Combat {
 
         double pvAvant = cible.getVie();
         PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats);
-        cible.ajouterRage(resultat.degatsAppliques * 0.1);
 
         if (resultat.invincible) {
             log.add(cible.getNom() + " est invincible ! Degats bloques.");

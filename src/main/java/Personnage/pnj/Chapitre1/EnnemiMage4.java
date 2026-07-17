@@ -54,7 +54,7 @@ public class EnnemiMage4 extends PersonnageBase {
         log.add(this.nom + " declenche une pluie de maledictions sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.35;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

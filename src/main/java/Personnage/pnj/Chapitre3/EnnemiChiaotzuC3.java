@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EnnemiChiaotzuC3 extends PersonnageBase {
 
-    public EnnemiChiaotzuC3() { this(28); }
+    public EnnemiChiaotzuC3() { this(33); }
 
     public EnnemiChiaotzuC3(int niveau) {
         this.nom    = "Chiaotzu";

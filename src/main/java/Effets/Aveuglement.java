@@ -18,11 +18,11 @@ public class Aveuglement implements Effet {
     }
     @Override
     public void tick(PersonnageBase cible) {
+        toursRestants--;
         if (toursRestants <= 0) {
             cible.setPrecisions(cible.getTauxPrecisions() + malusApplique);
             System.out.println("L'aveuglement de " + cible.getNom() + " se dissipe !");
         }
-        toursRestants--;
     }
     @Override
     public boolean estTermine() { return toursRestants <= 0; }
@@ -39,11 +39,11 @@ public class Aveuglement implements Effet {
 
     @Override
     public void tick(PersonnageBase cible, List<String> log) {
+        toursRestants--;
         if (toursRestants <= 0) {
             cible.setPrecisions(cible.getTauxPrecisions() + malusApplique);
             log.add("L'aveuglement de " + cible.getNom() + " se dissipe !");
         }
-        toursRestants--;
     }
 
 }

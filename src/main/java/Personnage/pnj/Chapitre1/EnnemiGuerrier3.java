@@ -54,7 +54,7 @@ public class EnnemiGuerrier3 extends PersonnageBase {
         log.add(this.nom + " tourbillonne sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

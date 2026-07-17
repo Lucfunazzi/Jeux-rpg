@@ -19,7 +19,7 @@ public class EnnemiNappaC3 extends PersonnageBase {
         double mult = 1.3;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 620.0 * mult * niv;
+        this.vie     = 400.0 * mult * niv;
         this.attaque = 140.0 * mult * niv;
         this.defense = 130.0 * mult * niv;
         this.vitesse = 80.0 * mult * vit;

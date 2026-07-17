@@ -34,6 +34,7 @@ import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
+import lancement.ChapitreElite.Chapitre3Elite;
 import lancement.Formation;
 import lancement.GameContext;
 import lancement.Quetes.QueteJournaliere;
@@ -132,6 +133,11 @@ public class GestionnaireSauvegarde {
         if (ctx.chapitre2Elite != null) {
             copierTableaux(ctx.chapitre2Elite.getStagesDebloques(), data.chapitre2EliteDebloques);
             copierTableaux(ctx.chapitre2Elite.getStagesReussis(),   data.chapitre2EliteReussis);
+        }
+        if (ctx.chapitre3Elite != null) {
+            copierTableaux(ctx.chapitre3Elite.getStagesDebloques(),  data.chapitre3EliteDebloques);
+            copierTableaux(ctx.chapitre3Elite.getStagesReussis(),    data.chapitre3EliteReussis);
+            copierTableaux(ctx.chapitre3Elite.getPremiereVictoire(), data.chapitre3ElitePremiereVictoire);
         }
 
         if (ctx.chapitre3 != null) {
@@ -474,6 +480,15 @@ public class GestionnaireSauvegarde {
             c.setStagesDebloques(data.chapitre2EliteDebloques);
         if (data.chapitre2EliteReussis != null)
             c.setStagesReussis(data.chapitre2EliteReussis);
+    }
+
+    public void restaurerChapitre3Elite(Chapitre3Elite c, SauvegardeData data) {
+        if (data.chapitre3EliteDebloques != null)
+            c.setStagesDebloques(data.chapitre3EliteDebloques);
+        if (data.chapitre3EliteReussis != null)
+            c.setStagesReussis(data.chapitre3EliteReussis);
+        if (data.chapitre3ElitePremiereVictoire != null)
+            c.setPremiereVictoire(data.chapitre3ElitePremiereVictoire);
     }
 
     public void restaurerDonjon(GestionnaireDonjon gd, SauvegardeData data) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EnnemiFreezrC3 extends PersonnageBase {
 
-    public EnnemiFreezrC3() { this(38); }
+    public EnnemiFreezrC3() { this(32); }
 
     public EnnemiFreezrC3(int niveau) {
         this.nom    = "Freezer";
@@ -19,8 +19,8 @@ public class EnnemiFreezrC3 extends PersonnageBase {
         double mult = 1.5;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 570.0 * mult * niv;
-        this.attaque = 220.0 * mult * niv;
+        this.vie     = 250.0 * mult * niv;
+        this.attaque = 180.0 * mult * niv;
         this.defense = 110.0 * mult * niv;
         this.vitesse = 130.0 * mult * vit;
 

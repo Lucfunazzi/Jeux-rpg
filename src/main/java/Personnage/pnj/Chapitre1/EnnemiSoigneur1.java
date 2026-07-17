@@ -62,7 +62,7 @@ public class EnnemiSoigneur1 extends PersonnageBase {
         log.add(this.nom + " lance une vague de soins sur toute l'equipe !");
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant()) {
-                double soin = this.getAttaque() * 0.80;
+                double soin = this.getAttaque() * 0.50;
                 allie.recevoirSoin(soin, log);
             }
         }

@@ -54,7 +54,7 @@ public class EnnemiTank2 extends PersonnageBase {
         log.add(this.nom + " provoque un raz-de-maree sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

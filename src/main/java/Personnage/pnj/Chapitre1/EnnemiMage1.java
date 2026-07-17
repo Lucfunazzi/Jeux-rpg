@@ -54,7 +54,7 @@ public class EnnemiMage1 extends PersonnageBase {
         log.add(this.nom + " declenche une onde magique sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.10;
+                double degats = this.getAttaque() * 0.60;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

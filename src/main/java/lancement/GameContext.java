@@ -8,6 +8,7 @@ import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
+import lancement.ChapitreElite.Chapitre3Elite;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEnergie;
 import lancement.Gestionnaires.GestionnaireQuetes;
@@ -41,6 +42,7 @@ public class GameContext {
     // ── Chapitres élite ───────────────────────────────────────────────────
     public Chapitre1Elite chapitre1Elite;
     public Chapitre2Elite chapitre2Elite;
+    public Chapitre3Elite chapitre3Elite;
 
     // ── Managers ──────────────────────────────────────────────────────────
     public GestionnaireSauvegarde sauvegarde;

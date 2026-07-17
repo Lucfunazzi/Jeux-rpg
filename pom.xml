@@ -28,6 +28,11 @@
         <!-- Indique à Maven où se trouve le code source (packages à la racine de java/) -->
         <sourceDirectory>src/main/java</sourceDirectory>
 
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <!-- Crée un fat JAR exécutable (tout inclus) -->
             <plugin>

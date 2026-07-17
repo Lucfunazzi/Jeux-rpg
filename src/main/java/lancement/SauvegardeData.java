@@ -45,6 +45,9 @@ public class SauvegardeData {
     public boolean[] chapitre2Reussis        = new boolean[11];
     public boolean[] chapitre2EliteDebloques = new boolean[11];
     public boolean[] chapitre2EliteReussis   = new boolean[11];
+    public boolean[] chapitre3EliteDebloques  = new boolean[11];
+    public boolean[] chapitre3EliteReussis    = new boolean[11];
+    public boolean[] chapitre3ElitePremiereVictoire = new boolean[11];
 
     public boolean[] chapitre3Debloques = new boolean[11];
     public boolean[] chapitre3Reussis   = new boolean[11];

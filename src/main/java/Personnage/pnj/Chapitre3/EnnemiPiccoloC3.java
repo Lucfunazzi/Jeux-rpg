@@ -19,7 +19,7 @@ public class EnnemiPiccoloC3 extends PersonnageBase {
         double mult = 1.4;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 560.0 * mult * niv;
+        this.vie     = 300.0 * mult * niv;
         this.attaque = 180.0 * mult * niv;
         this.defense = 130.0 * mult * niv;
         this.vitesse = 115.0 * mult * vit;

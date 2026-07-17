@@ -1,0 +1,66 @@
+{
+  "nom": "Tobi",
+  "type": "Ninja",
+  "role": "DPS",
+  "rarete": "S",
+  "univers": "Naruto",
+
+  "stats": {
+    "vie":              500,
+    "attaque":          250,
+    "defense":           75,
+    "vitesse":          160,
+    "tauxCritique":     0.22,
+    "degatCritique":    1.45,
+    "precision":        110.0,
+    "esquive":          0.20,
+    "blocage":          0.05,
+    "reductionBlocage": 0.10,
+    "degatsRenvoi":     0.80
+  },
+
+  "attaques": [
+    {
+      "type": "BASE",
+      "nom": "Frappe Fantome",
+      "ciblage": "CIBLE_UNIQUE",
+      "multiplicateur": 1.10,
+      "effetsSoi": [
+        { "type": "BuffTauxEsquive", "valeur": 0.20, "tours": 1 }
+      ],
+      "effets": [
+        { "type": "Confusion", "tours": 1, "chance": 0.20 }
+      ],
+      "description": "Inflige 110% ATK, 20% de chance de confondre la cible. Tobi gagne +20% esquive pendant 1 tour."
+    },
+    {
+      "type": "SPECIALE",
+      "nom": "Teleportation Kamui",
+      "ciblage": "PLUS_BAS_PV_ENNEMI",
+      "multiplicateur": 1.60,
+      "effets": [
+        { "type": "Silence",         "tours": 2 },
+        { "type": "ReductionAttaque","valeur": 0.20, "tours": 2 }
+      ],
+      "effetsSoi": [
+        { "type": "BuffTauxEsquive", "valeur": 0.15, "tours": 2 }
+      ],
+      "description": "Inflige 160% ATK a l'ennemi avec le moins de PV, applique Silence 2 tours et reduit son ATK de 20%. Tobi gagne +15% esquive pendant 2 tours."
+    },
+    {
+      "type": "ULTIME",
+      "nom": "Kamui Dimensionnel",
+      "ciblage": "AOE_ENNEMIS",
+      "multiplicateur": 1.90,
+      "bonusRage": true,
+      "effets": [
+        { "type": "Fragilite",       "valeur": 0.20, "tours": 2 },
+        { "type": "Etourdissement",  "tours":  1,    "chance": 0.50 }
+      ],
+      "effetsSoi": [
+        { "type": "Invincibilite", "tours": 1 }
+      ],
+      "description": "Inflige 190% ATK (bonus rage) a tous les ennemis, les fragilise (+20%) pendant 2 tours, 50% de chance d'etourdir 1 tour. Tobi devient invincible pendant 1 tour."
+    }
+  ]
+}

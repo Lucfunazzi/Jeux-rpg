@@ -19,7 +19,7 @@ public class EnnemiCellC3 extends PersonnageBase {
         double mult = 1.6;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 680.0 * mult * niv;
+        this.vie     = 400.0 * mult * niv;
         this.attaque = 190.0 * mult * niv;
         this.defense = 160.0 * mult * niv;
         this.vitesse = 100.0 * mult * vit;

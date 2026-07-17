@@ -1,0 +1,67 @@
+{
+  "nom": "Konan",
+  "type": "Ninja",
+  "role": "Support",
+  "rarete": "A",
+  "univers": "Naruto",
+
+  "stats": {
+    "vie":              480,
+    "attaque":          110,
+    "defense":           95,
+    "vitesse":          120,
+    "tauxCritique":     0.08,
+    "degatCritique":    1.15,
+    "precision":        105.0,
+    "esquive":          0.12,
+    "blocage":          0.08,
+    "reductionBlocage": 0.10,
+    "degatsRenvoi":     0.80
+  },
+
+  "attaques": [
+    {
+      "type": "BASE",
+      "nom": "Lames de Papier",
+      "ciblage": "CIBLE_UNIQUE",
+      "multiplicateur": 1.0,
+      "effets": [
+        { "type": "Saignement", "valeur": 0.06, "tours": 2 }
+      ],
+      "description": "Inflige 100% ATK et applique Saignement (6% PV/tour) pendant 2 tours."
+    },
+    {
+      "type": "SPECIALE",
+      "nom": "Bouclier d'Ange",
+      "ciblage": "SOI",
+      "multiplicateur": 0,
+      "soinPourcentageAtk": 0.50,
+      "ciblageSOin": "PLUS_BAS_PV_ALLIE",
+      "purifierApresSOin": 2,
+      "effetsSoi": [
+        { "type": "Bouclier", "valeur": 0.25 }
+      ],
+      "synergies": [
+        { "allie": "Nagato", "action": "RAGE", "valeur": 20 },
+        { "allie": "Pain",   "action": "RAGE", "valeur": 20 }
+      ],
+      "description": "Soigne l'allie le plus blesse de 50% ATK (retire 2 effets negatifs), genere un bouclier (25% PV max) sur soi. [Synergie] Donne 20 rage a Nagato et Pain s'ils sont vivants."
+    },
+    {
+      "type": "ULTIME",
+      "nom": "Explosion de Papier-Bombes",
+      "ciblage": "AOE_ENNEMIS",
+      "multiplicateur": 1.40,
+      "bonusRage": true,
+      "effets": [
+        { "type": "ReductionDefense", "valeur": 0.20, "tours": 3 },
+        { "type": "Brulure",          "valeur": 0.08, "tours": 2 }
+      ],
+      "synergies": [
+        { "allie": "Nagato", "action": "RAGE", "valeur": 25 },
+        { "allie": "Pain",   "action": "RAGE", "valeur": 25 }
+      ],
+      "description": "Inflige 140% ATK (bonus rage) a tous les ennemis, reduit leur DEF de 20% pendant 3 tours et applique Brulure (8%/tour) pendant 2 tours. [Synergie] Donne 25 rage a Nagato et Pain s'ils sont vivants."
+    }
+  ]
+}

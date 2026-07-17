@@ -42,7 +42,7 @@ public class Confusion implements Effet {
      * @param attaquant Le personnage qui subit l'effet de confusion.
      * @return La nouvelle cible alliée, ou null si aucun allié n'est disponible.
      */
-    public PersonnageBase redirigerVersAllie(ArrayList<PersonnageBase> equipeAlliee, PersonnageBase attaquant) {
+    public PersonnageBase redirigerVersAllie(List<PersonnageBase> equipeAlliee, PersonnageBase attaquant) {
         ArrayList<PersonnageBase> ciblesPossibles = new ArrayList<>();
         
         for (PersonnageBase perso : equipeAlliee) {

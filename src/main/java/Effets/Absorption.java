@@ -32,8 +32,7 @@ public class Absorption implements Effet {
     // Appelée dans Combat.attaquer() après avoir infligé des dégâts — déjà en place
     public void volerVie(PersonnageBase soi, double degatsInfliges, java.util.List<String> log) {
         double pvVoles = degatsInfliges * pourcentageVol;
-        soi.restaurerPv(pvVoles);
-        log.add(soi.getNom() + " absorbe " + String.format("%.1f", pvVoles) + " PV !");
+        soi.recevoirSoin(pvVoles, log);
     }
 
     public int getToursRestant() { return toursRestant; }

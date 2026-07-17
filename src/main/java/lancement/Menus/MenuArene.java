@@ -10,6 +10,7 @@ import Joueur.Competences;
 import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
 import lancement.Gestionnaires.GestionnaireArene;
+import Personnage.json.ChargeurPersonnage;
 import Personnage.Naruto_Shippuden.*;
 import Personnage.DragonBallZ.*;
 import Personnage.FairyTail.*;
@@ -167,9 +168,10 @@ public class MenuArene {
         // Construire les 4 membres normaux de l'équipe adverse
         List<PersonnageBase> equipeAdverse = adversaire.construireEquipe(this::creerPersonnage);
 
-        // Ajouter le personnage principal IA (5ème membre)
+        // Ajouter le personnage principal IA (5ème membre) au même niveau que l'équipe
+        int niveauEquipeAdv = Math.max(1, adversaire.getNiveauMoyenEquipe());
         PersonnageBase principalAdverse = creerPersonnagePrincipalIA(
-            adversaire.getPersonnagePrincipalNom()
+            adversaire.getPersonnagePrincipalNom(), niveauEquipeAdv
         );
         if (principalAdverse != null) {
             equipeAdverse.add(principalAdverse);
@@ -217,23 +219,36 @@ public class MenuArene {
      * Le marqueur est "PP_Mage", "PP_Ninja" ou "PP_Guerrier".
      * Pour les vrais joueurs, on essaie creerPersonnage() normalement.
      */
-    private PersonnageBase creerPersonnagePrincipalIA(String marqueur) {
-        if (marqueur == null) return null;
-
-        // Vrai joueur — le nom stocké est son pseudo, pas un perso recrutaable
-        // On retourne null et lancerCombat() utilisera le premier de l'équipe
-        if (!marqueur.startsWith("PP_")) return null;
+    /** Crée le PP adverse IA au bon niveau et avec les compétences exclusives à sa classe. */
+    private PersonnageBase creerPersonnagePrincipalIA(String marqueur, int niveauCible) {
+        if (marqueur == null || !marqueur.startsWith("PP_")) return null;
 
         String classe = marqueur.replace("PP_", "");
-        Personnage_principale pp = new Personnage_principale("Combattant", 30);
+
+        // Compétences strictement liées à la classe — un Guerrier ne peut pas avoir
+        // les skills d'un Mage ou d'un Ninja.
         Competences comp = switch (classe) {
-            case "Mage"     -> new Mage();
-            case "Ninja"    -> new Ninja();
-            default         -> new Guerrier();
+            case "Mage"    -> new Mage();
+            case "Ninja"   -> new Ninja();
+            case "Guerrier"-> new Guerrier();
+            default        -> new Guerrier();
         };
+
+        // choixComp déterministe par classe, toujours dans l'intervalle [1,3]
+        int choixComp = switch (classe) {
+            case "Mage"    -> 1;   // Hurlement du dragon de feu
+            case "Ninja"   -> 2;   // Suiton : Dragon aqueux
+            default        -> 1;   // Kamehameha (Guerrier)
+        };
+
+        Personnage_principale pp = new Personnage_principale("Combattant (" + classe + ")", 1);
         pp.setChoixClasses(classe);
-        pp.setChoixComp(1 + new Random(classe.hashCode()).nextInt(3));
+        pp.setChoixComp(choixComp);
         pp.setCompetencesChoisie(comp);
+
+        // Monter le PP au même niveau que l'équipe adverse
+        while (pp.getNiveau() < niveauCible) pp.monterDeNiveauSilencieux();
+
         return pp;
     }
 
@@ -384,7 +399,25 @@ public class MenuArene {
             
             // ── Rang A (suite) ──
             case "Angel"            -> new perso_Angel();
-            default                 -> null;
+            // ── Personnages JSON (Akatsuki + nouveaux) ──
+            default -> ChargeurPersonnage.charger(resoudreCheminJson(nom));
+        };
+    }
+
+    /**
+     * Résout le chemin JSON à partir du nom du personnage.
+     * Ajouter ici les nouveaux personnages JSON au fur et à mesure.
+     */
+    private String resoudreCheminJson(String nom) {
+        return switch (nom) {
+            case "Kisame" -> "Naruto/kisame.json";
+            case "Konan"  -> "Naruto/konan.json";
+            case "Nagato" -> "Naruto/nagato.json";
+            case "Pain"   -> "Naruto/pain.json";
+            case "Tobi"   -> "Naruto/tobi.json";
+            case "Kakuzu" -> "Naruto/kakuzu.json";
+            case "Zetsu"  -> "Naruto/zetsu.json";
+            default -> null; // nom inconnu
         };
     }
 }

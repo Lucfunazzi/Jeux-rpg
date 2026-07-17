@@ -70,7 +70,7 @@ public class EnnemiSoigneur2 extends PersonnageBase {
         log.add(this.nom + " perturbe le champ de bataille !");
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant()) {
-                double soin = this.getAttaque() * 0.70;
+                double soin = this.getAttaque() * 0.50;
                 allie.recevoirSoin(soin, log);
             }
         }

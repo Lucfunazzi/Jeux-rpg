@@ -1,0 +1,63 @@
+{
+  "nom": "Zetsu",
+  "type": "Ninja",
+  "role": "Support",
+  "rarete": "B",
+  "univers": "Naruto",
+
+  "stats": {
+    "vie":              420,
+    "attaque":           90,
+    "defense":           85,
+    "vitesse":          115,
+    "tauxCritique":     0.05,
+    "degatCritique":    1.10,
+    "precision":        105.0,
+    "esquive":          0.15,
+    "blocage":          0.06,
+    "reductionBlocage": 0.10,
+    "degatsRenvoi":     0.80
+  },
+
+  "attaques": [
+    {
+      "type": "BASE",
+      "nom": "Spores Parasites",
+      "ciblage": "CIBLE_UNIQUE",
+      "multiplicateur": 0.90,
+      "effets": [
+        { "type": "Marquage", "valeur": 0.15, "tours": 3 },
+        { "type": "Poison",   "valeur": 0.04, "tours": 2, "chance": 0.40 }
+      ],
+      "description": "Inflige 90% ATK, marque la cible (+15% degats recus) pendant 3 tours et 40% de chance d'empoisonner (4% PV/tour) pendant 2 tours."
+    },
+    {
+      "type": "SPECIALE",
+      "nom": "Imitation Blanche",
+      "ciblage": "SOI",
+      "multiplicateur": 0,
+      "effetsSoi": [
+        { "type": "BuffAttaque",      "valeur": 0.15, "tours": 2 },
+        { "type": "BuffDefense",      "valeur": 0.15, "tours": 2 },
+        { "type": "BuffTauxEsquive",  "valeur": 0.10, "tours": 2 }
+      ],
+      "purifierEquipe": true,
+      "description": "Zetsu imite les forces alliees : gagne +15% ATK, +15% DEF et +10% esquive pendant 2 tours. Purge 1 effet negatif sur chaque allie."
+    },
+    {
+      "type": "ULTIME",
+      "nom": "Spores de l'Ombre",
+      "ciblage": "AOE_ENNEMIS",
+      "multiplicateur": 1.20,
+      "bonusRage": true,
+      "effets": [
+        { "type": "ReductionVitesse","valeur": 0.25, "tours": 3 },
+        { "type": "Poison",          "valeur": 0.06, "tours": 3 }
+      ],
+      "effetsSoi": [
+        { "type": "BuffTauxEsquive", "valeur": 0.15, "tours": 2 }
+      ],
+      "description": "Inflige 120% ATK (bonus rage) a tous les ennemis, reduit leur VIT de 25% et empoisonne (6% PV max/tour) pendant 3 tours. Zetsu gagne +15% esquive pendant 2 tours."
+    }
+  ]
+}

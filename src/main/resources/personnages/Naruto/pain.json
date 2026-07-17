@@ -1,0 +1,66 @@
+{
+  "nom": "Pain",
+  "type": "Ninja",
+  "role": "DPS",
+  "rarete": "S",
+  "univers": "Naruto",
+
+  "stats": {
+    "vie":              560,
+    "attaque":          260,
+    "defense":           90,
+    "vitesse":          140,
+    "tauxCritique":     0.20,
+    "degatCritique":    1.40,
+    "precision":        110.0,
+    "esquive":          0.12,
+    "blocage":          0.05,
+    "reductionBlocage": 0.10,
+    "degatsRenvoi":     0.80
+  },
+
+  "attaques": [
+    {
+      "type": "BASE",
+      "nom": "Poing du Deva",
+      "ciblage": "PLUS_HAUTE_ATK",
+      "multiplicateur": 1.10,
+      "effets": [
+        { "type": "Marquage", "valeur": 0.15, "tours": 2 }
+      ],
+      "description": "Inflige 110% ATK a l'ennemi avec la plus haute ATK et le marque (+15% degats recus) pendant 2 tours."
+    },
+    {
+      "type": "SPECIALE",
+      "nom": "Bansho Tenin",
+      "ciblage": "AOE_ENNEMIS",
+      "multiplicateur": 1.10,
+      "effets": [
+        { "type": "Etourdissement", "tours": 1, "chance": 0.40 },
+        { "type": "Fragilite",      "valeur": 0.10, "tours": 2 }
+      ],
+      "synergies": [
+        { "allie": "Konan",  "action": "BUFF_ATK_SOI", "valeur": 0.10, "tours": 2 },
+        { "allie": "Nagato", "action": "BUFF_ATK_SOI", "valeur": 0.10, "tours": 2 }
+      ],
+      "description": "Inflige 110% ATK a tous les ennemis, 40% de chance d'etourdir 1 tour, fragilise tous pendant 2 tours. [Synergie] Si Konan ou Nagato vivants, Pain gagne +10% ATK pendant 2 tours par allie present."
+    },
+    {
+      "type": "ULTIME",
+      "nom": "Chibaku Tensei",
+      "ciblage": "AOE_ENNEMIS",
+      "multiplicateur": 2.00,
+      "bonusRage": true,
+      "effets": [
+        { "type": "Fragilite",       "valeur": 0.20, "tours": 3 },
+        { "type": "ReductionVitesse","valeur": 0.25, "tours": 3 },
+        { "type": "Etourdissement",  "tours":  1,    "chance": 0.60 }
+      ],
+      "synergies": [
+        { "allie": "Konan",  "action": "RAGE", "valeur": 30 },
+        { "allie": "Nagato", "action": "RAGE", "valeur": 30 }
+      ],
+      "description": "Inflige 200% ATK (bonus rage) a tous les ennemis, les fragilise (+20%) et ralentit (-25% VIT) pendant 3 tours, 60% de chance d'etourdir 1 tour. [Synergie] Donne 30 rage a Konan et Nagato s'ils sont vivants."
+    }
+  ]
+}

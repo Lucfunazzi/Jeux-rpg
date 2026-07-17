@@ -54,7 +54,7 @@ public class EnnemiMage3 extends PersonnageBase {
         log.add(this.nom + " declenche une tempete magique sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
+                double degats = this.getAttaque() * 0.60;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

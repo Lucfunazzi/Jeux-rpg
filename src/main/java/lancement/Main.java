@@ -2,6 +2,7 @@ package lancement;
 
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
+import lancement.ChapitreElite.Chapitre3Elite;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
@@ -27,6 +28,7 @@ import lancement.Menus.MenuCreaturesSacrees;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import Joueur.*;
 import Personnage.*;
 import java.util.ArrayList;
@@ -53,9 +55,12 @@ public class Main {
         ctx.gestionnaireTitres   = new GestionnaireTitres();
         ctx.gestionnaireDonjon   = new GestionnaireDonjon();
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
-        ctx.gestionnaireCompagnons = new GestionnaireCompagnons();
+        ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
+        ctx.gestionnaireCreaturesSacrees = new GestionnaireCreaturesSacrees();
+        ctx.gestionnaireClefsCelestes    = new GestionnaireClefsCelestes();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
+        ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
 
         // ── Menus ─────────────────────────────────────────────────────────
         MenuInventaire      menuInventaire      = new MenuInventaire();
@@ -65,7 +70,7 @@ public class Main {
         MenuAmeliorations   menuAmeliorations   = new MenuAmeliorations();
         MenuFormation       menuFormation       = new MenuFormation();
         MenuRang            menuRang            = new MenuRang();
-        MenuHistoire        menuHistoire        = new MenuHistoire(ctx.chapitre1, ctx.chapitre1Elite, ctx.chapitre2, ctx.chapitre2Elite, ctx.chapitre3);
+        MenuHistoire        menuHistoire        = new MenuHistoire(ctx.chapitre1, ctx.chapitre1Elite, ctx.chapitre2, ctx.chapitre2Elite, ctx.chapitre3, ctx.chapitre3Elite);
         MenuQuetes          menuQuetes          = new MenuQuetes();
         MenuDonjon          menuDonjon          = new MenuDonjon();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();
@@ -98,6 +103,7 @@ public class Main {
                     ctx.sauvegarde.restaurerChapitre2(ctx.chapitre2, data);
                     ctx.sauvegarde.restaurerChapitre3(ctx.chapitre3, data);
                     ctx.sauvegarde.restaurerChapitre2Elite2(ctx.chapitre2Elite, data);
+                    ctx.sauvegarde.restaurerChapitre3Elite(ctx.chapitre3Elite, data);
                     ctx.sauvegarde.restaurerInventaire(ctx.inventaire, data);
                     ctx.sauvegarde.restaurerQuetes(ctx.gestionnaireQuetes, data);
                     ctx.sauvegarde.restaurerEnergie(ctx.gestionnaireEnergie, data);

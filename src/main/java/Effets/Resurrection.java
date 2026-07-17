@@ -34,7 +34,18 @@ public class Resurrection implements Effet {
             double pvRestaures = cible.getVieMax() * pourcentagePv;
             cible.restaurerPv(pvRestaures);
             disponible = false;
-            System.out.println("✦ " + cible.getNom() + " se relève avec "
+            System.out.println("✦ " + cible.getNom() + " se releve avec "
+                    + String.format("%.1f", pvRestaures) + " PV !");
+        }
+    }
+
+    // Appelée depuis retirerVie() (chemins DoT) avec log de combat
+    public void tenterResurrection(PersonnageBase cible, List<String> log) {
+        if (disponible) {
+            double pvRestaures = cible.getVieMax() * pourcentagePv;
+            cible.restaurerPv(pvRestaures);
+            disponible = false;
+            log.add("✦ " + cible.getNom() + " se releve avec "
                     + String.format("%.1f", pvRestaures) + " PV !");
         }
     }

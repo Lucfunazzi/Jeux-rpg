@@ -189,13 +189,21 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
                 bouclierAbsorbe, degatsAbsorbesBouclier, pvRestantsBouclier);
     }
     public void retirerVie(double montant) {
-    this.vie = Math.max(0, this.vie - montant);
-
-    if (!estVivant()) {
-        Resurrection resurrection = getEffet(Resurrection.class);
-        if (resurrection != null) resurrection.tenterResurrection(this);
+        this.vie = Math.max(0, this.vie - montant);
+        if (!estVivant()) {
+            Effets.Resurrection resurrection = getEffet(Effets.Resurrection.class);
+            if (resurrection != null) resurrection.tenterResurrection(this);
+        }
     }
-}
+
+    /** Surcharge avec log — utilisée par les DoT (Brûlure, Saignement, Poison) via appliquerEffets(log). */
+    public void retirerVie(double montant, java.util.List<String> log) {
+        this.vie = Math.max(0, this.vie - montant);
+        if (!estVivant()) {
+            Effets.Resurrection resurrection = getEffet(Effets.Resurrection.class);
+            if (resurrection != null) resurrection.tenterResurrection(this, log);
+        }
+    }
 
     public void restaurerPv(double montant) {
         this.vie = Math.min(getVieMax(), this.vie + montant);
@@ -221,6 +229,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public void ajouterRage(double montant) {
         Ralentissement ralen = getEffet(Ralentissement.class);
+        if (ralen != null) montant = ralen.appliquerSurGainRage(montant);
         this.rage += montant;
     }
 
@@ -485,17 +494,19 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public void equiper(Equipement e) {
         equipements.put(e.getSlot(), e);
+        // getVieMax() inclut déjà getBonusEquipementPV() dynamiquement,
+        // donc on ne modifie PAS this.vieMax ici pour éviter le double-comptage.
         if (e.getBonusPV() > 0) {
-            this.vieMax += e.getBonusPV();
             this.vie = Math.min(this.vie + e.getBonusPV(), getVieMax());
         }
     }
 
     public void desequiper(Equipement.Slot slot) {
         Equipement ancien = equipements.remove(slot);
-        if (ancien != null && ancien.getBonusPV() > 0) {
-            this.vieMax = Math.max(1, this.vieMax - ancien.getBonusPV());
-            this.vie = Math.min(this.vie, this.vieMax);
+        // getVieMax() recalcule dynamiquement sans cet équipement désormais retiré.
+        // On plafonne juste les PV actuels au nouveau maximum.
+        if (ancien != null) {
+            this.vie = Math.min(this.vie, getVieMax());
         }
     }
 

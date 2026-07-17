@@ -54,7 +54,7 @@ public class EnnemiNinja1 extends PersonnageBase {
         log.add(this.nom + " invoque des clones sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.10;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

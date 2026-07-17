@@ -54,7 +54,7 @@ public class EnnemiNinja3 extends PersonnageBase {
         log.add(this.nom + " seme la destruction sur toute l'equipe !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.40;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

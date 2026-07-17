@@ -54,7 +54,7 @@ public class EnnemiNatsu extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Natsu utilise Poings d'acier du dragon de feu !");
-        double degats = this.getAttaque() * 1.30;
+        double degats = this.getAttaque() * 1.14;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (Math.random() < 0.30) {
             Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
@@ -72,7 +72,7 @@ public class EnnemiNatsu extends PersonnageBase {
         }
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Brulure(3, 0.12), log);
             }

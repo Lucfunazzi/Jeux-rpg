@@ -208,6 +208,37 @@ public class GestionnaireQuetes {
         quetesProgression.add(new QueteProgression("C3S10",
                 "Cell vaincu", "Terminez le stage 10 du Chapitre 3.",
                 3, 10, false, 43950, 8000, 200));
+
+        quetesProgression.add(new QueteProgression("C3E1",
+                "Qualifications d'Elite", "Terminez le stage 1 du Chapitre 3 Elite.",
+                3, 1, true, 320000, 4000, 0));
+        quetesProgression.add(new QueteProgression("C3E2",
+                "La Garde de Chiaotzu", "Terminez le stage 2 du Chapitre 3 Elite.",
+                3, 2, true, 325000, 4500, 0));
+        quetesProgression.add(new QueteProgression("C3E3",
+                "Saiyans d'Elite", "Terminez le stage 3 du Chapitre 3 Elite.",
+                3, 3, true, 328000, 5000, 0));
+        quetesProgression.add(new QueteProgression("C3E4",
+                "Freezer Transcende", "Terminez le stage 4 du Chapitre 3 Elite.",
+                3, 4, true, 330000, 5500, 0));
+        quetesProgression.add(new QueteProgression("C3E5",
+                "Les Guerriers de la Terre", "Terminez le stage 5 du Chapitre 3 Elite.",
+                3, 5, true, 330000, 6000, 0));
+        quetesProgression.add(new QueteProgression("C3E6",
+                "Les Cyborgs Reprogrammes", "Terminez le stage 6 du Chapitre 3 Elite.",
+                3, 6, true, 333000, 6500, 0));
+        quetesProgression.add(new QueteProgression("C3E7",
+                "L'Armee Saiyan", "Terminez le stage 7 du Chapitre 3 Elite.",
+                3, 7, true, 333000, 7000, 0));
+        quetesProgression.add(new QueteProgression("C3E8",
+                "Piccolo et ses Disciples", "Terminez le stage 8 du Chapitre 3 Elite.",
+                3, 8, true, 335000, 7500, 0));
+        quetesProgression.add(new QueteProgression("C3E9",
+                "L'Armee Inarretable", "Terminez le stage 9 du Chapitre 3 Elite.",
+                3, 9, true, 335000, 8000, 0));
+        quetesProgression.add(new QueteProgression("C3E10",
+                "Cell Parfait Vaincu", "Terminez le stage 10 du Chapitre 3 Elite.",
+                3, 10, true, 340000, 12000, 0));
     }
 
     // ── Renouvellement automatique à minuit ───────────────────────────────

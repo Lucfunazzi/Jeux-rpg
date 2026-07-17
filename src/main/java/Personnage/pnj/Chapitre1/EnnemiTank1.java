@@ -54,7 +54,7 @@ public class EnnemiTank1 extends PersonnageBase {
         log.add(this.nom + " provoque un tremblement de terre sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.20;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }

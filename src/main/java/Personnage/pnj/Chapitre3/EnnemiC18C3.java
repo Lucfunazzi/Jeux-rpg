@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EnnemiC18C3 extends PersonnageBase {
 
-    public EnnemiC18C3() { this(36); }
+    public EnnemiC18C3() { this(30); }
 
     public EnnemiC18C3(int niveau) {
         this.nom    = "C-18";
@@ -19,7 +19,7 @@ public class EnnemiC18C3 extends PersonnageBase {
         double mult = 1.5;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 700.0 * mult * niv;
+        this.vie     = 400.0 * mult * niv;
         this.attaque = 150.0 * mult * niv;
         this.defense = 90.0 * mult * niv;
         this.vitesse = 120.0 * mult * vit;
