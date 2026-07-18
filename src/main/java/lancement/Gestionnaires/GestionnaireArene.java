@@ -23,9 +23,9 @@ public class GestionnaireArene {
 
     // ── Pools par rareté et rôle ──────────────────────────────────────────
 
-    private static final List<String> TANKS_C = List.of("Iruka", "Tien");
+    private static final List<String> TANKS_C = List.of("Nab", "Elfman");
     private static final List<String> TANKS_B = List.of("Choji", "Hinata", "Nappa");
-    private static final List<String> TANKS_A = List.of("Naruto", "Neji", "Hidan", "Kisame", "Kakuzu");
+    private static final List<String> TANKS_A = List.of("Gray", "Gajeel", "Natsu", "Freed", "Angel");
     private static final List<String> TANKS_S = List.of("Erza", "Gaara", "Cell", "Rogue");
 
     private static final List<String> SUPPORTS_C = List.of("Shino", "Chiaotzu");
@@ -34,7 +34,7 @@ public class GestionnaireArene {
     private static final List<String> SUPPORTS_S = List.of("C-18", "Yukino", "Nagato");
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
-    private static final List<String> DPS_C = List.of("Kiba", "Tenten", "Yamcha", "Alzack", "Bisca", "Elfman");
+    private static final List<String> DPS_C = List.of("Jet", "Romeo", "Max", "Alzack", "Bisca", "Elfman");
     private static final List<String> DPS_B = List.of("Lee", "Kankuro", "Zabuza", "Raditz", "Gohan (enfant)", "Bickslow", "Loke");
     private static final List<String> DPS_A = List.of("Sakura", "Deidara", "Natsu", "Gray", "Sangoku", "Vegeta", "Gajeel", "Angel");
     private static final List<String> DPS_S = List.of("Sasuke", "Kakashi", "Gai", "Itachi", "Orochimaru", "C-17", "Freezer", "Mirajane", "Natsu Etherion", "Sting", "Pain", "Tobi");

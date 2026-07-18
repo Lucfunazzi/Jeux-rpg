@@ -11,9 +11,8 @@ import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
 import lancement.Gestionnaires.GestionnaireArene;
 import Personnage.json.ChargeurPersonnage;
-import Personnage.Naruto_Shippuden.*;
-import Personnage.DragonBallZ.*;
 import Personnage.FairyTail.*;
+import Personnage.FairyTail.perso_Mirajane_Halphas;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -329,47 +328,29 @@ public class MenuArene {
     private PersonnageBase creerPersonnage(String nom) {
         return switch (nom) {
             // ── Rang C ──
-            case "Kiba"             -> new perso_Kiba();
-            case "Shino"            -> new perso_Shino();
-            case "Tenten"           -> new perso_Tenten();
-            case "Iruka"            -> new perso_Iruka();
-            case "Yamcha"           -> new perso_Yamcha();
-            case "Tien"             -> new perso_Tien();
-            case "Chiaotzu"         -> new perso_Chiaotzu();
+                        case "Alzack"      -> new perso_Alzack();
+                        case "Bisca"       -> new perso_Bisca();
+                        case "Max"         -> new perso_Max();
+                        case "Droy"        -> new perso_Droy();
+                        case "Jet"         -> new perso_Jet();
+                        case "Warren"      -> new perso_Warren();
+                        case "Nab"         -> new perso_Nab();
             case "Elfman"           -> new perso_Elfman();
-            case "Alzack"           -> new perso_Alzack();
-            case "Bisca"            -> new perso_Bisca();
+   
             // ── Rang B ──
-            case "Hinata"           -> new perso_Hinata();
-            case "Choji"            -> new perso_Choji();
-            case "Ino"              -> new perso_Ino();
-            case "Lee"              -> new perso_Lee();
-            case "Kankuro"          -> new perso_Kankuro();
-            case "Temari"           -> new perso_Temari();
-            case "Kabuto"           -> new perso_Kabuto();
-            case "Haku"             -> new perso_Haku();
-            case "Zabuza"           -> new perso_Zabuza();
-            case "Krillin"          -> new perso_Krillin();
-            case "Raditz"           -> new perso_Raditz();
+                        case "Romeo"       -> new perso_Romeo();
+                        case "Levy"        -> new perso_Levy();
+                        case "Lisanna"     -> new perso_Lisanna();
+                        case "Elfman Bête" -> new perso_ElfmanBete();
+                                                          
+      
             case "Cana"             -> new perso_Kana();
             case "Loke"             -> new perso_Loke();
             case "Bickslow"         -> new perso_Bickslow();
             case "Evergreen"        -> new perso_Evergreen();
-            case "Nappa"            -> new perso_Nappa();
-            case "Gohan (enfant)"   -> new perso_Gohan_Enfant();
+         
             // ── Rang A ──
-            case "Naruto"           -> new perso_Naruto();
-            case "Sasuke"           -> new perso_Sasuke();
-            case "Sakura"           -> new perso_Sakura();
-            case "Kakashi"          -> new perso_Kakashi();
-            case "Neji"             -> new perso_Neji();
-            case "Shikamaru"        -> new perso_Shikamaru();
-            case "Kurenai"          -> new perso_Kurenai();
-            case "Asuma"            -> new perso_Asuma();
-            case "Gai"              -> new perso_Gai();
-            case "Hidan"            -> new perso_Hidan();
-            case "Deidara"          -> new perso_Deidara();
-            case "Sangoku"          -> new perso_Sangoku();
+           
             case "Natsu"            -> new perso_Natsu();
             case "Lucy"             -> new perso_Lucy();
             case "Gray"             -> new perso_Gray();
@@ -377,47 +358,27 @@ public class MenuArene {
             case "Gajeel"           -> new perso_Gajeel();
             case "Jubia"            -> new perso_Jubia();
             case "Wendy"            -> new perso_Wendy();
-            case "Vegeta"           -> new perso_Vegeta_detecteur();
-            case "Piccolo"          -> new perso_Piccolo();
+           
             // ── Rang S ──
-            case "Itachi"           -> new perso_Itachi();
-            case "Orochimaru"       -> new perso_Orochimaru();
-            case "Gaara"            -> new perso_Gaara();
+           
             case "Erza"             -> new perso_Erza();
             case "Mirajane"         -> new perso_Mirajane();
             case "Sting"            -> new perso_Sting();
             case "Rogue"            -> new perso_Rogue();
-            case "C-17"             -> new perso_C17();
-            case "C-18"             -> new perso_C18();
-            case "Freezer"          -> new perso_Freezer();
-            case "Cell"             -> new perso_Cell();
+            
+        
             case "Natsu Etherion"   -> new perso_Natsu_Etherion();
             case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
-            case "Sasori"           -> new perso_Sasori();
+          
             case "Yukino"           -> new perso_Yukino();
             // ── Rang SS ──
             
             // ── Rang A (suite) ──
             case "Angel"            -> new perso_Angel();
             // ── Personnages JSON (Akatsuki + nouveaux) ──
-            default -> ChargeurPersonnage.charger(resoudreCheminJson(nom));
+            default -> null;
         };
     }
 
-    /**
-     * Résout le chemin JSON à partir du nom du personnage.
-     * Ajouter ici les nouveaux personnages JSON au fur et à mesure.
-     */
-    private String resoudreCheminJson(String nom) {
-        return switch (nom) {
-            case "Kisame" -> "Naruto/kisame.json";
-            case "Konan"  -> "Naruto/konan.json";
-            case "Nagato" -> "Naruto/nagato.json";
-            case "Pain"   -> "Naruto/pain.json";
-            case "Tobi"   -> "Naruto/tobi.json";
-            case "Kakuzu" -> "Naruto/kakuzu.json";
-            case "Zetsu"  -> "Naruto/zetsu.json";
-            default -> null; // nom inconnu
-        };
-    }
+  
 }

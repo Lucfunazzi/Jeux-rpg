@@ -5,62 +5,10 @@ import Equipement.ParcheminXP;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 
-// Naruto
-import Personnage.Naruto_Shippuden.perso_Iruka;
-import Personnage.Naruto_Shippuden.perso_Tenten;
-import Personnage.Naruto_Shippuden.perso_Kiba;
-import Personnage.Naruto_Shippuden.perso_Shino;
-import Personnage.Naruto_Shippuden.perso_Hinata;
-import Personnage.Naruto_Shippuden.perso_Choji;
-import Personnage.Naruto_Shippuden.perso_Ino;
-import Personnage.Naruto_Shippuden.perso_Haku;
-import Personnage.Naruto_Shippuden.perso_Kabuto;
-import Personnage.Naruto_Shippuden.perso_Temari;
-import Personnage.Naruto_Shippuden.perso_Kankuro;
-import Personnage.Naruto_Shippuden.perso_Lee;
-import Personnage.Naruto_Shippuden.perso_Zabuza;
-import Personnage.Naruto_Shippuden.perso_Asuma;
-import Personnage.Naruto_Shippuden.perso_Kurenai;
-import Personnage.Naruto_Shippuden.perso_Deidara;
-import Personnage.Naruto_Shippuden.perso_Hidan;
-import Personnage.Naruto_Shippuden.perso_Naruto;
-import Personnage.Naruto_Shippuden.perso_Neji;
-import Personnage.Naruto_Shippuden.perso_Shikamaru;
-import Personnage.Naruto_Shippuden.perso_Sakura;
-import Personnage.Naruto_Shippuden.perso_Itachi;
-import Personnage.Naruto_Shippuden.perso_Kakashi;
-import Personnage.Naruto_Shippuden.perso_Sasuke;
-import Personnage.Naruto_Shippuden.perso_Gai;
-import Personnage.Naruto_Shippuden.perso_Orochimaru;
 
-// Dragon Ball Z
-import Personnage.DragonBallZ.perso_Yamcha;
-import Personnage.DragonBallZ.perso_Tien;
-import Personnage.DragonBallZ.perso_Chiaotzu;
-import Personnage.DragonBallZ.perso_Raditz;
-import Personnage.DragonBallZ.perso_Krillin;
-import Personnage.DragonBallZ.perso_Sangoku;
-import Personnage.DragonBallZ.perso_C17;
-import Personnage.DragonBallZ.perso_C18;
 
 // Fairy Tail
-import Personnage.FairyTail.perso_Alzack;
-import Personnage.FairyTail.perso_Bisca;
-import Personnage.FairyTail.perso_Elfman;
-import Personnage.FairyTail.perso_Kana;
-import Personnage.FairyTail.perso_Evergreen;
-import Personnage.FairyTail.perso_Bickslow;
-import Personnage.FairyTail.perso_Loke;
-import Personnage.FairyTail.perso_Lucy;
-import Personnage.FairyTail.perso_Gray;
-import Personnage.FairyTail.perso_Natsu;
-import Personnage.FairyTail.perso_Freed;
-import Personnage.FairyTail.perso_Gajeel;
-import Personnage.FairyTail.perso_Jubia;
-import Personnage.FairyTail.perso_Mirajane;
-import Personnage.FairyTail.perso_Erza;
-import Personnage.FairyTail.perso_Natsu_Etherion;
-import Personnage.FairyTail.perso_Wendy;
+import Personnage.FairyTail.*;
 
 import lancement.Donjon.StageDonjon;
 import lancement.GameContext;
@@ -233,28 +181,28 @@ public class MenuDonjon {
             case NORMAL -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Iruka (C) | DPS: Yamcha (C), Kiba (C), Alzack (C) | Support: Shino (C)
-                        ennemis.add(niv(new perso_Iruka(),   niv));
-                        ennemis.add(niv(new perso_Yamcha(),  niv));
-                        ennemis.add(niv(new perso_Kiba(),    niv));
+                        // Tank: Nab (C) | DPS: Alzack (C), Jet (C), Bisca (C) | Support: Warren (C)
+                        ennemis.add(niv(new perso_Nab(),     niv));
                         ennemis.add(niv(new perso_Alzack(),  niv));
-                        ennemis.add(niv(new perso_Shino(),   niv));
+                        ennemis.add(niv(new perso_Jet(),     niv));
+                        ennemis.add(niv(new perso_Bisca(),   niv));
+                        ennemis.add(niv(new perso_Warren(),  niv));
                     }
                     case AFFINAGE -> {
-                        // Tank: Hinata (B) | DPS: Tenten (C), Bisca (C) | Support: Ino (B), Kana (B)
-                        ennemis.add(niv(new perso_Hinata(),    niv));
-                        ennemis.add(niv(new perso_Tenten(),    niv));
-                        ennemis.add(niv(new perso_Bisca(),     niv));
-                        ennemis.add(niv(new perso_Ino(),       niv));
-                        ennemis.add(niv(new perso_Kana(),      niv));
+                        // Tank: Elfman Bête (B) | DPS: Max (C), Droy (C) | Support: Levy (B), Lisanna (B)
+                        ennemis.add(niv(new perso_ElfmanBete(), niv));
+                        ennemis.add(niv(new perso_Max(),        niv));
+                        ennemis.add(niv(new perso_Droy(),       niv));
+                        ennemis.add(niv(new perso_Levy(),       niv));
+                        ennemis.add(niv(new perso_Lisanna(),    niv));
                     }
                     case XP -> {
-                        // Tank: Choji (B) | DPS: Elfman (C), Raditz (B), Kankuro (B) | Support: Haku (B)
-                        ennemis.add(niv(new perso_Choji(),     niv));
+                        // Tank: Nab (C) | DPS: Romeo (C), Elfman (C), Bickslow (B) | Support: Evergreen (B)
+                        ennemis.add(niv(new perso_Nab(),       niv));
+                        ennemis.add(niv(new perso_Romeo(),     niv));
                         ennemis.add(niv(new perso_Elfman(),    niv));
-                        ennemis.add(niv(new perso_Raditz(),    niv));
-                        ennemis.add(niv(new perso_Kankuro(),   niv));
-                        ennemis.add(niv(new perso_Haku(),      niv));
+                        ennemis.add(niv(new perso_Bickslow(),  niv));
+                        ennemis.add(niv(new perso_Evergreen(), niv));
                     }
                 }
             }
@@ -263,28 +211,28 @@ public class MenuDonjon {
             case DIFFICILE -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Hidan (A) | DPS: Lee (B), Zabuza (B), Deidara (A) | Support: Temari (B)
-                        ennemis.add(niv(new perso_Hidan(),     niv));
-                        ennemis.add(niv(new perso_Lee(),       niv));
-                        ennemis.add(niv(new perso_Zabuza(),    niv));
-                        ennemis.add(niv(new perso_Deidara(),   niv));
-                        ennemis.add(niv(new perso_Temari(),    niv));
+                        // Tank: Elfman Bête (B) | DPS: Loke (B), Gajeel (A), Angel (A) | Support: Levy (B)
+                        ennemis.add(niv(new perso_ElfmanBete(), niv));
+                        ennemis.add(niv(new perso_Loke(),       niv));
+                        ennemis.add(niv(new perso_Gajeel(),     niv));
+                        ennemis.add(niv(new perso_Angel(),      niv));
+                        ennemis.add(niv(new perso_Levy(),       niv));
                     }
                     case AFFINAGE -> {
-                        // Tank: Naruto (A) | DPS: Bickslow (B), Loke (B), Gray (A) | Support: Freed (A)
-                        ennemis.add(niv(new perso_Naruto(),    niv));
+                        // Tank: Rogue (S) | DPS: Bickslow (B), Loke (B), Gray (A) | Support: Freed (A)
+                        ennemis.add(niv(new perso_Rogue(),     niv));
                         ennemis.add(niv(new perso_Bickslow(),  niv));
                         ennemis.add(niv(new perso_Loke(),      niv));
                         ennemis.add(niv(new perso_Gray(),      niv));
                         ennemis.add(niv(new perso_Freed(),     niv));
                     }
                     case XP -> {
-                        // Tank: Neji (A) | DPS: Sangoku (A), Gajeel (A), Sakura (A) | Support: Kurenai (A)
-                        ennemis.add(niv(new perso_Neji(),      niv));
-                        ennemis.add(niv(new perso_Sangoku(),   niv));
+                        // Tank: Natsu (A) | DPS: Gajeel (A), Lucy (A), Wendy (A) | Support: Jubia (A)
+                        ennemis.add(niv(new perso_Natsu(),     niv));
                         ennemis.add(niv(new perso_Gajeel(),    niv));
-                        ennemis.add(niv(new perso_Sakura(),    niv));
-                        ennemis.add(niv(new perso_Kurenai(),   niv));
+                        ennemis.add(niv(new perso_Lucy(),      niv));
+                        ennemis.add(niv(new perso_Wendy(),     niv));
+                        ennemis.add(niv(new perso_Jubia(),     niv));
                     }
                 }
             }
@@ -295,25 +243,25 @@ public class MenuDonjon {
                     case OR -> {
                         // Tank: Erza (S) | DPS: Itachi (S), Kakashi (S), Natsu (A) | Support: Asuma (A)
                         ennemis.add(niv(new perso_Erza(),      niv));
-                        ennemis.add(niv(new perso_Itachi(),    niv));
-                        ennemis.add(niv(new perso_Kakashi(),   niv));
+                        ennemis.add(niv(new perso_Erza(),    niv));
+                        ennemis.add(niv(new perso_Sting(),   niv));
                         ennemis.add(niv(new perso_Natsu(),     niv));
-                        ennemis.add(niv(new perso_Asuma(),     niv));
+                        ennemis.add(niv(new perso_Angel(),     niv));
                     }
                     case AFFINAGE -> {
                         // Tank: C18 (S) | DPS: Sasuke (S), Gai (S), Mirajane (S) | Support: Jubia (A)
-                        ennemis.add(niv(new perso_C18(),           niv));
-                        ennemis.add(niv(new perso_Sasuke(),        niv));
-                        ennemis.add(niv(new perso_Gai(),           niv));
+                        ennemis.add(niv(new perso_Mirajane_Halphas(),           niv));
+                        ennemis.add(niv(new perso_Rogue(),        niv));
+                        ennemis.add(niv(new perso_Mirajane(),           niv));
                         ennemis.add(niv(new perso_Mirajane(),      niv));
                         ennemis.add(niv(new perso_Jubia(),         niv));
                     }
                     case XP -> {
                         // Tank: C17 (S) | DPS: Orochimaru (S), Natsu Etherion (S) | Support: Shikamaru (A), Wendy (A)
-                        ennemis.add(niv(new perso_C17(),           niv));
-                        ennemis.add(niv(new perso_Orochimaru(),    niv));
+                        ennemis.add(niv(new perso_Lucas(),           niv));
+                        ennemis.add(niv(new perso_Yukino(),    niv));
                         ennemis.add(niv(new perso_Natsu_Etherion(), niv));
-                        ennemis.add(niv(new perso_Shikamaru(),     niv));
+                        ennemis.add(niv(new perso_Natsu(),     niv));
                         ennemis.add(niv(new perso_Wendy(),         niv));
                     }
                 }

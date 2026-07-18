@@ -1,10 +1,7 @@
 package lancement.Chapitres;
 
-import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre1.*;
-import Personnage.Naruto_Shippuden.perso_Iruka;
-import Personnage.DragonBallZ.perso_Yamcha;
 import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ public class Chapitre1 {
 
         while (!retour) {
             System.out.println("\n========================================");
-            System.out.println("         CHAPITRE 1 — L'Eveil");
+            System.out.println("      CHAPITRE 1 — Prologue : L'Éveil");
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr()));
             System.out.println();
@@ -72,14 +69,7 @@ public class Chapitre1 {
                     ctx.gestionnaireEtoiles.mettreAJour(1, choix, false,
                             resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
 
-                    if (choix == 3 && !dejaRecruteParNom("Iruka", ctx.personnagesRecruites)) {
-                        ctx.personnagesRecruites.add(new perso_Iruka());
-                        System.out.println(">> Iruka rejoint vos allies !");
-                    }
-                    if (choix == 6 && !dejaRecruteParNom("Yamcha", ctx.personnagesRecruites)) {
-                        ctx.personnagesRecruites.add(new perso_Yamcha());
-                        System.out.println(">> Yamcha rejoint vos allies !");
-                    }
+
                 }
             }
         }
@@ -90,45 +80,45 @@ public class Chapitre1 {
 
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1());
-                         return new Stage(1, "Le Sentier Maudit", 100, 10, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiMage2());
-                         return new Stage(2, "L'Ancien Reveil", 150, 15, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiIruka());
-                         return new Stage(3, "Le Maitre Ninja", 200, 20, ennemis); }
+                         return new Stage(1, "Les Hommes de Bora", 100, 10, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage1());
+                         return new Stage(2, "La Flamme Écarlate approche", 150, 15, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiMage1());
+                         return new Stage(3, "Evaro, le bouclier de Bora", 220, 20, ennemis); }
             case 4  -> { ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage2());
-                         return new Stage(4, "La Triade Maudite", 280, 25, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiMage3());
-                         return new Stage(5, "L'Avant-Garde", 340, 30, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiYamcha());
-                         return new Stage(6, "Le Loup du Desert", 380, 35, ennemis); }
+                         return new Stage(4, "La Garde de la Flamme", 290, 25, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiBora()); ennemis.add(new EnnemiMage2());
+                         return new Stage(5, "Bora, Mage de la Flamme Écarlate", 360, 30, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiGuerrier3()); ennemis.add(new EnnemiMage3());
+                         return new Stage(6, "L'Avant-Garde des Ombres", 430, 35, ennemis); }
             case 7  -> { ennemis.add(new EnnemiNinja1()); ennemis.add(new EnnemiGuerrier3());
                          ennemis.add(new EnnemiNinja2()); ennemis.add(new EnnemiMage4());
-                         return new Stage(7, "Les Quatre Predateurs", 440, 40, ennemis); }
+                         return new Stage(7, "Les Quatre Predateurs", 500, 40, ennemis); }
             case 8  -> { ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiGuerrier4());
                          ennemis.add(new EnnemiGuerrier4()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(8, "L'Armee des Ombres", 520, 45, ennemis); }
+                         return new Stage(8, "L'Armée des Ombres", 580, 45, ennemis); }
             case 9  -> { ennemis.add(new EnnemiTank2()); ennemis.add(new EnnemiNinja3());
-                         ennemis.add(new EnnemiNinja3()); ennemis.add(new EnnemiNinja3()); ennemis.add(new EnnemiSoigneur2());
-                         return new Stage(9, "Les Generaux des Tenebres", 620, 50, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiNatsu());
-                         ennemis.add(new EnnemiNinja3()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur2());
-                         return new Stage(10, "Le Dragon de Feu", 800, 55, ennemis); }
+                         ennemis.add(new EnnemiNinja3()); ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur2());
+                         return new Stage(9, "Les Généraux des Ténèbres", 680, 50, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiEligor()); ennemis.add(new EnnemiBora());
+                         ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(10, "Eligor — Le Démon Invoqué", 860, 55, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Le Sentier Maudit";
-            case 2  -> "L'Ancien Reveil";
-            case 3  -> "Le Maitre Ninja";
-            case 4  -> "La Triade Maudite";
-            case 5  -> "L'Avant-Garde";
-            case 6  -> "Le Loup du Desert";
+            case 1  -> "Les Hommes de Bora";
+            case 2  -> "La Flamme Écarlate approche";
+            case 3  -> "Evaro, le bouclier de Bora";
+            case 4  -> "La Garde de la Flamme";
+            case 5  -> "Bora, Mage de la Flamme Écarlate";
+            case 6  -> "L'Avant-Garde des Ombres";
             case 7  -> "Les Quatre Predateurs";
-            case 8  -> "L'Armee des Ombres";
-            case 9  -> "Les Generaux des Tenebres";
-            case 10 -> "Le Dragon de Feu";
+            case 8  -> "L'Armée des Ombres";
+            case 9  -> "Les Généraux des Ténèbres";
+            case 10 -> "Eligor — Le Démon Invoqué";
             default -> "???";
         };
     }

@@ -1,0 +1,104 @@
+package Personnage.pnj.Chapitre3;
+
+import Combat.Combat;
+import Effets.BuffAttaque;
+import Effets.Etourdissement;
+import Effets.Poison;
+import Effets.ReductionDefense;
+import Effets.ReductionAttaque;
+import Personnage.PersonnageBase;
+import java.util.List;
+
+/**
+ * José Porla — Maître de la guilde Phantom Lord, rang S.
+ * Magie des Ombres spectrales (Shades) : invoque des ombres,
+ * draine et maudit ses ennemis.
+ * Multiplicateur rang S : 1.50
+ */
+public class EnnemiJose extends PersonnageBase {
+
+    public EnnemiJose() { this(35); }
+
+    public EnnemiJose(int niveau) {
+        this.nom    = "José Porla";
+        this.niveau = niveau;
+        this.type   = "Mage";
+        this.role   = "DPS";
+        this.rarete = "S";
+
+        double mult = 1.50;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        this.vie     = 320.0 * mult * niv;
+        this.attaque = 130.0 * mult * niv;
+        this.defense =  90.0 * mult * niv;
+        this.vitesse = 110.0 * mult * vit;
+
+        this.taux_critiques    = 0.22;
+        this.degat_critiques   = 1.50;
+        this.taux_precisions   = 100.00;
+        this.taux_esquives     = 0.14;
+        this.taux_blocage      = 0.08;
+        this.reduction_blocage = 0.12;
+        this.degats_renvoi     = 0.80;
+
+        initialiserVieMax();
+    }
+
+    @Override
+    public String[] getNomsAttaques() {
+        return new String[]{"Main Spectrale", "Armée de Shades", "Jugement du Maître des Ombres"};
+    }
+
+    @Override
+    public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
+                            List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("José tend une main spectrale et étreint l'âme de " + cible.getNom() + " !");
+        Combat.attaquer(this, cible, log);
+        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
+        // Drain mineur sur attaque de base
+        double soin = this.getAttaque() * 0.20;
+        this.recevoirSoin(soin, log);
+    }
+
+    @Override
+    public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
+                                List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("José invoque son armée de Shades — des spectres s'abattent sur " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.70;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, cible, new ReductionDefense(0.25, 3), log);
+        Combat.appliquerEffet(this, cible, new Poison(3, 0.08), log);
+        if (Math.random() < 0.35) {
+            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+        }
+    }
+
+    @Override
+    public void attaqueUltime(List<PersonnageBase> equipeAlliee,
+                              List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("José libère son Jugement — les ombres de Phantom Lord engloutissent tout !");
+        Combat.appliquerEffet(this, new BuffAttaque(0.30, 3), log);
+        for (PersonnageBase cible : equipeEnnemie) {
+            if (cible.estVivant()) {
+                double degats = this.getAttaque() * 1.40;
+                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+                Combat.appliquerEffet(this, cible, new ReductionDefense(0.20, 3), log);
+                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 3), log);
+            }
+        }
+        // Drain massif
+        double soin = this.getVieMax() * 0.15;
+        this.recevoirSoin(soin, log);
+    }
+
+    @Override public void descriptionAttaqueBase() {
+        System.out.println("Main Spectrale — Inflige 100% ATK, réduit ATK de 15% pendant 2 tours, se soigne de 20% ATK.");
+    }
+    @Override public void descriptionAttaqueSpeciale() {
+        System.out.println("Armée de Shades — Inflige 170% ATK, réduit DEF de 25% pendant 3 tours, empoisonne (8% PV/tour), 35% étourdissement.");
+    }
+    @Override public void descriptionAttaqueUltime() {
+        System.out.println("Jugement — Gagne 30% ATK, inflige 140% ATK à tous, réduit ATK et DEF de 20% pendant 3 tours, draine 15% PV max.");
+    }
+}

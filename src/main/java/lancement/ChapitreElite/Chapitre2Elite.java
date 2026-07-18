@@ -2,6 +2,16 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre2Elite.*;
+import Personnage.pnj.Chapitre2.EnnemiTobi;
+import Personnage.pnj.Chapitre2.EnnemiYuka;
+import Personnage.pnj.Chapitre2.EnnemiChery;
+import Personnage.pnj.Chapitre2.EnnemiLeon;
+import Personnage.pnj.Chapitre1.EnnemiMage1;
+import Personnage.pnj.Chapitre1.EnnemiMage2;
+import Personnage.pnj.Chapitre1.EnnemiMage3;
+import Personnage.pnj.Chapitre1.EnnemiTank1;
+import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
+import Personnage.pnj.Chapitre1.EnnemiSoigneur2;
 import Equipement.EquipementFactory;
 import Equipement.Equipement;
 import lancement.GameContext;
@@ -114,6 +124,12 @@ public class Chapitre2Elite {
                         }
                     }
 
+                    // ── Drop écharpe d'Ignir sur stage 10 Elite (50%) ──
+                    if (choix == NB_STAGES && Math.random() < 0.50) {
+                        ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 1);
+                        System.out.println("   + 1x Echarpe blanche d'Ignir !");
+                    }
+
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
                     ctx.gestionnaireQuetes.notifierStageFini(2, choix, true,
                             ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
@@ -127,57 +143,49 @@ public class Chapitre2Elite {
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiLeeElite()); ennemis.add(new EnnemiNejiElite());
-                         ennemis.add(new EnnemiTentenElite()); ennemis.add(new EnnemiNinja1Elite()); ennemis.add(new EnnemiSoigneur1Elite());
-                         return new Stage(1, "[ELITE] L'equipe Gai entre en action !", 6000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiKibaElite()); ennemis.add(new EnnemiHinataElite());
-                         ennemis.add(new EnnemiShinoElite()); ennemis.add(new EnnemiNinja1Elite()); ennemis.add(new EnnemiSoigneur2Elite());
-                         return new Stage(2, "[ELITE] L'Equipe 8 entre en action !", 7200, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiChojiElite()); ennemis.add(new EnnemiInoElite());
-                         ennemis.add(new EnnemiShikamaruElite()); ennemis.add(new EnnemiNinja2Elite()); ennemis.add(new EnnemiNinja1Elite());
-                         return new Stage(3, "[ELITE] L'Equipe 10 entre en action !", 8400, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiNarutoElite()); ennemis.add(new EnnemiSakuraElite());
-                         ennemis.add(new EnnemiSasukeElite()); ennemis.add(new EnnemiSoigneur1Elite()); ennemis.add(new EnnemiNinja1Elite());
-                         return new Stage(4, "[ELITE] L'Equipe 7 entre en action !", 10000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiZabuzaElite()); ennemis.add(new EnnemiHakuElite());
-                         ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiSoigneur1Elite()); ennemis.add(new EnnemiSoigneur2Elite());
-                         return new Stage(5, "[ELITE] Interlude — Zabuza et Haku !", 11200, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiGaaraElite()); ennemis.add(new EnnemiTemariElite());
-                         ennemis.add(new EnnemiKankuroElite()); ennemis.add(new EnnemiNinja1Elite()); ennemis.add(new EnnemiSoigneur2Elite());
-                         return new Stage(6, "[ELITE] L'equipe de Suna entre en action !", 12800, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiLeeElite()); ennemis.add(new EnnemiNejiElite());
-                         ennemis.add(new EnnemiTentenElite()); ennemis.add(new EnnemiGaiElite()); ennemis.add(new EnnemiSoigneur1Elite());
-                         return new Stage(7, "[ELITE] Equipe Gai — La Revanche !", 15200, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiChojiElite()); ennemis.add(new EnnemiInoElite());
-                         ennemis.add(new EnnemiShikamaruElite()); ennemis.add(new EnnemiAsumaElite()); ennemis.add(new EnnemiNinja1Elite());
-                         return new Stage(8, "[ELITE] Equipe 10 — Second Match !", 16800, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiHinataElite()); ennemis.add(new EnnemiShinoElite());
-                         ennemis.add(new EnnemiKibaElite()); ennemis.add(new EnnemiKurenaiElite()); ennemis.add(new EnnemiNinja2Elite());
-                         return new Stage(9, "[ELITE] Equipe 8 — Second Match !", 18000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiOrochimaruElite()); ennemis.add(new EnnemiKabutoElite());
-                         ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiNinja2Elite()); ennemis.add(new EnnemiSoigneur1Elite());
-                         return new Stage(10, "[ELITE] Orochimaru — Le Ninja Legendaire !", 20000, 0, ennemis); }
+            case 1  -> { ennemis.add(new EnnemiTobi(15)); ennemis.add(new EnnemiMage2(15)); ennemis.add(new EnnemiMage1(15));
+                         return new Stage(1, "[ELITE] Débarquement — La garde de l'île", 6000, 0, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiYuka(15)); ennemis.add(new EnnemiTobi(15)); ennemis.add(new EnnemiMage2(15)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(2, "[ELITE] Yuka et Tobi renforcés", 7500, 0, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiChery(16)); ennemis.add(new EnnemiYuka(16)); ennemis.add(new EnnemiMage3(16)); ennemis.add(new EnnemiTank1());
+                         return new Stage(3, "[ELITE] Chery et l'annuleur d'élite", 9000, 0, ennemis); }
+            case 4  -> { ennemis.add(new EnnemiTobi(17)); ennemis.add(new EnnemiYuka(17)); ennemis.add(new EnnemiChery(17)); ennemis.add(new EnnemiMage2(17)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(4, "[ELITE] Le trio de l'île — Forme renforcée", 11000, 0, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiLeon(20)); ennemis.add(new EnnemiMage3(18)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur2());
+                         return new Stage(5, "[ELITE] Leon Bastia d'élite", 13000, 0, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiLeon(20)); ennemis.add(new EnnemiTobi(18)); ennemis.add(new EnnemiYuka(18)); ennemis.add(new EnnemiChery(18)); ennemis.add(new EnnemiMage2());
+                         return new Stage(6, "[ELITE] L'île en guerre totale", 16000, 0, ennemis); }
+            case 7  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiYuka(20)); ennemis.add(new EnnemiChery(20)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur2());
+                         return new Stage(7, "[ELITE] Leon — Maître des glaces d'élite", 19500, 0, ennemis); }
+            case 8  -> { ennemis.add(new EnnemiLeon(24)); ennemis.add(new EnnemiTobi(22)); ennemis.add(new EnnemiYuka(22)); ennemis.add(new EnnemiChery(22)); ennemis.add(new EnnemiMage3());
+                         return new Stage(8, "[ELITE] Dernier bastion de l'île", 23000, 0, ennemis); }
+            case 9  -> { ennemis.add(new EnnemiLeon(26)); ennemis.add(new EnnemiYuka(24)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur2());
+                         return new Stage(9, "[ELITE] Leon — Résistance ultime", 27000, 0, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiLeon(28)); ennemis.add(new EnnemiYuka(26)); ennemis.add(new EnnemiChery(26)); ennemis.add(new EnnemiTobi(24)); ennemis.add(new EnnemiSoigneur2());
+                         return new Stage(10, "[ELITE] Leon — Le Pacte Brisé Ultime", 32000, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "[ELITE] L'equipe Gai entre en action !";
-            case 2  -> "[ELITE] L'Equipe 8 — Kiba, Hinata, Shino";
-            case 3  -> "[ELITE] L'Equipe 10 — Choji, Ino, Shikamaru";
-            case 4  -> "[ELITE] L'Equipe 7 — Naruto, Sakura, Sasuke";
-            case 5  -> "[ELITE] Interlude — Zabuza et Haku";
-            case 6  -> "[ELITE] L'equipe de Suna";
-            case 7  -> "[ELITE] Equipe Gai — La Revanche";
-            case 8  -> "[ELITE] Equipe 10 — Second Match";
-            case 9  -> "[ELITE] Equipe 8 — Second Match";
-            case 10 -> "[ELITE] Orochimaru — Le Ninja Legendaire !";
+            case 1  -> "[ELITE] Débarquement — La garde de l'île";
+            case 2  -> "[ELITE] Yuka et Tobi renforcés";
+            case 3  -> "[ELITE] Chery et l'annuleur d'élite";
+            case 4  -> "[ELITE] Le trio de l'île — Forme renforcée";
+            case 5  -> "[ELITE] Leon Bastia d'élite";
+            case 6  -> "[ELITE] L'île en guerre totale";
+            case 7  -> "[ELITE] Leon — Maître des glaces d'élite";
+            case 8  -> "[ELITE] Dernier bastion de l'île";
+            case 9  -> "[ELITE] Leon — Résistance ultime";
+            case 10 -> "[ELITE] Leon — Le Pacte Brisé Ultime";
             default -> "???";
         };
     }
+    
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
+    
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= NB_STAGES; i++) stagesDebloques[i] = d[i]; }
     public void setStagesReussis(boolean[] r)   { for (int i = 0; i <= NB_STAGES; i++) stagesReussis[i]   = r[i]; }

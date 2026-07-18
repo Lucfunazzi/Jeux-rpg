@@ -12,15 +12,29 @@ import java.util.Map;
  *                 "C2S7" = Chapitre 2 Stage 7
  *
  * Coffres par chapitre (clé : "C1", "C1E", "C2"...) :
- *   Coffre 1 : 9  étoiles → 20 coupons
- *   Coffre 2 : 18 étoiles → 40 coupons
- *   Coffre 3 : 30 étoiles → 150 coupons
+ *   Coffre 1 : 9  étoiles → 2 Parchemins de Tirage Ordinaire
+ *   Coffre 2 : 18 étoiles → 5 Parchemins de Tirage Ordinaire
+ *   Coffre 3 : 30 étoiles → 1 Parchemin de Tirage Elite
  */
 public class GestionnaireEtoiles {
 
-    private static final int[] SEUILS   = {9, 18, 30};
-    private static final int[] COUPONS  = {20, 40, 150};
-    private static final int   NB_STAGES = 10;
+    private static final int[] SEUILS     = {9, 18, 30};
+    private static final int[] NB_STAGES  = {10};   // kept for compat
+    private static final int   NB_STAGES_INT = 10;
+
+    /** Types de récompense des coffres étoiles. */
+    public enum TypeRecompenseCoffre {
+        PARCHEMIN_ORDINAIRE,
+        PARCHEMIN_ELITE
+    }
+
+    public record RecompenseCoffre(TypeRecompenseCoffre type, int quantite) {}
+
+    private static final RecompenseCoffre[] RECOMPENSES = {
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 2),   // coffre 1
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 5),   // coffre 2
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ELITE,     1)    // coffre 3
+    };
 
     // étoiles par stage : clé = "C1S3", "C1E5", "C2S7"...
     private final Map<String, EtoilesStage> etoiles = new HashMap<>();
@@ -57,7 +71,7 @@ public class GestionnaireEtoiles {
 
     public int compterEtoiles(int chapitre, boolean elite) {
         int total = 0;
-        for (int s = 1; s <= NB_STAGES; s++) {
+        for (int s = 1; s <= NB_STAGES_INT; s++) {
             EtoilesStage e = etoiles.get(cle(chapitre, s, elite));
             if (e != null) total += e.compter();
         }
@@ -82,16 +96,16 @@ public class GestionnaireEtoiles {
         return Boolean.TRUE.equals(coffresClaimes.get(cleCoffre(chapitre, elite, numeroCoffre)));
     }
 
-    /** Réclame le coffre et retourne le nombre de coupons gagnés (0 si non disponible). */
-    public int reclamerCoffre(int chapitre, boolean elite, int numeroCoffre) {
-        if (!coffreDisponible(chapitre, elite, numeroCoffre)) return 0;
+    /** Réclame le coffre et retourne la récompense (null si non disponible). */
+    public RecompenseCoffre reclamerCoffre(int chapitre, boolean elite, int numeroCoffre) {
+        if (!coffreDisponible(chapitre, elite, numeroCoffre)) return null;
         coffresClaimes.put(cleCoffre(chapitre, elite, numeroCoffre), true);
-        return COUPONS[numeroCoffre - 1];
+        return RECOMPENSES[numeroCoffre - 1];
     }
 
-    public int getCouponsCoffre(int numeroCoffre) {
-        if (numeroCoffre < 1 || numeroCoffre > 3) return 0;
-        return COUPONS[numeroCoffre - 1];
+    public RecompenseCoffre getRecompenseCoffre(int numeroCoffre) {
+        if (numeroCoffre < 1 || numeroCoffre > 3) return null;
+        return RECOMPENSES[numeroCoffre - 1];
     }
 
     public int getSeuilCoffre(int numeroCoffre) {

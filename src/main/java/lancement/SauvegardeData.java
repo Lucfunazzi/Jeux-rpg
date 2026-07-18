@@ -58,6 +58,12 @@ public class SauvegardeData {
     public int parcheminC;
     public int parcheminB;
 
+    // ── Tirages ───────────────────────────────────────────────────────────
+    public int parcheminTirageOrdinaire = 0;
+    public int parcheminTirageElite     = 0;
+    public int tirageEliteCompteurSansS = 0;
+    public int tirageEliteCompteurSansSS = 0;
+
     // ── Inventaire ────────────────────────────────────────────────────────
     public List<EquipementData>  inventaireEquipements   = new ArrayList<>();
     public List<EquipementData>  joueurEquipementsPortes = new ArrayList<>();
@@ -70,6 +76,7 @@ public class SauvegardeData {
         public int    niveau;
         public int    experience;
         public int    experienceMax;
+        public int    nbreEtoiles = 0;
         public List<EquipementData> equipementsPortes = new ArrayList<>();
 
         public PersonnageData() {}

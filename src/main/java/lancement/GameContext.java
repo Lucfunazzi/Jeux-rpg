@@ -11,14 +11,17 @@ import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEnergie;
+import lancement.Gestionnaires.GestionnaireEtoiles;
+import lancement.Gestionnaires.GestionnaireEtoilesPerso;
 import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
-import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
 import lancement.Gestionnaires.GestionnaireClefsCelestes;
+import lancement.Menus.MenuEtoilesPerso;
 import lancement.Menus.MenuRecrutement;
+import lancement.Menus.MenuTirage;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +40,6 @@ public class GameContext {
     public Chapitre1      chapitre1;
     public Chapitre2      chapitre2;
     public Chapitre3      chapitre3;
-    // Ajouter Chapitre3, Chapitre4... ici
 
     // ── Chapitres élite ───────────────────────────────────────────────────
     public Chapitre1Elite chapitre1Elite;
@@ -45,18 +47,25 @@ public class GameContext {
     public Chapitre3Elite chapitre3Elite;
 
     // ── Managers ──────────────────────────────────────────────────────────
-    public GestionnaireSauvegarde sauvegarde;
-    public GestionnaireQuetes     gestionnaireQuetes;
-    public GestionnaireEnergie    gestionnaireEnergie;
-    public GestionnaireTitres     gestionnaireTitres;
-    public GestionnaireDonjon     gestionnaireDonjon;
-    public RangJoueur             rangJoueur;
-    public MenuRecrutement        menuRecrutement;
-    public GestionnaireEtoiles    gestionnaireEtoiles;
-    public GestionnaireCompagnons gestionnaireCompagnons;
+    public GestionnaireSauvegarde        sauvegarde;
+    public GestionnaireQuetes            gestionnaireQuetes;
+    public GestionnaireEnergie           gestionnaireEnergie;
+    public GestionnaireTitres            gestionnaireTitres;
+    public GestionnaireDonjon            gestionnaireDonjon;
+    public GestionnaireEtoiles           gestionnaireEtoiles;
+    public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
+    public GestionnaireCompagnons        gestionnaireCompagnons;
     public GestionnaireCreaturesSacrees  gestionnaireCreaturesSacrees;
     public GestionnaireClefsCelestes     gestionnaireClefsCelestes;
-    public int                    coupons = 0;
+    public RangJoueur                    rangJoueur;
+
+    // ── Menus ─────────────────────────────────────────────────────────────
+    public MenuRecrutement   menuRecrutement;
+    public MenuEtoilesPerso  menuEtoilesPerso;
+    public MenuTirage        menuTirage;
+
+    // ── Divers ────────────────────────────────────────────────────────────
+    public int    coupons            = 0;
     public String dernierCoffreArene = null;
 
     public GameContext() {}

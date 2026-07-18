@@ -1,19 +1,38 @@
 package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
-import Personnage.pnj.Chapitre3Elite.*;
+
+import Personnage.pnj.Chapitre3.EnnemiJubia;
+import Personnage.pnj.Chapitre3.EnnemiTotomaru;
+import Personnage.pnj.Chapitre3.EnnemiSol;
+import Personnage.pnj.Chapitre3.EnnemiAlya;
+import Personnage.pnj.Chapitre3.EnnemiJose;
+import Personnage.pnj.Chapitre1.EnnemiMage1;
+import Personnage.pnj.Chapitre1.EnnemiMage2;
+import Personnage.pnj.Chapitre1.EnnemiMage3;
+import Personnage.pnj.Chapitre1.EnnemiGuerrier1;
+import Personnage.pnj.Chapitre1.EnnemiGuerrier2;
+import Personnage.pnj.Chapitre1.EnnemiTank1;
+import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
 import Equipement.CarteOr;
+import Equipement.FragmentEquipement;
+import Equipement.GestionnaireFragments;
 import lancement.GameContext;
 import lancement.Stage;
 import lancement.Chapitres.Chapitre3;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Chapitre3Elite {
 
-    private static final int NB_STAGES = 10;
+    private static final int    NB_STAGES             = 10;
     private static final double CHANCE_CARTE_OR_REPLAY = 0.30;
+    private static final double CHANCE_FRAGMENT        = 0.40; // 40% par run
+    private static final double CHANCE_FRAGMENT_BOSS   = 0.70; // 70% sur le stage 10
+
+    private static final GestionnaireFragments gestionnaireFragments = new GestionnaireFragments();
 
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
     private final boolean[] stagesReussis   = new boolean[NB_STAGES + 1];
@@ -109,6 +128,21 @@ public class Chapitre3Elite {
                         }
                     }
 
+                    // ── Drop de fragment d'équipement ────────────────────
+                    double chanceFragment = (choix == NB_STAGES)
+                            ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
+                    if (Math.random() < chanceFragment) {
+                        List<FragmentEquipement> catalogue =
+                                gestionnaireFragments.getCatalogue();
+                        FragmentEquipement fragment =
+                                catalogue.get(new Random().nextInt(catalogue.size()));
+                        ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
+                        int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
+                        System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
+                                fragment.getNomFragment(), total,
+                                FragmentEquipement.QUANTITE_REQUISE);
+                    }
+
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
                     ctx.gestionnaireQuetes.notifierStageFini(3, choix, true,
                             ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
@@ -124,54 +158,46 @@ public class Chapitre3Elite {
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiYamchaC3Elite()); ennemis.add(new EnnemiChiaotzuC3Elite());
-                         ennemis.add(new EnnemiTienC3Elite()); ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiSoigneurDBZElite());
-                         return new Stage(1, "[ELITE] Qualifications — La Garde du Tournoi", 9000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiChiaotzuC3Elite()); ennemis.add(new EnnemiTienC3Elite());
-                         ennemis.add(new EnnemiYamchaC3Elite()); ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiProtecteurDBZElite());
-                         return new Stage(2, "[ELITE] L'equipe de Chiaotzu Renforcee", 11000, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiNappaC3Elite()); ennemis.add(new EnnemiRaditzC3Elite());
-                         ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiProtecteurDBZElite());
-                         return new Stage(3, "[ELITE] Les Soldats Saiyan d'Elite", 13500, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiFreezrC3Elite()); ennemis.add(new EnnemiCombattantDBZElite());
-                         ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiProtecteurDBZElite()); ennemis.add(new EnnemiSoigneurDBZElite());
-                         return new Stage(4, "[ELITE] La Terreur de Freezer Transcende", 16000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiKrillinC3Elite()); ennemis.add(new EnnemiGohanEnfantC3Elite());
-                         ennemis.add(new EnnemiTienC3Elite()); ennemis.add(new EnnemiSoigneurDBZElite()); ennemis.add(new EnnemiCombattantDBZElite());
-                         return new Stage(5, "[ELITE] Krillin et ses Allies d'Elite", 19000, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiC17C3Elite()); ennemis.add(new EnnemiC18C3Elite());
-                         ennemis.add(new EnnemiCombattantDBZElite()); ennemis.add(new EnnemiProtecteurDBZElite()); ennemis.add(new EnnemiSoigneurDBZElite());
-                         return new Stage(6, "[ELITE] Les Cyborgs Reprogrammes", 22000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiVegetaC3Elite()); ennemis.add(new EnnemiNappaC3Elite());
-                         ennemis.add(new EnnemiRaditzC3Elite()); ennemis.add(new EnnemiProtecteurDBZElite()); ennemis.add(new EnnemiSoigneurDBZElite());
-                         return new Stage(7, "[ELITE] L'Armee Saiyan d'Elite", 26000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiPiccoloC3Elite()); ennemis.add(new EnnemiKrillinC3Elite());
-                         ennemis.add(new EnnemiGohanEnfantC3Elite()); ennemis.add(new EnnemiProtecteurDBZElite()); ennemis.add(new EnnemiCombattantDBZElite());
-                         return new Stage(8, "[ELITE] Le Demon Vert et ses Disciples d'Elite", 30000, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiFreezrC3Elite()); ennemis.add(new EnnemiC17C3Elite());
-                         ennemis.add(new EnnemiC18C3Elite()); ennemis.add(new EnnemiSoigneurDBZElite()); ennemis.add(new EnnemiProtecteurDBZElite());
-                         return new Stage(9, "[ELITE] L'Armee Inarretable d'Elite", 35000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiCellC3Elite());
-                         return new Stage(10, "[ELITE] Cell Parfait — La Forme Ultime", 42000, 0, ennemis); }
+            case 1  -> { ennemis.add(new EnnemiMage1(32)); ennemis.add(new EnnemiGuerrier1(32)); ennemis.add(new EnnemiMage2(30)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 9000, 0, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiTotomaru(33)); ennemis.add(new EnnemiMage2(32)); ennemis.add(new EnnemiGuerrier2(30)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 11000, 0, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiSol(33)); ennemis.add(new EnnemiGuerrier1(32)); ennemis.add(new EnnemiTank1(30)); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 13500, 0, ennemis); }
+            case 4  -> { ennemis.add(new EnnemiTotomaru(35)); ennemis.add(new EnnemiSol(35)); ennemis.add(new EnnemiMage3(32)); ennemis.add(new EnnemiGuerrier2(30)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiJubia(36)); ennemis.add(new EnnemiMage3(34)); ennemis.add(new EnnemiGuerrier2(32)); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiTank1());
+                         return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiJubia(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2(34)); ennemis.add(new EnnemiGuerrier1());
+                         return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, ennemis); }
+            case 7  -> { ennemis.add(new EnnemiAlya(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, ennemis); }
+            case 8  -> { ennemis.add(new EnnemiAlya(39)); ennemis.add(new EnnemiJubia(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2());
+                         return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 30000, 0, ennemis); }
+            case 9  -> { ennemis.add(new EnnemiJose(40)); ennemis.add(new EnnemiAlya(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiJose(42));
+                         return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 42000, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "[ELITE] Qualifications — La Garde du Tournoi";
-            case 2  -> "[ELITE] L'equipe de Chiaotzu Renforcee";
-            case 3  -> "[ELITE] Les Soldats Saiyan d'Elite";
-            case 4  -> "[ELITE] La Terreur de Freezer Transcende";
-            case 5  -> "[ELITE] Krillin et ses Allies d'Elite";
-            case 6  -> "[ELITE] Les Cyborgs Reprogrammes";
-            case 7  -> "[ELITE] L'Armee Saiyan d'Elite";
-            case 8  -> "[ELITE] Le Demon Vert et ses Disciples d'Elite";
-            case 9  -> "[ELITE] L'Armee Inarretable d'Elite";
-            case 10 -> "[ELITE] Cell Parfait — La Forme Ultime";
+            case 1  -> "[ELITE] L'assaut de Phantom Lord Renforcé";
+            case 2  -> "[ELITE] Totomaru — Sept Flammes d'Élite";
+            case 3  -> "[ELITE] Sol — L'Impénétrable d'Élite";
+            case 4  -> "[ELITE] L'Élément 4 Renforcé";
+            case 5  -> "[ELITE] Jubia — L'Eau qui Brise d'Élite";
+            case 6  -> "[ELITE] L'Élément 4 Complet d'Élite";
+            case 7  -> "[ELITE] Aria — Magie du Ciel Vide Transcendée";
+            case 8  -> "[ELITE] L'Élément 4 — Ultime Résistance";
+            case 9  -> "[ELITE] José — L'Ombre Transcendée";
+            case 10 -> "[ELITE] José Porla — Forme Spectrali Suprême";
             default -> "???";
         };
     }
+    
 
     public boolean[] getStagesDebloques()  { return stagesDebloques; }
     public boolean[] getStagesReussis()    { return stagesReussis; }

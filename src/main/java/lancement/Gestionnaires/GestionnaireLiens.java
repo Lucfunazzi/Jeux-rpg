@@ -59,14 +59,14 @@ public class GestionnaireLiens {
 
         liens.add(new Lien(
             "Androïds jumeaux",
-            "C-17 et C-18 ensemble : toute l'equipe gagne +5% ATK et +15% VIT",
-            new String[]{"C-17", "C-18"},
+            "Rogue et Sting ensemble : toute l'equipe gagne +8% ATK et +10% VIT",
+            new String[]{"Rogue", "Sting"},
             0.05, 0.00, 0.00, 0.15
         ));
         liens.add(new Lien(
             "Freres aux destins tragiques",
-            "Sasuke et Itachi ensemble : toute l'equipe gagne +10% ATK et +5% DEF",
-            new String[]{"Sasuke", "Itachi"},
+            "Natsu et Gray ensemble : toute l'equipe gagne +10% ATK et +5% DEF",
+            new String[]{"Natsu", "Gray"},
             0.10, 0.05, 0.00, 0.00
         ));
         liens.add(new Lien(
@@ -83,8 +83,8 @@ public class GestionnaireLiens {
         ));
         liens.add(new Lien(
             "Guerrier team Z 1",
-            "Tien, Yamcha et Krillin ensemble : toute l'equipe gagne +2% ATK et +5% DEF",
-            new String[]{"Tien", "Yamcha", "Krillin"},
+            "Alzack et Bisca ensemble : toute l'equipe gagne +5% ATK et +8% VIT",
+            new String[]{"Alzack", "Bisca"},
             0.02, 0.00, 0.05, 0.00
         ));
 

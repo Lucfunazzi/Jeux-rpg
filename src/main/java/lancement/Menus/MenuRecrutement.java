@@ -2,20 +2,39 @@ package lancement.Menus;
 
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
-import Personnage.Naruto_Shippuden.perso_Kiba;
-import Personnage.Naruto_Shippuden.perso_Shino;
-import Personnage.DragonBallZ.perso_Tien;
-import Personnage.DragonBallZ.perso_Chiaotzu;
-import Personnage.DragonBallZ.perso_Krillin;
-import Personnage.DragonBallZ.perso_Raditz;
-import Personnage.FairyTail.perso_Kana;
+import Personnage.FairyTail.perso_Alzack;
+import Personnage.FairyTail.perso_Bisca;
 import Personnage.FairyTail.perso_Elfman;
-import Personnage.Naruto_Shippuden.perso_Choji;
-import Personnage.Naruto_Shippuden.perso_Hinata;
-import Personnage.Naruto_Shippuden.perso_Ino;
-import Personnage.Naruto_Shippuden.perso_Kabuto;
-import Personnage.Naruto_Shippuden.perso_Kankuro;
-import Personnage.Naruto_Shippuden.perso_Temari;
+import Personnage.FairyTail.perso_Max;
+import Personnage.FairyTail.perso_Droy;
+import Personnage.FairyTail.perso_Jet;
+import Personnage.FairyTail.perso_Warren;
+import Personnage.FairyTail.perso_Nab;
+import Personnage.FairyTail.perso_Romeo;
+import Personnage.FairyTail.perso_Levy;
+import Personnage.FairyTail.perso_Lisanna;
+import Personnage.FairyTail.perso_ElfmanBete;
+import Personnage.FairyTail.perso_Bickslow;
+import Personnage.FairyTail.perso_Evergreen;
+import Personnage.FairyTail.perso_Kana;
+import Personnage.FairyTail.perso_Loke;
+import Personnage.FairyTail.perso_Angel;
+import Personnage.FairyTail.perso_Freed;
+import Personnage.FairyTail.perso_Gajeel;
+import Personnage.FairyTail.perso_Gray;
+import Personnage.FairyTail.perso_Jubia;
+import Personnage.FairyTail.perso_Lucy;
+import Personnage.FairyTail.perso_Natsu;
+import Personnage.FairyTail.perso_Wendy;
+import Personnage.FairyTail.perso_Erza;
+import Personnage.FairyTail.perso_Mirajane;
+import Personnage.FairyTail.perso_Natsu_Etherion;
+import Personnage.FairyTail.perso_Rogue;
+import Personnage.FairyTail.perso_Sting;
+import Personnage.FairyTail.perso_Yukino;
+import Personnage.FairyTail.perso_Lucas;
+import Personnage.FairyTail.perso_Mirajane_Halphas;
+import Personnage.FairyTail.perso_Elfman;
 import Equipement.ParcheminXP;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +56,25 @@ public class MenuRecrutement {
     private record InfoPerso(String nom, String role) {}
 
     private static final List<InfoPerso> PAGE1 = List.of(
-        new InfoPerso("Kiba",     "DPS"),
-        new InfoPerso("Shino",    "DPS"),
-        new InfoPerso("Tien",     "Tank"),
-        new InfoPerso("Chiaotzu", "Support"),
-        new InfoPerso("Elfman",   "DPS")
+        new InfoPerso("Alzack",  "DPS"),
+        new InfoPerso("Bisca",   "DPS"),
+        new InfoPerso("Elfman",  "DPS"),
+        new InfoPerso("Max",     "DPS"),
+        new InfoPerso("Droy",    "Support"),
+        new InfoPerso("Jet",     "DPS"),
+        new InfoPerso("Warren",  "Support"),
+        new InfoPerso("Nab",     "Tank"),
+        new InfoPerso("Romeo",   "DPS")
     );
 
     private static final List<InfoPerso> PAGE2 = List.of(
-        new InfoPerso("Cana",    "Support"),
-        new InfoPerso("Krillin", "DPS"),
-        new InfoPerso("Raditz",  "DPS"),
-        new InfoPerso("Kabuto",  "Support"),
-        new InfoPerso("Kankuro", "DPS"),
-        new InfoPerso("Temari",  "DPS"),
-        new InfoPerso("Ino",     "Support"),
-        new InfoPerso("Choji",   "Tank"),
-        new InfoPerso("Hinata",  "Tank")
+        new InfoPerso("Bickslow",    "DPS"),
+        new InfoPerso("Evergreen",   "Support"),
+        new InfoPerso("Cana",        "Support"),
+        new InfoPerso("Loke",        "DPS"),
+        new InfoPerso("Levy",        "Support"),
+        new InfoPerso("Lisanna",     "Support"),
+        new InfoPerso("Elfman Bête", "Tank")
     );
 
     private int parcheminC = 0;
@@ -295,21 +316,23 @@ public class MenuRecrutement {
     // ── Factory ───────────────────────────────────────────────────────────
     private PersonnageBase creerPersonnage(String nom) {
         return switch (nom) {
-            case "Kiba"     -> new perso_Kiba();
-            case "Shino"    -> new perso_Shino();
-            case "Tien"     -> new perso_Tien();
-            case "Chiaotzu" -> new perso_Chiaotzu();
-            case "Elfman"   -> new perso_Elfman();
-            case "Cana"     -> new perso_Kana();
-            case "Krillin"  -> new perso_Krillin();
-            case "Raditz"   -> new perso_Raditz();
-            case "Kabuto"   -> new perso_Kabuto();
-            case "Kankuro"  -> new perso_Kankuro();
-            case "Temari"   -> new perso_Temari();
-            case "Ino"      -> new perso_Ino();
-            case "Choji"    -> new perso_Choji();
-            case "Hinata"   -> new perso_Hinata();
-            default         -> null;
+            case "Alzack"      -> new perso_Alzack();
+            case "Bisca"       -> new perso_Bisca();
+            case "Elfman"      -> new perso_Elfman();
+            case "Max"         -> new perso_Max();
+            case "Droy"        -> new perso_Droy();
+            case "Jet"         -> new perso_Jet();
+            case "Warren"      -> new perso_Warren();
+            case "Nab"         -> new perso_Nab();
+            case "Romeo"       -> new perso_Romeo();
+            case "Bickslow"    -> new perso_Bickslow();
+            case "Evergreen"   -> new perso_Evergreen();
+            case "Cana"        -> new perso_Kana();
+            case "Loke"        -> new perso_Loke();
+            case "Levy"        -> new perso_Levy();
+            case "Lisanna"     -> new perso_Lisanna();
+            case "Elfman Bête" -> new perso_ElfmanBete();
+            default            -> null;
         };
     }
 

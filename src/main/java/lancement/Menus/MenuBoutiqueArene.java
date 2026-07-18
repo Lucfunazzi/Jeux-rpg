@@ -2,8 +2,7 @@ package lancement.Menus;
 
 import lancement.GameContext;
 import Personnage.PersonnageBase;
-import Personnage.Naruto_Shippuden.perso_Haku;
-import Personnage.Naruto_Shippuden.perso_Zabuza;
+import Personnage.FairyTail.*;
 import lancement.Gestionnaires.AreneData;
 import java.util.Scanner;
 
@@ -11,8 +10,8 @@ public class MenuBoutiqueArene {
 
     // ── Catalogue ─────────────────────────────────────────────────────────
 
-    private static final int PRIX_HAKU   = 10_000;
-    private static final int PRIX_ZABUZA = 13_000;
+    private static final int PRIX_LOKE  = 10_000;
+    private static final int PRIX_LEVY  = 13_000;
 
     private final GameContext ctx;
     private final Scanner     scanner;
@@ -39,15 +38,15 @@ public class MenuBoutiqueArene {
                          + joueurArene.getPointsBoutique() + " pts");
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  PERSONNAGES");
-        afficherLigne("1", "Haku",   "B", PRIX_HAKU,   dejaRecruté("Haku"));
-        afficherLigne("2", "Zabuza", "B", PRIX_ZABUZA, dejaRecruté("Zabuza"));
+        afficherLigne("1", "Loke",  "B", PRIX_LOKE,  dejaRecruté("Loke"));
+        afficherLigne("2", "Levy",  "B", PRIX_LEVY,  dejaRecruté("Levy"));
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  [0] Retour");
         System.out.print("  Choix : ");
 
         return switch (scanner.nextLine().trim()) {
-            case "1" -> { acheterPersonnage("Haku",   PRIX_HAKU);   yield true; }
-            case "2" -> { acheterPersonnage("Zabuza", PRIX_ZABUZA); yield true; }
+            case "1" -> { acheterPersonnage("Loke",  PRIX_LOKE);  yield true; }
+            case "2" -> { acheterPersonnage("Levy",  PRIX_LEVY);  yield true; }
             case "0" -> false;
             default  -> { System.out.println("  Choix invalide."); yield true; }
         };
@@ -90,8 +89,8 @@ public class MenuBoutiqueArene {
         joueurArene.setPointsBoutique(joueurArene.getPointsBoutique() - prix);
 
         PersonnageBase perso = switch (nom) {
-            case "Haku"   -> new perso_Haku();
-            case "Zabuza" -> new perso_Zabuza();
+            case "Loke"  -> new perso_Loke();
+            case "Levy"  -> new perso_Levy();
             default       -> null;
         };
 

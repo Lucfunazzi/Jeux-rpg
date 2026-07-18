@@ -10,14 +10,42 @@ import Joueur.Competences;
 import Personnage.PersonnageBase;
 
 
-import Personnage.Naruto_Shippuden.*;
-
-import Personnage.DragonBallZ.*;
-
 import Personnage.FairyTail.*;
 
 
 
+import Personnage.FairyTail.perso_Alzack;
+import Personnage.FairyTail.perso_Bisca;
+import Personnage.FairyTail.perso_Elfman;
+import Personnage.FairyTail.perso_Max;
+import Personnage.FairyTail.perso_Droy;
+import Personnage.FairyTail.perso_Jet;
+import Personnage.FairyTail.perso_Warren;
+import Personnage.FairyTail.perso_Nab;
+import Personnage.FairyTail.perso_Romeo;
+import Personnage.FairyTail.perso_Levy;
+import Personnage.FairyTail.perso_Lisanna;
+import Personnage.FairyTail.perso_ElfmanBete;
+import Personnage.FairyTail.perso_Bickslow;
+import Personnage.FairyTail.perso_Evergreen;
+import Personnage.FairyTail.perso_Kana;
+import Personnage.FairyTail.perso_Loke;
+import Personnage.FairyTail.perso_Angel;
+import Personnage.FairyTail.perso_Freed;
+import Personnage.FairyTail.perso_Gajeel;
+import Personnage.FairyTail.perso_Gray;
+import Personnage.FairyTail.perso_Jubia;
+import Personnage.FairyTail.perso_Lucy;
+import Personnage.FairyTail.perso_Natsu;
+import Personnage.FairyTail.perso_Wendy;
+import Personnage.FairyTail.perso_Erza;
+import Personnage.FairyTail.perso_Mirajane;
+import Personnage.FairyTail.perso_Natsu_Etherion;
+import Personnage.FairyTail.perso_Rogue;
+import Personnage.FairyTail.perso_Sting;
+import Personnage.FairyTail.perso_Yukino;
+import Personnage.FairyTail.perso_Lucas;
+import Personnage.FairyTail.perso_Mirajane_Halphas;
 import Equipement.CarteOr;
 import Equipement.Equipement;
 import Equipement.Inventaire;
@@ -105,6 +133,7 @@ public class GestionnaireSauvegarde {
             SauvegardeData.PersonnageData pd = new SauvegardeData.PersonnageData(
                 p.getNom(), p.getNiveau(), p.getExperience(), p.getExperienceMax()
             );
+            pd.nbreEtoiles = p.getNbreEtoiles();
             for (Equipement e : p.getEquipementsPortes())
                 pd.equipementsPortes.add(versEquipementData(e, 1));
             data.personnagesRecruites.add(pd);
@@ -148,6 +177,14 @@ public class GestionnaireSauvegarde {
         // Parchemins
         data.parcheminC = ctx.menuRecrutement.getParcheminC();
         data.parcheminB = ctx.menuRecrutement.getParcheminB();
+
+        // Tirages
+        if (ctx.menuTirage != null) {
+            data.parcheminTirageOrdinaire    = ctx.menuTirage.getParcheminOrdinaire();
+            data.parcheminTirageElite        = ctx.menuTirage.getParcheminElite();
+            data.tirageEliteCompteurSansS    = ctx.menuTirage.getCompteurSansSRang();
+            data.tirageEliteCompteurSansSS   = ctx.menuTirage.getCompteurSansSS();
+        }
 
         // Inventaire
         for (Inventaire.StackEquipement s : ctx.inventaire.getStacks())
@@ -333,6 +370,7 @@ public class GestionnaireSauvegarde {
             PersonnageBase p = creerPersonnageParNom(pd.nom);
             if (p != null) {
                 appliquerNiveaux(p, pd);
+                p.setNbreEtoiles(pd.nbreEtoiles);
                 if (pd.equipementsPortes != null)
                     for (SauvegardeData.EquipementData ed : pd.equipementsPortes)
                         p.equiper(versEquipement(ed));
@@ -529,32 +567,46 @@ public class GestionnaireSauvegarde {
         return e;
     }
 
-   private PersonnageBase creerPersonnageParNom(String nom) {
+   public PersonnageBase creerPersonnageParNom(String nom) {
     return switch (nom) {
-        // Page 1 — Rang C
-        case "Kiba"           -> new perso_Kiba();
-        case "Shino"          -> new perso_Shino();
-        case "Tien"           -> new perso_Tien();
-        case "Chiaotzu"       -> new perso_Chiaotzu();
+        // Rang C
+        case "Alzack"         -> new perso_Alzack();
+        case "Bisca"          -> new perso_Bisca();
         case "Elfman"         -> new perso_Elfman();
-        // Page 2 — Rang B
+        case "Max"            -> new perso_Max();
+        case "Droy"           -> new perso_Droy();
+        case "Jet"            -> new perso_Jet();
+        case "Warren"         -> new perso_Warren();
+        case "Nab"            -> new perso_Nab();
+        case "Romeo"          -> new perso_Romeo();
+        // Rang B
+        case "Bickslow"       -> new perso_Bickslow();
+        case "Evergreen"      -> new perso_Evergreen();
         case "Cana"           -> new perso_Kana();
-        case "Krillin"        -> new perso_Krillin();
-        case "Raditz"         -> new perso_Raditz();
-        case "Kabuto"         -> new perso_Kabuto();
-        case "Kankuro"        -> new perso_Kankuro();
-        case "Temari"         -> new perso_Temari();
-        case "Ino"            -> new perso_Ino();
-        case "Choji"          -> new perso_Choji();
-        case "Hinata"         -> new perso_Hinata();
+        case "Loke"           -> new perso_Loke();
+        case "Levy"           -> new perso_Levy();
+        case "Lisanna"        -> new perso_Lisanna();
+        case "Elfman Bête"    -> new perso_ElfmanBete();
         // Boutique arène — Rang B
-        case "Haku"           -> new perso_Haku();
-        case "Zabuza"         -> new perso_Zabuza();
-        // Recrutement rare
-        case "Iruka"          -> new perso_Iruka();
-        case "Yamcha"         -> new perso_Yamcha();
+        case "Elfman Bete"    -> new perso_ElfmanBete();
+        // Rang A
+        case "Angel"          -> new perso_Angel();
+        case "Freed"          -> new perso_Freed();
+        case "Gajeel"         -> new perso_Gajeel();
+        case "Gray"           -> new perso_Gray();
+        case "Jubia"          -> new perso_Jubia();
+        case "Lucy"           -> new perso_Lucy();
         case "Natsu"          -> new perso_Natsu();
+        case "Wendy"          -> new perso_Wendy();
+        // Rang S+
+        case "Erza"           -> new perso_Erza();
+        case "Mirajane"       -> new perso_Mirajane();
         case "Natsu Etherion" -> new perso_Natsu_Etherion();
+        case "Rogue"          -> new perso_Rogue();
+        case "Sting"          -> new perso_Sting();
+        case "Yukino"         -> new perso_Yukino();
+        case "Lucas"          -> new perso_Lucas();
+        case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
         default               -> null;
     };
 }

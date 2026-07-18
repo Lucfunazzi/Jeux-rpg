@@ -2,6 +2,9 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.chapitre1Elite.*;
+import Personnage.pnj.Chapitre1.EnnemiBora;
+import Personnage.pnj.Chapitre1.EnnemiEvaro;
+import Personnage.pnj.Chapitre1.EnnemiEligor;
 import Personnage.pnj.Chapitre1Elite.EnnemiMage3Elite;
 import Equipement.EquipementFactory;
 import Equipement.Equipement;
@@ -114,13 +117,13 @@ public class Chapitre1Elite {
             }
             case 2  -> { ennemis.add(new EnnemiMage2Elite());
                          return new Stage(2, "[ELITE] L'Ancien Reveil", 3000, 300, ennemis, EquipementFactory.couvreCheC()); }
-            case 3  -> { ennemis.add(new EnnemiIrukaElite());
+            case 3  -> { ennemis.add(new EnnemiEvaro());
                          return new Stage(3, "[ELITE] Le Maitre Ninja", 4000, 310, ennemis, EquipementFactory.bottesC()); }
             case 4  -> { ennemis.add(new EnnemiGuerrier1Elite()); ennemis.add(new EnnemiMage2Elite()); ennemis.add(new EnnemiMage2Elite());
                          return new Stage(4, "[ELITE] La Triade Maudite", 5600, 320, ennemis, EquipementFactory.jambieresC()); }
             case 5  -> { ennemis.add(new EnnemiGuerrier2Elite()); ennemis.add(new EnnemiMage3Elite()); ennemis.add(new EnnemiMage3Elite());
                          return new Stage(5, "[ELITE] L'Avant-Garde", 6800, 330, ennemis, EquipementFactory.mainsC()); }
-            case 6  -> { ennemis.add(new EnnemiYamchaElite());
+            case 6  -> { ennemis.add(new EnnemiBora());
                          return new Stage(6, "[ELITE] Le Loup du Desert", 7600, 340, ennemis, EquipementFactory.torseC()); }
             case 7  -> { ennemis.add(new EnnemiNinja1Elite()); ennemis.add(new EnnemiGuerrier3Elite());
                          ennemis.add(new EnnemiNinja2Elite()); ennemis.add(new EnnemiMage4Elite());
@@ -131,7 +134,7 @@ public class Chapitre1Elite {
             case 9  -> { ennemis.add(new EnnemiTank2Elite()); ennemis.add(new EnnemiNinja3Elite());
                          ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiSoigneur2Elite());
                          return new Stage(9, "[ELITE] Les Generaux des Tenebres", 12400, 370, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiNatsuElite());
+            case 10 -> { ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiEligor());
                          ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiSoigneur1Elite()); ennemis.add(new EnnemiSoigneur2Elite());
                          return new Stage(10, "[ELITE] Le Dragon de Feu", 16000, 380, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }

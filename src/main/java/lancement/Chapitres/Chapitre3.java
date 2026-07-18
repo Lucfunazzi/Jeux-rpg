@@ -1,6 +1,13 @@
 package lancement.Chapitres;
 
 import Personnage.PersonnageBase;
+import Personnage.pnj.Chapitre1.EnnemiMage1;
+import Personnage.pnj.Chapitre1.EnnemiMage2;
+import Personnage.pnj.Chapitre1.EnnemiMage3;
+import Personnage.pnj.Chapitre1.EnnemiGuerrier1;
+import Personnage.pnj.Chapitre1.EnnemiGuerrier2;
+import Personnage.pnj.Chapitre1.EnnemiTank1;
+import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
 import Personnage.pnj.Chapitre3.*;
 import lancement.GameContext;
 import lancement.Stage;
@@ -22,7 +29,7 @@ public class Chapitre3 {
 
         while (!retour) {
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 3 — Le Tournoi du Tenkaichi");
+            System.out.println("   CHAPITRE 3 — Phantom Lord");
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr()));
             System.out.println();
@@ -58,7 +65,7 @@ public class Chapitre3 {
                         stagesDebloques[choix + 1] = true;
                         System.out.println(">> Stage " + (choix + 1) + " debloque !");
                     } else {
-                        System.out.println(">> Vous avez remporte le Tournoi du Tenkaichi !");
+                        System.out.println(">> Félicitations ! Vous avez vaincu Phantom Lord !");
                         // Donner la Clef Celeste Taurus (une seule fois)
                         if (estNouveau && ctx.gestionnaireClefsCelestes != null
                                 && ctx.gestionnaireClefsCelestes.debloquer(
@@ -81,42 +88,47 @@ public class Chapitre3 {
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiYamchaC3()); ennemis.add(new EnnemiCombattantDBZ1()); ennemis.add(new EnnemiCombattantDBZ1()); ennemis.add(new EnnemiSoigneurDBZ()); ennemis.add(new EnnemiProtecteurDBZ());
-                         return new Stage(1, "Qualifications — Premier sang", 6000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiChiaotzuC3()); ennemis.add(new EnnemiTienC3()); ennemis.add(new EnnemiYamchaC3()); ennemis.add(new EnnemiCombattantDBZ1()); ennemis.add(new EnnemiSoigneurDBZ());
-                         return new Stage(2, "L'equipe de Chiaotzu", 7500, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiNappaC3()); ennemis.add(new EnnemiRaditzC3()); ennemis.add(new EnnemiCombattantDBZ1()); ennemis.add(new EnnemiCombattantDBZ2()); ennemis.add(new EnnemiProtecteurDBZ());
-                         return new Stage(3, "Les soldats de Nappa", 9000, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiFreezrC3()); ennemis.add(new EnnemiCombattantDBZ2()); ennemis.add(new EnnemiCombattantDBZ2()); ennemis.add(new EnnemiProtecteurDBZ()); ennemis.add(new EnnemiSoigneurDBZ());
-                         return new Stage(4, "La terreur de Freezer", 11000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiKrillinC3()); ennemis.add(new EnnemiGohanEnfantC3()); ennemis.add(new EnnemiTienC3()); ennemis.add(new EnnemiSoigneurDBZ()); ennemis.add(new EnnemiCombattantDBZ2());
-                         return new Stage(5, "Krillin et ses allies", 13000, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiC17C3()); ennemis.add(new EnnemiC18C3()); ennemis.add(new EnnemiCombattantDBZ2()); ennemis.add(new EnnemiProtecteurDBZ()); ennemis.add(new EnnemiSoigneurDBZ());
-                         return new Stage(6, "Les Cyborgs et leur garde", 15000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiVegetaC3()); ennemis.add(new EnnemiNappaC3()); ennemis.add(new EnnemiRaditzC3()); ennemis.add(new EnnemiProtecteurDBZ()); ennemis.add(new EnnemiSoigneurDBZ());
-                         return new Stage(7, "L'elite Saiyan", 18000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiPiccoloC3()); ennemis.add(new EnnemiKrillinC3()); ennemis.add(new EnnemiGohanEnfantC3()); ennemis.add(new EnnemiProtecteurDBZ()); ennemis.add(new EnnemiCombattantDBZ2());
-                         return new Stage(8, "Le demon vert et ses disciples", 21000, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiFreezrC3()); ennemis.add(new EnnemiC17C3()); ennemis.add(new EnnemiC18C3()); ennemis.add(new EnnemiSoigneurDBZ()); ennemis.add(new EnnemiProtecteurDBZ());
-                         return new Stage(9, "L'armee de Freezer", 25000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiCellC3());
-                         return new Stage(10, "Cell — Forme Impure", 30000, 0, ennemis); }
+            case 1  -> { ennemis.add(new EnnemiMage1()); ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiMage2());
+                         return new Stage(1, "L'assaut de Phantom Lord", 6000, 0, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier2());
+                         return new Stage(2, "Totomaru — Sept Flammes", 7500, 0, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiMage2());
+                         return new Stage(3, "Sol — L'Impénétrable", 9500, 0, ennemis); }
+            case 4  -> { ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol());
+                         ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier2());
+                         return new Stage(4, "L'Élément 4 se déploie", 11500, 0, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiJubia()); ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiJubia()); ennemis.add(new EnnemiTotomaru());
+                         ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier1());
+                         return new Stage(6, "L'Élément 4 au complet", 16000, 0, ennemis); }
+            case 7  -> { ennemis.add(new EnnemiAlya()); ennemis.add(new EnnemiMage3());
+                         ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, ennemis); }
+            case 8  -> { ennemis.add(new EnnemiAlya()); ennemis.add(new EnnemiJubia());
+                         ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2());
+                         return new Stage(8, "L'Élément 4 — Dernière résistance", 22500, 0, ennemis); }
+            case 9  -> { ennemis.add(new EnnemiJose()); ennemis.add(new EnnemiAlya());
+                         ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
+                         return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiJose());
+                         return new Stage(10, "José Porla — Maître de Phantom Lord", 34000, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Qualifications — Premier sang";
-            case 2  -> "L'equipe de Chiaotzu";
-            case 3  -> "Les soldats de Nappa";
-            case 4  -> "La terreur de Freezer";
-            case 5  -> "Krillin et ses allies";
-            case 6  -> "Les Cyborgs et leur garde";
-            case 7  -> "L'elite Saiyan";
-            case 8  -> "Le demon vert et ses disciples";
-            case 9  -> "L'armee de Freezer";
-            case 10 -> "Cell — Forme Impure";
+            case 1  -> "L'assaut de Phantom Lord";
+            case 2  -> "Totomaru — Sept Flammes";
+            case 3  -> "Sol — L'Impénétrable";
+            case 4  -> "L'Élément 4 se déploie";
+            case 5  -> "Jubia — L'Eau qui emprisonne";
+            case 6  -> "L'Élément 4 au complet";
+            case 7  -> "Aria — Magie du Ciel Vide";
+            case 8  -> "L'Élément 4 — Dernière résistance";
+            case 9  -> "José — L'Ombre s'éveille";
+            case 10 -> "José Porla — Maître de Phantom Lord";
             default -> "???";
         };
     }

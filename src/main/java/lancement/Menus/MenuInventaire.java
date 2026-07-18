@@ -2,6 +2,8 @@ package lancement.Menus;
 
 import Equipement.CarteOr;
 import Equipement.Equipement;
+import Equipement.FragmentEquipement;
+import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
 import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
@@ -11,6 +13,8 @@ import java.util.Scanner;
 import lancement.GameContext;
 
 public class MenuInventaire {
+
+    private final GestionnaireFragments gestionnaireFragments = new GestionnaireFragments();
 
     public void afficher(GameContext ctx, Scanner scanner) {
         boolean retour = false;
@@ -23,6 +27,7 @@ public class MenuInventaire {
             System.out.println("3. Voir l'equipement d'un personnage");
             System.out.println("4. Equiper un set complet");
             System.out.println("5. Utiliser des Cartes d'Or");
+            System.out.println("6. Synthetiser un equipement [A] (fragments)");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -32,6 +37,7 @@ public class MenuInventaire {
                 case "3" -> menuVoirEquipement(ctx, scanner);
                 case "4" -> menuEquiperSet(ctx, scanner);
                 case "5" -> menuCartesOr(ctx, scanner);
+                case "6" -> menuSynthese(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -258,6 +264,89 @@ public class MenuInventaire {
      * Les pièces non-armes sont toujours compatibles.
      * Les armes dépendent du type de classe du personnage.
      */
+    // ── Synthèse d'équipements rang A par fragments ───────────────────────
+    private void menuSynthese(GameContext ctx, Scanner scanner) {
+        System.out.println("\n========================================");
+        System.out.println("    SYNTHESE — EQUIPEMENTS [A]");
+        System.out.println("========================================");
+        System.out.println("Collectez " + FragmentEquipement.QUANTITE_REQUISE
+                + " fragments identiques pour creer un equipement rang A.");
+        System.out.println("Les fragments se droppent dans le Chapitre 3 Elite.\n");
+
+        // Afficher tous les fragments (progression même à 0)
+        List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
+
+        // Séparer : synthétisables en premier, puis les autres
+        List<FragmentEquipement> prets    = new ArrayList<>();
+        List<FragmentEquipement> enCours  = new ArrayList<>();
+
+        for (FragmentEquipement f : catalogue) {
+            int qte = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
+            if (qte >= FragmentEquipement.QUANTITE_REQUISE) prets.add(f);
+            else if (qte > 0) enCours.add(f);
+        }
+
+        if (!prets.isEmpty()) {
+            System.out.println("[ Prêts à synthetiser ]");
+            for (int i = 0; i < prets.size(); i++) {
+                System.out.printf("  [%d] %s%n", i + 1,
+                        gestionnaireFragments.afficherProgression(prets.get(i), ctx.inventaire));
+            }
+        }
+
+        if (!enCours.isEmpty()) {
+            System.out.println("[ En cours de collecte ]");
+            for (FragmentEquipement f : enCours) {
+                System.out.println("      " +
+                        gestionnaireFragments.afficherProgression(f, ctx.inventaire));
+            }
+        }
+
+        if (prets.isEmpty() && enCours.isEmpty()) {
+            System.out.println("Vous n'avez encore aucun fragment.");
+            System.out.println("Jouez le Chapitre 3 Elite pour en obtenir !");
+            return;
+        }
+
+        if (prets.isEmpty()) {
+            System.out.println("\nAucun equipement n'est encore synthetisable.");
+            return;
+        }
+
+        System.out.println("\nChoisissez un equipement a synthetiser (0 pour annuler) :");
+        System.out.print("Votre choix : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > prets.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        FragmentEquipement fragment = prets.get(choix - 1);
+        Equipement nouvel = gestionnaireFragments.synthetiser(fragment, ctx.inventaire);
+
+        if (nouvel == null) {
+            // Ne devrait pas arriver (déjà filtré), sécurité
+            System.out.println("Fragments insuffisants.");
+            return;
+        }
+
+        ctx.inventaire.ajouterEquipement(nouvel);
+        System.out.println("\n>> Synthèse réussie !");
+        System.out.println("   " + nouvel + " ajouté à l'inventaire !");
+        System.out.println("   " + FragmentEquipement.QUANTITE_REQUISE
+                + " fragments consommés.");
+
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
     // ── Cartes d'or ───────────────────────────────────────────────────────
     private void menuCartesOr(GameContext ctx, Scanner scanner) {
         List<Inventaire.StackCarteOr> stacks = new ArrayList<>();

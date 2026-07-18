@@ -115,4 +115,78 @@ public class EquipementFactory {
             default         -> kunaiB();
         };
     }
+
+    // ── Rang A (synthèse par fragments — Chapitre 3 Elite) ────────────────
+
+    public static Equipement kunaiA() {
+        return new Equipement("Kunai du Vent", Equipement.Slot.ARME, Equipement.Rarete.A,
+                Equipement.TypeArme.KUNAI, 70, 0, 0, 0);
+    }
+
+    public static Equipement batonA() {
+        return new Equipement("Baton de Foudre", Equipement.Slot.ARME, Equipement.Rarete.A,
+                Equipement.TypeArme.BATON, 70, 0, 0, 0);
+    }
+
+    public static Equipement gantsArmeA() {
+        return new Equipement("Gants de Titane", Equipement.Slot.ARME, Equipement.Rarete.A,
+                Equipement.TypeArme.GANTS, 70, 0, 0, 0);
+    }
+
+    public static Equipement couvreCheA() {
+        return new Equipement("Heaume Sacré", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.A,
+                Equipement.TypeArme.AUCUN, 0, 0, 200, 0);
+    }
+
+    public static Equipement torseA() {
+        return new Equipement("Cuirasse de l'Aube", Equipement.Slot.TORSE, Equipement.Rarete.A,
+                Equipement.TypeArme.AUCUN, 0, 60, 0, 0);
+    }
+
+    public static Equipement mainsA() {
+        return new Equipement("Gantelets Forgés", Equipement.Slot.MAINS, Equipement.Rarete.A,
+                Equipement.TypeArme.AUCUN, 0, 40, 0, 0);
+    }
+
+    public static Equipement jambieresA() {
+        return new Equipement("Jambières de Fer", Equipement.Slot.JAMBIERES, Equipement.Rarete.A,
+                Equipement.TypeArme.AUCUN, 0, 0, 160, 0);
+    }
+
+    public static Equipement bottesA() {
+        return new Equipement("Bottes de Tempête", Equipement.Slot.BOTTES, Equipement.Rarete.A,
+                Equipement.TypeArme.AUCUN, 0, 0, 0, 35);
+    }
+
+    /**
+     * Retourne l'arme rang A correspondant au type du personnage.
+     * @param type "Ninja", "Mage" ou "Guerrier"
+     */
+    public static Equipement armeA(String type) {
+        return switch (type) {
+            case "Ninja"    -> kunaiA();
+            case "Mage"     -> batonA();
+            case "Guerrier" -> gantsArmeA();
+            default         -> kunaiA();
+        };
+    }
+
+    /**
+     * Crée dynamiquement un équipement rang A à partir des paramètres de synthèse.
+     * Utilisé par {@link Equipement.GestionnaireFragments} lors de la synthèse.
+     */
+    public static Equipement creerEquipementA(String nom, Equipement.Slot slot,
+                                              Equipement.TypeArme typeArme) {
+        return switch (nom) {
+            case "Kunai du Vent"      -> kunaiA();
+            case "Baton de Foudre"    -> batonA();
+            case "Gants de Titane"    -> gantsArmeA();
+            case "Heaume Sacré"       -> couvreCheA();
+            case "Cuirasse de l'Aube" -> torseA();
+            case "Gantelets Forgés"   -> mainsA();
+            case "Jambières de Fer"   -> jambieresA();
+            case "Bottes de Tempête"  -> bottesA();
+            default -> new Equipement(nom, slot, Equipement.Rarete.A, typeArme, 0, 0, 0, 0);
+        };
+    }
 }

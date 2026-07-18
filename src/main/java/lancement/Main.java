@@ -23,6 +23,8 @@ import lancement.Menus.MenuQuetes;
 import lancement.Menus.MenuRang;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuRecrutementRare;
+import lancement.Menus.MenuEtoilesPerso;
+import lancement.Menus.MenuTirage;
 import lancement.Menus.MenuCompagnons;
 import lancement.Menus.MenuCreaturesSacrees;
 import lancement.Gestionnaires.GestionnaireEtoiles;
@@ -46,6 +48,8 @@ public class Main {
         ctx.sauvegarde           = new GestionnaireSauvegarde();
         ctx.inventaire           = new Inventaire();
         ctx.menuRecrutement      = new MenuRecrutement();
+        ctx.menuEtoilesPerso     = new MenuEtoilesPerso();
+        ctx.menuTirage           = new MenuTirage();
         ctx.chapitre1            = new Chapitre1();
         ctx.chapitre2            = new Chapitre2();
         ctx.chapitre3            = new Chapitre3();
@@ -111,6 +115,10 @@ public class Main {
                     ctx.sauvegarde.restaurerDonjon(ctx.gestionnaireDonjon, data);
                     ctx.menuRecrutement.setParcheminC(data.parcheminC);
                     ctx.menuRecrutement.setParcheminB(data.parcheminB);
+                    ctx.menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
+                    ctx.menuTirage.setParcheminElite(data.parcheminTirageElite);
+                    ctx.menuTirage.setCompteurSansSRang(data.tirageEliteCompteurSansS);
+                    ctx.menuTirage.setCompteurSansSS(data.tirageEliteCompteurSansSS);
                     ctx.sauvegarde.restaurerEtoiles(ctx.gestionnaireEtoiles, data);
                     ctx.coupons = data.coupons;
                     System.out.println("\nPartie chargee ! Bon retour, " + ctx.joueur.getNom() + " !");
@@ -165,6 +173,8 @@ public class Main {
             if (areneDisponible)                                                               System.out.println("13. Arene  ⚔");
             if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)            System.out.println("14. Compagnons");
             if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE)      System.out.println("15. Créatures Sacrées");
+            if (ctx.joueur.getNiveau() >= 6)                                                   System.out.println("16. Etoiles & Fragments");
+            System.out.println("17. Tirages");
             System.out.println("12. Sauvegarder");
             System.out.println("0.  Quitter");
             System.out.print("Votre choix : ");
@@ -209,6 +219,11 @@ public class Main {
                     if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE) { menuCreaturesSacrees.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
                     else System.out.println("Choix invalide.");
                 }
+                case "16" -> {
+                    if (ctx.joueur.getNiveau() >= 6) { ctx.menuEtoilesPerso.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
+                case "17" -> { ctx.menuTirage.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
                 case "0"  -> {
                     if (modifieDepuisSauvegarde) {
                         System.out.println("Vous avez des modifications non sauvegardees.");

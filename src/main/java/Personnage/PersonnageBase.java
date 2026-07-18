@@ -69,6 +69,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     private double bonusCreatureDEF = 0.0;
     private double bonusCreaturePV  = 0.0;
     private double bonusCreatureVIT = 0.0;
+    private int    nbreEtoiles    = 0;   // 0-5 : chaque étoile = +5% ATK/DEF/PV/VIT
 
     protected ArrayList<Effet> effetsActifs = new ArrayList<>();
 
@@ -103,6 +104,20 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getBonusCreatureDEF() { return bonusCreatureDEF; }
     public double getBonusCreaturePV()  { return bonusCreaturePV; }
     public double getBonusCreatureVIT() { return bonusCreatureVIT; }
+
+    // ── Étoiles ───────────────────────────────────────────────────────────
+    public int  getNbreEtoiles()        { return nbreEtoiles; }
+    public void setNbreEtoiles(int n)   { this.nbreEtoiles = Math.max(0, Math.min(5, n)); }
+
+    /** Monte d'une étoile (max 5) et recalcule les stats. */
+    public void monterEtoile() {
+        if (nbreEtoiles < 5) nbreEtoiles++;
+    }
+
+    /** Multiplicateur étoile : 1.00 à 1.25 */
+    public double getMultiplicateurEtoile() {
+        return 1.0 + (nbreEtoiles * 0.05);
+    }
 
     protected void initialiserVieMax() {
         this.vieMax            = this.vie;
@@ -250,7 +265,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getVieMax() {
         BuffTitre titre = getEffet(BuffTitre.class);
-        double base = this.vieMax;
+        double base = this.vieMax * getMultiplicateurEtoile();
         if (compterPiecesRangC() >= 3) base += 200;
         base += getBonusEquipementPV();
         if (titre != null) base *= (1 + titre.getBonus());
@@ -272,7 +287,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         BuffAttaque buff        = getEffet(BuffAttaque.class);
         ReductionAttaque debuff = getEffet(ReductionAttaque.class);
         BuffTitre titre         = getEffet(BuffTitre.class);
-        double base = attaqueBase;
+        double base = attaqueBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         if (titre  != null) base *= (1 + titre.getBonus());
@@ -294,7 +309,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         BuffDefense buff         = getEffet(BuffDefense.class);
         ReductionDefense debuff  = getEffet(ReductionDefense.class);
         BuffTitre titre          = getEffet(BuffTitre.class);
-        double base = defenseBase;
+        double base = defenseBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         if (titre  != null) base *= (1 + titre.getBonus());
@@ -315,7 +330,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         BuffVitesse buff         = getEffet(BuffVitesse.class);
         ReductionVitesse debuff  = getEffet(ReductionVitesse.class);
         BuffTitre titre          = getEffet(BuffTitre.class);
-        double base = vitesseBase;
+        double base = vitesseBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         if (titre  != null) base *= (1 + titre.getBonus());
