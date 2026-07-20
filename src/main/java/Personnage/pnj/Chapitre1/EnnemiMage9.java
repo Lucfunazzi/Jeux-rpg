@@ -5,16 +5,16 @@ import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiGuerrier2 extends PersonnageBase {
+public class EnnemiMage9 extends PersonnageBase {
 
-    public EnnemiGuerrier2() {
+    public EnnemiMage9() {
         this(3);
     }
 
-    public EnnemiGuerrier2(int niveau) {
+    public EnnemiMage9(int niveau) {
         this.nom    = "Guerrier de Fer";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

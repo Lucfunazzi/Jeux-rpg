@@ -19,7 +19,7 @@ public class EnnemiSol extends PersonnageBase {
     public EnnemiSol(int niveau) {
         this.nom    = "Sol";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "B";
 

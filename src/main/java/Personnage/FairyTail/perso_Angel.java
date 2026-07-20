@@ -9,7 +9,7 @@ public class perso_Angel extends PersonnageBase {
 
     public perso_Angel() {
         this.nom    = "Angel";
-        this.type   = "Mage";
+        this.type="Invocateur";
         this.role   = "DPS";
         this.rarete = "A";
         this.niveau = 1;

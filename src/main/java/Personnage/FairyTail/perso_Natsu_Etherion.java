@@ -8,7 +8,7 @@ public class perso_Natsu_Etherion extends PersonnageBase {
 
     public perso_Natsu_Etherion() {
         this.nom = "Natsu Etherion";
-        this.type = "Mage";
+        this.type = "ChasseurDeDragon";
         this.role = "DPS";
         this.rarete = "S";
         this.niveau = 1;

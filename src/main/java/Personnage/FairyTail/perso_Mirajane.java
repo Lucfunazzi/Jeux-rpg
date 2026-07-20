@@ -8,7 +8,7 @@ public class perso_Mirajane extends PersonnageBase {
 
     public perso_Mirajane() {
         this.nom = "Mirajane";
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "S";
         this.niveau = 1;

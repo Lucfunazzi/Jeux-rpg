@@ -14,7 +14,7 @@ public class EnnemiSoigneur1 extends PersonnageBase {
     public EnnemiSoigneur1(int niveau) {
         this.nom    = "Clerc des Ruines";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "Support";
         this.rarete = "C";
 

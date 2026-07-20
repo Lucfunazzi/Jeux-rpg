@@ -4,8 +4,8 @@ import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre1.EnnemiMage1;
 import Personnage.pnj.Chapitre1.EnnemiMage2;
 import Personnage.pnj.Chapitre1.EnnemiMage3;
-import Personnage.pnj.Chapitre1.EnnemiGuerrier1;
-import Personnage.pnj.Chapitre1.EnnemiGuerrier2;
+import Personnage.pnj.Chapitre1.EnnemiMage8;
+import Personnage.pnj.Chapitre1.EnnemiMage9;
 import Personnage.pnj.Chapitre1.EnnemiTank1;
 import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
 import Personnage.pnj.Chapitre3.*;
@@ -91,9 +91,9 @@ public class Chapitre3 {
             // Stage 1 — Avant-garde Phantom Lord (soldats bas rang)
             case 1 -> {
                 e.add(new EnnemiMage1(22));
-                e.add(new EnnemiGuerrier1(22));
+                e.add(new EnnemiMage8(22));
                 e.add(new EnnemiMage2(22));
-                e.add(new EnnemiGuerrier1(21));
+                e.add(new EnnemiMage8(21));
                 e.add(new EnnemiMage1(21));
                 return new Stage(1, "L'assaut de Phantom Lord", 6000, 0, e);
             }
@@ -102,16 +102,16 @@ public class Chapitre3 {
             case 2 -> {
                 e.add(new EnnemiTotomaru());        // niv 26 par défaut
                 e.add(new EnnemiMage2(24));
-                e.add(new EnnemiGuerrier2(24));
+                e.add(new EnnemiMage9(24));
                 e.add(new EnnemiMage1(23));
-                e.add(new EnnemiGuerrier1(23));
+                e.add(new EnnemiMage8(23));
                 return new Stage(2, "Totomaru — Sept Flammes", 7500, 0, e);
             }
 
             // Stage 3 — Sol + troupe solide
             case 3 -> {
                 e.add(new EnnemiSol());             // niv 26 par défaut
-                e.add(new EnnemiGuerrier1(25));
+                e.add(new EnnemiMage8(25));
                 e.add(new EnnemiTank1(25));
                 e.add(new EnnemiMage2(24));
                 e.add(new EnnemiSoigneur1(24));
@@ -123,7 +123,7 @@ public class Chapitre3 {
                 e.add(new EnnemiTotomaru(27));
                 e.add(new EnnemiSol(27));
                 e.add(new EnnemiMage2(26));
-                e.add(new EnnemiGuerrier2(25));
+                e.add(new EnnemiMage9(25));
                 e.add(new EnnemiSoigneur1(25));
                 return new Stage(4, "L'Élément 4 se déploie", 11500, 0, e);
             }
@@ -132,7 +132,7 @@ public class Chapitre3 {
             case 5 -> {
                 e.add(new EnnemiJubia_4elements()); // niv 28 par défaut
                 e.add(new EnnemiMage3(27));
-                e.add(new EnnemiGuerrier2(26));
+                e.add(new EnnemiMage9(26));
                 e.add(new EnnemiTank1(26));
                 e.add(new EnnemiSoigneur1(25));
                 return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, e);
@@ -144,7 +144,7 @@ public class Chapitre3 {
                 e.add(new EnnemiTotomaru(28));
                 e.add(new EnnemiSol(28));
                 e.add(new EnnemiMage2(26));
-                e.add(new EnnemiGuerrier1(26));
+                e.add(new EnnemiMage8(26));
                 return new Stage(6, "L'Élément 4 au complet", 16000, 0, e);
             }
 
@@ -152,7 +152,7 @@ public class Chapitre3 {
             case 7 -> {
                 e.add(new EnnemiAria());            // niv 30 par défaut
                 e.add(new EnnemiMage3(28));
-                e.add(new EnnemiGuerrier2(28));
+                e.add(new EnnemiMage9(28));
                 e.add(new EnnemiTank1(27));
                 e.add(new EnnemiSoigneur1(27));
                 return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, e);
@@ -173,7 +173,7 @@ public class Chapitre3 {
                 e.add(new EnnemiJose());            // niv 35 par défaut
                 e.add(new EnnemiAria(31));
                 e.add(new EnnemiMage3(29));
-                e.add(new EnnemiGuerrier2(28));
+                e.add(new EnnemiMage9(28));
                 e.add(new EnnemiSoigneur1(28));
                 return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, e);
             }

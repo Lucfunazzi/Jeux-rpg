@@ -18,7 +18,7 @@ public class EnnemiEligor extends PersonnageBase {
     public EnnemiEligor(int niveau) {
         this.nom    = "Eligor";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

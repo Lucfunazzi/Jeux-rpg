@@ -44,7 +44,7 @@ import java.util.Scanner;
  * Doublon → fragments : si le personnage est déjà recruté, il se convertit
  * automatiquement en fragments de ce personnage (1 doublon = coût_recrutement / 4).
  */
-public class MenuTirage {
+public class MenuTirage_recrutement {
 
     // ── Parchemins ────────────────────────────────────────────────────────
     private int parcheminOrdinaire = 0;

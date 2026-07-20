@@ -16,7 +16,7 @@ public class EnnemiGuerrier3Elite extends PersonnageBase {
     public EnnemiGuerrier3Elite(int niveau) {
         this.nom    = "Gladiateur Fou";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

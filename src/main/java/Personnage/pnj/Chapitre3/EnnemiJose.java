@@ -22,7 +22,7 @@ public class EnnemiJose extends PersonnageBase {
     public EnnemiJose(int niveau) {
         this.nom    = "José Porla";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "S";
 

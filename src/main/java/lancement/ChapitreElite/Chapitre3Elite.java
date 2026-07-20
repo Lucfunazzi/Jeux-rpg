@@ -9,8 +9,8 @@ import Personnage.pnj.Chapitre3.EnnemiJose;
 import Personnage.pnj.Chapitre1.EnnemiMage1;
 import Personnage.pnj.Chapitre1.EnnemiMage2;
 import Personnage.pnj.Chapitre1.EnnemiMage3;
-import Personnage.pnj.Chapitre1.EnnemiGuerrier1;
-import Personnage.pnj.Chapitre1.EnnemiGuerrier2;
+import Personnage.pnj.Chapitre1.EnnemiMage8;
+import Personnage.pnj.Chapitre1.EnnemiMage9;
 import Personnage.pnj.Chapitre1.EnnemiTank1;
 import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
 import Equipement.CarteOr;
@@ -154,9 +154,9 @@ public class Chapitre3Elite {
             // Stage 1 — Avant-garde renforcée (+12 niveaux vs normal)
             case 1 -> {
                 e.add(new EnnemiMage1(34));
-                e.add(new EnnemiGuerrier1(34));
+                e.add(new EnnemiMage8(34));
                 e.add(new EnnemiMage2(33));
-                e.add(new EnnemiGuerrier2(33));
+                e.add(new EnnemiMage9(33));
                 e.add(new EnnemiSoigneur1(32));
                 return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 9000, 0, e);
             }
@@ -165,7 +165,7 @@ public class Chapitre3Elite {
             case 2 -> {
                 e.add(new EnnemiTotomaru(38));
                 e.add(new EnnemiMage2(36));
-                e.add(new EnnemiGuerrier2(35));
+                e.add(new EnnemiMage9(35));
                 e.add(new EnnemiMage3(34));
                 e.add(new EnnemiSoigneur1(34));
                 return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 11000, 0, e);
@@ -174,7 +174,7 @@ public class Chapitre3Elite {
             // Stage 3 — Sol élite + troupe lourde
             case 3 -> {
                 e.add(new EnnemiSol(38));
-                e.add(new EnnemiGuerrier1(36));
+                e.add(new EnnemiMage8(36));
                 e.add(new EnnemiTank1(36));
                 e.add(new EnnemiMage2(35));
                 e.add(new EnnemiSoigneur1(35));
@@ -186,7 +186,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiTotomaru(40));
                 e.add(new EnnemiSol(40));
                 e.add(new EnnemiMage3(37));
-                e.add(new EnnemiGuerrier2(36));
+                e.add(new EnnemiMage9(36));
                 e.add(new EnnemiSoigneur1(36));
                 return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, e);
             }
@@ -195,7 +195,7 @@ public class Chapitre3Elite {
             case 5 -> {
                 e.add(new EnnemiJubia_4elements(41));
                 e.add(new EnnemiMage3(39));
-                e.add(new EnnemiGuerrier2(38));
+                e.add(new EnnemiMage9(38));
                 e.add(new EnnemiTank1(38));
                 e.add(new EnnemiSoigneur1(37));
                 return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, e);
@@ -207,7 +207,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiTotomaru(41));
                 e.add(new EnnemiSol(41));
                 e.add(new EnnemiMage3(39));
-                e.add(new EnnemiGuerrier2(38));
+                e.add(new EnnemiMage9(38));
                 return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, e);
             }
 
@@ -215,7 +215,7 @@ public class Chapitre3Elite {
             case 7 -> {
                 e.add(new EnnemiAria(43));
                 e.add(new EnnemiMage3(41));
-                e.add(new EnnemiGuerrier2(40));
+                e.add(new EnnemiMage9(40));
                 e.add(new EnnemiTank1(40));
                 e.add(new EnnemiSoigneur1(39));
                 return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, e);
@@ -236,7 +236,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiJose(46));
                 e.add(new EnnemiAria(44));
                 e.add(new EnnemiMage3(41));
-                e.add(new EnnemiGuerrier2(40));
+                e.add(new EnnemiMage9(40));
                 e.add(new EnnemiSoigneur1(40));
                 return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, e);
             }

@@ -6,7 +6,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Max extends PersonnageBase {
     public perso_Max() {
-        this.nom = "Max"; this.niveau = 1; this.type = "Mage";
+        this.nom = "Max"; this.niveau = 1; this.type="Elementaliste";
         this.role = "Tank"; this.rarete = "C";
         double m = 1.00;
         this.vie=310*m; this.attaque=110*m; this.defense=65*m; this.vitesse=95*m;

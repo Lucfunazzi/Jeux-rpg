@@ -16,7 +16,7 @@ public class EnnemiMage1Elite extends PersonnageBase {
     public EnnemiMage1Elite(int niveau) {
         this.nom    = "Mage Ombral";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

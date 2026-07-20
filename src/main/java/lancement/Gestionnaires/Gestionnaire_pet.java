@@ -20,7 +20,7 @@ import java.util.List;
  *        → Virgo → Cancer → Taurus → Leo
  *        → Bébé Dragon de Feu → Atlas Flame → Igneel
  */
-public class GestionnaireCreaturesSacrees {
+public class Gestionnaire_pet {
 
     public static final int NIVEAU_DEBLOCAGE = 30;
     public static final int NIVEAU_MAX       = 20;
@@ -43,7 +43,7 @@ public class GestionnaireCreaturesSacrees {
     }
 
     // ── État ──────────────────────────────────────────────────────────────
-    private CreatureSacreeType type;
+    private pet_Types type;
     private int                niveau;
     private int                experience;
     private int                experienceMax;
@@ -52,8 +52,8 @@ public class GestionnaireCreaturesSacrees {
     private Entrainement       entrainementActif = null;
     private LocalDateTime      debutEntrainement = null;
 
-    public GestionnaireCreaturesSacrees() {
-        this.type          = CreatureSacreeType.OEUF;
+    public Gestionnaire_pet() {
+        this.type          = pet_Types.OEUF;
         this.niveau        = 1;
         this.experience    = 0;
         this.experienceMax = xpRequise(1);
@@ -141,7 +141,7 @@ public class GestionnaireCreaturesSacrees {
         if (!estAuNiveauMax())   return type.nom + " doit être niveau 20 pour évoluer.";
         if (!type.peutEvoluer()) return type.nom + " est déjà la forme finale — Igneel veille sur votre équipe !";
 
-        CreatureSacreeType ancien = type;
+        pet_Types ancien = type;
         type          = type.suivant();
         niveau        = 1;
         experience    = 0;
@@ -250,7 +250,7 @@ public class GestionnaireCreaturesSacrees {
 
     // ── Utilitaires ───────────────────────────────────────────────────────
     public boolean estAuNiveauMax()             { return niveau >= NIVEAU_MAX; }
-    public CreatureSacreeType getType()         { return type; }
+    public pet_Types getType()         { return type; }
     public int getNiveau()                      { return niveau; }
     public int getExperience()                  { return experience; }
     public int getExperienceMax()               { return experienceMax; }
@@ -261,10 +261,10 @@ public class GestionnaireCreaturesSacrees {
     public void restaurer(String typeNom, int niv, int xp, boolean oeuf,
                           String entrainementNom, String debutStr) {
         try {
-            this.type = CreatureSacreeType.valueOf(typeNom);
+            this.type = pet_Types.valueOf(typeNom);
         } catch (IllegalArgumentException e) {
             // Ancienne valeur DBZ (SHENRON, OOZARU, etc.) → repart de l'Œuf
-            this.type = CreatureSacreeType.OEUF;
+            this.type = pet_Types.OEUF;
         }
         this.niveau        = Math.max(1, Math.min(NIVEAU_MAX, niv));
         this.experienceMax = xpRequise(this.niveau);

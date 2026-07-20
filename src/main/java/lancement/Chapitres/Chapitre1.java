@@ -85,20 +85,20 @@ public class Chapitre1 {
                          return new Stage(2, "La Flamme Écarlate approche", 150, 15, ennemis); }
             case 3  -> { ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiMage1());
                          return new Stage(3, "Evaro, le bouclier de Bora", 220, 20, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage2());
+            case 4  -> { ennemis.add(new EnnemiMage8()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage2());
                          return new Stage(4, "La Garde de la Flamme", 290, 25, ennemis); }
             case 5  -> { ennemis.add(new EnnemiBora()); ennemis.add(new EnnemiMage2());
                          return new Stage(5, "Bora, Mage de la Flamme Écarlate", 360, 30, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiGuerrier3()); ennemis.add(new EnnemiMage3());
+            case 6  -> { ennemis.add(new EnnemiMage9()); ennemis.add(new EnnemiMage10()); ennemis.add(new EnnemiMage3());
                          return new Stage(6, "L'Avant-Garde des Ombres", 430, 35, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiNinja1()); ennemis.add(new EnnemiGuerrier3());
-                         ennemis.add(new EnnemiNinja2()); ennemis.add(new EnnemiMage4());
+            case 7  -> { ennemis.add(new EnnemiMage5()); ennemis.add(new EnnemiMage10());
+                         ennemis.add(new EnnemiMage6()); ennemis.add(new EnnemiMage4());
                          return new Stage(7, "Les Quatre Predateurs", 500, 40, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiGuerrier4());
-                         ennemis.add(new EnnemiGuerrier4()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur1());
+            case 8  -> { ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiMage11());
+                         ennemis.add(new EnnemiMage11()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(8, "L'Armée des Ombres", 580, 45, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiTank2()); ennemis.add(new EnnemiNinja3());
-                         ennemis.add(new EnnemiNinja3()); ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur2());
+            case 9  -> { ennemis.add(new EnnemiTank2()); ennemis.add(new EnnemiMage7());
+                         ennemis.add(new EnnemiMage7()); ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur2());
                          return new Stage(9, "Les Généraux des Ténèbres", 680, 50, ennemis); }
             case 10 -> { ennemis.add(new EnnemiEligor()); ennemis.add(new EnnemiBora());
                          ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur1());

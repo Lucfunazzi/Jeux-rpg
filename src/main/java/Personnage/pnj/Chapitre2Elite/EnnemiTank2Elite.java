@@ -15,7 +15,7 @@ public class EnnemiTank2Elite extends PersonnageBase {
     public EnnemiTank2Elite(int niveau) {
         this.nom    = "Titan des Abysses";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

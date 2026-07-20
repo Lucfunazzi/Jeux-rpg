@@ -12,7 +12,7 @@ public class perso_Loke extends PersonnageBase {
     public perso_Loke() {
         this.nom = "Loke";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "B";
         double multiplicateurRarete = 1.30;

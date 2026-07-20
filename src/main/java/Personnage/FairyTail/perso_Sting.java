@@ -11,7 +11,7 @@ public class perso_Sting extends PersonnageBase {
 
     public perso_Sting() {
         this.nom = "Sting";
-        this.type = "Mage";
+        this.type = "ChasseurDeDragon";
         this.role = "DPS";
         this.rarete = "S";
         this.niveau = 1;

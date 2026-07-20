@@ -16,7 +16,7 @@ public class EnnemiJubia_4elements extends PersonnageBase {
     public EnnemiJubia_4elements(int niveau) {
         this.nom    = "Jubia";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "Support";
         this.rarete = "A";
 

@@ -12,7 +12,7 @@ package lancement.Gestionnaires;
  * Les stats sont des BONUS FLAT ajoutés aux stats de l'équipe en formation.
  * Valeurs au niveau 1 de chaque phase ; chaque niveau ajoute bonusParNiveau.
  */
-public enum CreatureSacreeType {
+public enum pet_Types {
 
     //                        nom                          atk1   pv1    def1  vit1   dAtk  dPV    dDef  dVit
     OEUF(
@@ -85,7 +85,7 @@ public enum CreatureSacreeType {
     public final double bonusDEFParNiveau;
     public final double bonusVITParNiveau;
 
-    CreatureSacreeType(String nom,
+    pet_Types(String nom,
                        double atk1, double pv1, double def1, double vit1,
                        double dAtk, double dPV,  double dDef, double dVit) {
         this.nom               = nom;
@@ -106,8 +106,8 @@ public enum CreatureSacreeType {
     public double getVIT(int niveau) { return bonusVITBase + bonusVITParNiveau * (niveau - 1); }
 
     /** Créature suivante dans la chaîne, ou null si c'est la dernière. */
-    public CreatureSacreeType suivant() {
-        CreatureSacreeType[] vals = values();
+    public pet_Types suivant() {
+        pet_Types[] vals = values();
         int idx = this.ordinal() + 1;
         return idx < vals.length ? vals[idx] : null;
     }

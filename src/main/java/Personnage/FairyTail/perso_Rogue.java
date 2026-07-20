@@ -12,7 +12,7 @@ public class perso_Rogue extends PersonnageBase {
 
     public perso_Rogue() {
         this.nom = "Rogue";
-        this.type = "Mage";
+        this.type = "ChasseurDeDragon";
         this.role = "Tank";
         this.rarete = "S";
         this.niveau = 1;

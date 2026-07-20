@@ -17,11 +17,11 @@ import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireCompagnons;
-import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Gestionnaires.Gestionnaire_pet;
 import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import lancement.Menus.MenuEtoilesPerso;
 import lancement.Menus.MenuRecrutement;
-import lancement.Menus.MenuTirage;
+import lancement.Menus.MenuTirage_recrutement;
 import java.util.ArrayList;
 
 /**
@@ -55,14 +55,14 @@ public class GameContext {
     public GestionnaireEtoiles           gestionnaireEtoiles;
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
     public GestionnaireCompagnons        gestionnaireCompagnons;
-    public GestionnaireCreaturesSacrees  gestionnaireCreaturesSacrees;
+    public Gestionnaire_pet  gestionnaireCreaturesSacrees;
     public GestionnaireClefsCelestes     gestionnaireClefsCelestes;
     public RangJoueur                    rangJoueur;
 
     // ── Menus ─────────────────────────────────────────────────────────────
     public MenuRecrutement   menuRecrutement;
     public MenuEtoilesPerso  menuEtoilesPerso;
-    public MenuTirage        menuTirage;
+    public MenuTirage_recrutement        menuTirage;
 
     // ── Divers ────────────────────────────────────────────────────────────
     public int    coupons            = 0;

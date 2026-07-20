@@ -9,7 +9,7 @@ public class perso_Kana extends PersonnageBase {
     public perso_Kana() {
         this.nom = "Cana";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "B";
         

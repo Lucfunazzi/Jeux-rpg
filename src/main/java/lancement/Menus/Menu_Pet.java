@@ -1,14 +1,14 @@
 package lancement.Menus;
 
 import lancement.GameContext;
-import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
-import lancement.Gestionnaires.GestionnaireCreaturesSacrees.Entrainement;
+import lancement.Gestionnaires.Gestionnaire_pet;
+import lancement.Gestionnaires.Gestionnaire_pet.Entrainement;
 import java.util.Scanner;
 
-public class MenuCreaturesSacrees {
+public class Menu_Pet {
 
     public void afficher(GameContext ctx, Scanner scanner) {
-        GestionnaireCreaturesSacrees gcs = ctx.gestionnaireCreaturesSacrees;
+        Gestionnaire_pet gcs = ctx.gestionnaireCreaturesSacrees;
         boolean retour = false;
 
         while (!retour) {
@@ -71,7 +71,7 @@ public class MenuCreaturesSacrees {
         }
     }
 
-    private void lancerEntrainement(GestionnaireCreaturesSacrees gcs,
+    private void lancerEntrainement(Gestionnaire_pet gcs,
                                     Entrainement e, GameContext ctx) {
         boolean ok = gcs.lancerEntrainement(e);
         if (ok) {

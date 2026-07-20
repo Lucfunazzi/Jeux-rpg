@@ -21,7 +21,7 @@ public class EnnemiAria extends PersonnageBase {
     public EnnemiAria(int niveau) {
         this.nom    = "Aria";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "A";
 

@@ -16,7 +16,7 @@ public class EnnemiSoigneur2Elite extends PersonnageBase {
     public EnnemiSoigneur2Elite(int niveau) {
         this.nom    = "Mage Perturbateur";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "Support";
         this.rarete = "C";
 

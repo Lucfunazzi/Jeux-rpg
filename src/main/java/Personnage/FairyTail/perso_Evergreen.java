@@ -12,7 +12,7 @@ public class perso_Evergreen extends PersonnageBase {
     public perso_Evergreen() {
         this.nom = "Evergreen";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "B";
         double multiplicateurRarete = 1.30;

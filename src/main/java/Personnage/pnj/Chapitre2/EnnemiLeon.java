@@ -20,7 +20,7 @@ public class EnnemiLeon extends PersonnageBase {
     public EnnemiLeon(int niveau) {
         this.nom    = "Leon";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "B";
 

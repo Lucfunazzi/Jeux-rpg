@@ -3,10 +3,10 @@ package lancement.Menus;
 import Combat.Combat;
 import lancement.GameContext;
 import Joueur.Personnage_principale;
-import Joueur.Mage;
+import Joueur.Elementaliste;
 import Joueur.Chevalier;
 import Joueur.ChasseurDeDragon;
-import Joueur.Constellationniste;
+import Joueur.Invocateur;
 import Joueur.Competences;
 import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
@@ -227,10 +227,10 @@ public class MenuArene {
 
         // Compétences liées à la classe — chaque classe a sa spéciale et ultime fixes
         Competences comp = switch (classe) {
-            case "Mage"                -> new Mage();
+            case "Mage"                -> new Elementaliste();
             case "Chasseur de Dragon"  -> new ChasseurDeDragon();
             case "Chevalier"           -> new Chevalier();
-            case "Constellationniste"  -> new Constellationniste();
+            case "Constellationniste"  -> new Invocateur();
             default                    -> new Chevalier();
         };
 

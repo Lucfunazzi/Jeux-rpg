@@ -16,7 +16,7 @@ public class EnnemiNinja1Elite extends PersonnageBase {
     public EnnemiNinja1Elite(int niveau) {
         this.nom    = "Ninja de l'Ombre";
         this.niveau = niveau;
-        this.type   = "Ninja";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

@@ -6,7 +6,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Romeo extends PersonnageBase {
     public perso_Romeo() {
-        this.nom = "Romeo"; this.niveau = 1; this.type = "Mage";
+        this.nom = "Romeo"; this.niveau = 1; this.type="Elementaliste";
         this.role = "DPS"; this.rarete = "C";
         double m = 1.00;
         this.vie=295*m; this.attaque=100*m; this.defense=60*m; this.vitesse=85*m;

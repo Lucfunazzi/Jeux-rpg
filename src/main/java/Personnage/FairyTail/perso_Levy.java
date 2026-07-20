@@ -7,7 +7,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Levy extends PersonnageBase {
     public perso_Levy() {
-        this.nom = "Levy"; this.niveau = 1; this.type = "Mage";
+        this.nom = "Levy"; this.niveau = 1; this.type="Elementaliste";
         this.role = "Support"; this.rarete = "B";
         double m = 1.30;
         this.vie=390*m; this.attaque=130*m; this.defense=100*m; this.vitesse=105*m;

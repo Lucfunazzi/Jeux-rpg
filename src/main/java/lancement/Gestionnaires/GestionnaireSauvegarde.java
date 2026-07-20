@@ -3,10 +3,10 @@ package lancement.Gestionnaires;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import Joueur.Personnage_principale;
-import Joueur.Mage;
+import Joueur.Elementaliste;
 import Joueur.ChasseurDeDragon;
 import Joueur.Chevalier;
-import Joueur.Constellationniste;
+import Joueur.Invocateur;
 import Joueur.Competences;
 import Personnage.PersonnageBase;
 
@@ -325,10 +325,10 @@ public class GestionnaireSauvegarde {
     public Personnage_principale restaurerJoueur(SauvegardeData data, GameContext ctx) {
         Personnage_principale joueur = new Personnage_principale(data.joueurNom, 1);
         Competences comp = switch (data.joueurClasse) {
-            case "Mage"     -> new Mage();
+            case "Mage"     -> new Elementaliste();
             case "Chasseur de Dragon"  -> new ChasseurDeDragon();
             case "Chevalier"           -> new Chevalier();
-            case "Constellationniste"  -> new Constellationniste();
+            case "Constellationniste"  -> new Invocateur();
             default         -> null;
         };
         joueur.setChoixClasses(data.joueurClasse);

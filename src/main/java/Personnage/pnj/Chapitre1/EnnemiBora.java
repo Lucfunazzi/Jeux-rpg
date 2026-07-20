@@ -17,7 +17,7 @@ public class EnnemiBora extends PersonnageBase {
     public EnnemiBora(int niveau) {
         this.nom    = "Bora";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

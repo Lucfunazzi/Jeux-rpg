@@ -13,7 +13,7 @@ public class perso_Bixrow extends PersonnageBase {
     public perso_Bixrow() {
         this.nom = "Bickslow";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type = "Invocateur";
         this.role = "DPS";
         this.rarete = "B";
         double multiplicateurRarete = 1.30;

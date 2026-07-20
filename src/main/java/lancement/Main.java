@@ -24,12 +24,12 @@ import lancement.Menus.MenuRang;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuRecrutementRare;
 import lancement.Menus.MenuEtoilesPerso;
-import lancement.Menus.MenuTirage;
+import lancement.Menus.MenuTirage_recrutement;
 import lancement.Menus.MenuCompagnons;
-import lancement.Menus.MenuCreaturesSacrees;
+import lancement.Menus.Menu_Pet;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
-import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Gestionnaires.Gestionnaire_pet;
 import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import Joueur.*;
 import Personnage.*;
@@ -49,7 +49,7 @@ public class Main {
         ctx.inventaire           = new Inventaire();
         ctx.menuRecrutement      = new MenuRecrutement();
         ctx.menuEtoilesPerso     = new MenuEtoilesPerso();
-        ctx.menuTirage           = new MenuTirage();
+        ctx.menuTirage           = new MenuTirage_recrutement();
         ctx.chapitre1            = new Chapitre1();
         ctx.chapitre2            = new Chapitre2();
         ctx.chapitre3            = new Chapitre3();
@@ -60,7 +60,7 @@ public class Main {
         ctx.gestionnaireDonjon   = new GestionnaireDonjon();
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
-        ctx.gestionnaireCreaturesSacrees = new GestionnaireCreaturesSacrees();
+        ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
         ctx.gestionnaireClefsCelestes    = new GestionnaireClefsCelestes();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
@@ -78,7 +78,7 @@ public class Main {
         MenuQuetes          menuQuetes          = new MenuQuetes();
         MenuDonjon          menuDonjon          = new MenuDonjon();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();
-        MenuCreaturesSacrees menuCreaturesSacrees = new MenuCreaturesSacrees();
+        Menu_Pet menuCreaturesSacrees = new Menu_Pet();
 
         // ── Pseudo & chargement ───────────────────────────────────────────
         System.out.println("========================================");
@@ -172,7 +172,7 @@ public class Main {
             if (ctx.joueur.getNiveau() >= 10)                                                  System.out.println("11. Donjon de ressources");
             if (areneDisponible)                                                               System.out.println("13. Arene  ⚔");
             if (ctx.joueur.getNiveau() >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)            System.out.println("14. Compagnons");
-            if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE)      System.out.println("15. Créatures Sacrées");
+            if (ctx.joueur.getNiveau() >= Gestionnaire_pet.NIVEAU_DEBLOCAGE)      System.out.println("15. Créatures Sacrées");
             if (ctx.joueur.getNiveau() >= 6)                                                   System.out.println("16. Etoiles & Fragments");
             System.out.println("17. Tirages");
             System.out.println("12. Sauvegarder");
@@ -216,7 +216,7 @@ public class Main {
                     else System.out.println("Choix invalide.");
                 }
                 case "15" -> {
-                    if (ctx.joueur.getNiveau() >= GestionnaireCreaturesSacrees.NIVEAU_DEBLOCAGE) { menuCreaturesSacrees.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    if (ctx.joueur.getNiveau() >= Gestionnaire_pet.NIVEAU_DEBLOCAGE) { menuCreaturesSacrees.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
                     else System.out.println("Choix invalide.");
                 }
                 case "16" -> {
@@ -259,10 +259,10 @@ public class Main {
         joueur.setChoixClasses(joueur.getClasses()[choixClasseNum - 1]);
 
         competences = switch (joueur.getChoixClasses()) {
-            case "Mage"                -> new Mage();
+            case "Mage"                -> new Elementaliste();
             case "Chasseur de Dragon"  -> new ChasseurDeDragon();
             case "Chevalier"           -> new Chevalier();
-            case "Constellationniste"  -> new Constellationniste();
+            case "Constellationniste"  -> new Invocateur();
             default         -> null;
         };
 

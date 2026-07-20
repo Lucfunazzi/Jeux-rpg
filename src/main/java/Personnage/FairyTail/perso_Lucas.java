@@ -11,7 +11,7 @@ public class perso_Lucas extends PersonnageBase {
 
     public perso_Lucas() {
         this.nom = "Lucas";
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "SS";
         this.niveau = 1;

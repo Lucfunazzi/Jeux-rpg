@@ -5,16 +5,16 @@ import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiNinja1 extends PersonnageBase {
+public class EnnemiMage5 extends PersonnageBase {
 
-    public EnnemiNinja1() {
+    public EnnemiMage5() {
         this(6);
     }
 
-    public EnnemiNinja1(int niveau) {
+    public EnnemiMage5(int niveau) {
         this.nom    = "Ninja de l'Ombre";
         this.niveau = niveau;
-        this.type   = "Ninja";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

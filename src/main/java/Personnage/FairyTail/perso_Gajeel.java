@@ -9,7 +9,7 @@ public class perso_Gajeel extends PersonnageBase {
 
     public perso_Gajeel() {
         this.nom = "Gajeel";
-        this.type = "Mage";
+        this.type = "ChasseurDeDragon";
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = 1;

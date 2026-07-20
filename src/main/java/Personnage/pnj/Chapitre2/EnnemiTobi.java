@@ -17,7 +17,7 @@ public class EnnemiTobi extends PersonnageBase {
     public EnnemiTobi(int niveau) {
         this.nom    = "Tobi";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

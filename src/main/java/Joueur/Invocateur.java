@@ -14,7 +14,7 @@ import java.util.List;
  * Spéciale Arbre 1 : Invocation : Leo       (frappe + Silence + buff ATK équipe)
  * Ultime  Arbre 2  : Portes des Étoiles     (Taurus + Sagittarius + Leo simultanés)
  */
-public class Constellationniste implements Competences {
+public class Invocateur implements Competences {
 
     @Override
     public String[] getNomsCompetences() {
@@ -109,9 +109,9 @@ public class Constellationniste implements Competences {
         System.out.println("Invocation de Taurus — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Invocation : Leo [Arbre 1] — Inflige 180% ATK à 1 cible + Silence 1 tour. +12% ATK à toute l'équipe (2 tours).");
+        
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Portes des Étoiles [Arbre 2] — Taurus : 120% ATK + -20% DEF sur ennemi le plus résistant. Sagittarius : 100% ATK + 50% Saignement sur ennemi 2. Leo : +15% ATK équipe (2 tours).");
+        
     }
 }

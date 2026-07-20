@@ -4,7 +4,7 @@ import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import lancement.Gestionnaires.GestionnaireLiens;
 import lancement.Gestionnaires.GestionnaireCompagnons;
-import lancement.Gestionnaires.GestionnaireCreaturesSacrees;
+import lancement.Gestionnaires.Gestionnaire_pet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class Formation {
 
     private static final GestionnaireLiens gestionnaireLiens = new GestionnaireLiens();
     private GestionnaireCompagnons       gestionnaireCompagnons;
-    private GestionnaireCreaturesSacrees gestionnaireCreaturesSacrees;
+    private Gestionnaire_pet gestionnaireCreaturesSacrees;
 
     public Formation(Personnage_principale joueur) {
         this.joueur = joueur;
@@ -31,7 +31,7 @@ public class Formation {
     }
 
     public Formation(Personnage_principale joueur, GestionnaireCompagnons gestionnaireCompagnons,
-                     GestionnaireCreaturesSacrees gestionnaireCreaturesSacrees) {
+                     Gestionnaire_pet gestionnaireCreaturesSacrees) {
         this.joueur = joueur;
         this.gestionnaireCompagnons = gestionnaireCompagnons;
         this.gestionnaireCreaturesSacrees = gestionnaireCreaturesSacrees;
@@ -42,7 +42,7 @@ public class Formation {
         this.gestionnaireCompagnons = gc;
     }
 
-    public void setGestionnaireCreaturesSacrees(GestionnaireCreaturesSacrees gc) {
+    public void setGestionnaireCreaturesSacrees(Gestionnaire_pet gc) {
         this.gestionnaireCreaturesSacrees = gc;
     }
 

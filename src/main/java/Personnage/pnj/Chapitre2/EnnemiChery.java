@@ -18,7 +18,7 @@ public class EnnemiChery extends PersonnageBase {
     public EnnemiChery(int niveau) {
         this.nom    = "Chery";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

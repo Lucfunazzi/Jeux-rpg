@@ -15,7 +15,7 @@ public class perso_Freed extends PersonnageBase {
     public perso_Freed() {
         this.nom = "Freed";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "A";
         double multiplicateurRarete = 1.40;

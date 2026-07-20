@@ -12,7 +12,7 @@ public class perso_Gray extends PersonnageBase {
 
     public perso_Gray() {
         this.nom = "Gray";
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "DPS"; // ✅
         this.rarete = "A";
         this.niveau = 1;

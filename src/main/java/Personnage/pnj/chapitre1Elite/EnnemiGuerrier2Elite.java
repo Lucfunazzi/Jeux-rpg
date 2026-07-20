@@ -16,7 +16,7 @@ public class EnnemiGuerrier2Elite extends PersonnageBase {
     public EnnemiGuerrier2Elite(int niveau) {
         this.nom    = "Guerrier de Fer";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

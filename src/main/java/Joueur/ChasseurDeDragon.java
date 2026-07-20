@@ -91,9 +91,9 @@ public class ChasseurDeDragon implements Competences {
         System.out.println("Hurlement du Dragon d'Eau — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Écailles du Dragon d'Eau [Arbre 1] — Inflige 170% ATK à 1 cible. Soigne le lanceur de 20% des dégâts. -25% VIT cible (3 tours).");
+        
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Forme Dragon — Inondation Abyssale [Arbre 2] — Inflige 150% ATK à tous les ennemis. 40% Trempe (2 tours). -20% VIT (2 tours). +20% ATK au lanceur.");
+        
     }
 }

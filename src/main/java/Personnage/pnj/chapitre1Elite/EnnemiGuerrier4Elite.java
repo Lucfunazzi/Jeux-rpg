@@ -16,7 +16,7 @@ public class EnnemiGuerrier4Elite extends PersonnageBase {
     public EnnemiGuerrier4Elite(int niveau) {
         this.nom    = "Chasseur de Primes";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

@@ -8,7 +8,7 @@ public class perso_Natsu extends PersonnageBase {
 
     public perso_Natsu() {
         this.nom = "Natsu";
-        this.type = "Mage";
+        this.type = "ChasseurDeDragon";
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = 1;

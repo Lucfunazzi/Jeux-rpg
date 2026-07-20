@@ -97,9 +97,9 @@ public class Chevalier implements Competences {
         System.out.println("Lance des Ténèbres — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Changement d'Armure [Arbre 1] — Inflige 190% ATK à 1 cible, -20% DEF cible (3 tours). +30% DEF au lanceur (2 tours).");
+        
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Armure du Ciel Brillant [Arbre 2] — Inflige 220% ATK à l'ennemi le plus résistant + Saignement 7% (3 tours). +25% DEF équipe + +20% ATK lanceur (2 tours).");
+       
     }
 }

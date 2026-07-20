@@ -18,7 +18,7 @@ public class EnnemiYuka extends PersonnageBase {
     public EnnemiYuka(int niveau) {
         this.nom    = "Yuka";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "Support";
         this.rarete = "C";
 

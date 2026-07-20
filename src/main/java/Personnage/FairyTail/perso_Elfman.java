@@ -9,7 +9,7 @@ public class perso_Elfman extends PersonnageBase {
     public perso_Elfman() {
         this.nom = "Elfman";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "C";
         double multiplicateurRarete = 1.00;

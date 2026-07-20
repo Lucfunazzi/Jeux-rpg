@@ -12,7 +12,7 @@ public class perso_Arzak extends PersonnageBase {
     public perso_Arzak() {
         this.nom = "Alzack";
         this.niveau = 1;
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "C";
         double multiplicateurRarete = 1.00;

@@ -18,7 +18,7 @@ public class EnnemiTotomaru extends PersonnageBase {
     public EnnemiTotomaru(int niveau) {
         this.nom    = "Totomaru";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "B";
 

@@ -17,8 +17,8 @@ public class EnnemiEvaro extends PersonnageBase {
     public EnnemiEvaro(int niveau) {
         this.nom    = "Evaro";
         this.niveau = niveau;
-        this.type   = "Guerrier";
-        this.role   = "Tank";
+        this.type   = "Constellationniste";
+        this.role   = "DPS";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);

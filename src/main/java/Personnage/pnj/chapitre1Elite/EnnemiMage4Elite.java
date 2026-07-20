@@ -16,7 +16,7 @@ public class EnnemiMage4Elite extends PersonnageBase {
     public EnnemiMage4Elite(int niveau) {
         this.nom    = "Sorcier Maudit";
         this.niveau = niveau;
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 

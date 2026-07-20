@@ -10,7 +10,7 @@ public class perso_Jubia_4elements extends PersonnageBase {
 
     public perso_Jubia_4elements() {
         this.nom = "Jubia";
-        this.type = "Mage";
+        this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "A";
         this.niveau = 1;

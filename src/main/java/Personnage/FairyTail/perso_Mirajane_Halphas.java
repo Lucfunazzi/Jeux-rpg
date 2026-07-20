@@ -15,7 +15,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
 
     public perso_Mirajane_Halphas() {
         this.nom    = "Mirajane Halphas";
-        this.type   = "Mage";
+        this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "SS";
         this.niveau = 1;

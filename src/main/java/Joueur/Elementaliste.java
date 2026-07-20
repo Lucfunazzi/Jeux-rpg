@@ -13,7 +13,7 @@ import java.util.List;
  * Spéciale Arbre 1 : Épée de Glace Éternelle (frappe lourde + gel + -DEF)
  * Ultime  Arbre 2  : Ice Make — Démon de Glace (AoE 3 cibles + gel massif)
  */
-public class Mage implements Competences {
+public class Elementaliste implements Competences {
 
     @Override
     public String[] getNomsCompetences() {
@@ -94,9 +94,9 @@ public class Mage implements Competences {
         System.out.println("Bazooka de Glace — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Épée de Glace Éternelle [Arbre 1] — Inflige 190% ATK à 1 cible. -20% DEF (3 tours). 40% de chance de Gel 1 tour.");
+        
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Ice Make — Démon de Glace [Arbre 2] — Inflige 160% ATK aux 3 premières cibles. -15% DEF (2 tours). 45% Gel 1 tour. +20% DEF au lanceur (2 tours).");
+        
     }
 }

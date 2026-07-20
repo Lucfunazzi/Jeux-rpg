@@ -15,7 +15,7 @@ public class EnnemiTank1 extends PersonnageBase {
     public EnnemiTank1(int niveau) {
         this.nom    = "Colosse de Pierre";
         this.niveau = niveau;
-        this.type   = "Guerrier";
+        this.type="Elementaliste";
         this.role   = "Tank";
         this.rarete = "C";
 

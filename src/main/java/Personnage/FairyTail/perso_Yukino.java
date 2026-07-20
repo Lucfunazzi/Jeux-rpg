@@ -9,7 +9,7 @@ public class perso_Yukino extends PersonnageBase {
 
     public perso_Yukino() {
         this.nom    = "Yukino";
-        this.type   = "Mage";
+        this.type="Invocateur";
         this.role   = "Support";
         this.rarete = "S";
         this.niveau = 1;
