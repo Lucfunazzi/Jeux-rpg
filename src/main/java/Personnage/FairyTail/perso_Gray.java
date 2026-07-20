@@ -33,14 +33,19 @@ public class perso_Gray extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup de poings", "Marteau de glace", "Ultra geyser de glace"};
+        return new String[]{"Lance de glace", "Marteau de glace", "Ultra geyser de glace"};
     }
 
     
   @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Gray utilise Coups de poings !");
-    Combat.attaquer(this, cible, log);
+    log.add("Gray utilise Lance de glace !");
+    
+    double degats = this.getAttaque() * 1.10;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+    if (Math.random() < 0.10){
+        Combat.appliquerEffet(this,cible,new Gel(1), log);
+    }
 }
 
 @Override
@@ -74,7 +79,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 }
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Coup de poings — Inflige 120% ATK a la cible.");
+        System.out.println("Lance de glace — Inflige 120% ATK a la cible.");
     }
 
     @Override

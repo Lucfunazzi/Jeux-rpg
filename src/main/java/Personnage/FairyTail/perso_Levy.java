@@ -19,8 +19,9 @@ public class perso_Levy extends PersonnageBase {
         return new String[]{"Script : Fer","Script : Flamme","Script : Solidifier"};
     }
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
-        log.add("Levy écrit 'Fer' et une lame d'acier frappe "+cible.getNom()+" !");
-        Combat.attaquer(this, cible, log);
+        log.add("Levy écrit 'Fer' et une lame d'acier frappe " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.00;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Levy inscrit 'Flamme' — un feu de script s'embrase sur "+cible.getNom()+" !");
@@ -34,7 +35,7 @@ public class perso_Levy extends PersonnageBase {
             Combat.appliquerEffet(this, al, new BuffDefense(0.10, 2), log);
         }
     }
-    @Override public void descriptionAttaqueBase() { System.out.println("Script : Fer — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Script : Flamme — 130% ATK, 30% silence 1 tour."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Script : Solidifier — toute l'équipe +12% ATK et +10% DEF 2 tours."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Script : Fer — inflige 100% ATK a une cible."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Script : Flamme — inflige 130% ATK a une cible, 30% de chance de Silence pendant 1 tour."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Script : Solidifier — applique +12% ATK et +10% DEF pendant 2 tours a toute l'equipe alliee."); }
 }

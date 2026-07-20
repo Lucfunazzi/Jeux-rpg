@@ -8,9 +8,9 @@ import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class perso_Bickslow extends PersonnageBase {
+public class perso_Bixrow extends PersonnageBase {
 
-    public perso_Bickslow() {
+    public perso_Bixrow() {
         this.nom = "Bickslow";
         this.niveau = 1;
         this.type = "Mage";
@@ -61,9 +61,9 @@ public class perso_Bickslow extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bickslow utilise Invasion des poupees !");
+        log.add("Bickslow utilise Formation 1 !");
 
-        // Attaque les 3 ennemis avec le moins de PV
+        // Attaque les 2 ennemis avec le moins de PV
         ArrayList<PersonnageBase> ennemisVivants = new ArrayList<>();
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) ennemisVivants.add(ennemi);
@@ -72,8 +72,8 @@ public class perso_Bickslow extends PersonnageBase {
 
         int ciblesAttaquees = 0;
         for (PersonnageBase ennemi : ennemisVivants) {
-            if (ciblesAttaquees >= 3) break;
-            double degats = this.getAttaque() * 0.80;
+            if (ciblesAttaquees >= 2) break;
+            double degats = this.getAttaque() * 1.00;
             if (ennemi.aEffet(Petrification.class)) {
                 Petrification pet = ennemi.getEffet(Petrification.class);
                 degats = pet.appliquerSurDegats(degats);
@@ -98,14 +98,14 @@ public class perso_Bickslow extends PersonnageBase {
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bickslow utilise Danse macabre !");
+        log.add("Bickslow utilise Formation X !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) {
             multiplicateurRage += (this.getRage() - 100) / 100.0;
         }
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.10;
+                double degats = this.getAttaque() * 1.20;
                 if (ennemi.aEffet(Petrification.class)) {
                     Petrification pet = ennemi.getEffet(Petrification.class);
                     degats = pet.appliquerSurDegats(degats);

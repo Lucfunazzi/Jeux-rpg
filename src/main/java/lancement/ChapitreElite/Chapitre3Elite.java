@@ -2,10 +2,10 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 
-import Personnage.pnj.Chapitre3.EnnemiJubia;
+import Personnage.pnj.Chapitre3.EnnemiJubia_4elements;
 import Personnage.pnj.Chapitre3.EnnemiTotomaru;
 import Personnage.pnj.Chapitre3.EnnemiSol;
-import Personnage.pnj.Chapitre3.EnnemiAlya;
+import Personnage.pnj.Chapitre3.EnnemiAria;
 import Personnage.pnj.Chapitre3.EnnemiJose;
 import Personnage.pnj.Chapitre1.EnnemiMage1;
 import Personnage.pnj.Chapitre1.EnnemiMage2;
@@ -166,15 +166,15 @@ public class Chapitre3Elite {
                          return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 13500, 0, ennemis); }
             case 4  -> { ennemis.add(new EnnemiTotomaru(35)); ennemis.add(new EnnemiSol(35)); ennemis.add(new EnnemiMage3(32)); ennemis.add(new EnnemiGuerrier2(30)); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiJubia(36)); ennemis.add(new EnnemiMage3(34)); ennemis.add(new EnnemiGuerrier2(32)); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiTank1());
+            case 5  -> { ennemis.add(new EnnemiJubia_4elements(36)); ennemis.add(new EnnemiMage3(34)); ennemis.add(new EnnemiGuerrier2(32)); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiTank1());
                          return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiJubia(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2(34)); ennemis.add(new EnnemiGuerrier1());
+            case 6  -> { ennemis.add(new EnnemiJubia_4elements(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2(34)); ennemis.add(new EnnemiGuerrier1());
                          return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiAlya(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
+            case 7  -> { ennemis.add(new EnnemiAria(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiAlya(39)); ennemis.add(new EnnemiJubia(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2());
+            case 8  -> { ennemis.add(new EnnemiAria(39)); ennemis.add(new EnnemiJubia_4elements(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2());
                          return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 30000, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiJose(40)); ennemis.add(new EnnemiAlya(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiSoigneur1());
+            case 9  -> { ennemis.add(new EnnemiJose(40)); ennemis.add(new EnnemiAria(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, ennemis); }
             case 10 -> { ennemis.add(new EnnemiJose(42));
                          return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 42000, 0, ennemis); }

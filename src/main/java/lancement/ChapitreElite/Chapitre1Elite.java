@@ -5,7 +5,7 @@ import Personnage.pnj.chapitre1Elite.*;
 import Personnage.pnj.Chapitre1.EnnemiBora;
 import Personnage.pnj.Chapitre1.EnnemiEvaro;
 import Personnage.pnj.Chapitre1.EnnemiEligor;
-import Personnage.pnj.Chapitre1Elite.EnnemiMage3Elite;
+import Personnage.pnj.chapitre1Elite.EnnemiMage3Elite;
 import Equipement.EquipementFactory;
 import Equipement.Equipement;
 import lancement.GameContext;

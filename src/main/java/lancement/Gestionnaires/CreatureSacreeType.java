@@ -1,51 +1,74 @@
 package lancement.Gestionnaires;
 
 /**
- * Définit la progression linéaire des Créatures Sacrées (univers DBZ).
+ * Définit la progression linéaire des Créatures Sacrées (univers Fairy Tail).
  *
- * Cycle : Oeuf → Ptérodactyle → Icari → Shenron → Porunga → Oozaru → Super Shenron
+ * Cycle d'évolution :
+ *   Œuf → Bébé Happy → Happy → Ichiya (Edolas Chat) → Virgo (Esprit)
+ *       → Cancer (Esprit) → Taurus (Esprit) → Leo (Esprit)
+ *       → Bébé Dragon de Feu → Atlas Flame → Igneel (Roi Dragon de Feu)
+ *
  * Chaque phase se joue niveaux 1→20 via l'entraînement, puis évolue vers la suivante.
- *
  * Les stats sont des BONUS FLAT ajoutés aux stats de l'équipe en formation.
  * Valeurs au niveau 1 de chaque phase ; chaque niveau ajoute bonusParNiveau.
  */
 public enum CreatureSacreeType {
 
-    //                    nom               atk1  pv1   def1  vit1  dAtk  dPV   dDef  dVit
+    //                        nom                          atk1   pv1    def1  vit1   dAtk  dPV    dDef  dVit
     OEUF(
         "Œuf Mystérieux",
-         8,    60,   5,    2,
-         4,    30,   3,    1
+          8,     60,    5,    2,
+          4,     30,    3,    1
     ),
-    PTERODACTYLE(
-        "Ptérodactyle",
-        90,   700,  60,   25,
-        18,   120,  10,    4
+    BEBE_HAPPY(
+        "Bébé Happy",
+         30,    280,   20,   12,
+         10,     80,    6,    3
     ),
-    ICARI(
-        "Icari",
-        200,  1_600, 130,  55,
-        35,   250,   20,   8
+    HAPPY(
+        "Happy",
+         90,    700,   60,   28,
+         18,    120,   10,    5
     ),
-    SHENRON(
-        "Shenron",
-        420,  3_500, 280, 115,
-        65,   500,   40,  15
+    ICHIYA_CHAT(
+        "Ichiya (Chat d'Edolas)",
+        180,  1_500,  120,   55,
+         32,    230,   18,    8
     ),
-    PORUNGA(
-        "Porunga",
-        800,  7_000, 550, 220,
-       110,   900,   75,  25
+    VIRGO(
+        "Virgo — Esprit Céleste",
+        350,  3_000,  240,  100,
+         58,    450,   36,   14
     ),
-    OOZARU(
-        "Oozaru",
-       1_500, 14_000, 1_100, 430,
-        200,  1_800,   150,   45
+    CANCER(
+        "Cancer — Esprit Céleste",
+        600,  5_500,  440,  180,
+         95,    750,   62,   22
     ),
-    SUPER_SHENRON(
-        "Super Shenron",
-       3_000, 28_000, 2_200, 850,
-        380,  3_500,   280,   80
+    TAURUS(
+        "Taurus — Esprit Céleste",
+        950,  9_000,  720,  290,
+        145,  1_200,   98,   33
+    ),
+    LEO(
+        "Leo — Esprit Céleste",
+      1_500, 14_000, 1_100,  440,
+        210,  1_800,  150,   48
+    ),
+    BEBE_DRAGON_FEU(
+        "Bébé Dragon de Feu",
+      2_200, 20_000, 1_600,  620,
+        300,  2_600,  210,   65
+    ),
+    ATLAS_FLAME(
+        "Atlas Flame",
+      3_200, 30_000, 2_400,  880,
+        430,  3_800,  310,   88
+    ),
+    IGNEEL(
+        "Igneel — Roi Dragon de Feu",
+      5_000, 50_000, 4_000, 1_400,
+        700,  6_000,  500,  140
     );
 
     public final String nom;
@@ -76,7 +99,7 @@ public enum CreatureSacreeType {
         this.bonusVITParNiveau = dVit;
     }
 
-    /** Stats totales ATK au niveau donné (1-based). */
+    /** Stats totales au niveau donné (1-based). */
     public double getATK(int niveau) { return bonusATKBase + bonusATKParNiveau * (niveau - 1); }
     public double getPV (int niveau) { return bonusPVBase  + bonusPVParNiveau  * (niveau - 1); }
     public double getDEF(int niveau) { return bonusDEFBase + bonusDEFParNiveau * (niveau - 1); }

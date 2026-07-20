@@ -7,9 +7,9 @@ import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class perso_Alzack extends PersonnageBase {
+public class perso_Arzak extends PersonnageBase {
 
-    public perso_Alzack() {
+    public perso_Arzak() {
         this.nom = "Alzack";
         this.niveau = 1;
         this.type = "Mage";
@@ -32,7 +32,7 @@ public class perso_Alzack extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Tir magique", "Tir percant", "Pluie de balles magiques"};
+        return new String[]{"Tir magique", "Tir de folie", "Pluie de balles magiques"};
     }
 
     @Override
@@ -46,19 +46,15 @@ public class perso_Alzack extends PersonnageBase {
         }
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-
-        // Synergie Alzack & Bisca : si Bisca est vivante dans l'equipe, +15% chance de critique
-        // (simulee ici via un petit buff ATK conditionnel au critique)
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alzack utilise Tir percant !");
+        log.add("Alzack utilise Tir de folie !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
 
-        // Synergie Alzack & Bisca : si Bisca vivante → +5% ATK pendant 2 tours
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Bisca") && allie.estVivant()) {
                 Combat.appliquerEffet(this, new BuffAttaque(0.05, 2), log);
@@ -70,14 +66,14 @@ public class perso_Alzack extends PersonnageBase {
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alzack utilise Pluie de balles magiques !");
+        log.add("Alzack utilise Tornado Shot !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) {
             multiplicateurRage += (this.getRage() - 100) / 100.0;
         }
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
+                double degats = (this.getAttaque() * 0.70) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
@@ -90,13 +86,14 @@ public class perso_Alzack extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Tir percant — inflige 120% ATK a une cible, "
+        System.out.println("Tir de folie — inflige 120% ATK a une cible, "
                 + "reduit sa vitesse de 15% pendant 2 tours. "
                 + "[Synergie Duo de tireurs] Bisca vivante : +5% ATK pendant 2 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Pluie de balles magiques — inflige 90% ATK a tous les ennemis.");
+        System.out.println("Tornado Shot — inflige 70% ATK a tous les ennemis. "
+                + "Puissance augmentee par la Rage.");
     }
 }

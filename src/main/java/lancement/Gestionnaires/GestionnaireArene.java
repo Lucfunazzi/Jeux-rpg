@@ -19,28 +19,35 @@ public class GestionnaireArene {
 
     private static final int TAILLE_CLASSEMENT = 100;
 
-    // ── Listes par rôle ───────────────────────────────────────────────────
-
     // ── Pools par rareté et rôle ──────────────────────────────────────────
+    // Uniquement les personnages jouables existants dans le projet.
 
-    private static final List<String> TANKS_C = List.of("Nab", "Elfman");
-    private static final List<String> TANKS_B = List.of("Choji", "Hinata", "Nappa");
-    private static final List<String> TANKS_A = List.of("Gray", "Gajeel", "Natsu", "Freed", "Angel");
-    private static final List<String> TANKS_S = List.of("Erza", "Gaara", "Cell", "Rogue");
+    // TANKS   : Nab(C), Max(C), Elfman(C), ElfmanBete(B), Rogue(S), Erza(S)
+    private static final List<String> TANKS_C = List.of("Nab", "Max", "Elfman");
+    private static final List<String> TANKS_B = List.of("Nab", "Max", "Elfman", "ElfmanBete");
+    private static final List<String> TANKS_A = List.of("ElfmanBete", "Erza");
+    private static final List<String> TANKS_S = List.of("Erza", "Rogue");
 
-    private static final List<String> SUPPORTS_C = List.of("Shino", "Chiaotzu");
-    private static final List<String> SUPPORTS_B = List.of("Ino", "Kabuto", "Haku", "Krillin", "Evergreen", "Cana", "Temari", "Zetsu");
-    private static final List<String> SUPPORTS_A = List.of("Kurenai", "Shikamaru", "Asuma", "Lucy", "Piccolo", "Sasori", "Jubia", "Wendy", "Freed", "Konan");
-    private static final List<String> SUPPORTS_S = List.of("C-18", "Yukino", "Nagato");
+    // SUPPORTS : Warren(C), Droy(C), Kana(B), Evergreen(B), Levy(B), Lisanna(B),
+    //            Freed(A), Lucy(A), Jubia(A), Wendy(A), Yukino(S), Lucas(SS)
+    private static final List<String> SUPPORTS_C  = List.of("Warren", "Droy");
+    private static final List<String> SUPPORTS_B  = List.of("Warren", "Droy", "Kana", "Evergreen", "Levy", "Lisanna");
+    private static final List<String> SUPPORTS_A  = List.of("Freed", "Lucy", "Jubia", "Wendy");
+    private static final List<String> SUPPORTS_S  = List.of("Yukino", "Freed", "Wendy");
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
-    private static final List<String> DPS_C = List.of("Jet", "Romeo", "Max", "Alzack", "Bisca", "Elfman");
-    private static final List<String> DPS_B = List.of("Lee", "Kankuro", "Zabuza", "Raditz", "Gohan (enfant)", "Bickslow", "Loke");
-    private static final List<String> DPS_A = List.of("Sakura", "Deidara", "Natsu", "Gray", "Sangoku", "Vegeta", "Gajeel", "Angel");
-    private static final List<String> DPS_S = List.of("Sasuke", "Kakashi", "Gai", "Itachi", "Orochimaru", "C-17", "Freezer", "Mirajane", "Natsu Etherion", "Sting", "Pain", "Tobi");
-    private static final List<String> DPS_SS = List.of("Mirajane Halphas");
+    // DPS : Arzak(C), Biska(C), Elfman(C), Jett(C), Romeo(C),
+    //       Bixrow(B), Loke(B),
+    //       Angel(A), Gajeel(A), Gray(A), Natsu(A),
+    //       Erza(S), Mirajane(S), Natsu_Etherion(S), Sting(S), Rogue(S),
+    //       Mirajane_Halphas(SS)
+    private static final List<String> DPS_C  = List.of("Arzak", "Biska", "Elfman", "Jett", "Romeo");
+    private static final List<String> DPS_B  = List.of("Arzak", "Biska", "Jett", "Romeo", "Bixrow", "Loke");
+    private static final List<String> DPS_A  = List.of("Bixrow", "Loke", "Angel", "Gajeel", "Gray", "Natsu");
+    private static final List<String> DPS_S  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Erza", "Mirajane", "Natsu_Etherion", "Sting", "Rogue");
+    private static final List<String> DPS_SS = List.of("Mirajane_Halphas");
 
-    private static final String[] CLASSES_IA = {"Mage", "Ninja", "Guerrier"};
+    private static final String[] CLASSES_IA = {"Mage", "Guerrier"};
 
     private static final String[] PREFIXES = {
         "Shadow", "Dark", "Storm", "Iron", "Blazing",
@@ -75,37 +82,37 @@ public class GestionnaireArene {
                 poolTanks = TANKS_C; poolSupports = SUPPORTS_C; poolDPS = DPS_C;
             } else if (rang >= 80) {
                 niveau = 20 + rng.nextInt(6);
-                poolTanks = mix(rng, TANKS_C, TANKS_B, 0.6);
+                poolTanks    = mix(rng, TANKS_C,    TANKS_B,    0.6);
                 poolSupports = mix(rng, SUPPORTS_C, SUPPORTS_B, 0.6);
-                poolDPS = mix(rng, DPS_C, DPS_B, 0.6);
+                poolDPS      = mix(rng, DPS_C,      DPS_B,      0.6);
             } else if (rang >= 60) {
                 niveau = 30 + rng.nextInt(11);
                 poolTanks = TANKS_B; poolSupports = SUPPORTS_B; poolDPS = DPS_B;
             } else if (rang >= 40) {
                 niveau = 40 + rng.nextInt(16);
-                poolTanks = mix(rng, TANKS_B, TANKS_A, 0.5);
+                poolTanks    = mix(rng, TANKS_B,    TANKS_A,    0.5);
                 poolSupports = mix(rng, SUPPORTS_B, SUPPORTS_A, 0.5);
-                poolDPS = mix(rng, DPS_B, DPS_A, 0.5);
+                poolDPS      = mix(rng, DPS_B,      DPS_A,      0.5);
             } else if (rang >= 20) {
                 niveau = 55 + rng.nextInt(21);
                 poolTanks = TANKS_A; poolSupports = SUPPORTS_A; poolDPS = DPS_A;
             } else if (rang >= 10) {
                 niveau = 75 + rng.nextInt(11);
-                poolTanks = mix(rng, TANKS_A, TANKS_S, 0.5);
+                poolTanks    = mix(rng, TANKS_A,    TANKS_S,    0.5);
                 poolSupports = mix(rng, SUPPORTS_A, SUPPORTS_S, 0.5);
-                poolDPS = mix(rng, DPS_A, DPS_S, 0.5);
+                poolDPS      = mix(rng, DPS_A,      DPS_S,      0.5);
             } else if (rang >= 5) {
                 niveau = 85 + rng.nextInt(6);
                 poolTanks = TANKS_S; poolSupports = SUPPORTS_S; poolDPS = DPS_S;
             } else {
                 niveau = 90 + rng.nextInt(11);
-                poolTanks = TANKS_S;
-                poolSupports = mix(rng, SUPPORTS_S, SUPPORTS_SS, 0.4);
-                poolDPS = mix(rng, DPS_S, DPS_SS, 0.4);
+                poolTanks    = TANKS_S;
+                poolSupports = mix(rng, SUPPORTS_S,  SUPPORTS_SS, 0.4);
+                poolDPS      = mix(rng, DPS_S,        DPS_SS,      0.4);
             }
 
             List<String> equipe = genererEquipeParPools(rng, poolTanks, poolSupports, poolDPS);
-            String classeIA = CLASSES_IA[rng.nextInt(CLASSES_IA.length)];
+            String classeIA  = CLASSES_IA[rng.nextInt(CLASSES_IA.length)];
             String principal = "PP_" + classeIA;
             int points = 10000 - (rang - 1) * 95;
 
@@ -133,7 +140,7 @@ public class GestionnaireArene {
         java.util.Set<String> deja = new java.util.HashSet<>();
 
         String tank = piocher(rng, tanks, deja);
-        if (tank != null) { equipe.add(tank); deja.add(tank); }
+        if (tank    != null) { equipe.add(tank);    deja.add(tank); }
 
         String support = piocher(rng, supports, deja);
         if (support != null) { equipe.add(support); deja.add(support); }
@@ -181,13 +188,11 @@ public class GestionnaireArene {
                 new TypeToken<Map<String, Map<String, Object>>>(){}.getType()
             );
 
-            // Base de faux joueurs en premier
             genererFauxJoueurs();
 
-            // Écraser les rangs occupés par de vrais joueurs
             for (Map<String, Object> data : raw.values()) {
-                AreneData vrai = AreneData.depuisMap(data);
-                int index = vrai.getRang() - 1;
+                AreneData vrai  = AreneData.depuisMap(data);
+                int       index = vrai.getRang() - 1;
                 if (index >= 0 && index < classement.size()) {
                     classement.set(index, vrai);
                 }

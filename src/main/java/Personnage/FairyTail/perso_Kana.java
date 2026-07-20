@@ -2,7 +2,7 @@ package Personnage.FairyTail;
 import Combat.Combat;
 import Effets.Paralysie;
 import Personnage.PersonnageBase;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class perso_Kana extends PersonnageBase {
@@ -12,6 +12,7 @@ public class perso_Kana extends PersonnageBase {
         this.type = "Mage";
         this.role = "Support";
         this.rarete = "B";
+        
         double multiplicateurRarete = 1.30;
         this.vie = 350 * multiplicateurRarete;
         this.attaque = 120 * multiplicateurRarete;

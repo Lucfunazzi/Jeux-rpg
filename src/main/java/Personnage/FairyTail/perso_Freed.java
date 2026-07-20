@@ -40,7 +40,7 @@ public class perso_Freed extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Freed utilise Tranchant des runes !");
+        log.add("Freed utilise coup d'épée!");
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         // Synergie Equipe du Tonnerre : si Bickslow a touché cible ce tour
@@ -49,7 +49,7 @@ public class perso_Freed extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Freed pose les Runes protectrices !");
+        log.add("Freed Ecrit de l'ombre : Protection !");
 
         // Bouclier sur toute l'équipe
         for (PersonnageBase allie : equipeAlliee) {
@@ -78,7 +78,7 @@ public class perso_Freed extends PersonnageBase {
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Freed utilise Runes de confinement !");
+        log.add("Freed utilise ecrit de l'ombre : Douleur !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) {
             multiplicateurRage += (this.getRage() - 100) / 100.0;

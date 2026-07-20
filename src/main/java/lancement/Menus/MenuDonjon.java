@@ -183,9 +183,9 @@ public class MenuDonjon {
                     case OR -> {
                         // Tank: Nab (C) | DPS: Alzack (C), Jet (C), Bisca (C) | Support: Warren (C)
                         ennemis.add(niv(new perso_Nab(),     niv));
-                        ennemis.add(niv(new perso_Alzack(),  niv));
-                        ennemis.add(niv(new perso_Jet(),     niv));
-                        ennemis.add(niv(new perso_Bisca(),   niv));
+                        ennemis.add(niv(new perso_Arzak(),  niv));
+                        ennemis.add(niv(new perso_Jett(),     niv));
+                        ennemis.add(niv(new perso_Biska(),   niv));
                         ennemis.add(niv(new perso_Warren(),  niv));
                     }
                     case AFFINAGE -> {
@@ -201,7 +201,7 @@ public class MenuDonjon {
                         ennemis.add(niv(new perso_Nab(),       niv));
                         ennemis.add(niv(new perso_Romeo(),     niv));
                         ennemis.add(niv(new perso_Elfman(),    niv));
-                        ennemis.add(niv(new perso_Bickslow(),  niv));
+                        ennemis.add(niv(new perso_Bixrow(),  niv));
                         ennemis.add(niv(new perso_Evergreen(), niv));
                     }
                 }
@@ -221,7 +221,7 @@ public class MenuDonjon {
                     case AFFINAGE -> {
                         // Tank: Rogue (S) | DPS: Bickslow (B), Loke (B), Gray (A) | Support: Freed (A)
                         ennemis.add(niv(new perso_Rogue(),     niv));
-                        ennemis.add(niv(new perso_Bickslow(),  niv));
+                        ennemis.add(niv(new perso_Bixrow(),  niv));
                         ennemis.add(niv(new perso_Loke(),      niv));
                         ennemis.add(niv(new perso_Gray(),      niv));
                         ennemis.add(niv(new perso_Freed(),     niv));
@@ -232,7 +232,7 @@ public class MenuDonjon {
                         ennemis.add(niv(new perso_Gajeel(),    niv));
                         ennemis.add(niv(new perso_Lucy(),      niv));
                         ennemis.add(niv(new perso_Wendy(),     niv));
-                        ennemis.add(niv(new perso_Jubia(),     niv));
+                        ennemis.add(niv(new perso_Jubia_4elements(),     niv));
                     }
                 }
             }
@@ -254,7 +254,7 @@ public class MenuDonjon {
                         ennemis.add(niv(new perso_Rogue(),        niv));
                         ennemis.add(niv(new perso_Mirajane(),           niv));
                         ennemis.add(niv(new perso_Mirajane(),      niv));
-                        ennemis.add(niv(new perso_Jubia(),         niv));
+                        ennemis.add(niv(new perso_Jubia_4elements(),         niv));
                     }
                     case XP -> {
                         // Tank: C17 (S) | DPS: Orochimaru (S), Natsu Etherion (S) | Support: Shikamaru (A), Wendy (A)

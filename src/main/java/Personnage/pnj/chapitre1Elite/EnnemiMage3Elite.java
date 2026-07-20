@@ -1,4 +1,4 @@
-package Personnage.pnj.Chapitre1Elite;
+package Personnage.pnj.chapitre1Elite;
 
 import Personnage.PersonnageBase;
 import Combat.Combat;

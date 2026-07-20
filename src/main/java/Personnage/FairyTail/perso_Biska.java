@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class perso_Bisca extends PersonnageBase {
+public class perso_Biska extends PersonnageBase {
 
-    public perso_Bisca() {
+    public perso_Biska() {
         this.nom = "Bisca";
         this.niveau = 1;
         this.type = "Mage";
@@ -33,12 +33,12 @@ public class perso_Bisca extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Fleche magique", "Fleche explosve", "Vollee de fleches"};
+        return new String[]{"Tir rapide", "Stinger Shot", "Tir à tête chercheuse"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bisca utilise Fleche magique !");
+        log.add("Bisca utilise Tir rapide !");
         boolean touche = Combat.attaqueTouche(this, cible);
         if (!touche) {
             log.add(cible.getNom() + " esquive !");
@@ -51,12 +51,11 @@ public class perso_Bisca extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bisca utilise Fleche explosive !");
-        double degats = this.getAttaque() * 1.10;
+        log.add("Bisca utilise Stinger Shot !");
+        double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Saignement(2, 0.03), log);
 
-        // Synergie Alzack & Bisca : si Alzack vivant → +5% ATK pendant 2 tours
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Alzack") && allie.estVivant()) {
                 Combat.appliquerEffet(this, new BuffAttaque(0.05, 2), log);
@@ -68,12 +67,11 @@ public class perso_Bisca extends PersonnageBase {
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bisca utilise Vollee de fleches !");
+        log.add("Bisca utilise Tir à tête chercheuses !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) {
             multiplicateurRage += (this.getRage() - 100) / 100.0;
         }
-        // Cible les 2 ennemis avec le plus de PV
         ArrayList<PersonnageBase> ennemisVivants = new ArrayList<>();
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) ennemisVivants.add(ennemi);
@@ -82,7 +80,7 @@ public class perso_Bisca extends PersonnageBase {
         int ciblesAttaquees = 0;
         for (PersonnageBase ennemi : ennemisVivants) {
             if (ciblesAttaquees < 2) {
-                double degats = (this.getAttaque() * 1.10) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Saignement(2, 0.03), log);
                 ciblesAttaquees++;
@@ -92,19 +90,20 @@ public class perso_Bisca extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Fleche magique — inflige 100% ATK a une cible.");
+        System.out.println("Tir rapide — inflige 100% ATK a une cible.");
     }
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Fleche explosive — inflige 110% ATK a une cible, "
+        System.out.println("Stinger Shot — inflige 120% ATK a une cible, "
                 + "applique Saignement (3% PV/tour) pendant 2 tours. "
                 + "[Synergie Duo de tireurs] Alzack vivant : +5% ATK pendant 2 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Vollee de fleches — inflige 110% ATK aux 2 ennemis ayant le plus de PV, "
-                + "applique Saignement (3% PV/tour) pendant 2 tours sur chacun.");
+        System.out.println("Tir a tete chercheuse — inflige 140% ATK aux 2 ennemis ayant le plus de PV, "
+                + "applique Saignement (3% PV/tour) pendant 2 tours sur chacun. "
+                + "Puissance augmentee par la Rage.");
     }
 }

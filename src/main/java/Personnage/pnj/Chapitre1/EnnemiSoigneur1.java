@@ -78,6 +78,6 @@ public class EnnemiSoigneur1 extends PersonnageBase {
         System.out.println("Soin Cible : soigne l'allie le plus bas en PV a 100% ATK.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Vague de Soins : soigne toute l'equipe a 80% ATK.");
+        System.out.println("Vague de Soins : soigne toute l'equipe a 50% ATK.");
     }
 }

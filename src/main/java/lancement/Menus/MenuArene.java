@@ -328,11 +328,11 @@ public class MenuArene {
     private PersonnageBase creerPersonnage(String nom) {
         return switch (nom) {
             // ── Rang C ──
-                        case "Alzack"      -> new perso_Alzack();
-                        case "Bisca"       -> new perso_Bisca();
+                        case "Alzack"      -> new perso_Arzak();
+                        case "Bisca"       -> new perso_Biska();
                         case "Max"         -> new perso_Max();
                         case "Droy"        -> new perso_Droy();
-                        case "Jet"         -> new perso_Jet();
+                        case "Jet"         -> new perso_Jett();
                         case "Warren"      -> new perso_Warren();
                         case "Nab"         -> new perso_Nab();
             case "Elfman"           -> new perso_Elfman();
@@ -346,7 +346,7 @@ public class MenuArene {
       
             case "Cana"             -> new perso_Kana();
             case "Loke"             -> new perso_Loke();
-            case "Bickslow"         -> new perso_Bickslow();
+            case "Bickslow"         -> new perso_Bixrow();
             case "Evergreen"        -> new perso_Evergreen();
          
             // ── Rang A ──
@@ -356,7 +356,7 @@ public class MenuArene {
             case "Gray"             -> new perso_Gray();
             case "Freed"            -> new perso_Freed();
             case "Gajeel"           -> new perso_Gajeel();
-            case "Jubia"            -> new perso_Jubia();
+            case "Jubia"            -> new perso_Jubia_4elements();
             case "Wendy"            -> new perso_Wendy();
            
             // ── Rang S ──

@@ -14,19 +14,19 @@ import Personnage.FairyTail.*;
 
 
 
-import Personnage.FairyTail.perso_Alzack;
-import Personnage.FairyTail.perso_Bisca;
+import Personnage.FairyTail.perso_Arzak;
+import Personnage.FairyTail.perso_Biska;
 import Personnage.FairyTail.perso_Elfman;
 import Personnage.FairyTail.perso_Max;
 import Personnage.FairyTail.perso_Droy;
-import Personnage.FairyTail.perso_Jet;
+import Personnage.FairyTail.perso_Jett;
 import Personnage.FairyTail.perso_Warren;
 import Personnage.FairyTail.perso_Nab;
 import Personnage.FairyTail.perso_Romeo;
 import Personnage.FairyTail.perso_Levy;
 import Personnage.FairyTail.perso_Lisanna;
 import Personnage.FairyTail.perso_ElfmanBete;
-import Personnage.FairyTail.perso_Bickslow;
+import Personnage.FairyTail.perso_Bixrow;
 import Personnage.FairyTail.perso_Evergreen;
 import Personnage.FairyTail.perso_Kana;
 import Personnage.FairyTail.perso_Loke;
@@ -34,7 +34,7 @@ import Personnage.FairyTail.perso_Angel;
 import Personnage.FairyTail.perso_Freed;
 import Personnage.FairyTail.perso_Gajeel;
 import Personnage.FairyTail.perso_Gray;
-import Personnage.FairyTail.perso_Jubia;
+import Personnage.FairyTail.perso_Jubia_4elements;
 import Personnage.FairyTail.perso_Lucy;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Wendy;
@@ -570,17 +570,17 @@ public class GestionnaireSauvegarde {
    public PersonnageBase creerPersonnageParNom(String nom) {
     return switch (nom) {
         // Rang C
-        case "Alzack"         -> new perso_Alzack();
-        case "Bisca"          -> new perso_Bisca();
+        case "Alzack"         -> new perso_Arzak();
+        case "Bisca"          -> new perso_Biska();
         case "Elfman"         -> new perso_Elfman();
         case "Max"            -> new perso_Max();
         case "Droy"           -> new perso_Droy();
-        case "Jet"            -> new perso_Jet();
+        case "Jet"            -> new perso_Jett();
         case "Warren"         -> new perso_Warren();
         case "Nab"            -> new perso_Nab();
         case "Romeo"          -> new perso_Romeo();
         // Rang B
-        case "Bickslow"       -> new perso_Bickslow();
+        case "Bickslow"       -> new perso_Bixrow();
         case "Evergreen"      -> new perso_Evergreen();
         case "Cana"           -> new perso_Kana();
         case "Loke"           -> new perso_Loke();
@@ -594,7 +594,7 @@ public class GestionnaireSauvegarde {
         case "Freed"          -> new perso_Freed();
         case "Gajeel"         -> new perso_Gajeel();
         case "Gray"           -> new perso_Gray();
-        case "Jubia"          -> new perso_Jubia();
+        case "Jubia"          -> new perso_Jubia_4elements();
         case "Lucy"           -> new perso_Lucy();
         case "Natsu"          -> new perso_Natsu();
         case "Wendy"          -> new perso_Wendy();

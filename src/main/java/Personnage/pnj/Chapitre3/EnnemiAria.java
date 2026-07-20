@@ -14,11 +14,11 @@ import java.util.List;
  * Le plus puissant des Element 4 : draine et détruit.
  * Multiplicateur rang A : 1.40
  */
-public class EnnemiAlya extends PersonnageBase {
+public class EnnemiAria extends PersonnageBase {
 
-    public EnnemiAlya() { this(30); }
+    public EnnemiAria() { this(30); }
 
-    public EnnemiAlya(int niveau) {
+    public EnnemiAria(int niveau) {
         this.nom    = "Aria";
         this.niveau = niveau;
         this.type   = "Mage";

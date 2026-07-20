@@ -97,18 +97,18 @@ public class Chapitre3 {
             case 4  -> { ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol());
                          ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier2());
                          return new Stage(4, "L'Élément 4 se déploie", 11500, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiJubia()); ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
+            case 5  -> { ennemis.add(new EnnemiJubia_4elements()); ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiJubia()); ennemis.add(new EnnemiTotomaru());
+            case 6  -> { ennemis.add(new EnnemiJubia_4elements()); ennemis.add(new EnnemiTotomaru());
                          ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier1());
                          return new Stage(6, "L'Élément 4 au complet", 16000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiAlya()); ennemis.add(new EnnemiMage3());
+            case 7  -> { ennemis.add(new EnnemiAria()); ennemis.add(new EnnemiMage3());
                          ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiAlya()); ennemis.add(new EnnemiJubia());
+            case 8  -> { ennemis.add(new EnnemiAria()); ennemis.add(new EnnemiJubia_4elements());
                          ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2());
                          return new Stage(8, "L'Élément 4 — Dernière résistance", 22500, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiJose()); ennemis.add(new EnnemiAlya());
+            case 9  -> { ennemis.add(new EnnemiJose()); ennemis.add(new EnnemiAria());
                          ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
                          return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, ennemis); }
             case 10 -> { ennemis.add(new EnnemiJose());

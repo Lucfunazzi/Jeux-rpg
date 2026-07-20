@@ -112,8 +112,8 @@ public class Chapitre2Elite {
                         // Donner l'Oeuf de Créature Sacrée (une seule fois)
                         if (estNouveau && !ctx.gestionnaireCreaturesSacrees.isOeufDebloque()) {
                             ctx.gestionnaireCreaturesSacrees.debloquerOeuf();
-                            System.out.println(">> Vous avez obtenu un Oeuf de Creature Sacree !");
-                            System.out.println("   Accessible depuis le menu Creatures Sacrees (niveau 30 requis).");
+                            System.out.println(">> Vous avez obtenu un Œuf Mystérieux !");
+                            System.out.println("      Un être légendaire sommeille à l'intérieur... Accessible depuis le menu Créatures Sacrées (niveau 30 requis).");
                         }
                         // Donner la Clef Celeste Virgo (une seule fois)
                         if (estNouveau && ctx.gestionnaireClefsCelestes != null
