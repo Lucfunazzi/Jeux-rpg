@@ -432,6 +432,14 @@ public class Combat {
      */
     public static void appliquerEffet(PersonnageBase source, PersonnageBase cible,
                                        Effet effet, List<String> log) {
+        // Immunité — bloque les effets négatifs si la cible est immunisée
+        if (effet instanceof Effets.EffetNegatif) {
+            Effets.Immunite immunite = cible.getEffet(Effets.Immunite.class);
+            if (immunite != null && !immunite.estTermine()) {
+                log.add("🛡 " + cible.getNom() + " est immunisé — [" + effet.getNom() + "] bloqué !");
+                return;
+            }
+        }
         // Cas spécial Poison : stack au lieu de remplacer
         if (effet instanceof Poison) {
             Poison poisonExistant = cible.getEffet(Poison.class);
@@ -455,6 +463,14 @@ public class Combat {
 
     // Surcharge pratique quand la source et la cible sont la même personne (buffs sur soi)
     public static void appliquerEffet(PersonnageBase cible, Effet effet, List<String> log) {
+        // Immunité — bloque les effets négatifs si la cible est immunisée
+        if (effet instanceof Effets.EffetNegatif) {
+            Effets.Immunite immunite = cible.getEffet(Effets.Immunite.class);
+            if (immunite != null && !immunite.estTermine()) {
+                log.add("🛡 " + cible.getNom() + " est immunisé — [" + effet.getNom() + "] bloqué !");
+                return;
+            }
+        }
         if (effet instanceof Poison) {
             Poison poisonExistant = cible.getEffet(Poison.class);
             if (poisonExistant != null) {

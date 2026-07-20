@@ -432,9 +432,10 @@ public class MenuPersonnage {
         }
         if (type == null) return true;
         return switch (type) {
-            case "Ninja"    -> e.getTypeArme() == Equipement.TypeArme.KUNAI;
+            case "Chasseur de Dragon" -> e.getTypeArme() == Equipement.TypeArme.LANCE;
             case "Mage"     -> e.getTypeArme() == Equipement.TypeArme.BATON;
-            case "Guerrier" -> e.getTypeArme() == Equipement.TypeArme.GANTS;
+            case "Chevalier"          -> e.getTypeArme() == Equipement.TypeArme.EPEE;
+                case "Constellationniste" -> e.getTypeArme() == Equipement.TypeArme.BATON;
             default         -> true;
         };
     }

@@ -3,28 +3,29 @@ package Joueur;
 import Personnage.PersonnageBase;
 import Effets.*;
 import Combat.Combat;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * Mage — magie de glace et de cristaux, inspiré de Gray Fullbuster.
+ * Constellationniste — esprits célestes, inspiré de Lucy Heartfilia.
  *
- * Spéciale de base : Lance de Glace         (100% ATK mono-cible Tank + 100% précision)
- * Ultime de base   : Bazooka de Glace       (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
- * Spéciale Arbre 1 : Épée de Glace Éternelle (frappe lourde + gel + -DEF)
- * Ultime  Arbre 2  : Ice Make — Démon de Glace (AoE 3 cibles + gel massif)
+ * Spéciale de base : Invocation de Caelum   (100% ATK mono-cible Tank + 100% précision)
+ * Ultime de base   : Invocation de Taurus   (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
+ * Spéciale Arbre 1 : Invocation : Leo       (frappe + Silence + buff ATK équipe)
+ * Ultime  Arbre 2  : Portes des Étoiles     (Taurus + Sagittarius + Leo simultanés)
  */
-public class Mage implements Competences {
+public class Constellationniste implements Competences {
 
     @Override
     public String[] getNomsCompetences() {
-        return new String[]{"Lance de Glace", "Bazooka de Glace"};
+        return new String[]{"Invocation de Caelum", "Invocation de Taurus"};
     }
 
     // ── Spéciale de base ─────────────────────────────────────────────────
     @Override
     public void attaqueSpeciale(PersonnageBase utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Lance de Glace !");
+        log.add("Invocation de Caelum !");
         PersonnageBase tank = equipeEnnemie.stream()
                 .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
                 .findFirst().orElse(cible);
@@ -37,7 +38,7 @@ public class Mage implements Competences {
     @Override
     public void ultime(PersonnageBase utilisateur, List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bazooka de Glace !");
+        log.add("Invocation de Taurus !");
         PersonnageBase tank = equipeEnnemie.stream()
                 .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
                 .findFirst().orElse(
@@ -58,12 +59,14 @@ public class Mage implements Competences {
     @Override
     public void competenceArbre(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Épée de Glace Éternelle !");
-        double degats = utilisateur.getAttaque() * 1.90;
+        log.add("Invocation : Leo — Le Lion des Étoiles rugit !");
+        double degats = utilisateur.getAttaque() * 1.80;
         Combat.appliquerDegatsAvecLog(utilisateur, cible, degats, log);
-        Combat.appliquerEffet(utilisateur, cible, new ReductionDefense(0.20, 3), log);
-        if (Math.random() < 0.40) {
-            Combat.appliquerEffet(utilisateur, cible, new Gel(1), log);
+        Combat.appliquerEffet(utilisateur, cible, new Silence(1), log);
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(utilisateur, allie, new BuffAttaque(0.12, 2), log);
+            }
         }
     }
 
@@ -71,32 +74,44 @@ public class Mage implements Competences {
     @Override
     public void competenceArbre2(Personnage_principale utilisateur,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Ice Make — Démon de Glace !");
-        int touche = 0;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && touche < 3) {
-                double degats = utilisateur.getAttaque() * 1.60;
-                Combat.appliquerDegatsAvecLog(utilisateur, ennemi, degats, log);
-                Combat.appliquerEffet(utilisateur, ennemi, new ReductionDefense(0.15, 2), log);
-                if (Math.random() < 0.45) {
-                    Combat.appliquerEffet(utilisateur, ennemi, new Gel(1), log);
-                }
-                touche++;
+        log.add("Portes des Étoiles — Invocation Multiple !");
+        // Taurus sur l'ennemi le plus résistant
+        PersonnageBase cible1 = equipeEnnemie.stream()
+                .filter(PersonnageBase::estVivant)
+                .max(Comparator.comparingDouble(PersonnageBase::getVie))
+                .orElse(null);
+        if (cible1 != null) {
+            Combat.appliquerDegatsAvecLog(utilisateur, cible1, utilisateur.getAttaque() * 1.20, log);
+            Combat.appliquerEffet(utilisateur, cible1, new ReductionDefense(0.20, 2), log);
+        }
+        // Sagittarius sur une 2e cible
+        PersonnageBase cible2 = equipeEnnemie.stream()
+                .filter(e -> e.estVivant() && e != cible1)
+                .findFirst().orElse(null);
+        if (cible2 != null) {
+            Combat.appliquerDegatsAvecLog(utilisateur, cible2, utilisateur.getAttaque() * 1.00, log);
+            if (Math.random() < 0.50) {
+                Combat.appliquerEffet(utilisateur, cible2, new Saignement(2, 0.06), log);
             }
         }
-        Combat.appliquerEffet(utilisateur, new BuffDefense(0.20, 2), log);
+        // Leo buff équipe
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(utilisateur, allie, new BuffAttaque(0.15, 2), log);
+            }
+        }
     }
 
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Lance de Glace — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
+        System.out.println("Invocation de Caelum — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }
     @Override public void descriptionUltime() {
-        System.out.println("Bazooka de Glace — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
+        System.out.println("Invocation de Taurus — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Épée de Glace Éternelle [Arbre 1] — Inflige 190% ATK à 1 cible. -20% DEF (3 tours). 40% de chance de Gel 1 tour.");
+        System.out.println("Invocation : Leo [Arbre 1] — Inflige 180% ATK à 1 cible + Silence 1 tour. +12% ATK à toute l'équipe (2 tours).");
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Ice Make — Démon de Glace [Arbre 2] — Inflige 160% ATK aux 3 premières cibles. -15% DEF (2 tours). 45% Gel 1 tour. +20% DEF au lanceur (2 tours).");
+        System.out.println("Portes des Étoiles [Arbre 2] — Taurus : 120% ATK + -20% DEF sur ennemi le plus résistant. Sagittarius : 100% ATK + 50% Saignement sur ennemi 2. Leo : +15% ATK équipe (2 tours).");
     }
 }

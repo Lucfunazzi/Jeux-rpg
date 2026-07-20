@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import Joueur.Personnage_principale;
 import Joueur.Mage;
-import Joueur.Ninja;
-import Joueur.Guerrier;
+import Joueur.ChasseurDeDragon;
+import Joueur.Chevalier;
+import Joueur.Constellationniste;
 import Joueur.Competences;
 import Personnage.PersonnageBase;
 
@@ -325,8 +326,9 @@ public class GestionnaireSauvegarde {
         Personnage_principale joueur = new Personnage_principale(data.joueurNom, 1);
         Competences comp = switch (data.joueurClasse) {
             case "Mage"     -> new Mage();
-            case "Ninja"    -> new Ninja();
-            case "Guerrier" -> new Guerrier();
+            case "Chasseur de Dragon"  -> new ChasseurDeDragon();
+            case "Chevalier"           -> new Chevalier();
+            case "Constellationniste"  -> new Constellationniste();
             default         -> null;
         };
         joueur.setChoixClasses(data.joueurClasse);

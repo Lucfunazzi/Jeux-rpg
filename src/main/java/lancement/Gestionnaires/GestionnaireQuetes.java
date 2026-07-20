@@ -24,7 +24,7 @@ public class GestionnaireQuetes {
         new QueteJournaliere("J2", "Accumulateur",
                 "Gagnez 500 or en combat.",
                 QueteJournaliere.TypeObjectif.GAGNER_OR, 500, 500, 1000),
-        new QueteJournaliere("J3", "Guerrier assidu",
+        new QueteJournaliere("J3", "Mage assidu",
                 "Terminez 3 stages.",
                 QueteJournaliere.TypeObjectif.TERMINER_STAGE, 3, 800, 1500),
         new QueteJournaliere("J4", "Grande forge",
@@ -222,7 +222,7 @@ public class GestionnaireQuetes {
                 "Freezer Transcende", "Terminez le stage 4 du Chapitre 3 Elite.",
                 3, 4, true, 330000, 5500, 0));
         quetesProgression.add(new QueteProgression("C3E5",
-                "Les Guerriers de la Terre", "Terminez le stage 5 du Chapitre 3 Elite.",
+                "Les Guerriers de Fairy Tail", "Terminez le stage 5 du Chapitre 3 Elite.",
                 3, 5, true, 330000, 6000, 0));
         quetesProgression.add(new QueteProgression("C3E6",
                 "Les Cyborgs Reprogrammes", "Terminez le stage 6 du Chapitre 3 Elite.",

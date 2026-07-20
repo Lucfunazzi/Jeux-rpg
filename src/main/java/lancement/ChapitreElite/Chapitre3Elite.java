@@ -1,7 +1,6 @@
 package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
-
 import Personnage.pnj.Chapitre3.EnnemiJubia_4elements;
 import Personnage.pnj.Chapitre3.EnnemiTotomaru;
 import Personnage.pnj.Chapitre3.EnnemiSol;
@@ -27,15 +26,15 @@ import java.util.Scanner;
 
 public class Chapitre3Elite {
 
-    private static final int    NB_STAGES             = 10;
+    private static final int    NB_STAGES              = 10;
     private static final double CHANCE_CARTE_OR_REPLAY = 0.30;
-    private static final double CHANCE_FRAGMENT        = 0.40; // 40% par run
-    private static final double CHANCE_FRAGMENT_BOSS   = 0.70; // 70% sur le stage 10
+    private static final double CHANCE_FRAGMENT        = 0.40;
+    private static final double CHANCE_FRAGMENT_BOSS   = 0.70;
 
     private static final GestionnaireFragments gestionnaireFragments = new GestionnaireFragments();
 
-    private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
-    private final boolean[] stagesReussis   = new boolean[NB_STAGES + 1];
+    private final boolean[] stagesDebloques  = new boolean[NB_STAGES + 1];
+    private final boolean[] stagesReussis    = new boolean[NB_STAGES + 1];
     private final boolean[] premiereVictoire = new boolean[NB_STAGES + 1];
 
     private final Chapitre3      chapitre3;
@@ -47,7 +46,6 @@ public class Chapitre3Elite {
         stagesDebloques[1]  = true;
     }
 
-    // ── Condition de déblocage ────────────────────────────────────────────
     public boolean estDebloque() {
         return chapitre3.getStagesReussis()[10]
             && chapitre2Elite.getStagesReussis()[10];
@@ -65,7 +63,7 @@ public class Chapitre3Elite {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 3 ELITE — Le Tournoi Ultime");
+            System.out.println("   CHAPITRE 3 ELITE — Phantom Lord Transcendé");
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -114,7 +112,6 @@ public class Chapitre3Elite {
                         System.out.println(">> Felicitations ! Vous avez termine le Chapitre 3 Elite !");
                     }
 
-                    // ── Récompenses Carte d'Or Lv.2 ──────────────────────
                     if (estNouveau && !premiereVictoire[choix]) {
                         premiereVictoire[choix] = true;
                         int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 10);
@@ -128,19 +125,14 @@ public class Chapitre3Elite {
                         }
                     }
 
-                    // ── Drop de fragment d'équipement ────────────────────
-                    double chanceFragment = (choix == NB_STAGES)
-                            ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
+                    double chanceFragment = (choix == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
                     if (Math.random() < chanceFragment) {
-                        List<FragmentEquipement> catalogue =
-                                gestionnaireFragments.getCatalogue();
-                        FragmentEquipement fragment =
-                                catalogue.get(new Random().nextInt(catalogue.size()));
+                        List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
+                        FragmentEquipement fragment = catalogue.get(new Random().nextInt(catalogue.size()));
                         ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
                         int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
                         System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
-                                fragment.getNomFragment(), total,
-                                FragmentEquipement.QUANTITE_REQUISE);
+                                fragment.getNomFragment(), total, FragmentEquipement.QUANTITE_REQUISE);
                     }
 
                     ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
@@ -156,29 +148,110 @@ public class Chapitre3Elite {
     }
 
     private Stage construireStage(int numero, GameContext ctx) {
-        ArrayList<PersonnageBase> ennemis = new ArrayList<>();
+        ArrayList<PersonnageBase> e = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiMage1(32)); ennemis.add(new EnnemiGuerrier1(32)); ennemis.add(new EnnemiMage2(30)); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 9000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiTotomaru(33)); ennemis.add(new EnnemiMage2(32)); ennemis.add(new EnnemiGuerrier2(30)); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 11000, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiSol(33)); ennemis.add(new EnnemiGuerrier1(32)); ennemis.add(new EnnemiTank1(30)); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 13500, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiTotomaru(35)); ennemis.add(new EnnemiSol(35)); ennemis.add(new EnnemiMage3(32)); ennemis.add(new EnnemiGuerrier2(30)); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiJubia_4elements(36)); ennemis.add(new EnnemiMage3(34)); ennemis.add(new EnnemiGuerrier2(32)); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiTank1());
-                         return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiJubia_4elements(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2(34)); ennemis.add(new EnnemiGuerrier1());
-                         return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiAria(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiAria(39)); ennemis.add(new EnnemiJubia_4elements(37)); ennemis.add(new EnnemiTotomaru(36)); ennemis.add(new EnnemiSol(36)); ennemis.add(new EnnemiMage2());
-                         return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 30000, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiJose(40)); ennemis.add(new EnnemiAria(38)); ennemis.add(new EnnemiMage3(35)); ennemis.add(new EnnemiGuerrier2(33)); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiJose(42));
-                         return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 42000, 0, ennemis); }
-            default -> { return new Stage(numero, "???", 0, 0, ennemis); }
+
+            // Stage 1 — Avant-garde renforcée (+12 niveaux vs normal)
+            case 1 -> {
+                e.add(new EnnemiMage1(34));
+                e.add(new EnnemiGuerrier1(34));
+                e.add(new EnnemiMage2(33));
+                e.add(new EnnemiGuerrier2(33));
+                e.add(new EnnemiSoigneur1(32));
+                return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 9000, 0, e);
+            }
+
+            // Stage 2 — Totomaru élite + escorte
+            case 2 -> {
+                e.add(new EnnemiTotomaru(38));
+                e.add(new EnnemiMage2(36));
+                e.add(new EnnemiGuerrier2(35));
+                e.add(new EnnemiMage3(34));
+                e.add(new EnnemiSoigneur1(34));
+                return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 11000, 0, e);
+            }
+
+            // Stage 3 — Sol élite + troupe lourde
+            case 3 -> {
+                e.add(new EnnemiSol(38));
+                e.add(new EnnemiGuerrier1(36));
+                e.add(new EnnemiTank1(36));
+                e.add(new EnnemiMage2(35));
+                e.add(new EnnemiSoigneur1(35));
+                return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 13500, 0, e);
+            }
+
+            // Stage 4 — Totomaru + Sol élite ensemble
+            case 4 -> {
+                e.add(new EnnemiTotomaru(40));
+                e.add(new EnnemiSol(40));
+                e.add(new EnnemiMage3(37));
+                e.add(new EnnemiGuerrier2(36));
+                e.add(new EnnemiSoigneur1(36));
+                return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, e);
+            }
+
+            // Stage 5 — Jubia élite + garde rapprochée
+            case 5 -> {
+                e.add(new EnnemiJubia_4elements(41));
+                e.add(new EnnemiMage3(39));
+                e.add(new EnnemiGuerrier2(38));
+                e.add(new EnnemiTank1(38));
+                e.add(new EnnemiSoigneur1(37));
+                return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, e);
+            }
+
+            // Stage 6 — Élément 4 complet élite
+            case 6 -> {
+                e.add(new EnnemiJubia_4elements(42));
+                e.add(new EnnemiTotomaru(41));
+                e.add(new EnnemiSol(41));
+                e.add(new EnnemiMage3(39));
+                e.add(new EnnemiGuerrier2(38));
+                return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, e);
+            }
+
+            // Stage 7 — Aria élite + escorte d'élite
+            case 7 -> {
+                e.add(new EnnemiAria(43));
+                e.add(new EnnemiMage3(41));
+                e.add(new EnnemiGuerrier2(40));
+                e.add(new EnnemiTank1(40));
+                e.add(new EnnemiSoigneur1(39));
+                return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, e);
+            }
+
+            // Stage 8 — Aria + Élément 4 au complet élite
+            case 8 -> {
+                e.add(new EnnemiAria(44));
+                e.add(new EnnemiJubia_4elements(43));
+                e.add(new EnnemiTotomaru(42));
+                e.add(new EnnemiSol(42));
+                e.add(new EnnemiMage3(40));
+                return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 30000, 0, e);
+            }
+
+            // Stage 9 — José élite + Aria + renforts maximum
+            case 9 -> {
+                e.add(new EnnemiJose(46));
+                e.add(new EnnemiAria(44));
+                e.add(new EnnemiMage3(41));
+                e.add(new EnnemiGuerrier2(40));
+                e.add(new EnnemiSoigneur1(40));
+                return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, e);
+            }
+
+            // Stage 10 — José boss + tout l'Élément 4 élite
+            case 10 -> {
+                e.add(new EnnemiJose(48));
+                e.add(new EnnemiAria(45));
+                e.add(new EnnemiJubia_4elements(44));
+                e.add(new EnnemiTotomaru(43));
+                e.add(new EnnemiSol(43));
+                return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 42000, 0, e);
+            }
+
+            default -> { return new Stage(numero, "???", 0, 0, e); }
         }
     }
 
@@ -197,7 +270,6 @@ public class Chapitre3Elite {
             default -> "???";
         };
     }
-    
 
     public boolean[] getStagesDebloques()  { return stagesDebloques; }
     public boolean[] getStagesReussis()    { return stagesReussis; }

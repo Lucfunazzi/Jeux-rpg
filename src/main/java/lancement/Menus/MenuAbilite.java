@@ -15,14 +15,25 @@ public class MenuAbilite {
 
         while (!retour) {
             System.out.println("\n========================================");
-            System.out.println("            MENU ABILITE");
+            System.out.println("            ARBRE DE COMPÉTENCES");
             System.out.println("========================================");
             System.out.println("Points disponibles : " + arbre.getPointsDisponibles());
             System.out.println();
-            System.out.println("1. Arbre 1" + (arbre.isNoeud10Debloque() ? " [COMPLETE]" : ""));
-            System.out.println("2. Arbre 2"
-                    + (!arbre.isArbre2Debloque() ? " [VERROUILLE — terminez le Chapitre 2 Elite]"
-                    : arbre.isNoeud10Arbre2Debloque() ? " [COMPLETE]" : ""));
+
+            // Afficher les compétences actives
+            String[] noms = joueur.getNomsAttaques();
+            System.out.println("  Spéciale active : " + noms[1]);
+            System.out.println("  Ultime  active  : " + noms[2]);
+            System.out.println();
+
+            System.out.println("1. Arbre 1 — Nouvelle Spéciale"
+                    + (arbre.isNoeud10Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 1) + "]" : ""));
+            System.out.println("2. Arbre 2 — Nouvel Ultime"
+                    + (!arbre.isArbre2Debloque()
+                        ? " [VERROUILLÉ — terminez le Chapitre 2 Elite]"
+                        : arbre.isNoeud10Arbre2Debloque()
+                            ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 2) + "]"
+                            : ""));
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -30,7 +41,7 @@ public class MenuAbilite {
                 case "1" -> afficherArbre(joueur, arbre, 1, scanner);
                 case "2" -> {
                     if (!arbre.isArbre2Debloque())
-                        System.out.println("L'arbre 2 se debloque en terminant le Chapitre 2 Elite.");
+                        System.out.println("L'arbre 2 se débloque en terminant le Chapitre 2 Elite.");
                     else
                         afficherArbre(joueur, arbre, 2, scanner);
                 }
@@ -40,7 +51,6 @@ public class MenuAbilite {
         }
     }
 
-    // ── Affichage générique d'un arbre ────────────────────────────────────
     private void afficherArbre(Personnage_principale joueur,
                                 ArbreCompetences arbre,
                                 int numArbre,
@@ -49,52 +59,43 @@ public class MenuAbilite {
 
         while (!retour) {
             System.out.println("\n========================================");
-            System.out.println("         ARBRE " + numArbre
-                    + (numArbre == 1
-                        ? " — Voie du Combattant"
-                        : " — Voie du Maitre"));
+            System.out.println("  ARBRE " + numArbre
+                    + (numArbre == 1 ? " — Voie du Combattant" : " — Voie du Maître"));
             System.out.println("========================================");
             System.out.println("Points disponibles : " + arbre.getPointsDisponibles());
             System.out.println();
 
             for (int i = 1; i <= 10; i++) {
-                NoeudArbre n = numArbre == 1
-                        ? arbre.getNoeud(i)
-                        : arbre.getNoeudArbre2(i);
+                NoeudArbre n = numArbre == 1 ? arbre.getNoeud(i) : arbre.getNoeudArbre2(i);
                 String etat = n.isDebloque() ? "[OK]" : "[  ]";
                 String cout = n.isDebloque() ? "      " : "(" + n.getCoutPoints() + " pts)";
-                System.out.println(etat + " Noeud " + i + " — " + n.getDescription()
-                        + "  " + cout);
+                System.out.println(etat + " Nœud " + i + " — " + n.getDescription() + "  " + cout);
             }
 
             System.out.println();
-            System.out.println("Entrez le numero du noeud a debloquer (0 pour revenir) :");
+            System.out.println("Entrez le numéro du nœud à débloquer (0 pour revenir) :");
             int choix;
             try {
                 choix = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Entree invalide.");
+                System.out.println("Entrée invalide.");
                 continue;
             }
 
             if (choix == 0) {
                 retour = true;
             } else if (choix < 1 || choix > 10) {
-                System.out.println("Noeud invalide.");
+                System.out.println("Nœud invalide.");
             } else {
-                NoeudArbre n = numArbre == 1
-                        ? arbre.getNoeud(choix)
-                        : arbre.getNoeudArbre2(choix);
+                NoeudArbre n = numArbre == 1 ? arbre.getNoeud(choix) : arbre.getNoeudArbre2(choix);
 
                 if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE) {
-                    afficherChoixNoeudSpecial(joueur, arbre, numArbre, choix, scanner);
+                    debloquerNoeudCompetence(joueur, arbre, numArbre, choix);
                 } else {
                     String resultat = arbre.tenterDebloquer(numArbre, choix);
                     if (resultat.equals("OK")) {
-                        System.out.println(">> Noeud " + choix + " debloque : "
-                                + n.getDescription() + " !");
-                        System.out.println("   Points restants : "
-                                + arbre.getPointsDisponibles());
+                        System.out.println(">> Nœud " + choix + " débloqué : " + n.getDescription() + " !");
+                        System.out.println("   Points restants : " + arbre.getPointsDisponibles());
                     } else {
                         System.out.println(resultat);
                     }
@@ -103,35 +104,28 @@ public class MenuAbilite {
         }
     }
 
-    // ── Gestion du nœud compétence spéciale ──────────────────────────────
-    private void afficherChoixNoeudSpecial(Personnage_principale joueur,
-                                            ArbreCompetences arbre,
-                                            int numArbre,
-                                            int indexNoeud,
-                                            Scanner scanner) {
-        NoeudArbre n = numArbre == 1
-                ? arbre.getNoeud(indexNoeud)
-                : arbre.getNoeudArbre2(indexNoeud);
-
+    private void debloquerNoeudCompetence(Personnage_principale joueur,
+                                           ArbreCompetences arbre,
+                                           int numArbre, int indexNoeud) {
+        NoeudArbre n = numArbre == 1 ? arbre.getNoeud(indexNoeud) : arbre.getNoeudArbre2(indexNoeud);
         String nomComp = getNomCompetence(joueur.getChoixClasses(), numArbre);
 
         if (n.isDebloque()) {
-            // Nœud déjà débloqué → rediriger vers le menu de sélection de compétence
-            // (géré dans MenuFormation, on informe simplement le joueur)
-            System.out.println("\n--- Competence speciale (Arbre " + numArbre + ") ---");
-            System.out.println("  " + nomComp + " est deja disponible.");
-            System.out.println("  Rendez-vous dans le Menu Formation pour changer");
-            System.out.println("  votre attaque speciale active.");
+            System.out.println("\n  " + nomComp + " est déjà débloquée et active.");
         } else {
-            // Tenter de débloquer
             String resultat = arbre.tenterDebloquer(numArbre, indexNoeud);
             if (resultat.equals("OK")) {
-                System.out.println(">> Noeud " + indexNoeud + " debloque : "
-                        + nomComp + " !");
-                if (numArbre == 1)
-                    System.out.println(">> Arbre 1 complete ! Terminez le Chapitre 2 Elite pour debloquer l'Arbre 2.");
-                System.out.println("   Rendez-vous dans le Menu Formation pour");
-                System.out.println("   l'activer comme attaque speciale.");
+                // Activer automatiquement la nouvelle compétence
+                if (numArbre == 1) {
+                    joueur.activerArbre1();
+                    System.out.println(">> Nouvelle spéciale débloquée : " + nomComp + " !");
+                    System.out.println("   Votre attaque spéciale est maintenant remplacée par " + nomComp + ".");
+                    System.out.println("   Terminez le Chapitre 2 Elite pour débloquer l'Arbre 2.");
+                } else {
+                    joueur.activerArbre2();
+                    System.out.println(">> Nouvel ultime débloqué : " + nomComp + " !");
+                    System.out.println("   Votre attaque ultime est maintenant remplacée par " + nomComp + ".");
+                }
                 System.out.println("   Points restants : " + arbre.getPointsDisponibles());
             } else {
                 System.out.println(resultat);
@@ -139,13 +133,8 @@ public class MenuAbilite {
         }
     }
 
-    // ── Noms des compétences par classe et arbre ──────────────────────────
+    // ── Noms des compétences d'arbre par classe ───────────────────────────
     public static String getNomCompetence(String classe, int arbre) {
-        return switch (classe) {
-            case "Mage" -> arbre == 1 ? "Nova Arcanique"       : "Tempete Cristalline";
-            case "Ninja"-> arbre == 1 ? "Substitution Meurtriere" : "Tourbillon de Lames";
-            case "Guerrier" -> arbre == 1 ? "Brise-Armure"     : "Frappe Sismique";
-            default     -> "Competence speciale " + arbre;
-        };
+        return Joueur.Personnage_principale.getNomCompetenceArbre(classe, arbre);
     }
 }

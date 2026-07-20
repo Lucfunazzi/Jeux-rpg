@@ -82,7 +82,7 @@ public class GestionnaireLiens {
             0.03, 0.02, 0.02, 0.00
         ));
         liens.add(new Lien(
-            "Guerrier team Z 1",
+            "Chevalier de la Guilde 1",
             "Alzack et Bisca ensemble : toute l'equipe gagne +5% ATK et +8% VIT",
             new String[]{"Alzack", "Bisca"},
             0.02, 0.00, 0.05, 0.00

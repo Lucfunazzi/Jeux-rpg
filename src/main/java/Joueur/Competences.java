@@ -1,35 +1,37 @@
 package Joueur;
 
 import Personnage.PersonnageBase;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Interface de compétences du personnage principal.
+ *
+ * Chaque classe possède :
+ *   - attaqueSpeciale()  : compétence de base (toujours disponible)
+ *   - ultime()           : ultime de base (toujours disponible)
+ *   - competenceArbre()  : nouvelle spéciale débloquée via Arbre 1 (nœud 10)
+ *   - competenceArbre2() : nouvel ultime débloqué via Arbre 2 (nœud 10)
+ */
 public interface Competences {
 
-    void choix_competence1(PersonnageBase utilisateur, PersonnageBase cible,
+    /** Attaque spéciale de base — toujours disponible dès le départ. */
+    void attaqueSpeciale(PersonnageBase utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log);
 
-    void choix_competence2(PersonnageBase utilisateur, PersonnageBase cible,
-            List<PersonnageBase> equipeAlliee,
-            List<PersonnageBase> equipeEnnemie, List<String> log);
-
-    void choix_competence3(PersonnageBase utilisateur, PersonnageBase cible,
-            List<PersonnageBase> equipeAlliee,
-            List<PersonnageBase> equipeEnnemie, List<String> log);
-
+    /** Ultime de base — toujours disponible dès le départ. */
     void ultime(PersonnageBase utilisateur,
             List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log);
 
+    /** Noms affichés : [0] = spéciale, [1] = ultime */
     String[] getNomsCompetences();
-    void descriptionCompetence1();
-    void descriptionCompetence2();
-    void descriptionCompetence3();
+
+    void descriptionAttaqueSpeciale();
     void descriptionUltime();
 
-    default void competenceArbre(Personnage_principale utilisateur,
-            PersonnageBase cible,
+    /** Nouvelle attaque spéciale débloquée par l'Arbre 1 (nœud 10). */
+    default void competenceArbre(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Competence arbre non implementee pour cette classe.");
@@ -38,14 +40,15 @@ public interface Competences {
     default void descriptionCompetenceArbre() {
         System.out.println("Aucune description disponible.");
     }
-    
-    default void competenceArbre2(Personnage_principale utilisateur, PersonnageBase cible,
-        List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie,
-        List<String> log) {
-    log.add("Competence arbre 2 non implementee.");
-}
 
-default void descriptionCompetenceArbre2() {
-    System.out.println("Competence arbre 2 non implementee.");
-}
+    /** Nouvel ultime débloqué par l'Arbre 2 (nœud 10). */
+    default void competenceArbre2(Personnage_principale utilisateur,
+            List<PersonnageBase> equipeAlliee,
+            List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("Ultime arbre 2 non implementee.");
+    }
+
+    default void descriptionCompetenceArbre2() {
+        System.out.println("Ultime arbre 2 non implementee.");
+    }
 }

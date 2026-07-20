@@ -47,7 +47,7 @@ public class GestionnaireArene {
     private static final List<String> DPS_S  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Erza", "Mirajane", "Natsu_Etherion", "Sting", "Rogue");
     private static final List<String> DPS_SS = List.of("Mirajane_Halphas");
 
-    private static final String[] CLASSES_IA = {"Mage", "Guerrier"};
+    private static final String[] CLASSES_IA = {"Chevalier", "Chasseur de Dragon", "Mage", "Constellationniste"};
 
     private static final String[] PREFIXES = {
         "Shadow", "Dark", "Storm", "Iron", "Blazing",

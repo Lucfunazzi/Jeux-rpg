@@ -259,44 +259,25 @@ public class Main {
         joueur.setChoixClasses(joueur.getClasses()[choixClasseNum - 1]);
 
         competences = switch (joueur.getChoixClasses()) {
-            case "Mage"     -> new Mage();
-            case "Ninja"    -> new Ninja();
-            case "Guerrier" -> new Guerrier();
+            case "Mage"                -> new Mage();
+            case "Chasseur de Dragon"  -> new ChasseurDeDragon();
+            case "Chevalier"           -> new Chevalier();
+            case "Constellationniste"  -> new Constellationniste();
             default         -> null;
         };
 
+        // Afficher les compétences de départ (spéciale + ultime)
         String[] nomCompetences = competences.getNomsCompetences();
-        System.out.println("\nVoici les 3 competences disponibles, vous devez en choisir une :");
-        for (int i = 0; i < nomCompetences.length; i++)
-            System.out.println((i + 1) + ". " + nomCompetences[i]);
-
-        System.out.println("\nVoulez-vous la description des competences ? (1 : Oui / 2 : Non) :");
-        int choixDesc = scanner.nextInt(); scanner.nextLine();
-        if (choixDesc == 1) {
-            boolean continuerDesc = true;
-            while (continuerDesc) {
-                System.out.println("\nChoisissez la description a afficher (1, 2, 3 ou 4 pour Quitter) :");
-                int c = scanner.nextInt(); scanner.nextLine();
-                joueur.setChoixDescription_comp(c);
-                switch (joueur.getchoixDescription_comp()) {
-                    case 1 -> competences.descriptionCompetence1();
-                    case 2 -> competences.descriptionCompetence2();
-                    case 3 -> competences.descriptionCompetence3();
-                    case 4 -> continuerDesc = false;
-                    default -> System.out.println("Choix invalide.");
-                }
-            }
+        System.out.println("\nVos compétences de départ :");
+        System.out.println("  Spéciale : " + nomCompetences[0]);
+        System.out.println("  Ultime   : " + nomCompetences[1]);
+        System.out.println("\nVoulez-vous voir la description de vos compétences ? (1 : Oui / 2 : Non) :");
+        String choixDesc = scanner.nextLine().trim();
+        if (choixDesc.equals("1")) {
+            competences.descriptionAttaqueSpeciale();
+            competences.descriptionUltime();
         }
-
-        int choixComp = 0;
-        while (choixComp < 1 || choixComp > 3) {
-            System.out.println("\nChoisissez votre competence active (entre 1 et 3) :");
-            choixComp = scanner.nextInt(); scanner.nextLine();
-            if (choixComp < 1 || choixComp > 3)
-                System.out.println("Numero invalide ! Veuillez choisir 1, 2 ou 3.");
-        }
-        System.out.println("\n-> Vous avez choisi la competence : " + nomCompetences[choixComp - 1]);
-        joueur.setChoixComp(choixComp);
+        System.out.println("\nD'autres compétences seront débloquées via l'Arbre de Compétences !");
         joueur.setCompetencesChoisie(competences);
         return joueur;
     }

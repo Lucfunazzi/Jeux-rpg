@@ -24,7 +24,7 @@ public class EquipementFactory {
     }
 
     public static Equipement couvreCheC() {
-        return new Equipement("Bandeau ninja", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.C,
+        return new Equipement("Coiffe de Guilde", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.C,
                 Equipement.TypeArme.AUCUN, 0, 0, 50, 0);
     }
 
@@ -50,13 +50,14 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang C correspondant au type du personnage.
-     * @param type "Ninja", "Mage" ou "Guerrier"
+     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
      */
     public static Equipement armeC(String type) {
         return switch (type) {
-            case "Ninja"    -> kunaiC();
+            case "Chasseur de Dragon"  -> kunaiC();
             case "Mage"     -> batonC();
-            case "Guerrier" -> gantsArmeC();
+            case "Chevalier"           -> gantsArmeC();
+            case "Constellationniste"  -> batonC();
             default         -> kunaiC();
         };
     }
@@ -69,7 +70,7 @@ public class EquipementFactory {
     }
 
     public static Equipement batonB() {
-        return new Equipement("Baton de fer", Equipement.Slot.ARME, Equipement.Rarete.B,
+        return new Equipement("Baton de Cristal", Equipement.Slot.ARME, Equipement.Rarete.B,
                 Equipement.TypeArme.BATON, 40, 0, 0, 0);
     }
 
@@ -105,13 +106,14 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang B correspondant au type du personnage.
-     * @param type "Ninja", "Mage" ou "Guerrier"
+     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
      */
     public static Equipement armeB(String type) {
         return switch (type) {
-            case "Ninja"    -> kunaiB();
+            case "Chasseur de Dragon"  -> kunaiB();
             case "Mage"     -> batonB();
-            case "Guerrier" -> gantsArmeB();
+            case "Chevalier"           -> gantsArmeB();
+            case "Constellationniste"  -> batonB();
             default         -> kunaiB();
         };
     }
@@ -160,13 +162,14 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang A correspondant au type du personnage.
-     * @param type "Ninja", "Mage" ou "Guerrier"
+     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
      */
     public static Equipement armeA(String type) {
         return switch (type) {
-            case "Ninja"    -> kunaiA();
+            case "Chasseur de Dragon"  -> kunaiA();
             case "Mage"     -> batonA();
-            case "Guerrier" -> gantsArmeA();
+            case "Chevalier"           -> gantsArmeA();
+            case "Constellationniste"  -> batonA();
             default         -> kunaiA();
         };
     }

@@ -4,8 +4,9 @@ import Combat.Combat;
 import lancement.GameContext;
 import Joueur.Personnage_principale;
 import Joueur.Mage;
-import Joueur.Ninja;
-import Joueur.Guerrier;
+import Joueur.Chevalier;
+import Joueur.ChasseurDeDragon;
+import Joueur.Constellationniste;
 import Joueur.Competences;
 import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
@@ -215,7 +216,7 @@ public class MenuArene {
 
     /**
      * Crée un Personnage_principale IA pour les faux joueurs.
-     * Le marqueur est "PP_Mage", "PP_Ninja" ou "PP_Guerrier".
+     * Le marqueur est "PP_Chevalier", "PP_Chasseur de Dragon", "PP_Mage" ou "PP_Constellationniste".
      * Pour les vrais joueurs, on essaie creerPersonnage() normalement.
      */
     /** Crée le PP adverse IA au bon niveau et avec les compétences exclusives à sa classe. */
@@ -224,25 +225,17 @@ public class MenuArene {
 
         String classe = marqueur.replace("PP_", "");
 
-        // Compétences strictement liées à la classe — un Guerrier ne peut pas avoir
-        // les skills d'un Mage ou d'un Ninja.
+        // Compétences liées à la classe — chaque classe a sa spéciale et ultime fixes
         Competences comp = switch (classe) {
-            case "Mage"    -> new Mage();
-            case "Ninja"   -> new Ninja();
-            case "Guerrier"-> new Guerrier();
-            default        -> new Guerrier();
-        };
-
-        // choixComp déterministe par classe, toujours dans l'intervalle [1,3]
-        int choixComp = switch (classe) {
-            case "Mage"    -> 1;   // Hurlement du dragon de feu
-            case "Ninja"   -> 2;   // Suiton : Dragon aqueux
-            default        -> 1;   // Kamehameha (Guerrier)
+            case "Mage"                -> new Mage();
+            case "Chasseur de Dragon"  -> new ChasseurDeDragon();
+            case "Chevalier"           -> new Chevalier();
+            case "Constellationniste"  -> new Constellationniste();
+            default                    -> new Chevalier();
         };
 
         Personnage_principale pp = new Personnage_principale("Combattant (" + classe + ")", 1);
         pp.setChoixClasses(classe);
-        pp.setChoixComp(choixComp);
         pp.setCompetencesChoisie(comp);
 
         // Monter le PP au même niveau que l'équipe adverse

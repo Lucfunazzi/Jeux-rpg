@@ -6,25 +6,25 @@ import Combat.Combat;
 import java.util.List;
 
 /**
- * Mage — magie de glace et de cristaux, inspiré de Gray Fullbuster.
+ * Chasseur de Dragon — magie draconique de l'eau.
  *
- * Spéciale de base : Lance de Glace         (100% ATK mono-cible Tank + 100% précision)
- * Ultime de base   : Bazooka de Glace       (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
- * Spéciale Arbre 1 : Épée de Glace Éternelle (frappe lourde + gel + -DEF)
- * Ultime  Arbre 2  : Ice Make — Démon de Glace (AoE 3 cibles + gel massif)
+ * Spéciale de base : Poings du Dragon d'Eau      (100% ATK mono-cible Tank + 100% précision)
+ * Ultime de base   : Hurlement du Dragon d'Eau   (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
+ * Spéciale Arbre 1 : Écailles du Dragon d'Eau    (frappe + absorption)
+ * Ultime  Arbre 2  : Forme Dragon — Inondation Abyssale (AoE dévastateur)
  */
-public class Mage implements Competences {
+public class ChasseurDeDragon implements Competences {
 
     @Override
     public String[] getNomsCompetences() {
-        return new String[]{"Lance de Glace", "Bazooka de Glace"};
+        return new String[]{"Poings du Dragon d'Eau", "Hurlement du Dragon d'Eau"};
     }
 
     // ── Spéciale de base ─────────────────────────────────────────────────
     @Override
     public void attaqueSpeciale(PersonnageBase utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Lance de Glace !");
+        log.add("Poings du Dragon d'Eau !");
         PersonnageBase tank = equipeEnnemie.stream()
                 .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
                 .findFirst().orElse(cible);
@@ -37,7 +37,7 @@ public class Mage implements Competences {
     @Override
     public void ultime(PersonnageBase utilisateur, List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bazooka de Glace !");
+        log.add("Hurlement du Dragon d'Eau !");
         PersonnageBase tank = equipeEnnemie.stream()
                 .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
                 .findFirst().orElse(
@@ -58,45 +58,42 @@ public class Mage implements Competences {
     @Override
     public void competenceArbre(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Épée de Glace Éternelle !");
-        double degats = utilisateur.getAttaque() * 1.90;
+        log.add("Écailles du Dragon d'Eau !");
+        double degats = utilisateur.getAttaque() * 1.70;
         Combat.appliquerDegatsAvecLog(utilisateur, cible, degats, log);
-        Combat.appliquerEffet(utilisateur, cible, new ReductionDefense(0.20, 3), log);
-        if (Math.random() < 0.40) {
-            Combat.appliquerEffet(utilisateur, cible, new Gel(1), log);
-        }
+        double soin = degats * 0.20;
+        utilisateur.recevoirSoin(soin, log);
+        Combat.appliquerEffet(utilisateur, cible, new ReductionVitesse(0.25, 3), log);
     }
 
     // ── Ultime Arbre 2 ───────────────────────────────────────────────────
     @Override
     public void competenceArbre2(Personnage_principale utilisateur,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Ice Make — Démon de Glace !");
-        int touche = 0;
+        log.add("Forme Dragon — Inondation Abyssale !");
         for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && touche < 3) {
-                double degats = utilisateur.getAttaque() * 1.60;
+            if (ennemi.estVivant()) {
+                double degats = utilisateur.getAttaque() * 1.50;
                 Combat.appliquerDegatsAvecLog(utilisateur, ennemi, degats, log);
-                Combat.appliquerEffet(utilisateur, ennemi, new ReductionDefense(0.15, 2), log);
-                if (Math.random() < 0.45) {
-                    Combat.appliquerEffet(utilisateur, ennemi, new Gel(1), log);
+                Combat.appliquerEffet(utilisateur, ennemi, new ReductionVitesse(0.20, 2), log);
+                if (Math.random() < 0.40) {
+                    Combat.appliquerEffet(utilisateur, ennemi, new Trempe(2), log);
                 }
-                touche++;
             }
         }
-        Combat.appliquerEffet(utilisateur, new BuffDefense(0.20, 2), log);
+        Combat.appliquerEffet(utilisateur, new BuffAttaque(0.20, 2), log);
     }
 
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Lance de Glace — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
+        System.out.println("Poings du Dragon d'Eau — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }
     @Override public void descriptionUltime() {
-        System.out.println("Bazooka de Glace — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
+        System.out.println("Hurlement du Dragon d'Eau — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
-        System.out.println("Épée de Glace Éternelle [Arbre 1] — Inflige 190% ATK à 1 cible. -20% DEF (3 tours). 40% de chance de Gel 1 tour.");
+        System.out.println("Écailles du Dragon d'Eau [Arbre 1] — Inflige 170% ATK à 1 cible. Soigne le lanceur de 20% des dégâts. -25% VIT cible (3 tours).");
     }
     @Override public void descriptionCompetenceArbre2() {
-        System.out.println("Ice Make — Démon de Glace [Arbre 2] — Inflige 160% ATK aux 3 premières cibles. -15% DEF (2 tours). 45% Gel 1 tour. +20% DEF au lanceur (2 tours).");
+        System.out.println("Forme Dragon — Inondation Abyssale [Arbre 2] — Inflige 150% ATK à tous les ennemis. 40% Trempe (2 tours). -20% VIT (2 tours). +20% ATK au lanceur.");
     }
 }

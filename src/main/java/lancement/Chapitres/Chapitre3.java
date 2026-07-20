@@ -66,7 +66,6 @@ public class Chapitre3 {
                         System.out.println(">> Stage " + (choix + 1) + " debloque !");
                     } else {
                         System.out.println(">> Félicitations ! Vous avez vaincu Phantom Lord !");
-                        // Donner la Clef Celeste Taurus (une seule fois)
                         if (estNouveau && ctx.gestionnaireClefsCelestes != null
                                 && ctx.gestionnaireClefsCelestes.debloquer(
                                     lancement.Gestionnaires.ClefCeleste.TAURUS)) {
@@ -86,34 +85,110 @@ public class Chapitre3 {
     }
 
     private Stage construireStage(int numero) {
-        ArrayList<PersonnageBase> ennemis = new ArrayList<>();
+        ArrayList<PersonnageBase> e = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiMage1()); ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiMage2());
-                         return new Stage(1, "L'assaut de Phantom Lord", 6000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier2());
-                         return new Stage(2, "Totomaru — Sept Flammes", 7500, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiGuerrier1()); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiMage2());
-                         return new Stage(3, "Sol — L'Impénétrable", 9500, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol());
-                         ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier2());
-                         return new Stage(4, "L'Élément 4 se déploie", 11500, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiJubia_4elements()); ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiJubia_4elements()); ennemis.add(new EnnemiTotomaru());
-                         ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiGuerrier1());
-                         return new Stage(6, "L'Élément 4 au complet", 16000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiAria()); ennemis.add(new EnnemiMage3());
-                         ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiAria()); ennemis.add(new EnnemiJubia_4elements());
-                         ennemis.add(new EnnemiTotomaru()); ennemis.add(new EnnemiSol()); ennemis.add(new EnnemiMage2());
-                         return new Stage(8, "L'Élément 4 — Dernière résistance", 22500, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiJose()); ennemis.add(new EnnemiAria());
-                         ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiGuerrier2()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiJose());
-                         return new Stage(10, "José Porla — Maître de Phantom Lord", 34000, 0, ennemis); }
-            default -> { return new Stage(numero, "???", 0, 0, ennemis); }
+
+            // Stage 1 — Avant-garde Phantom Lord (soldats bas rang)
+            case 1 -> {
+                e.add(new EnnemiMage1(22));
+                e.add(new EnnemiGuerrier1(22));
+                e.add(new EnnemiMage2(22));
+                e.add(new EnnemiGuerrier1(21));
+                e.add(new EnnemiMage1(21));
+                return new Stage(1, "L'assaut de Phantom Lord", 6000, 0, e);
+            }
+
+            // Stage 2 — Totomaru + renforts
+            case 2 -> {
+                e.add(new EnnemiTotomaru());        // niv 26 par défaut
+                e.add(new EnnemiMage2(24));
+                e.add(new EnnemiGuerrier2(24));
+                e.add(new EnnemiMage1(23));
+                e.add(new EnnemiGuerrier1(23));
+                return new Stage(2, "Totomaru — Sept Flammes", 7500, 0, e);
+            }
+
+            // Stage 3 — Sol + troupe solide
+            case 3 -> {
+                e.add(new EnnemiSol());             // niv 26 par défaut
+                e.add(new EnnemiGuerrier1(25));
+                e.add(new EnnemiTank1(25));
+                e.add(new EnnemiMage2(24));
+                e.add(new EnnemiSoigneur1(24));
+                return new Stage(3, "Sol — L'Impénétrable", 9500, 0, e);
+            }
+
+            // Stage 4 — Totomaru + Sol ensemble
+            case 4 -> {
+                e.add(new EnnemiTotomaru(27));
+                e.add(new EnnemiSol(27));
+                e.add(new EnnemiMage2(26));
+                e.add(new EnnemiGuerrier2(25));
+                e.add(new EnnemiSoigneur1(25));
+                return new Stage(4, "L'Élément 4 se déploie", 11500, 0, e);
+            }
+
+            // Stage 5 — Jubia + troupe
+            case 5 -> {
+                e.add(new EnnemiJubia_4elements()); // niv 28 par défaut
+                e.add(new EnnemiMage3(27));
+                e.add(new EnnemiGuerrier2(26));
+                e.add(new EnnemiTank1(26));
+                e.add(new EnnemiSoigneur1(25));
+                return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, e);
+            }
+
+            // Stage 6 — Élément 4 au complet (Jubia + Totomaru + Sol)
+            case 6 -> {
+                e.add(new EnnemiJubia_4elements(28));
+                e.add(new EnnemiTotomaru(28));
+                e.add(new EnnemiSol(28));
+                e.add(new EnnemiMage2(26));
+                e.add(new EnnemiGuerrier1(26));
+                return new Stage(6, "L'Élément 4 au complet", 16000, 0, e);
+            }
+
+            // Stage 7 — Aria + escorte lourde
+            case 7 -> {
+                e.add(new EnnemiAria());            // niv 30 par défaut
+                e.add(new EnnemiMage3(28));
+                e.add(new EnnemiGuerrier2(28));
+                e.add(new EnnemiTank1(27));
+                e.add(new EnnemiSoigneur1(27));
+                return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, e);
+            }
+
+            // Stage 8 — Aria + tout l'Élément 4
+            case 8 -> {
+                e.add(new EnnemiAria(30));
+                e.add(new EnnemiJubia_4elements(29));
+                e.add(new EnnemiTotomaru(29));
+                e.add(new EnnemiSol(29));
+                e.add(new EnnemiMage2(27));
+                return new Stage(8, "L'Élément 4 — Dernière résistance", 22500, 0, e);
+            }
+
+            // Stage 9 — José + Aria + renforts d'élite
+            case 9 -> {
+                e.add(new EnnemiJose());            // niv 35 par défaut
+                e.add(new EnnemiAria(31));
+                e.add(new EnnemiMage3(29));
+                e.add(new EnnemiGuerrier2(28));
+                e.add(new EnnemiSoigneur1(28));
+                return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, e);
+            }
+
+            // Stage 10 — José seul, boss ultime
+            case 10 -> {
+                e.add(new EnnemiJose(35));
+                e.add(new EnnemiAria(32));
+                e.add(new EnnemiJubia_4elements(30));
+                e.add(new EnnemiTotomaru(30));
+                e.add(new EnnemiSol(30));
+                return new Stage(10, "José Porla — Maître de Phantom Lord", 34000, 0, e);
+            }
+
+            default -> { return new Stage(numero, "???", 0, 0, e); }
         }
     }
 
