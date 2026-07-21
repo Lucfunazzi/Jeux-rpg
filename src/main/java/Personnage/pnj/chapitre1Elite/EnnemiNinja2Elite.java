@@ -40,7 +40,6 @@ public class EnnemiNinja2Elite extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " frappe " + cible.getNom() + " dans l'ombre !");
         Combat.attaquer(this, cible, log);
     }
 

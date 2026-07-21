@@ -18,7 +18,6 @@ import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
-import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import lancement.Menus.MenuEtoilesPerso;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuTirage_recrutement;
@@ -56,7 +55,6 @@ public class GameContext {
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
     public GestionnaireCompagnons        gestionnaireCompagnons;
     public Gestionnaire_pet  gestionnaireCreaturesSacrees;
-    public GestionnaireClefsCelestes     gestionnaireClefsCelestes;
     public RangJoueur                    rangJoueur;
 
     // ── Menus ─────────────────────────────────────────────────────────────

@@ -1,15 +1,15 @@
 package Personnage.pnj.Chapitre2;
 
 import Combat.Combat;
-import Effets.Purification;
-import Effets.ReductionAttaque;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Yuka — Mage de l'île Galuna, magie de l'annulation, rang C.
- * Purge les buffs ennemis et affaiblit l'attaque adverse.
+ * Yuka Suzuki — Mage des Ondes, rang C.
+ * Magie des Ondes (Ondulation / Hadô) : annule toutes les formes d'attaque magique.
+ * Ses ondes neutralisent la magie adverse et peuvent causer des explosions.
+ * Affrontement célèbre contre Natsu : Natsu l'a battu en punchant physiquement à travers le bouclier.
  */
 public class EnnemiYuka extends PersonnageBase {
 
@@ -18,13 +18,13 @@ public class EnnemiYuka extends PersonnageBase {
     public EnnemiYuka(int niveau) {
         this.nom    = "Yuka";
         this.niveau = niveau;
-        this.type="Elementaliste";
-        this.role   = "Support";
+        this.type   = "Elementaliste";
+        this.role   = "Tank";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 225.0 * niv;
+        this.vie     = 230.0 * niv;
         this.attaque =  75.0 * niv;
         this.defense =  60.0 * niv;
         this.vitesse =  70.0 * vit;
@@ -42,47 +42,49 @@ public class EnnemiYuka extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Onde d'Annulation", "Frappe Inhibitrice", "Annulation Totale"};
+        return new String[]{"Ondulation — Hadô", "Onde Explosive", "Annulation Totale des Magies"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka projette une onde d'annulation sur " + cible.getNom() + " !");
+        log.add("Yuka projette une Ondulation qui neutralise la magie de " + cible.getNom() + " et le frappe !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.08, 1), log);
+        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka frappe " + cible.getNom() + " et inhibe ses capacités !");
-        double degats = this.getAttaque() * 1.10;
+        log.add("L'onde de Yuka entre en collision avec la magie de " + cible.getNom() + " — une explosion dévaste la cible !");
+        double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
-        Combat.appliquerEffet(this, cible, new ReductionDefense(0.10, 2), log);
+        Combat.appliquerEffet(cible,this,new BuffTauxEsquive(0.15,2),log );
+        
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka annule tous les effets positifs des ennemis !");
+        log.add("Yuka déploie une vague d'Ondulations qui annule toutes les magies ennemies !");
+        Purification.purifier(this, 3, log);
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                Purification.purifier(cible, 3, log);
-                double degats = this.getAttaque() * 0.55;
+                
+                double degats = this.getAttaque() * 0.65;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+                
             }
         }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Onde d'Annulation — Inflige 100% ATK et réduit l'Attaque de 8% pendant 1 tour.");
+        System.out.println("Ondulation — Hadô : Inflige 100% ATK, réduit ATK de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Frappe Inhibitrice — Inflige 110% ATK, réduit ATK de 15% et DEF de 10% pendant 2 tours.");
+        System.out.println("Onde Explosive : Inflige 130% ATK, réduit ATK de 20% et DEF de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Annulation Totale — Purge les buffs de tous les ennemis et inflige 55% ATK à chacun.");
+        System.out.println("Annulation Totale : Purge buffs ennemis, inflige 65% ATK à tous, réduit leur ATK de 15%.");
     }
 }

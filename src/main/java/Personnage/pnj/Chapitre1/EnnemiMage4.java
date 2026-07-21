@@ -38,7 +38,6 @@ public class EnnemiMage4 extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " lance un eclair maudit sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
     }
 

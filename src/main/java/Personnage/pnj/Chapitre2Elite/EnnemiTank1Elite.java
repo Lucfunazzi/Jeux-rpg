@@ -39,7 +39,6 @@ public class EnnemiTank1Elite extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " ecrase " + cible.getNom() + " de son poing !");
         Combat.attaquer(this, cible, log);
     }
 

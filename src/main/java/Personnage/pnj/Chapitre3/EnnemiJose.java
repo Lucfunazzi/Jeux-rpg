@@ -3,26 +3,25 @@ package Personnage.pnj.Chapitre3;
 import Combat.Combat;
 import Effets.BuffAttaque;
 import Effets.Etourdissement;
-import Effets.Poison;
-import Effets.ReductionDefense;
 import Effets.ReductionAttaque;
+import Effets.ReductionDefense;
 import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * José Porla — Maître de la guilde Phantom Lord, rang S.
- * Magie des Ombres spectrales (Shades) : invoque des ombres,
- * draine et maudit ses ennemis.
- * Multiplicateur rang S : 1.50
+ * José Pora — Maître de la guilde Phantom Lord, l'un des 10 Mages Sacrés, rang S.
+ * Magie des Ténèbres (Shade) : invoque des soldats fantomatiques (Shades).
+ * Sorts : Shade Troopers, Méduse (forme de méduse géante), Vague Fantomatique (Dead Wave).
+ * Sa magie dégage une sensation de mal et de froid intense.
  */
 public class EnnemiJose extends PersonnageBase {
 
     public EnnemiJose() { this(35); }
 
     public EnnemiJose(int niveau) {
-        this.nom    = "José Porla";
+        this.nom    = "José Pora";
         this.niveau = niveau;
-        this.type="Elementaliste";
+        this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "S";
 
@@ -47,28 +46,25 @@ public class EnnemiJose extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Main Spectrale", "Armée de Shades", "Jugement du Maître des Ombres"};
+        return new String[]{"Shades — Soldats Fantomatiques", "Méduse — Fantôme Colossal", "Vague Fantomatique — Dead Wave"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("José tend une main spectrale et étreint l'âme de " + cible.getNom() + " !");
+        log.add("José invoque des soldats fantomatiques armés qui s'abattent sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
-        // Drain mineur sur attaque de base
-        double soin = this.getAttaque() * 0.20;
+        double soin = this.getAttaque() * 0.15;
         this.recevoirSoin(soin, log);
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("José invoque son armée de Shades — des spectres s'abattent sur " + cible.getNom() + " !");
+        log.add("Les Shades de José fusionnent en une méduse colossale qui écrase " + cible.getNom() + " de ses poings massifs !");
         double degats = this.getAttaque() * 1.70;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new ReductionDefense(0.25, 3), log);
-        Combat.appliquerEffet(this, cible, new Poison(3, 0.08), log);
         if (Math.random() < 0.35) {
             Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
         }
@@ -77,28 +73,27 @@ public class EnnemiJose extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("José libère son Jugement — les ombres de Phantom Lord engloutissent tout !");
+        log.add("José étend son bras et génère une spirale de Shades — la Vague Fantomatique déchire tout sur son passage !");
         Combat.appliquerEffet(this, new BuffAttaque(0.30, 3), log);
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 1.40;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new ReductionDefense(0.20, 3), log);
-                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 3), log);
+                
+                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
             }
         }
-        // Drain massif
-        double soin = this.getVieMax() * 0.15;
+        double soin = this.getVieMax() * 0.12;
         this.recevoirSoin(soin, log);
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Main Spectrale — Inflige 100% ATK, réduit ATK de 15% pendant 2 tours, se soigne de 20% ATK.");
+        System.out.println("Shades — Soldats Fantomatiques : Inflige 100% ATK, réduit ATK de 15%, se soigne de 15% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Armée de Shades — Inflige 170% ATK, réduit DEF de 25% pendant 3 tours, empoisonne (8% PV/tour), 35% étourdissement.");
+        System.out.println("Méduse — Fantôme Colossal : Inflige 170% ATK, réduit DEF de 25% 3 tours, 35% étourdissement.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Jugement — Gagne 30% ATK, inflige 140% ATK à tous, réduit ATK et DEF de 20% pendant 3 tours, draine 15% PV max.");
+        System.out.println("Vague Fantomatique — Dead Wave : +30% ATK, 140% ATK à tous, -20% ATK/DEF 3 tours, draine 12% PV.");
     }
 }

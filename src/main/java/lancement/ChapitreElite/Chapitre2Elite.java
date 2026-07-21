@@ -115,13 +115,6 @@ public class Chapitre2Elite {
                             System.out.println(">> Vous avez obtenu un Œuf Mystérieux !");
                             System.out.println("      Un être légendaire sommeille à l'intérieur... Accessible depuis le menu Créatures Sacrées (niveau 30 requis).");
                         }
-                        // Donner la Clef Celeste Virgo (une seule fois)
-                        if (estNouveau && ctx.gestionnaireClefsCelestes != null
-                                && ctx.gestionnaireClefsCelestes.debloquer(
-                                    lancement.Gestionnaires.ClefCeleste.VIRGO)) {
-                            System.out.println(">> Vous avez obtenu la Clef Celeste : Virgo !");
-                            System.out.println("   Activez-la depuis le menu Clefs Celestes.");
-                        }
                     }
 
                     // ── Drop écharpe d'Ignir sur stage 10 Elite (50%) ──

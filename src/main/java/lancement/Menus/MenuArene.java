@@ -188,20 +188,9 @@ public class MenuArene {
         for (PersonnageBase p : equipeJoueur)  p.reinitialiserPourCombat();
         for (PersonnageBase p : equipeAdverse) p.reinitialiserPourCombat();
 
-        // Clefs célestes
-        lancement.Gestionnaires.ClefCeleste clefAdv = null;
-        int niveauClefAdv = 1;
-        if (adversaire.isEstFauxJoueur()) {
-            java.util.Random rng = new java.util.Random(adversaire.getRang() * 17L);
-            clefAdv      = lancement.Gestionnaires.GestionnaireClefsCelestes.genererClefArene(adversaire.getRang(), rng);
-            niveauClefAdv = lancement.Gestionnaires.GestionnaireClefsCelestes.genererNiveauClefArene(adversaire.getRang(), rng);
-        }
-
         boolean victoire = Combat.lancerCombatArene(
             equipeJoueur, ctx.joueur,
             equipeAdverse, principalAdverse,
-            ctx.gestionnaireClefsCelestes,
-            clefAdv, niveauClefAdv,
             scanner
         );
 

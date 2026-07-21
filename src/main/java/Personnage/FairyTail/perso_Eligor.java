@@ -1,4 +1,4 @@
-package Personnage.pnj.Chapitre1;
+package Personnage.FairyTail;
 
 import Combat.Combat;
 import Effets.BuffDefense;
@@ -9,38 +9,30 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Eligoal — Leader de la Guilde Eisenwald, surnommé "Shinigami", rang C.
- * Magie du Vent : attaques de vent tranchantes invisibles.
- * Sort signature : Mur de Vent (barrière de tornades qui emprisonne une zone entière).
- * Mur Tempête : bouclier de vent capable de bloquer les attaques ennemies.
+ * Eligoal — Elementaliste, rang C.
+ * Magie du Vent : attaques invisibles et tranchantes, Mur Tempête (bouclier), Mur de Vent (prison).
+ * Leader d'Eisenwald, surnommé "Shinigami".
  */
-public class EnnemiEligor extends PersonnageBase {
+public class perso_Eligor extends PersonnageBase {
 
-    public EnnemiEligor() { this(8); }
-
-    public EnnemiEligor(int niveau) {
+    public perso_Eligor() {
         this.nom    = "Eligoal";
-        this.niveau = niveau;
         this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
-
-        double mult = 1.20;
-        double niv  = Math.pow(1.05, niveau - 1);
-        double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 270.0 * mult * niv;
-        this.attaque = 100.0 * mult * niv;
-        this.defense =  65.0 * mult * niv;
-        this.vitesse =  90.0 * mult * vit;
-
-        this.taux_critiques    = 0.15;
-        this.degat_critiques   = 1.30;
+        this.niveau = 1;
+        double mult = 1.00;
+        this.vie     = 360 * mult;
+        this.attaque = 125 * mult;
+        this.defense =  85 * mult;
+        this.vitesse = 115 * mult;
+        this.taux_critiques    = 0.14;
+        this.degat_critiques   = 1.28;
         this.taux_precisions   = 100.00;
         this.taux_esquives     = 0.14;
         this.taux_blocage      = 0.08;
         this.reduction_blocage = 0.10;
         this.degats_renvoi     = 0.80;
-
         initialiserVieMax();
     }
 
@@ -52,7 +44,7 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal déchaîne des lames de vent invisibles et tranchantes sur " + cible.getNom() + " !");
+        log.add("Eligoal déchaîne des lames de vent invisible sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
         Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
     }
@@ -60,9 +52,9 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal déplace sa main gauche et crée un bouclier de vent dévastateur !");
+        log.add("Eligoal érige un Mur Tempête — son bouclier de vent dévaste " + cible.getNom() + " !");
         Combat.appliquerEffet(this, new BuffDefense(0.25, 2), log);
-        double degats = this.getAttaque() * 1.20;
+        double degats = this.getAttaque() * 1.25;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 2), log);
     }
@@ -70,10 +62,12 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal érige un Mur de Vent colossal — une prison de tornades tranchantes emprisonne l'équipe ennemie !");
+        log.add("Eligoal libère le Mur de Vent — une prison de tornades piège toute l'équipe ennemie !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.85;
+                double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 Combat.appliquerEffet(this, cible, new Silence(2), log);
                 Combat.appliquerEffet(this, cible, new ReductionVitesse(0.25, 2), log);
@@ -82,12 +76,12 @@ public class EnnemiEligor extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Lame de Vent Tranchante — Inflige 100% ATK, réduit la VIT de 15% pendant 2 tours.");
+        System.out.println("Lame de Vent Tranchante — 100% ATK, réduit VIT de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Mur Tempête — +25% DEF, inflige 120% ATK, réduit ATK cible de 20% pendant 2 tours.");
+        System.out.println("Mur Tempête — +25% DEF, inflige 125% ATK, réduit ATK cible de 20%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Mur de Vent — Inflige 85% ATK à tous, silence 2 tours, réduit VIT de 25%.");
+        System.out.println("Mur de Vent — 90% ATK à tous (x rage), silence 2 tours, réduit VIT de 25%.");
     }
 }

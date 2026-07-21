@@ -39,7 +39,6 @@ public class EnnemiSoigneur1Elite extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " lance un sort faible sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
     }
 

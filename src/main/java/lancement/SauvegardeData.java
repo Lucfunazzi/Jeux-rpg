@@ -177,22 +177,6 @@ public class SauvegardeData {
         }
     }
 
-    // ── Clefs Célestes ────────────────────────────────────────────────────
-    public List<ClefCelesteData> clefsCelestes = new ArrayList<>();
-    public String                clefCelesteActive = null; // nom enum ou null
-
-    public static class ClefCelesteData {
-        public String  nomClef;
-        public boolean debloquee;
-        public int     niveau;
-        public ClefCelesteData() {}
-        public ClefCelesteData(String nomClef, boolean debloquee, int niveau) {
-            this.nomClef   = nomClef;
-            this.debloquee = debloquee;
-            this.niveau    = niveau;
-        }
-    }
-
     // ── Compagnons ────────────────────────────────────────────────────────
     public String compagnonsType   = "HAPPY";
     public int    compagnonsNiveau = 1;

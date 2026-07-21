@@ -1,30 +1,44 @@
-package Personnage.FairyTail;
-import Combat.Combat;
-import Effets.*;
-import Personnage.PersonnageBase;
-import java.util.ArrayList;
-import java.util.List;
-public class perso_Natsu extends PersonnageBase {
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Personnage.pnj.Chapitre1;
 
-    public perso_Natsu() {
-        this.nom = "Natsu";
+import Combat.Combat;
+import Effets.Brulure;
+import Effets.BuffAttaque;
+import Effets.Etourdissement;
+import Personnage.PersonnageBase;
+import java.util.List;
+
+/**
+ *
+ * @author Lucas
+ */
+public class EnnemiNatsuStage4 extends PersonnageBase {
+    public  EnnemiNatsuStage4() {this(30);}
+        
+    public EnnemiNatsuStage4(int niveau){
+     this.nom = "Natsu";
         this.type = "ChasseurDeDragon";
         this.role = "DPS";
         this.rarete = "A";
-        this.niveau = 1;
-        double multiplicateurRarete = 1.40;
-        this.vie = 550 * multiplicateurRarete;
-        this.attaque = 200 * multiplicateurRarete;
-        this.defense = 100 * multiplicateurRarete;
-        this.vitesse = 100 * multiplicateurRarete;
-        this.taux_critiques = 0.25;
-        this.degat_critiques = 1.20;
-        this.taux_precisions = 105.00;
-        this.taux_esquives = 0.08;
-        this.taux_blocage = 0.02;
-        this.reduction_blocage = 0.02;
-        this.degats_renvoi = 0.80;
-        initialiserVieMax();
+        this.niveau = niveau;
+         double mult = 1.20;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        this.vie     = 500.0 * mult * niv;
+        this.attaque = 420.0 * mult * niv;
+        this.defense = 120.0 * mult * niv;
+        this.vitesse =  130.0 * mult * vit;
+
+        this.taux_critiques    = 0.15;
+        this.degat_critiques   = 1.30;
+        this.taux_precisions   = 100.00;
+        this.taux_esquives     = 0.14;
+        this.taux_blocage      = 0.08;
+        this.reduction_blocage = 0.10;
+        this.degats_renvoi     = 0.80;
     }
 
     @Override
@@ -50,7 +64,7 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Poings d'acier du dragon de feu !");
-    double degats = this.getAttaque() * 1.30;
+    double degats = this.getAttaque() * 2.50;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     if (Math.random() < 0.30) {
         Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
@@ -68,7 +82,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     }
     for (PersonnageBase ennemi : equipeEnnemie) {
         if (ennemi.estVivant()) {
-            double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+            double degats = (this.getAttaque() * 3.00) * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             Combat.appliquerEffet(this, ennemi, new Brulure(3, 0.12), log);
         }

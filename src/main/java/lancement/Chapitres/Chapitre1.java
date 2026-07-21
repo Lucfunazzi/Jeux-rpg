@@ -6,6 +6,9 @@ import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Personnage.FairyTail.perso_Erza;
+import Personnage.FairyTail.perso_Gray;
+import Personnage.FairyTail.perso_Natsu;
 
 public class Chapitre1 {
 
@@ -50,9 +53,16 @@ public class Chapitre1 {
             } else {
                 Stage stage        = construireStage(choix);
                 boolean estNouveau = !stagesReussis[choix];
-                Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+                Stage.ResultatStage resultatStage;
+                if (choix == 4) {
+                    resultatStage = lancerStage4AvecErza(ctx, stage, estNouveau);
+                } else if (choix == 10) {
+                    resultatStage = lancerStage10AvecN_G_E(ctx, stage, estNouveau);
+                } else {
+                    resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+                }
                 boolean victoire = resultatStage.victoire;
-
+                    
                 if (victoire) {
                     stagesReussis[choix] = true;
                     if (choix < NB_STAGES) {
@@ -80,45 +90,44 @@ public class Chapitre1 {
 
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1());
-                         return new Stage(1, "Les Hommes de Bora", 100, 10, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage1());
-                         return new Stage(2, "La Flamme Écarlate approche", 150, 15, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiMage1());
-                         return new Stage(3, "Evaro, le bouclier de Bora", 220, 20, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiMage8()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage2());
-                         return new Stage(4, "La Garde de la Flamme", 290, 25, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiBora()); ennemis.add(new EnnemiMage2());
-                         return new Stage(5, "Bora, Mage de la Flamme Écarlate", 360, 30, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiMage9()); ennemis.add(new EnnemiMage10()); ennemis.add(new EnnemiMage3());
-                         return new Stage(6, "L'Avant-Garde des Ombres", 430, 35, ennemis); }
+                         return new Stage(1, "Prologue", 100, 10, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiBora());
+                         return new Stage(2, "Bora le charmeur", 150, 15, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiMage1()); ennemis.add(new EnnemiMage2()); ennemis.add(new EnnemiMage1());
+                         return new Stage(3, "Chemin vers fairy tail", 220, 20, ennemis); }
+            case 4  -> { ennemis.add(new EnnemiNatsuStage4()); ennemis.add(new EnnemiGrayStage4());
+                         return new Stage(4, "L'arrivée de la reine des fées", 290, 25, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiMage3()); ennemis.add(new EnnemiMage4()); ennemis.add(new EnnemiMage1());
+                         return new Stage(5, "Premier mission pour Lucy", 360, 30, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiMage9()); ennemis.add(new EnnemiMage10()); ennemis.add(new EnnemiEvaro());
+                         return new Stage(6, "Le duc evarlo", 430, 35, ennemis); }
             case 7  -> { ennemis.add(new EnnemiMage5()); ennemis.add(new EnnemiMage10());
                          ennemis.add(new EnnemiMage6()); ennemis.add(new EnnemiMage4());
-                         return new Stage(7, "Les Quatre Predateurs", 500, 40, ennemis); }
+                         return new Stage(7, "Retour a fairy tail ", 500, 40, ennemis); }
             case 8  -> { ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiMage11());
                          ennemis.add(new EnnemiMage11()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(8, "L'Armée des Ombres", 580, 45, ennemis); }
+                         return new Stage(8, "Eisen Wald", 580, 45, ennemis); }
             case 9  -> { ennemis.add(new EnnemiTank2()); ennemis.add(new EnnemiMage7());
                          ennemis.add(new EnnemiMage7()); ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur2());
-                         return new Stage(9, "Les Généraux des Ténèbres", 680, 50, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiEligor()); ennemis.add(new EnnemiBora());
-                         ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiSoigneur1());
-                         return new Stage(10, "Eligor — Le Démon Invoqué", 860, 55, ennemis); }
+                         return new Stage(9, "Eligor le mage de vent", 680, 50, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiLullaby(1));
+                         return new Stage(10, "La flute maudite", 860, 55, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Les Hommes de Bora";
-            case 2  -> "La Flamme Écarlate approche";
-            case 3  -> "Evaro, le bouclier de Bora";
-            case 4  -> "La Garde de la Flamme";
-            case 5  -> "Bora, Mage de la Flamme Écarlate";
-            case 6  -> "L'Avant-Garde des Ombres";
-            case 7  -> "Les Quatre Predateurs";
-            case 8  -> "L'Armée des Ombres";
-            case 9  -> "Les Généraux des Ténèbres";
-            case 10 -> "Eligor — Le Démon Invoqué";
+            case 1  -> "Prologue";
+            case 2  -> "Bora le charmeur";
+            case 3  -> "Chemin vers fairy tail";
+            case 4  -> "L'arrivé de la reine des fées";
+            case 5  -> "Premier mission pour Lucy";
+            case 6  -> "Le duc evarlo";
+            case 7  -> "Retour a fairy tail ";
+            case 8  -> "Eisen Wald";
+            case 9  -> "Eligor le mage de vent";
+            case 10 -> "La flute maudite";
             default -> "???";
         };
     }
@@ -133,4 +142,77 @@ public class Chapitre1 {
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= 10; i++) stagesDebloques[i] = d[i]; }
     public void setStagesReussis(boolean[] r)   { for (int i = 0; i <= 10; i++) stagesReussis[i]   = r[i]; }
+  
+    
+    private Stage.ResultatStage lancerStage4AvecErza(GameContext ctx,Stage stage, boolean estNouveau){
+        perso_Erza erzaTemporaire = new perso_Erza();
+        erzaTemporaire.setNiveau(70);
+        erzaTemporaire.setVie(10000);
+        erzaTemporaire.setVieMax(10000);
+        erzaTemporaire.setAttaque(600);
+        erzaTemporaire.setDefense(200);
+        erzaTemporaire.setVitesse(4000);
+        
+    ArrayList<PersonnageBase> equipeOriginale = ctx.formation.getEquipe();
+    ArrayList<PersonnageBase> equipeAvecErza = new ArrayList<>();
+    equipeAvecErza.add(erzaTemporaire);
+    equipeAvecErza.addAll(equipeOriginale);
+    
+     System.out.println(">> Erza Scarlet rejoint votre équipe pour ce combat !");
+    System.out.println("   « Je m'en occupe. Regardez bien. »\n");
+
+    // Lancer le combat avec l'équipe augmentée
+    Stage.ResultatStage resultat = stage.lancer(ctx, equipeAvecErza, estNouveau);
+
+    // Retirer Erza après le combat
+    System.out.println("\n>> Erza quitte l'équipe après sa démonstration.");
+
+    return resultat;
+    }
+    
+    private Stage.ResultatStage lancerStage10AvecN_G_E(GameContext ctx, Stage stage, boolean estNouveau) {
+
+    // Natsu
+    perso_Natsu natsuTemporaire = new perso_Natsu();
+    
+   natsuTemporaire.setVie(6000);
+natsuTemporaire.setVieMax(6000);
+natsuTemporaire.setAttaque(900);
+natsuTemporaire.setDefense(250);
+natsuTemporaire.setVitesse(180);
+
+    // Gray
+    perso_Gray grayTemporaire = new perso_Gray();
+    
+ grayTemporaire.setVie(5500);
+grayTemporaire.setVieMax(5500);
+grayTemporaire.setAttaque(750);
+grayTemporaire.setDefense(320);
+grayTemporaire.setVitesse(150);
+
+    // Erza
+    perso_Erza erza = new perso_Erza();
+    erza.setVie(8000);
+erza.setVieMax(8000);
+erza.setAttaque(850);
+erza.setDefense(500);
+erza.setVitesse(160);
+
+    // Équipe fixe — sans les personnages du joueur
+    ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();
+    equipeFixe.add(erza);
+    equipeFixe.add(natsuTemporaire);
+    equipeFixe.add(grayTemporaire);
+
+    System.out.println(">> Natsu, Gray et Erza prennent les choses en main !");
+    System.out.println("   « Cette fois, on s'en occupe ensemble. » — Erza\n");
+
+    Stage.ResultatStage resultat = stage.lancer(ctx, equipeFixe, estNouveau);
+
+    System.out.println("\n>> Natsu, Gray et Erza retournent à la guilde.");
+
+    return resultat;
+}
+    
+    
 }

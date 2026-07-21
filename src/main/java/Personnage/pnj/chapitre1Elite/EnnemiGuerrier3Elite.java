@@ -40,7 +40,6 @@ public class EnnemiGuerrier3Elite extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " taillade " + cible.getNom() + " avec sa lame !");
         Combat.attaquer(this, cible, log);
     }
 

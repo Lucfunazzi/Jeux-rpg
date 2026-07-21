@@ -30,7 +30,6 @@ import lancement.Menus.Menu_Pet;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
-import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import Joueur.*;
 import Personnage.*;
 import java.util.ArrayList;
@@ -61,7 +60,6 @@ public class Main {
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
         ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
-        ctx.gestionnaireClefsCelestes    = new GestionnaireClefsCelestes();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
         ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);

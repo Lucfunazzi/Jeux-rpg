@@ -52,8 +52,6 @@ import Equipement.Equipement;
 import Equipement.Inventaire;
 import Equipement.Materiau;
 import Equipement.ParcheminXP;
-import lancement.Gestionnaires.ClefCeleste;
-import lancement.Gestionnaires.GestionnaireClefsCelestes;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -252,18 +250,6 @@ public class GestionnaireSauvegarde {
         if (ctx.gestionnaireCompagnons != null) {
             data.compagnonsType   = ctx.gestionnaireCompagnons.getType().name();
             data.compagnonsNiveau = ctx.gestionnaireCompagnons.getNiveau();
-        }
-
-        // Clefs Célestes
-        if (ctx.gestionnaireClefsCelestes != null) {
-            data.clefsCelestes.clear();
-            for (ClefCeleste clef : ClefCeleste.values()) {
-                GestionnaireClefsCelestes.EtatClef e = ctx.gestionnaireClefsCelestes.getCollection().get(clef);
-                if (e.debloquee) // n'enregistrer que les clefs obtenues
-                    data.clefsCelestes.add(new SauvegardeData.ClefCelesteData(clef.name(), true, e.niveau));
-            }
-            ClefCeleste active = ctx.gestionnaireClefsCelestes.getClefActive();
-            data.clefCelesteActive = (active != null) ? active.name() : null;
         }
 
         // Coupons
@@ -498,15 +484,6 @@ public class GestionnaireSauvegarde {
     public void restaurerCompagnons(GestionnaireCompagnons gc, SauvegardeData data) {
         if (data.compagnonsType != null) {
             gc.restaurer(data.compagnonsType, data.compagnonsNiveau);
-        }
-    }
-
-    public void restaurerClefsCelestes(GestionnaireClefsCelestes gcc, SauvegardeData data) {
-        if (data.clefsCelestes != null) {
-            for (SauvegardeData.ClefCelesteData cd : data.clefsCelestes) {
-                gcc.restaurer(cd.nomClef, cd.debloquee, cd.niveau,
-                        cd.nomClef.equals(data.clefCelesteActive));
-            }
         }
     }
 

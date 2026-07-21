@@ -1,14 +1,15 @@
 package Personnage.pnj.Chapitre1;
 
 import Combat.Combat;
-import Effets.Brulure;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Bora — Mage de la Flamme Écarlate, rang C.
- * Arc Prologue : ancien mage véreux qui vendait des esclaves.
+ * Bora de Prominens — Mage de la Protubérance, rang C.
+ * Arc Prologue : se faisait passer pour Salamander de Fairy Tail.
+ * Magie de la Protubérance (feu) : flammes violettes en spirale + Charme Magique + Magie du Sommeil.
+ * Sorts principaux : Fouet de la Protubérance, Typhon de la Protubérance, Douche Écarlate.
  */
 public class EnnemiBora extends PersonnageBase {
 
@@ -17,7 +18,7 @@ public class EnnemiBora extends PersonnageBase {
     public EnnemiBora(int niveau) {
         this.nom    = "Bora";
         this.niveau = niveau;
-        this.type="Elementaliste";
+        this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 
@@ -41,46 +42,49 @@ public class EnnemiBora extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Flamme Écarlate", "Tornade de Feu", "Pluie d'Étincelles"};
+        return new String[]{"Fouet de la Protubérance", "Douche Écarlate", "Typhon de la Protubérance"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora invoque une flamme écarlate sur " + cible.getNom() + " !");
+        log.add("Bora invoque son sceau magique et projette des faisceaux ardents en arc sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Brulure(1, 0.05), log);
+       
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora déchaîne une tornade de feu sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.30;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionDefense(0.10, 2), log);
-    }
+        log.add("Bora disperse une pluie de sphères de flammes écarlates sur " + cible.getNom() + " et ses alliés !");
+       double degats = this.getAttaque() *1.20;
+       Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+       Combat.appliquerEffet(this, new BuffPrecision(100, 2), log);
+           
+        }
+    
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora libère une pluie d'étincelles sur tous les ennemis !");
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Brulure(1, 0.04), log);
+        log.add("Bora écarte les bras et libère une colonne de feu en spirale — le Typhon de la Protubérance !");
+        
+                for (PersonnageBase cibleTank : equipeEnnemie) {
+            if (cibleTank.estVivant() && cibleTank.getRole().equals("Tank")) {
+                double degats = this.getAttaque() * 0.80;
+                Combat.appliquerDegatsAvecLog(this, cibleTank, degats, log);
+                
+                Combat.appliquerEffet(this, cibleTank, new Brulure(2,0.05), log);
             }
-        }
+      }
     }
-
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Flamme Écarlate — Inflige 100% ATK et brûle la cible 1 tour (5% PV/tour).");
+        System.out.println("Fouet de la Protubérance — Inflige 100% ATK, brûle 1 tour (5% PV/tour).");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Tornade de Feu — Inflige 130% ATK et réduit la Défense de 10% pendant 2 tours.");
+        System.out.println("Douche Écarlate — Inflige 75% ATK à tous les ennemis, brûle chacun 1 tour (4% PV/tour).");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Pluie d'Étincelles — Inflige 70% ATK à tous les ennemis et les brûle 1 tour.");
+        System.out.println("Typhon de la Protubérance — Inflige 110% ATK à tous, brûle 2 tours (6% PV/tour), 30% d'endormissement.");
     }
 }

@@ -38,7 +38,6 @@ public class EnnemiMage7 extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " frappe " + cible.getNom() + " avec brutalite !");
         Combat.attaquer(this, cible, log);
     }
 

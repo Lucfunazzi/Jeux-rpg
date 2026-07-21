@@ -40,7 +40,6 @@ public class EnnemiMage3Elite extends PersonnageBase {
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " lance une salve magique sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
     }
 

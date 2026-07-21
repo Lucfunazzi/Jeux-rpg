@@ -1,14 +1,15 @@
 package Personnage.pnj.Chapitre2;
 
 import Combat.Combat;
-import Effets.Gel;
-import Effets.ReductionVitesse;
+import Effets.Paralysie;
 import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Tobi — Mage de glace du clan de l'île Galuna, rang C.
- * Utilise la magie de glace pour ralentir et geler les ennemis.
+ * Tobi Ololta (Toby) — Mage aux Griffes Paralysantes, rang C.
+ * Magie des Griffes Paralysantes : griffes magiques au bout des doigts qui paralysent au contact.
+ * Attention : ses propres griffes peuvent l'atteindre ! (il s'est blessé lui-même contre Natsu)
+ * Coéquipier de Yuka dans l'équipe de Lyon.
  */
 public class EnnemiTobi extends PersonnageBase {
 
@@ -17,16 +18,16 @@ public class EnnemiTobi extends PersonnageBase {
     public EnnemiTobi(int niveau) {
         this.nom    = "Tobi";
         this.niveau = niveau;
-        this.type="Elementaliste";
+        this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 210.0 * niv;
-        this.attaque =  90.0 * niv;
-        this.defense =  50.0 * niv;
-        this.vitesse =  80.0 * vit;
+        this.vie     = 220.0 * niv;
+        this.attaque =  80.0 * niv;
+        this.defense =  55.0 * niv;
+        this.vitesse =  85.0 * vit;
 
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
@@ -41,48 +42,49 @@ public class EnnemiTobi extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Lame de Glace", "Blizzard Cinglant", "Tempête Glaciale"};
+        return new String[]{"Griffe Paralysante", "Griffe Paralysante Renforcée", "Assaut de Griffes"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi projette une lame de glace sur " + cible.getNom() + " !");
+        log.add("Tobi lacère " + cible.getNom() + " de ses griffes paralysantes !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.10, 1), log);
+        
+        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi déchaîne un blizzard cinglant sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.25;
+        log.add("Tobi concentre toute sa magie dans ses griffes et frappe " + cible.getNom() + " avec une puissance redoublée !");
+        double degats = this.getAttaque() * 1.35;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.20, 2), log);
+        Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi invoque une tempête glaciale sur toute l'équipe ennemie !");
+        log.add("Tobi se lance dans un assaut frénétique et lacère toute l'équipe ennemie de ses griffes !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.65;
+                double degats = this.getAttaque() * 0.80;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                if (Math.random() < 0.20) {
-                    Combat.appliquerEffet(this, cible, new Gel(1), log);
+                if (Math.random() < 0.35) {
+                    Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
                 }
             }
         }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Lame de Glace — Inflige 100% ATK et réduit la Vitesse de 10% pendant 1 tour.");
+        System.out.println("Griffe Paralysante — Inflige 100% ATK, 25% de chance de paralyser 1 tour.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Blizzard Cinglant — Inflige 125% ATK et réduit la Vitesse de 20% pendant 2 tours.");
+        System.out.println("Griffe Paralysante Renforcée — Inflige 135% ATK, paralyse la cible 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tempête Glaciale — Inflige 65% ATK à tous, 20% de chance de geler chaque cible 1 tour.");
+        System.out.println("Assaut de Griffes — Inflige 80% ATK à tous, 35% de chance de paralyser chacun 1 tour.");
     }
 }

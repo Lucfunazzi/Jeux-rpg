@@ -2,6 +2,7 @@ package lancement.Menus;
 
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
+import Personnage.FairyTail.perso_Aria;
 import Personnage.FairyTail.perso_Arzak;
 import Personnage.FairyTail.perso_Biska;
 import Personnage.FairyTail.perso_Elfman;
@@ -32,6 +33,16 @@ import Personnage.FairyTail.perso_Natsu_Etherion;
 import Personnage.FairyTail.perso_Rogue;
 import Personnage.FairyTail.perso_Sting;
 import Personnage.FairyTail.perso_Yukino;
+import Personnage.FairyTail.perso_Bora;
+import Personnage.FairyTail.perso_Cherry;
+import Personnage.FairyTail.perso_DucEverlue;
+import Personnage.FairyTail.perso_Eligor;
+import Personnage.FairyTail.perso_Jose;
+import Personnage.FairyTail.perso_Lyon;
+import Personnage.FairyTail.perso_Sol;
+import Personnage.FairyTail.perso_Tobi;
+import Personnage.FairyTail.perso_Totomaru;
+import Personnage.FairyTail.perso_Yuka;
 import Personnage.FairyTail.perso_Lucas;
 import Personnage.FairyTail.perso_Mirajane_Halphas;
 import Personnage.FairyTail.perso_Elfman;
@@ -56,15 +67,21 @@ public class MenuRecrutement {
     private record InfoPerso(String nom, String role) {}
 
     private static final List<InfoPerso> PAGE1 = List.of(
-        new InfoPerso("Alzack",  "DPS"),
-        new InfoPerso("Bisca",   "DPS"),
-        new InfoPerso("Elfman",  "DPS"),
-        new InfoPerso("Max",     "DPS"),
-        new InfoPerso("Droy",    "Support"),
-        new InfoPerso("Jet",     "DPS"),
-        new InfoPerso("Warren",  "Support"),
-        new InfoPerso("Nab",     "Tank"),
-        new InfoPerso("Romeo",   "DPS")
+        new InfoPerso("Alzack",      "DPS"),
+        new InfoPerso("Bisca",       "DPS"),
+        new InfoPerso("Elfman",      "DPS"),
+        new InfoPerso("Max",         "DPS"),
+        new InfoPerso("Droy",        "Support"),
+        new InfoPerso("Jet",         "DPS"),
+        new InfoPerso("Warren",      "Support"),
+        new InfoPerso("Nab",         "Tank"),
+        new InfoPerso("Romeo",       "DPS"),
+        new InfoPerso("Bora",        "DPS"),
+        new InfoPerso("Duc Everlue", "Tank"),
+        new InfoPerso("Eligoal",     "DPS"),
+        new InfoPerso("Cherry",      "Support"),
+        new InfoPerso("Tobi",        "DPS"),
+        new InfoPerso("Yuka",        "Support")
     );
 
     private static final List<InfoPerso> PAGE2 = List.of(
@@ -74,7 +91,15 @@ public class MenuRecrutement {
         new InfoPerso("Loke",        "DPS"),
         new InfoPerso("Levy",        "Support"),
         new InfoPerso("Lisanna",     "Support"),
-        new InfoPerso("Elfman Bête", "Tank")
+        new InfoPerso("Elfman Bête", "Tank"),
+        new InfoPerso("Lyon",        "DPS"),
+        new InfoPerso("Totomaru",    "DPS"),
+        new InfoPerso("Sol",         "Tank")
+    );
+
+    private static final List<InfoPerso> PAGE3 = List.of(
+        new InfoPerso("Aria",        "DPS"),
+        new InfoPerso("José Porla",  "DPS")
     );
 
     private int parcheminC = 0;
@@ -304,13 +329,16 @@ public class MenuRecrutement {
         }
     }
 
-    // ── Page 3 — Rang A (vide pour l'instant) ─────────────────────────────
+    // ── Page 3 — Rang A/S ─────────────────────────────────────────────────
     private void afficherPage3() {
         System.out.println("\n========================================");
-        System.out.println("       PAGE 3 — RANG A");
+        System.out.println("       PAGE 3 — RANG A/S");
         System.out.println("========================================");
-        System.out.println("  Aucun personnage disponible pour le moment.");
-        System.out.println("  (Contenu a venir dans une future mise a jour)");
+        System.out.println("  Personnages disponibles :");
+        for (InfoPerso p : PAGE3) {
+            System.out.println("  - " + p.nom() + " (" + p.role() + ")");
+        }
+        System.out.println("  (Recrutement Rang A/S a venir dans une future mise a jour)");
     }
 
     // ── Factory ───────────────────────────────────────────────────────────
@@ -332,6 +360,17 @@ public class MenuRecrutement {
             case "Levy"        -> new perso_Levy();
             case "Lisanna"     -> new perso_Lisanna();
             case "Elfman Bête" -> new perso_ElfmanBete();
+            case "Bora"        -> new perso_Bora();
+            case "Duc Everlue" -> new perso_DucEverlue();
+            case "Eligoal"     -> new perso_Eligor();
+            case "Lyon"        -> new perso_Lyon();
+            case "Cherry"      -> new perso_Cherry();
+            case "Tobi"        -> new perso_Tobi();
+            case "Yuka"        -> new perso_Yuka();
+            case "Aria"        -> new perso_Aria();
+            case "José Porla"  -> new perso_Jose();
+            case "Totomaru"    -> new perso_Totomaru();
+            case "Sol"         -> new perso_Sol();
             default            -> null;
         };
     }
