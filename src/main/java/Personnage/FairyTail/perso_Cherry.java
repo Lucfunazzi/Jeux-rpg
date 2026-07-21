@@ -1,8 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.ReductionAttaque;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -44,7 +43,6 @@ public class perso_Cherry extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cherry anime un arbre géant qui attaque " + cible.getNom() + " de ses branches !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.10, 2), log);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class perso_Cherry extends PersonnageBase {
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Arbre Marionnette — 100% ATK, réduit ATK de 10%."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Arbre Marionnette — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Contrôle des Esprits — 110% ATK, silence 2 tours, réduit ATK de 15%."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Marionnette de l'Amour — 85% ATK à tous (x rage), silence 2 tours, réduit ATK de 12%."); }
 }

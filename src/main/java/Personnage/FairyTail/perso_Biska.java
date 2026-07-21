@@ -1,8 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Saignement;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.Comparator;

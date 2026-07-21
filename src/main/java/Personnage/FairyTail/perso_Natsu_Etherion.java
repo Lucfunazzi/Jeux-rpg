@@ -47,7 +47,6 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
         return;
     }
     Combat.attaquer(this, cible, log);
-    Combat.appliquerEffet(this, cible, new Brulure(1, 0.08), log);
 }
 
 @Override
@@ -80,8 +79,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 }
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Ultra poings du dragon de feu — inflige 100% ATK a une cible, "
-                + "applique Brulure (8% PV) pendant 1 tour si elle touche.");
+        System.out.println("Ultra poings du dragon de feu — inflige 100% ATK a une cible.");
     }
 
     @Override

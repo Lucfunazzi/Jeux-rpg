@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.Etourdissement;
-import Effets.Regeneration;
-import Effets.ReductionAttaque;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -46,7 +43,6 @@ public class perso_DucEverlue extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Everlue plonge dans le sol et surgit sous " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        if (Math.random() < 0.20) Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
     }
 
     @Override
@@ -82,7 +78,7 @@ public class perso_DucEverlue extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Nage — Diver : Inflige 100% ATK, 20% d'étourdissement.");
+        System.out.println("Nage — Diver : Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Rebond de Terre : 70% ATK à tous les ennemis, réduit leur ATK de 10%.");

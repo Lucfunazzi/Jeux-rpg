@@ -2,7 +2,6 @@ package Personnage.FairyTail;
 
 import Combat.Combat;
 import Effets.*;
-
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +45,6 @@ public class perso_Evergreen extends PersonnageBase {
         }
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (Math.random() < 0.40) {
-            Combat.appliquerEffet(this, cible, new Petrification(1), log);
-        }
     }
 
     @Override
@@ -99,8 +95,7 @@ public class perso_Evergreen extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Stone Eyes — inflige 100% ATK a une cible, "
-                + "40% de chance de Petrification pendant 1 tour.");
+        System.out.println("Stone Eyes — inflige 100% ATK a une cible.");
     }
 
     @Override

@@ -1,8 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Brulure;
-import Effets.Sommeil;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -45,7 +44,6 @@ public class perso_Bora extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Bora projette des faisceaux ardents en arc sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Brulure(1, 0.05), log);
     }
 
     @Override
@@ -78,7 +76,7 @@ public class perso_Bora extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Fouet de la Protubérance — 100% ATK, brûle 1 tour (5% PV/tour).");
+        System.out.println("Fouet de la Protubérance — 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Douche Écarlate — 75% ATK à tous les ennemis, brûle chacun 1 tour (4% PV/tour).");

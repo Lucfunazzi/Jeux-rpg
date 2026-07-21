@@ -41,10 +41,6 @@ public class perso_Lucas extends PersonnageBase {
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Lucas utilise Gifle de l'amour !");
     Combat.attaquer(this, cible, log);
-    Combat.appliquerEffet(this, cible, new Marquage(2, 0.20), log);
-    if (Math.random() < 0.20) {
-        Combat.appliquerEffet(this, cible, new Confusion(2), log);
-    }
 }
 
 @Override
@@ -115,8 +111,8 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 }
     
     @Override
-    public void descriptionAttaqueBase() { 
-        System.out.println("Gifle de l'amour — Inflige 100% ATK à une cible, applique Marquage et a 20% de chances de rendre confus."); 
+    public void descriptionAttaqueBase() {
+        System.out.println("Gifle de l'amour — Inflige 100% ATK à une cible.");
     }
     
     @Override

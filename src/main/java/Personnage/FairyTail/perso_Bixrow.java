@@ -1,9 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Petrification;
-import Effets.Paralysie;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,17 +44,8 @@ public class perso_Bixrow extends PersonnageBase {
             return;
         }
 
-        // Dégâts amplifiés si cible pétrifiée (synergie Evergreen)
         double degats = this.getAttaque() * 1.00;
-        if (cible.aEffet(Petrification.class)) {
-            Petrification pet = cible.getEffet(Petrification.class);
-            degats = pet.appliquerSurDegats(degats);
-            log.add("Bickslow exploite la petrification ! Degats amplifies de 20%.");
-        }
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-
-        // Synergie Equipe du Tonnerre : Freed gagne +5% ATK
-        // (signal : Bickslow a touché → géré ici)
     }
 
     @Override
@@ -122,8 +111,7 @@ public class perso_Bixrow extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Frappe de poupee — inflige 100% ATK a une cible. "
-                + "[Synergie Evergreen] Cible petrifiee : degats +20%.");
+        System.out.println("Frappe de poupee — inflige 100% ATK a une cible.");
     }
 
     @Override

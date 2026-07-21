@@ -4,23 +4,17 @@ import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre2Elite.*;
 import Personnage.pnj.Chapitre2.EnnemiTobi;
 import Personnage.pnj.Chapitre2.EnnemiYuka;
-import Personnage.pnj.Chapitre2.EnnemiChery;
+import Personnage.pnj.Chapitre2.EnnemiCherry;
 import Personnage.pnj.Chapitre2.EnnemiLeon;
-import Personnage.pnj.Chapitre1.EnnemiMage1;
-import Personnage.pnj.Chapitre1.EnnemiMage2;
-import Personnage.pnj.Chapitre1.EnnemiMage3;
-import Personnage.pnj.Chapitre1.EnnemiTank1;
-import Personnage.pnj.Chapitre1.EnnemiSoigneur1;
-import Personnage.pnj.Chapitre1.EnnemiSoigneur2;
-import Equipement.EquipementFactory;
-import Equipement.Equipement;
+import Personnage.pnj.Chapitre2.EnnemiMage1DPS;
+import Personnage.pnj.Chapitre2.EnnemiMage2DPS;
+import Personnage.pnj.Chapitre2.EnnemiMage3Soigneur;
 import lancement.GameContext;
 import lancement.Stage;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.ChapitreElite.Chapitre1Elite;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Chapitre2Elite {
@@ -136,25 +130,25 @@ public class Chapitre2Elite {
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiTobi(15)); ennemis.add(new EnnemiMage2(15)); ennemis.add(new EnnemiMage1(15));
+            case 1  -> { ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiMage1DPS(20));
                          return new Stage(1, "[ELITE] Débarquement — La garde de l'île", 6000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiYuka(15)); ennemis.add(new EnnemiTobi(15)); ennemis.add(new EnnemiMage2(15)); ennemis.add(new EnnemiSoigneur1());
+            case 2  -> { ennemis.add(new EnnemiYuka(20)); ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiSoigneur1Elite(20));
                          return new Stage(2, "[ELITE] Yuka et Tobi renforcés", 7500, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiChery(16)); ennemis.add(new EnnemiYuka(16)); ennemis.add(new EnnemiMage3(16)); ennemis.add(new EnnemiTank1());
+            case 3  -> { ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiMage3Soigneur(21)); ennemis.add(new EnnemiTank1Elite(21));
                          return new Stage(3, "[ELITE] Chery et l'annuleur d'élite", 9000, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiTobi(17)); ennemis.add(new EnnemiYuka(17)); ennemis.add(new EnnemiChery(17)); ennemis.add(new EnnemiMage2(17)); ennemis.add(new EnnemiSoigneur1());
+            case 4  -> { ennemis.add(new EnnemiTobi(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiMage2DPS(21)); ennemis.add(new EnnemiSoigneur1Elite(21));
                          return new Stage(4, "[ELITE] Le trio de l'île — Forme renforcée", 11000, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiLeon(20)); ennemis.add(new EnnemiMage3(18)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur2());
+            case 5  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiMage3Soigneur(22)); ennemis.add(new EnnemiTank1Elite(22)); ennemis.add(new EnnemiSoigneur2Elite(22));
                          return new Stage(5, "[ELITE] Leon Bastia d'élite", 13000, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiLeon(20)); ennemis.add(new EnnemiTobi(18)); ennemis.add(new EnnemiYuka(18)); ennemis.add(new EnnemiChery(18)); ennemis.add(new EnnemiMage2());
+            case 6  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiTobi(22)); ennemis.add(new EnnemiYuka(22)); ennemis.add(new EnnemiCherry(22)); ennemis.add(new EnnemiMage2DPS(22));
                          return new Stage(6, "[ELITE] L'île en guerre totale", 16000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiYuka(20)); ennemis.add(new EnnemiChery(20)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur2());
+            case 7  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiTank1Elite(23)); ennemis.add(new EnnemiSoigneur2Elite(23));
                          return new Stage(7, "[ELITE] Leon — Maître des glaces d'élite", 19500, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon(24)); ennemis.add(new EnnemiTobi(22)); ennemis.add(new EnnemiYuka(22)); ennemis.add(new EnnemiChery(22)); ennemis.add(new EnnemiMage3());
+            case 8  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiTobi(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiMage3Soigneur(23));
                          return new Stage(8, "[ELITE] Dernier bastion de l'île", 23000, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiLeon(26)); ennemis.add(new EnnemiYuka(24)); ennemis.add(new EnnemiTank1()); ennemis.add(new EnnemiSoigneur1()); ennemis.add(new EnnemiSoigneur2());
+            case 9  -> { ennemis.add(new EnnemiLeon(24)); ennemis.add(new EnnemiYuka(24)); ennemis.add(new EnnemiTank1Elite(24)); ennemis.add(new EnnemiSoigneur1Elite(24)); ennemis.add(new EnnemiSoigneur2Elite(24));
                          return new Stage(9, "[ELITE] Leon — Résistance ultime", 27000, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiLeon(28)); ennemis.add(new EnnemiYuka(26)); ennemis.add(new EnnemiChery(26)); ennemis.add(new EnnemiTobi(24)); ennemis.add(new EnnemiSoigneur2());
+            case 10 -> { ennemis.add(new EnnemiLeon(25)); ennemis.add(new EnnemiYuka(25)); ennemis.add(new EnnemiCherry(25)); ennemis.add(new EnnemiTobi(25)); ennemis.add(new EnnemiSoigneur2Elite(25));
                          return new Stage(10, "[ELITE] Leon — Le Pacte Brisé Ultime", 32000, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }

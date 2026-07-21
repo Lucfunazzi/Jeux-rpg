@@ -1,9 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Marquage;
-import Effets.BuffAttaque;
-import Effets.BuffTauxCritique;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -40,8 +38,6 @@ public class perso_Sting extends PersonnageBase {
         log.add("Sting utilise Griffe du dragon blanc !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        // Marque la cible pour que Rogue fasse plus de dégâts dessus
-        Combat.appliquerEffet(this, cible, new Marquage(2, 0.25), log);
     }
 
     @Override
@@ -85,8 +81,7 @@ public class perso_Sting extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Griffe du dragon blanc — Inflige 120% ATK a la cible. "
-                + "Applique Marquage (+25% degats recus) pendant 2 tours.");
+        System.out.println("Griffe du dragon blanc — Inflige 120% ATK a la cible.");
     }
 
     @Override

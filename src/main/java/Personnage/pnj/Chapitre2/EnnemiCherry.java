@@ -12,11 +12,11 @@ import java.util.List;
  * Peut renvoyer les Esprits Célestes dans leur monde et retourner des invocations contre leur maître.
  * Sort signature : Arbre Marionnette (contrôle des végétaux).
  */
-public class EnnemiChery extends PersonnageBase {
+public class EnnemiCherry extends PersonnageBase {
 
-    public EnnemiChery() { this(12); }
+    public EnnemiCherry() { this(12); }
 
-    public EnnemiChery(int niveau) {
+    public EnnemiCherry(int niveau) {
         this.nom    = "Cherry";
         this.niveau = niveau;
         this.type   = "Elementaliste";

@@ -1,9 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.ReductionVitesse;
-import Effets.Gel;
-import Effets.BuffVitesse;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +38,8 @@ public class perso_Gray extends PersonnageBase {
   @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Gray utilise Lance de glace !");
-    
     double degats = this.getAttaque() * 1.10;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-    if (Math.random() < 0.10){
-        Combat.appliquerEffet(this,cible,new Gel(1), log);
-    }
 }
 
 @Override

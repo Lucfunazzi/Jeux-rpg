@@ -1,9 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Purification;
-import Effets.ReductionAttaque;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -46,7 +44,6 @@ public class perso_Yuka extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Yuka projette une Ondulation (Hadô) qui neutralise la magie de " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.10, 2), log);
     }
 
     @Override
@@ -75,7 +72,7 @@ public class perso_Yuka extends PersonnageBase {
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Ondulation — Hadô : 100% ATK, réduit ATK de 10%."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Ondulation — Hadô : 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Onde Explosive : 130% ATK, réduit ATK de 20% et DEF de 15%."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Annulation Totale : Purge buffs, 65% ATK à tous (x rage), réduit ATK de 15%."); }
 }

@@ -24,9 +24,9 @@ public class EnnemiBora extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 200.0 * niv;
+        this.vie     = 150.0 * niv;
         this.attaque =  85.0 * niv;
-        this.defense =  45.0 * niv;
+        this.defense =  25.0 * niv;
         this.vitesse =  75.0 * vit;
 
         this.taux_critiques    = 0.12;
@@ -59,7 +59,7 @@ public class EnnemiBora extends PersonnageBase {
         log.add("Bora disperse une pluie de sphères de flammes écarlates sur " + cible.getNom() + " et ses alliés !");
        double degats = this.getAttaque() *1.20;
        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-       Combat.appliquerEffet(this, new BuffPrecision(100, 2), log);
+       Combat.appliquerEffet(this, new BuffPrecision(1, 2), log);
            
         }
     
@@ -67,17 +67,33 @@ public class EnnemiBora extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora écarte les bras et libère une colonne de feu en spirale — le Typhon de la Protubérance !");
+        log.add("Bague de charme  !");
         
-                for (PersonnageBase cibleTank : equipeEnnemie) {
-            if (cibleTank.estVivant() && cibleTank.getRole().equals("Tank")) {
-                double degats = this.getAttaque() * 0.80;
-                Combat.appliquerDegatsAvecLog(this, cibleTank, degats, log);
-                
-                Combat.appliquerEffet(this, cibleTank, new Brulure(2,0.05), log);
-            }
-      }
+            PersonnageBase cible = null;
+    for (PersonnageBase p : equipeEnnemie) {
+        if (p.estVivant() && p.getRole().equals("Tank")) {
+            cible = p;
+            break;
+        }
     }
+    if (cible == null) {
+        for (PersonnageBase p : equipeEnnemie) {
+            if (p.estVivant()) {
+                cible = p;
+                break;
+            }
+        }
+    }
+
+    if (cible == null) return; // sécurité : tous KO
+
+    double degats = this.getAttaque() * 0.80;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+
+    if (Math.random() < 0.30) {
+        Combat.appliquerEffet(this, cible, new Sommeil(1), log);
+    }
+}
     @Override public void descriptionAttaqueBase() {
         System.out.println("Fouet de la Protubérance — Inflige 100% ATK, brûle 1 tour (5% PV/tour).");
     }

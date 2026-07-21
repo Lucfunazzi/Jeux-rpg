@@ -1,8 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.BuffDefense;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Levy extends PersonnageBase {

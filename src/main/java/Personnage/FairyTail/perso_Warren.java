@@ -1,7 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Warren extends PersonnageBase {

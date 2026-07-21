@@ -38,14 +38,6 @@ public class perso_Yukino extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Yukino utilise Voie Celeste sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-
-        // Synergie Angel : applique Marquage
-        boolean angelAlliee = equipeAlliee.stream()
-                .anyMatch(a -> a.estVivant() && a.getNom().equals("Angel"));
-        if (angelAlliee) {
-            Combat.appliquerEffet(this, cible, new Marquage(2, 0.15), log);
-            log.add("  Angel guide la frappe — Marquage applique !");
-        }
     }
 
     @Override
@@ -140,8 +132,7 @@ public class perso_Yukino extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Voie Celeste — inflige 100% ATK a une cible."
-                + " Si Angel est alliee : applique Marquage 2 tours.");
+        System.out.println("Voie Celeste — inflige 100% ATK a une cible.");
     }
 
     @Override

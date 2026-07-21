@@ -1,11 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.BuffAttaque;
-import Effets.Bouclier;
-import Effets.ReductionAttaque;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;

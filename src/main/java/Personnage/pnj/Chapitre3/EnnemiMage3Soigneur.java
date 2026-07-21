@@ -1,21 +1,24 @@
-package Personnage.pnj.Chapitre1;
+package Personnage.pnj.Chapitre3;
 
+
+import Personnage.pnj.Chapitre2.*;
 import Personnage.PersonnageBase;
 import Combat.Combat;
+import Effets.Purification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage3 extends PersonnageBase {
+public class EnnemiMage3Soigneur extends PersonnageBase {
 
-    public EnnemiMage3() {
-        this(4);
+    public EnnemiMage3Soigneur() {
+        this(15);
     }
 
-    public EnnemiMage3(int niveau) {
-        this.nom    = "Mage Ombral Majeur";
+    public EnnemiMage3Soigneur(int niveau) {
+        this.nom    = "Prêtre de la révérance";
         this.niveau = niveau;
         this.type="Elementaliste";
-        this.role   = "DPS";
+        this.role   = "Support";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
@@ -43,18 +46,29 @@ public class EnnemiMage3 extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " invoque un orbe de tenebres sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.50;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        log.add(this.nom + " Soigne" + cible.getNom() + " !");
+                    PersonnageBase cibleSoin = null;
+            for (PersonnageBase allie : equipeAlliee) {
+                if (allie.estVivant()) {
+                    if (cibleSoin == null || allie.getVie() < cibleSoin.getVie())
+                        cibleSoin = allie;
+                }
+            }
+            if (cibleSoin != null) {
+                double soin = this.getAttaque() * 0.70; 
+                cibleSoin.recevoirSoin(soin, log);
+                Purification.purifier(cibleSoin, 2, log);
+            }
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " declenche une tempete magique sur tous les ennemis !");
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.60;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        log.add(this.nom + " Soigne toute l'équipe !");
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                double soin = this.getAttaque() * 0.50;
+               allie.recevoirSoin(soin, log);
+               Purification.purifier(allie, 1, log);
             }
         }
     }

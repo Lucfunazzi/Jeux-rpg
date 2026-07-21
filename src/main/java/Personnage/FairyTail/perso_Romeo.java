@@ -1,7 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.Brulure;
-import Effets.BuffAttaque;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Romeo extends PersonnageBase {
@@ -20,7 +19,6 @@ public class perso_Romeo extends PersonnageBase {
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Romeo projette une flamme multicolore sur "+cible.getNom()+" !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Brulure(1, 0.04), log);
     }
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Romeo déchaîne sa magie des couleurs sur "+cible.getNom()+" !");
@@ -35,7 +33,7 @@ public class perso_Romeo extends PersonnageBase {
             Combat.appliquerEffet(this, c, new Brulure(1, 0.05), log);
         }
     }
-    @Override public void descriptionAttaqueBase() { System.out.println("Flamme multicolore — 100% ATK + brûlure 1 tour (4% PV)."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Flamme multicolore — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Magie des couleurs — 120% ATK + brûlure 2 tours (6% PV)."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Inferno arc-en-ciel — +15% ATK, 75% ATK à tous + brûlure 1 tour."); }
 }

@@ -1,7 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Purification;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.Comparator;
 import java.util.List;

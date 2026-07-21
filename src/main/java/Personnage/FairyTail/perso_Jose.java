@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Etourdissement;
-import Effets.ReductionAttaque;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -46,7 +43,6 @@ public class perso_Jose extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("José invoque des soldats fantomatiques qui s'abattent sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
         double soin = this.getAttaque() * 0.15;
         this.recevoirSoin(soin, log);
     }
@@ -80,7 +76,7 @@ public class perso_Jose extends PersonnageBase {
         this.recevoirSoin(soin, log);
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Shades — Soldats Fantomatiques : 100% ATK, réduit ATK de 15%, se soigne."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Shades — Soldats Fantomatiques : 100% ATK, se soigne."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Méduse — Fantôme Colossal : 170% ATK, réduit DEF de 25%, 35% étourdissement."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Dead Wave : +30% ATK, 140% ATK à tous (x rage), -20% ATK/DEF 3 tours, draine 12% PV."); }
 }

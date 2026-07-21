@@ -1,36 +1,39 @@
 package Personnage.pnj.Chapitre1;
 
+
+import Personnage.pnj.Chapitre2.*;
 import Personnage.PersonnageBase;
+import Effets.*;
 import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage8 extends PersonnageBase {
+public class EnnemiMage6Debuff extends PersonnageBase {
 
-    public EnnemiMage8() {
-        this(3);
+    public EnnemiMage6Debuff() {
+        this(8);
     }
 
-    public EnnemiMage8(int niveau) {
-        this.nom    = "Guerrier de Pierre";
+    public EnnemiMage6Debuff(int niveau) {
+        this.nom    = "Invocateur cartessien";
         this.niveau = niveau;
-        this.type="Elementaliste";
-        this.role   = "Tank";
+        this.type="Invocateur";
+        this.role   = "Support";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 350.0 * niv;
-        this.attaque =  45.0 * niv;
-        this.defense =  80.0 * niv;
-        this.vitesse =  40.0 * vit;
+        this.vie     = 210.0 * niv;
+        this.attaque =  82.0 * niv;
+        this.defense =  28.0 * niv;
+        this.vitesse = 110.0 * vit;
 
-        this.taux_critiques    = 0.05;
-        this.degat_critiques   = 1.10;
+        this.taux_critiques    = 0.20;
+        this.degat_critiques   = 1.50;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.05;
-        this.taux_blocage      = 0.20;
-        this.reduction_blocage = 0.25;
+        this.taux_esquives     = 0.15;
+        this.taux_blocage      = 0.02;
+        this.reduction_blocage = 0.02;
         this.degats_renvoi     = 0.80;
 
         initialiserVieMax();
@@ -43,32 +46,34 @@ public class EnnemiMage8 extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " frappe violemment " + cible.getNom() + " avec son arme !");
-        double degats = this.getAttaque() * 1.40;
+        log.add(this.nom + " invoque briseur de défense" + cible.getNom() + " !");
+        double degats = this.getAttaque() * 0.70;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(cible, new ReductionDefense(0.10,2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " effectue une charge devastatrice sur tous les ennemis !");
+        log.add(this.nom + " Invoque Vitesse Reduite !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
+                double degats = this.getAttaque() * 0.40;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+                Combat.appliquerEffet(this,cible ,new ReductionVitesse(0.10,2), log);
             }
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Coup de Bouclier", "Frappe Brutale", "Charge Devastatrice"};
+        return new String[]{"Frappe de l'Ombre", "Surgissement", "Disparition"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Coup de Bouclier : attaque de base sur la cible.");
+        System.out.println("Frappe de l'Ombre : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Frappe Brutale : inflige 140% ATK a la cible.");
+        System.out.println("Surgissement : inflige 170% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Charge Devastatrice : inflige 120% ATK a toute l'equipe ennemie.");
+        System.out.println("Disparition : inflige 120% ATK a toute l'equipe ennemie.");
     }
 }

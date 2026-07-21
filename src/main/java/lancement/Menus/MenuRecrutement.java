@@ -38,7 +38,7 @@ import Personnage.FairyTail.perso_Cherry;
 import Personnage.FairyTail.perso_DucEverlue;
 import Personnage.FairyTail.perso_Eligor;
 import Personnage.FairyTail.perso_Jose;
-import Personnage.FairyTail.perso_Lyon;
+import Personnage.FairyTail.perso_Leon;
 import Personnage.FairyTail.perso_Sol;
 import Personnage.FairyTail.perso_Tobi;
 import Personnage.FairyTail.perso_Totomaru;
@@ -363,7 +363,7 @@ public class MenuRecrutement {
             case "Bora"        -> new perso_Bora();
             case "Duc Everlue" -> new perso_DucEverlue();
             case "Eligoal"     -> new perso_Eligor();
-            case "Lyon"        -> new perso_Lyon();
+            case "Lyon"        -> new perso_Leon();
             case "Cherry"      -> new perso_Cherry();
             case "Tobi"        -> new perso_Tobi();
             case "Yuka"        -> new perso_Yuka();

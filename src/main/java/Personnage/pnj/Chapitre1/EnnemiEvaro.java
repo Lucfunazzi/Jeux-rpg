@@ -53,9 +53,7 @@ public class EnnemiEvaro extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Le Duc Everlue plonge dans le sol et surgit sous " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        if (Math.random() < 0.20) {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
-        }
+        
     }
 
     @Override
@@ -75,19 +73,30 @@ public class EnnemiEvaro extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Le Duc Everlue ouvre la Porte de la Vierge et invoque Virgo sous sa forme colossale !");
-        Combat.appliquerEffet(this, new BuffDefense(0.20, 3), log);
-        for (PersonnageBase allie : equipeAlliee) {
-            if (allie.estVivant()) {
-                Combat.appliquerEffet(this, allie, new Regeneration(0.06, 2), log);
+        
+       
+              PersonnageBase cible = null;
+    for (PersonnageBase p : equipeEnnemie) {
+        if (p.estVivant() && p.getRole().equals("Tank")) {
+            cible = p;
+            break;
+        }
+    }
+    if (cible == null) {
+        for (PersonnageBase p : equipeEnnemie) {
+            if (p.estVivant()) {
+                cible = p;
+                break;
             }
         }
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.90;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
-            }
-        }
+    }
+
+    if (cible == null) return;
+    
+     double degats = this.getAttaque() * 1.20;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+    Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+    
     }
 
     @Override public void descriptionAttaqueBase() {
@@ -97,6 +106,6 @@ public class EnnemiEvaro extends PersonnageBase {
         System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (70% ATK chacun), réduit leur ATK de 10%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Invocation de Virgo : +20% DEF, soigne les alliés (6% PV/tour), inflige 90% ATK à tous les ennemis + étourdissement.");
+        System.out.println("Invocation de Virgo : inflige 120% ATK à un seul ennemi + étourdissement.");
     }
 }

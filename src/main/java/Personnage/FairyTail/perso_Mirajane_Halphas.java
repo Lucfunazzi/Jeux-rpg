@@ -42,8 +42,6 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
     }
 
     // ── Attaque de base ───────────────────────────────────────────────────
-    // Mirajane S : 100% ATK + Poison 10%/2 tours
-    // Halphas    : 120% ATK + Poison 15%/3 tours + ReductionDEF 15%/2 tours
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Mirajane Halphas utilise Griffe de Halphas !");
@@ -55,8 +53,6 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
         }
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Poison(3, 0.15), log);
-        Combat.appliquerEffet(this, cible, new ReductionDefense(0.15, 2), log);
     }
 
     // ── Attaque spéciale ──────────────────────────────────────────────────
@@ -111,9 +107,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
     // ── Descriptions ──────────────────────────────────────────────────────
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Griffe de Halphas — inflige 120% ATK a une cible, "
-                + "applique Poison (15% PV/tour) pendant 3 tours "
-                + "et reduit sa DEF de 15% pendant 2 tours.");
+        System.out.println("Griffe de Halphas — inflige 120% ATK a une cible.");
     }
 
     @Override

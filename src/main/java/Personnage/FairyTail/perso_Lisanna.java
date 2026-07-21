@@ -1,8 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.Regeneration;
-import Effets.BuffDefense;
-import Effets.Resurrection;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Lisanna extends PersonnageBase {

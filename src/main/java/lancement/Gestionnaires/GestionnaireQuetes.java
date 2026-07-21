@@ -7,13 +7,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import lancement.Quetes.QueteJournaliere;
 import lancement.Quetes.QueteProgression;
+import Personnage.FairyTail.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GestionnaireQuetes {
+    
 
     private final ArrayList<QueteProgression> quetesProgression = new ArrayList<>();
     private QueteJournaliere queteJournaliere;
     private LocalDate dernierRenouvellement;
     private int indexQueteJournaliere = 0;
+    // Map : id de quête → personnage à offrir (null = pas de perso)
+private final Map<String, PersonnageBase> recompensesPersonnages = new HashMap<>();
+
+private void initialiserRecompensesPersonnages() {
+    recompensesPersonnages.put("C1S3",  new perso_Bora());    // Stage 3 chapitre 1  → Bora
+    recompensesPersonnages.put("C1S5", new perso_Nab());   // Stage 5 chapitre 1 → Nab
+  
+}
 
     // Pool de quêtes journalières
     // XP journalière calibrée pour être un petit bonus, pas une source principale
@@ -35,11 +47,12 @@ public class GestionnaireQuetes {
                 QueteJournaliere.TypeObjectif.GAGNER_OR, 1000, 1000, 2000),
     };
 
-    public GestionnaireQuetes() {
-        initialiserQuetesProgression();
-        dernierRenouvellement = LocalDate.now().minusDays(1); // force init
-        verifierRenouvellement();
-    }
+  public GestionnaireQuetes() {
+    initialiserQuetesProgression();
+    initialiserRecompensesPersonnages();   // ← ajouter
+    dernierRenouvellement = LocalDate.now().minusDays(1);
+    verifierRenouvellement();
+}
 
     // ── Initialisation des quêtes de progression ──────────────────────────
     private void initialiserQuetesProgression() {
@@ -47,133 +60,133 @@ public class GestionnaireQuetes {
         // ── Chapitre 1 normal (niv 1 → 10 | total ~6 200 XP) ────────────────
         // XP requise réelle niv 1→10 : 6 228 XP  |  distribution progressive
         quetesProgression.add(new QueteProgression("C1S1",
-                "Les premiers pas", "Terminez le stage 1 du Chapitre 1.",
+                "Prologue", "Terminez le stage 1 du Chapitre 1.",
                 1, 1, false, 450, 500, 0));
         quetesProgression.add(new QueteProgression("C1S2",
-                "Sur la bonne voie", "Terminez le stage 2 du Chapitre 1.",
+                "Bora le charmeur", "Terminez le stage 2 du Chapitre 1.",
                 1, 2, false, 500, 700, 0));
         quetesProgression.add(new QueteProgression("C1S3",
-                "Le chemin s'ouvre", "Terminez le stage 3 du Chapitre 1.",
+                "Chemin vers fairy tail", "Terminez le stage 3 du Chapitre 1.",
                 1, 3, false, 550, 1000, 0));
         quetesProgression.add(new QueteProgression("C1S4",
-                "Milieu du chemin", "Terminez le stage 4 du Chapitre 1.",
+                "L'arrivée de la reine des fées", "Terminez le stage 4 du Chapitre 1.",
                 1, 4, false, 600, 1200, 0));
         quetesProgression.add(new QueteProgression("C1S5",
-                "A mi-parcours", "Terminez le stage 5 du Chapitre 1.",
+                "Premier mission pour Lucy", "Terminez le stage 5 du Chapitre 1.",
                 1, 5, false, 600, 1500, 0));
         quetesProgression.add(new QueteProgression("C1S6",
-                "Pas en arriere", "Terminez le stage 6 du Chapitre 1.",
+                "Le duc evarlo", "Terminez le stage 6 du Chapitre 1.",
                 1, 6, false, 700, 1800, 0));
         quetesProgression.add(new QueteProgression("C1S7",
-                "La ligne droite", "Terminez le stage 7 du Chapitre 1.",
+                "Retour a fairy tail", "Terminez le stage 7 du Chapitre 1.",
                 1, 7, false, 700, 2000, 0));
         quetesProgression.add(new QueteProgression("C1S8",
-                "Presque au bout", "Terminez le stage 8 du Chapitre 1.",
+                "Eisen Wald", "Terminez le stage 8 du Chapitre 1.",
                 1, 8, false, 750, 2200, 0));
         quetesProgression.add(new QueteProgression("C1S9",
-                "Dernier obstacle", "Terminez le stage 9 du Chapitre 1.",
+                "Eligor le mage de vent", "Terminez le stage 9 du Chapitre 1.",
                 1, 9, false, 750, 2500, 0));
         quetesProgression.add(new QueteProgression("C1S10",
-                "Conquerant du Chapitre 1", "Terminez le stage 10 du Chapitre 1.",
+                "La flute maudite", "Terminez le stage 10 du Chapitre 1.",
                 1, 10, false, 600, 3000, 100));
 
         // ── Chapitre 1 Elite (niv 10 → 20 | total ~40 000 XP) ───────────────
         // XP requise réelle niv 10→20 : 40 024 XP  |  distribution progressive
         quetesProgression.add(new QueteProgression("C1E1",
-                "L'eveil de l'elite", "Terminez le stage 1 du Chapitre 1 Elite.",
+                "Prologue Elite", "Terminez le stage 1 du Chapitre 1 Elite.",
                 1, 1, true, 2800, 3000, 0));
         quetesProgression.add(new QueteProgression("C1E2",
-                "Elite confirmee", "Terminez le stage 2 du Chapitre 1 Elite.",
+                "Bora le charmeur Elite", "Terminez le stage 2 du Chapitre 1 Elite.",
                 1, 2, true, 3200, 3500, 0));
         quetesProgression.add(new QueteProgression("C1E3",
-                "Rang superieur", "Terminez le stage 3 du Chapitre 1 Elite.",
+                "Chemin vers Fairy Tail Elite", "Terminez le stage 3 du Chapitre 1 Elite.",
                 1, 3, true, 3600, 4000, 0));
         quetesProgression.add(new QueteProgression("C1E4",
-                "Force brute", "Terminez le stage 4 du Chapitre 1 Elite.",
+                "L'arrivée de la reine des fées Elite", "Terminez le stage 4 du Chapitre 1 Elite.",//vrai combat avec erza cette fois-ci
                 1, 4, true, 4000, 4500, 0));
         quetesProgression.add(new QueteProgression("C1E5",
-                "Demi-chemin elite", "Terminez le stage 5 du Chapitre 1 Elite.",
+                "Premier mission pour Lucy Elite", "Terminez le stage 5 du Chapitre 1 Elite.",
                 1, 5, true, 4000, 5000, 0));
         quetesProgression.add(new QueteProgression("C1E6",
-                "Survivant de l'ombre", "Terminez le stage 6 du Chapitre 1 Elite.",
+                "Le duc evarlo Elite", "Terminez le stage 6 du Chapitre 1 Elite.",
                 1, 6, true, 4400, 5500, 0));
         quetesProgression.add(new QueteProgression("C1E7",
-                "Predateur redoutable", "Terminez le stage 7 du Chapitre 1 Elite.",
+                "Retour a fairy tail Elite", "Terminez le stage 7 du Chapitre 1 Elite.",
                 1, 7, true, 4400, 6000, 0));
         quetesProgression.add(new QueteProgression("C1E8",
-                "Ombre parmi les ombres", "Terminez le stage 8 du Chapitre 1 Elite.",
+                "Eisen Wald Elite", "Terminez le stage 8 du Chapitre 1 Elite.",
                 1, 8, true, 4800, 6500, 0));
         quetesProgression.add(new QueteProgression("C1E9",
-                "General des tenebres", "Terminez le stage 9 du Chapitre 1 Elite.",
+                "Eligor le mage de vent Elite", "Terminez le stage 9 du Chapitre 1 Elite.",
                 1, 9, true, 4800, 7000, 0));
         quetesProgression.add(new QueteProgression("C1E10",
-                "Dragon vaincu", "Terminez le stage 10 du Chapitre 1 Elite.",
+                "La flute maudite Elite", "Terminez le stage 10 du Chapitre 1 Elite.", // vrai combat avec natsu gray et erza
                 1, 10, true, 4000, 9000, 0));
 
         // ── Chapitre 2 normal (niv 20 → 25 | total ~71 000 XP) ──────────────
         // XP requise réelle niv 20→25 : 71 010 XP  |  distribution progressive
         quetesProgression.add(new QueteProgression("C2S1",
-                "L'Examen commence", "Terminez le stage 1 du Chapitre 2.",
+                "Prologue Chapitre 2", "Terminez le stage 1 du Chapitre 2.",
                 2, 1, false, 4950, 1500, 0));
         quetesProgression.add(new QueteProgression("C2S2",
-                "Face a l'Equipe 8", "Terminez le stage 2 du Chapitre 2.",
+                "Arrivée a l'ile de galuna", "Terminez le stage 2 du Chapitre 2.",
                 2, 2, false, 5700, 2000, 0));
         quetesProgression.add(new QueteProgression("C2S3",
-                "L'Ombre et la Strategie", "Terminez le stage 3 du Chapitre 2.",
+                "Lucy VS Cherry", "Terminez le stage 3 du Chapitre 2.",
                 2, 3, false, 6400, 2500, 0));
         quetesProgression.add(new QueteProgression("C2S4",
-                "L'Equipe 7 se dresse", "Terminez le stage 4 du Chapitre 2.",
+                "Yuka contre Natsu", "Terminez le stage 4 du Chapitre 2.",
                 2, 4, false, 7100, 3000, 0));
         quetesProgression.add(new QueteProgression("C2S5",
-                "Le Brouillard de Zabuza", "Terminez le stage 5 du Chapitre 2.",
+                "Tobi contre Natsu", "Terminez le stage 5 du Chapitre 2.",
                 2, 5, false, 7100, 3500, 0));
         quetesProgression.add(new QueteProgression("C2S6",
-                "Sables de Suna", "Terminez le stage 6 du Chapitre 2.",
+                "Gray vs Leon 1", "Terminez le stage 6 du Chapitre 2.",
                 2, 6, false, 7800, 4000, 0));
         quetesProgression.add(new QueteProgression("C2S7",
-                "La Revanche de Gai", "Terminez le stage 7 du Chapitre 2.",
+                "Natsu contre l'homme mysterieux", "Terminez le stage 7 du Chapitre 2.",
                 2, 7, false, 7800, 4500, 0));
         quetesProgression.add(new QueteProgression("C2S8",
-                "Le Feu d'Asuma", "Terminez le stage 8 du Chapitre 2.",
+                "Gray vs Leon part 2", "Terminez le stage 8 du Chapitre 2.",
                 2, 8, false, 8500, 5000, 0));
         quetesProgression.add(new QueteProgression("C2S9",
-                "L'Oeil de Kurenai", "Terminez le stage 9 du Chapitre 2.",
+                "Le passé de Gray", "Terminez le stage 9 du Chapitre 2.",
                 2, 9, false, 8500, 5500, 0));
         quetesProgression.add(new QueteProgression("C2S10",
-                "Orochimaru vaincu", "Terminez le stage 10 du Chapitre 2.",
+                "Deliora le demon ", "Terminez le stage 10 du Chapitre 2.",
                 2, 10, false, 7100, 6000, 150));
 
         // ── Chapitre 2 Elite (niv 25 → 30 | total ~176 650 XP) ──────────────
         // XP requise réelle niv 25→30 : 176 680 XP  |  distribution progressive
         quetesProgression.add(new QueteProgression("C2E1",
-                "L'elite de l'Examen", "Terminez le stage 1 du Chapitre 2 Elite.",
+                "Prologue Chapitre 2 Elite", "Terminez le stage 1 du Chapitre 2 Elite.",
                 2, 1, true, 12350, 3000, 0));
         quetesProgression.add(new QueteProgression("C2E2",
-                "Equipe 8 redoutable", "Terminez le stage 2 du Chapitre 2 Elite.",
+                "Arrivée a l'ile de galuna Elite", "Terminez le stage 2 du Chapitre 2 Elite.",
                 2, 2, true, 14150, 3500, 0));
         quetesProgression.add(new QueteProgression("C2E3",
-                "L'Ombre elite", "Terminez le stage 3 du Chapitre 2 Elite.",
+                "Lucy VS Cherry Elite", "Terminez le stage 3 du Chapitre 2 Elite.",
                 2, 3, true, 15900, 4000, 0));
         quetesProgression.add(new QueteProgression("C2E4",
-                "Equipe 7 au sommet", "Terminez le stage 4 du Chapitre 2 Elite.",
+                "Yuka contre Natsu Elite", "Terminez le stage 4 du Chapitre 2 Elite.",
                 2, 4, true, 17650, 4500, 0));
         quetesProgression.add(new QueteProgression("C2E5",
-                "Brouillard d'acier", "Terminez le stage 5 du Chapitre 2 Elite.",
+                "Tobi contre Natsu Elite", "Terminez le stage 5 du Chapitre 2 Elite.",
                 2, 5, true, 17650, 5000, 0));
         quetesProgression.add(new QueteProgression("C2E6",
-                "Sables implacables", "Terminez le stage 6 du Chapitre 2 Elite.",
+                "Gray vs Leon 1 Elite", "Terminez le stage 6 du Chapitre 2 Elite.",
                 2, 6, true, 19450, 5500, 0));
         quetesProgression.add(new QueteProgression("C2E7",
-                "La Fureur de Gai", "Terminez le stage 7 du Chapitre 2 Elite.",
+                "Natsu contre l'homme mysterieux Elite", "Terminez le stage 7 du Chapitre 2 Elite.",
                 2, 7, true, 19450, 6000, 0));
         quetesProgression.add(new QueteProgression("C2E8",
-                "Le Feu ne s'eteint pas", "Terminez le stage 8 du Chapitre 2 Elite.",
+                "Gray vs Leon part 2 Elite", "Terminez le stage 8 du Chapitre 2 Elite.",
                 2, 8, true, 21200, 6500, 0));
         quetesProgression.add(new QueteProgression("C2E9",
-                "L'Oeil acere de Kurenai", "Terminez le stage 9 du Chapitre 2 Elite.",
+                "Le passé de Gray Elite", "Terminez le stage 9 du Chapitre 2 Elite.",
                 2, 9, true, 21200, 7000, 0));
         quetesProgression.add(new QueteProgression("C2E10",
-                "Orochimaru — Forme Finale", "Terminez le stage 10 du Chapitre 2 Elite.",
+                "Deliora le demon Elite", "Terminez le stage 10 du Chapitre 2 Elite.",
                 2, 10, true, 17650, 10000, 200));
 
         // ── Chapitre 3 normal (niv 30 → 35 | total ~439 500 XP) ─────────────
@@ -264,14 +277,30 @@ public class GestionnaireQuetes {
         verifierRenouvellement();
 
         for (QueteProgression q : quetesProgression) {
-            if (!q.isCompletee()
-                    && q.getChapitreRequis() == chapitre
-                    && q.getStageRequis()    == stage
-                    && q.isElite()           == estElite) {
-                q.setCompletee(true);
-                System.out.println("\n>> Quete accomplie : " + q.getTitre() + " !");
+    if (!q.isCompletee()
+            && q.getChapitreRequis() == chapitre
+            && q.getStageRequis()    == stage
+            && q.isElite()           == estElite) {
+        q.setCompletee(true);
+        System.out.println("\n>> Quete accomplie : " + q.getTitre() + " !");
+
+        // ── Récompense personnage ─────────────────────────────────────
+        PersonnageBase persoRecompense = recompensesPersonnages.get(q.getId());
+        if (persoRecompense != null) {
+            boolean dejaPresent = personnagesRecruites.stream()
+                    .anyMatch(p -> p.getClass().equals(persoRecompense.getClass()));
+            if (dejaPresent) {
+                System.out.println(">> Vous possedez deja " + persoRecompense.getNom()
+                        + " — recompense convertie en fragments !");
+                
+            } else {
+                personnagesRecruites.add(persoRecompense);
+                System.out.println(">> " + persoRecompense.getNom()
+                        + " a rejoint votre equipe !");
             }
         }
+    }
+}
 
         if (!queteJournaliere.isReclamee()
                 && queteJournaliere.getTypeObjectif()
@@ -343,4 +372,6 @@ public class GestionnaireQuetes {
     public int getIndexQueteJournaliere() { return indexQueteJournaliere; }
     public void setIndexQueteJournaliere(int index) { this.indexQueteJournaliere = index; }
     public void setQueteJournaliere(QueteJournaliere q) { this.queteJournaliere = q; }
+    
+    
 }

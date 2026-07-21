@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.Confusion;
-import Effets.Etourdissement;
-import Effets.ReductionAttaque;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -47,7 +44,6 @@ public class perso_Sol extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Sol projette des gravats de pierre sur " + cible.getNom() + " — Show Time, non !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.12, 2), log);
     }
 
     @Override
@@ -86,7 +82,7 @@ public class perso_Sol extends PersonnageBase {
         this.recevoirSoin(soin, log);
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Show Time — Gravats de Pierre : 100% ATK, réduit ATK de 12%."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Show Time — Gravats de Pierre : 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Merci la Vie — Mémoire : 110% ATK, 50% confusion ou étourdissement, réduit ATK de 18%."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre : +30% DEF, alliés +15% DEF, 90% ATK à tous (x rage), étourdissement, draine 10% PV."); }
 }

@@ -1,34 +1,37 @@
-package Personnage.pnj.Chapitre1;
+package Personnage.pnj.Chapitre3;
 
+
+import Personnage.pnj.Chapitre2.*;
 import Personnage.PersonnageBase;
+import Effets.*;
 import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage11 extends PersonnageBase {
+public class EnnemiMage6Debuff extends PersonnageBase {
 
-    public EnnemiMage11() {
-        this(5);
+    public EnnemiMage6Debuff() {
+        this(18);
     }
 
-    public EnnemiMage11(int niveau) {
-        this.nom    = "Chasseur de Primes";
+    public EnnemiMage6Debuff(int niveau) {
+        this.nom    = "Invocateur cartessien";
         this.niveau = niveau;
-        this.type="Elementaliste";
-        this.role   = "DPS";
+        this.type="Invocateur";
+        this.role   = "Support";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 250.0 * niv;
-        this.attaque =  95.0 * niv;
-        this.defense =  38.0 * niv;
-        this.vitesse =  90.0 * vit;
+        this.vie     = 210.0 * niv;
+        this.attaque =  82.0 * niv;
+        this.defense =  28.0 * niv;
+        this.vitesse = 110.0 * vit;
 
-        this.taux_critiques    = 0.15;
-        this.degat_critiques   = 1.45;
+        this.taux_critiques    = 0.20;
+        this.degat_critiques   = 1.50;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.08;
+        this.taux_esquives     = 0.15;
         this.taux_blocage      = 0.02;
         this.reduction_blocage = 0.02;
         this.degats_renvoi     = 0.80;
@@ -43,32 +46,34 @@ public class EnnemiMage11 extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " decoche un tir fatal sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.60;
+        log.add(this.nom + " invoque briseur de défense" + cible.getNom() + " !");
+        double degats = this.getAttaque() * 0.70;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(cible, new ReductionDefense(0.10,2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " arrose toute l'equipe ennemie !");
+        log.add(this.nom + " Invoque Vitesse Reduite !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
+                double degats = this.getAttaque() * 0.40;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+                Combat.appliquerEffet(this,cible ,new ReductionVitesse(0.10,2), log);
             }
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Tir Precis", "Tir Fatal", "Tir en Rafale"};
+        return new String[]{"Frappe de l'Ombre", "Surgissement", "Disparition"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Tir Precis : attaque de base sur la cible.");
+        System.out.println("Frappe de l'Ombre : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Tir Fatal : inflige 160% ATK a la cible.");
+        System.out.println("Surgissement : inflige 170% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tir en Rafale : inflige 130% ATK a toute l'equipe ennemie.");
+        System.out.println("Disparition : inflige 120% ATK a toute l'equipe ennemie.");
     }
 }

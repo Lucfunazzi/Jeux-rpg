@@ -1,7 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.BuffVitesse;
-import Effets.Etourdissement;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Jett extends PersonnageBase {

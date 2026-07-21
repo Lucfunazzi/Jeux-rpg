@@ -1,7 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -38,10 +38,6 @@ public class perso_Gajeel extends PersonnageBase {
         log.add("Gajeel utilise Griffes de fer !");
         double degats = this.getAttaque() * 1.10;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        // 30% de chance de réduire la DEF
-        if (Math.random() < 0.30) {
-            Combat.appliquerEffet(this, cible, new ReductionDefense(0.15, 2), log);
-        }
     }
 
     @Override
@@ -76,8 +72,7 @@ public class perso_Gajeel extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Griffes de fer — Inflige 110% ATK a la cible. "
-                + "30% de chance de reduire sa DEF de 15% pendant 2 tours.");
+        System.out.println("Griffes de fer — Inflige 110% ATK a la cible.");
     }
 
     @Override

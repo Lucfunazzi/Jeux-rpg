@@ -46,9 +46,6 @@ public class perso_Loke extends PersonnageBase {
         }
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (Math.random() < 0.20) {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
-        }
     }
 
     @Override
@@ -93,8 +90,7 @@ public class perso_Loke extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Poing du Lion — inflige 100% ATK a une cible, "
-                + "20% de chance d'etourdir pendant 1 tour.");
+        System.out.println("Poing du Lion — inflige 100% ATK a une cible.");
     }
 
     @Override

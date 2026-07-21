@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Malediction;
-import Effets.ReductionAttaque;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -47,7 +44,6 @@ public class perso_Aria extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Alya projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.12, 2), log);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class perso_Aria extends PersonnageBase {
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Zetsu — Jets Invisibles : 100% ATK, réduit ATK de 12%."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Zetsu — Jets Invisibles : 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Metsu — Drain Magique : 160% ATK, maudit et silence 2 tours."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Zéro — Vide Absolu : +25% ATK, 120% ATK à tous (x rage), silence 3 tours, réduit ATK de 25%."); }
 }

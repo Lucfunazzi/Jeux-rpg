@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Brulure;
-import Effets.BuffAttaque;
-import Effets.Poison;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -47,7 +44,6 @@ public class perso_Totomaru extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Totomaru projette une flamme blanche intense sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new Brulure(2, 0.06), log);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class perso_Totomaru extends PersonnageBase {
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Flamme Blanche — 100% ATK, brûle 2 tours (6% PV/tour)."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Flamme Blanche — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Feu Orange Nauséabond — 140% ATK, empoisonne 2 tours, silence 2 tours."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Flammes Arc-en-Ciel — +20% ATK, 100% ATK à tous (x rage), brûle + empoisonne 2 tours."); }
 }

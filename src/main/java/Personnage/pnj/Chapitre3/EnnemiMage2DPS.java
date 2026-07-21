@@ -1,18 +1,20 @@
-package Personnage.pnj.Chapitre1;
+package Personnage.pnj.Chapitre3;
 
+
+import Personnage.pnj.Chapitre2.*;
 import Personnage.PersonnageBase;
 import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage6 extends PersonnageBase {
+public class EnnemiMage2DPS extends PersonnageBase {
 
-    public EnnemiMage6() {
-        this(4);
+    public EnnemiMage2DPS() {
+        this(14);
     }
 
-    public EnnemiMage6(int niveau) {
-        this.nom    = "Assassin Furtif";
+    public EnnemiMage2DPS(int niveau) {
+        this.nom    = "Mage Ombral Ancien";
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "DPS";
@@ -20,15 +22,15 @@ public class EnnemiMage6 extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 210.0 * niv;
-        this.attaque =  82.0 * niv;
-        this.defense =  28.0 * niv;
-        this.vitesse = 110.0 * vit;
+        this.vie     = 220.0 * niv;
+        this.attaque =  55.0 * niv;
+        this.defense =  18.0 * niv;
+        this.vitesse =  65.0 * vit;
 
-        this.taux_critiques    = 0.20;
-        this.degat_critiques   = 1.50;
+        this.taux_critiques    = 0.10;
+        this.degat_critiques   = 1.40;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.15;
+        this.taux_esquives     = 0.07;
         this.taux_blocage      = 0.02;
         this.reduction_blocage = 0.02;
         this.degats_renvoi     = 0.80;
@@ -43,32 +45,32 @@ public class EnnemiMage6 extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " surgit de l'ombre sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.70;
+        log.add(this.nom + " invoque un orbe de tenebres sur " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " disparait et frappe tous les ennemis !");
+        log.add(this.nom + " declenche une tempete magique sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
+                double degats = this.getAttaque() * 0.60;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             }
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Frappe de l'Ombre", "Surgissement", "Disparition"};
+        return new String[]{"Salve Magique", "Orbe de Tenebres", "Tempete Magique"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Frappe de l'Ombre : attaque de base sur la cible.");
+        System.out.println("Salve Magique : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Surgissement : inflige 170% ATK a la cible.");
+        System.out.println("Orbe de Tenebres : inflige 150% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Disparition : inflige 120% ATK a toute l'equipe ennemie.");
+        System.out.println("Tempete Magique : inflige 130% ATK a toute l'equipe ennemie.");
     }
 }

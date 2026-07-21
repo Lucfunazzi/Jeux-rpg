@@ -54,17 +54,17 @@ public class EnnemiEligor extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Eligoal déchaîne des lames de vent invisibles et tranchantes sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
+      
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Eligoal déplace sa main gauche et crée un bouclier de vent dévastateur !");
-        Combat.appliquerEffet(this, new BuffDefense(0.25, 2), log);
+       
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 2), log);
+        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.10, 2), log);
     }
 
     @Override
@@ -73,10 +73,10 @@ public class EnnemiEligor extends PersonnageBase {
         log.add("Eligoal érige un Mur de Vent colossal — une prison de tornades tranchantes emprisonne l'équipe ennemie !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.85;
+                double degats = this.getAttaque() * 0.50;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Silence(2), log);
-                Combat.appliquerEffet(this, cible, new ReductionVitesse(0.25, 2), log);
+                
+                Combat.appliquerEffet(this, cible, new ReductionVitesse(0.10, 2), log);
             }
         }
     }

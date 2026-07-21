@@ -1,18 +1,21 @@
 package Personnage.pnj.Chapitre1;
 
+
+import Personnage.pnj.Chapitre2.*;
 import Personnage.PersonnageBase;
+import Effets.*;
 import Combat.Combat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage4 extends PersonnageBase {
+public class EnnemiMage4Buff extends PersonnageBase {
 
-    public EnnemiMage4() {
-        this(5);
+    public EnnemiMage4Buff() {
+        this(8);
     }
 
-    public EnnemiMage4(int niveau) {
-        this.nom    = "Sorcier Maudit";
+    public EnnemiMage4Buff(int niveau) {
+        this.nom    = "Sorcier de la prophétie";
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "DPS";
@@ -43,19 +46,24 @@ public class EnnemiMage4 extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " invoque une explosion arcanique sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.60;
+        log.add(this.nom + " Meteorie " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 0.80;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        for (PersonnageBase e :equipeAlliee){
+            if (e.estVivant() && e.getRole().equals("Support")){
+                Combat.appliquerEffet(e, new BuffAttaque(0.10,2), log);
+            }
+        }
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " declenche une pluie de maledictions sur tous les ennemis !");
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        log.add(this.nom + " Boost le taux critique de son équipe !");
+        for (PersonnageBase e : equipeAlliee) {
+            if (e.estVivant()){
+                Combat.appliquerEffet(e, new BuffTauxCritique(0.15,2), log);
             }
+            
         }
     }
 

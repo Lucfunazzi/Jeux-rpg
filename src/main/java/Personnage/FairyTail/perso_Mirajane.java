@@ -43,7 +43,6 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
         return;
     }
     Combat.attaquer(this, cible, log);
-    Combat.appliquerEffet(this, cible, new Poison(2, 0.10), log);
 }
 
 @Override
@@ -78,8 +77,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Attaque du demon — inflige 100% ATK a une cible, "
-                + "applique Poison (10% PV/tour) pendant 2 tours si elle touche.");
+        System.out.println("Attaque du demon — inflige 100% ATK a une cible.");
     }
 
     @Override

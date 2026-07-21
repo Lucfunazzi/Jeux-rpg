@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.Gel;
-import Effets.ReductionAttaque;
-import Effets.ReductionVitesse;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -13,9 +10,9 @@ import java.util.List;
  * Magie Ice-Make Statique : crée des créatures de glace animées autonomes.
  * Rival de Gray, cherchait à ressusciter Deliora. Finalement allié de Fairy Tail.
  */
-public class perso_Lyon extends PersonnageBase {
+public class perso_Leon extends PersonnageBase {
 
-    public perso_Lyon() {
+    public perso_Leon() {
         this.nom    = "Lyon";
         this.type   = "Chevalier";
         this.role   = "DPS";
@@ -46,7 +43,6 @@ public class perso_Lyon extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Lyon façonne un oiseau de glace qui fond sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
     }
 
     @Override
@@ -83,7 +79,7 @@ public class perso_Lyon extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK, réduit VIT de 15% pendant 2 tours.");
+        System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, réduit ATK de 20%, 35% de gel 1 tour.");

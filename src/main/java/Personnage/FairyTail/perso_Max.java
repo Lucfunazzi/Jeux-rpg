@@ -1,7 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.ReductionDefense;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Max extends PersonnageBase {

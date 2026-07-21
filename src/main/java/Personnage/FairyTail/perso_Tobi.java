@@ -1,7 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Paralysie;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class perso_Tobi extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Tobi lacère " + cible.getNom() + " de ses griffes paralysantes !");
         Combat.attaquer(this, cible, log);
-        if (Math.random() < 0.25) Combat.appliquerEffet(this, cible, new Paralysie(1,0.60), log);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class perso_Tobi extends PersonnageBase {
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Griffe Paralysante — 100% ATK, 25% de paralysie 1 tour."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Griffe Paralysante — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Griffe Renforcée — 135% ATK, paralyse 1 tour."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Assaut de Griffes — 80% ATK à tous (x rage), 35% de paralysie chacun."); }
 }

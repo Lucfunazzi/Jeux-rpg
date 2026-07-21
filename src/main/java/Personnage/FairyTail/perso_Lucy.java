@@ -40,14 +40,6 @@ public class perso_Lucy extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Lucy utilise Lucy Kick sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-
-        // Synergie Yukino : applique ReductionDEF
-        boolean yukinoAlliee = equipeAlliee.stream()
-                .anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
-        if (yukinoAlliee) {
-            Combat.appliquerEffet(this, cible, new ReductionDefense(0.08, 1), log);
-            log.add("  Yukino affaiblit la defense de " + cible.getNom() + " !");
-        }
     }
 
     @Override
@@ -127,8 +119,7 @@ public class perso_Lucy extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Lucy Kick — inflige 100% ATK a une cible."
-                + " Si Yukino alliee : reduit la DEF de la cible de 8% pendant 1 tour.");
+        System.out.println("Lucy Kick — inflige 100% ATK a une cible.");
     }
 
     @Override

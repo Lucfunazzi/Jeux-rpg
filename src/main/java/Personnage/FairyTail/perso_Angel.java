@@ -39,14 +39,6 @@ public class perso_Angel extends PersonnageBase {
         log.add("Angel utilise Aile Celeste sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-
-        // Synergie Yukino : ReductionATK
-        boolean yukinoAlliee = equipeAlliee.stream()
-                .anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
-        if (yukinoAlliee) {
-            Combat.appliquerEffet(this, cible, new ReductionAttaque(0.10, 1), log);
-            log.add("  Yukino guide l'aile — ATK de " + cible.getNom() + " reduite !");
-        }
     }
 
     @Override
@@ -109,8 +101,7 @@ public class perso_Angel extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Aile Celeste — inflige 120% ATK a une cible."
-                + " Si Yukino est alliee : reduit l'ATK de la cible de 10% pendant 1 tour.");
+        System.out.println("Aile Celeste — inflige 120% ATK a une cible.");
     }
 
     @Override

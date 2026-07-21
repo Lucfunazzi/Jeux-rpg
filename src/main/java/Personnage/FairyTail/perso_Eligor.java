@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.ReductionAttaque;
-import Effets.ReductionVitesse;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -46,7 +43,6 @@ public class perso_Eligor extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Eligoal déchaîne des lames de vent invisible sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
     }
 
     @Override
@@ -76,7 +72,7 @@ public class perso_Eligor extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Lame de Vent Tranchante — 100% ATK, réduit VIT de 15% pendant 2 tours.");
+        System.out.println("Lame de Vent Tranchante — 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Mur Tempête — +25% DEF, inflige 125% ATK, réduit ATK cible de 20%.");

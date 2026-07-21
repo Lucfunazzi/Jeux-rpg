@@ -1,8 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.BuffDefense;
-import Effets.Etourdissement;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_ElfmanBete extends PersonnageBase {
@@ -21,7 +19,6 @@ public class perso_ElfmanBete extends PersonnageBase {
     @Override public void attaqueBase(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Elfman Bête écrase "+cible.getNom()+" de son poing colossal !");
         Combat.attaquer(this, cible, log);
-        if (Math.random()<0.15) Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
     }
     @Override public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Elfman saisit "+cible.getNom()+" dans une prise titanesque !");
@@ -34,7 +31,7 @@ public class perso_ElfmanBete extends PersonnageBase {
         Combat.appliquerEffet(this, new BuffDefense(0.20, 3), log);
         double soin = this.getVieMax()*0.12; this.recevoirSoin(soin, log);
     }
-    @Override public void descriptionAttaqueBase() { System.out.println("Poing de la bête — 100% ATK, 15% étourdissement 1 tour."); }
+    @Override public void descriptionAttaqueBase() { System.out.println("Poing de la bête — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Prise du colosse — 125% ATK + étourdissement 1 tour."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Forme de bête totale — +25% ATK et +20% DEF 3 tours, se soigne 12% PV max."); }
 }

@@ -1,10 +1,7 @@
 package Personnage.FairyTail;
 
 import Combat.Combat;
-import Effets.Marquage;
-import Effets.ContreAttaque;
-import Effets.BuffTauxEsquive;
-import Effets.Invincibilite;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -40,12 +37,7 @@ public class perso_Rogue extends PersonnageBase {
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Rogue utilise Griffe de l'ombre !");
         double degats = this.getAttaque() * 1.10;
-        if (cible.aEffet(Marquage.class)) {
-            degats *= 1.30;
-            log.add("La cible est marquee ! Rogue frappe dans l'ombre pour +30% de degats !");
-        }
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, this, new BuffTauxEsquive(0.15, 2), log);
     }
 
     @Override
@@ -89,9 +81,7 @@ public class perso_Rogue extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Griffe de l'ombre — Inflige 110% ATK a la cible. "
-                + "Si la cible est Marquee : +30% degats. "
-                + "Rogue gagne +15% esquive pendant 2 tours.");
+        System.out.println("Griffe de l'ombre — Inflige 110% ATK a la cible.");
     }
 
     @Override

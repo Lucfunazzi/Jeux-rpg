@@ -1,6 +1,6 @@
 package Personnage.FairyTail;
 import Combat.Combat;
-import Effets.Paralysie;
+import Effets.*;
 import Personnage.PersonnageBase;
 
 import java.util.List;
