@@ -18,15 +18,9 @@ import Personnage.FairyTail.*;
 import Personnage.FairyTail.perso_Arzak;
 import Personnage.FairyTail.perso_Biska;
 import Personnage.FairyTail.perso_Elfman;
-import Personnage.FairyTail.perso_Max;
-import Personnage.FairyTail.perso_Droy;
-import Personnage.FairyTail.perso_Jett;
-import Personnage.FairyTail.perso_Warren;
 import Personnage.FairyTail.perso_Nab;
-import Personnage.FairyTail.perso_Romeo;
 import Personnage.FairyTail.perso_Levy;
 import Personnage.FairyTail.perso_Lisanna;
-import Personnage.FairyTail.perso_ElfmanBete;
 import Personnage.FairyTail.perso_Bixrow;
 import Personnage.FairyTail.perso_Evergreen;
 import Personnage.FairyTail.perso_Kana;
@@ -176,6 +170,7 @@ public class GestionnaireSauvegarde {
         // Parchemins
         data.parcheminC = ctx.menuRecrutement.getParcheminC();
         data.parcheminB = ctx.menuRecrutement.getParcheminB();
+        data.parcheminA = ctx.menuRecrutement.getParcheminA();
 
         // Tirages
         if (ctx.menuTirage != null) {
@@ -552,12 +547,7 @@ public class GestionnaireSauvegarde {
         case "Alzack"         -> new perso_Arzak();
         case "Bisca"          -> new perso_Biska();
         case "Elfman"         -> new perso_Elfman();
-        case "Max"            -> new perso_Max();
-        case "Droy"           -> new perso_Droy();
-        case "Jet"            -> new perso_Jett();
-        case "Warren"         -> new perso_Warren();
         case "Nab"            -> new perso_Nab();
-        case "Romeo"          -> new perso_Romeo();
         // Rang B
         case "Bickslow"       -> new perso_Bixrow();
         case "Evergreen"      -> new perso_Evergreen();
@@ -565,9 +555,6 @@ public class GestionnaireSauvegarde {
         case "Loke"           -> new perso_Loke();
         case "Levy"           -> new perso_Levy();
         case "Lisanna"        -> new perso_Lisanna();
-        case "Elfman Bête"    -> new perso_ElfmanBete();
-        // Boutique arène — Rang B
-        case "Elfman Bete"    -> new perso_ElfmanBete();
         // Rang A
         case "Angel"          -> new perso_Angel();
         case "Freed"          -> new perso_Freed();

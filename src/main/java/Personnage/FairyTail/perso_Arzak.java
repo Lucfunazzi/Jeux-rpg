@@ -52,7 +52,7 @@ public class perso_Arzak extends PersonnageBase {
         log.add("Alzack utilise Tir de folie !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionVitesse(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.15,2), log);
 
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Bisca") && allie.estVivant()) {
@@ -86,13 +86,13 @@ public class perso_Arzak extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Tir de folie — inflige 120% ATK a une cible, "
-                + "reduit sa vitesse de 15% pendant 2 tours. "
+                + "Augmente son Taux critique de 15% pendants 2 tours. "
                 + "[Synergie Duo de tireurs] Bisca vivante : +5% ATK pendant 2 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Tornado Shot — inflige 70% ATK a tous les ennemis. "
-                + "Puissance augmentee par la Rage.");
+        System.out.println("Tornado Shot — inflige 70% ATK a tous les ennemis. ")
+     ;
     }
 }

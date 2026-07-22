@@ -113,6 +113,7 @@ public class Main {
                     ctx.sauvegarde.restaurerDonjon(ctx.gestionnaireDonjon, data);
                     ctx.menuRecrutement.setParcheminC(data.parcheminC);
                     ctx.menuRecrutement.setParcheminB(data.parcheminB);
+                    ctx.menuRecrutement.setParcheminA(data.parcheminA);
                     ctx.menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
                     ctx.menuTirage.setParcheminElite(data.parcheminTirageElite);
                     ctx.menuTirage.setCompteurSansSRang(data.tirageEliteCompteurSansS);

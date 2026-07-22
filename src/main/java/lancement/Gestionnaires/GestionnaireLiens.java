@@ -58,13 +58,13 @@ public class GestionnaireLiens {
         List<Lien> liens = new ArrayList<>();
 
         liens.add(new Lien(
-            "Androïds jumeaux",
+            "Les dragons jumeaux",
             "Rogue et Sting ensemble : toute l'equipe gagne +8% ATK et +10% VIT",
             new String[]{"Rogue", "Sting"},
             0.05, 0.00, 0.00, 0.15
         ));
         liens.add(new Lien(
-            "Freres aux destins tragiques",
+            "Feu et Glace",
             "Natsu et Gray ensemble : toute l'equipe gagne +10% ATK et +5% DEF",
             new String[]{"Natsu", "Gray"},
             0.10, 0.05, 0.00, 0.00
@@ -82,7 +82,7 @@ public class GestionnaireLiens {
             0.03, 0.02, 0.02, 0.00
         ));
         liens.add(new Lien(
-            "Chevalier de la Guilde 1",
+            "Les tireur d'élites",
             "Alzack et Bisca ensemble : toute l'equipe gagne +5% ATK et +8% VIT",
             new String[]{"Alzack", "Bisca"},
             0.02, 0.00, 0.05, 0.00
@@ -95,12 +95,7 @@ public class GestionnaireLiens {
             0.08, 0.00, 0.05, 0.03
         ));
 
-        liens.add(new Lien(
-            "Duo Akatsuki",
-            "Sasori et Deidara ensemble : toute l'equipe gagne +8% VIT et +5% ATK",
-            new String[]{"Sasori", "Deidara"},
-            0.05, 0.00, 0.00, 0.08
-        ));
+      
 
         // Ajouter de nouveaux liens ici :
         // liens.add(new Lien("Nom", "Description", new String[]{"Perso1","Perso2"}, atk, def, pv, vit));

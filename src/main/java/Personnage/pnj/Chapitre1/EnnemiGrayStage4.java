@@ -27,7 +27,7 @@ public class EnnemiGrayStage4 extends PersonnageBase {
          double mult = 1.20;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 700.0 * mult * niv;
+        this.vie     = 220.0 * mult * niv;
         this.attaque = 300.0 * mult * niv;
         this.defense = 140.0 * mult * niv;
         this.vitesse =  170.0 * mult * vit;
@@ -39,8 +39,9 @@ public class EnnemiGrayStage4 extends PersonnageBase {
         this.taux_blocage      = 0.08;
         this.reduction_blocage = 0.10;
         this.degats_renvoi     = 0.80;
+        initialiserVieMax();
     }
-    
+
       @Override
     public String[] getNomsAttaques() {
         return new String[]{"Lance de glace", "Marteau de glace", "Ultra geyser de glace"};

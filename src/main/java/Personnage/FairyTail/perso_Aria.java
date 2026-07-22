@@ -52,7 +52,7 @@ public class perso_Aria extends PersonnageBase {
         log.add("Alya place ses mains vers " + cible.getNom() + " — METSU ! Sa magie est complètement aspirée !");
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Malediction(2,0.20), log);
+        
         Combat.appliquerEffet(this, cible, new Silence(2), log);
     }
 
@@ -67,8 +67,8 @@ public class perso_Aria extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Silence(3), log);
-                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.25, 3), log);
+                Combat.appliquerEffet(this, cible, new BuffTauxCritique(0.20,2), log);
+                
             }
         }
     }

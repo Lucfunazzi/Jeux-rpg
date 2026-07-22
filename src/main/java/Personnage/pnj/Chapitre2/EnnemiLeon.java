@@ -84,7 +84,7 @@ public class EnnemiLeon extends PersonnageBase {
                 }
             }
         }
-        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
+       
     }
 
     @Override public void descriptionAttaqueBase() {
@@ -94,6 +94,6 @@ public class EnnemiLeon extends PersonnageBase {
         System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, réduit ATK de 20% pendant 2 tours, 35% de gel 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 25%, 25% de gel, gagne 15% DEF.");
+        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 25%.");
     }
 }

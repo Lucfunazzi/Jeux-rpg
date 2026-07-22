@@ -10,8 +10,14 @@ public class MenuBoutiqueArene {
 
     // ── Catalogue ─────────────────────────────────────────────────────────
 
-    private static final int PRIX_LOKE  = 10_000;
-    private static final int PRIX_LEVY  = 13_000;
+    private static final int PRIX_BISKA  = 3_500;
+    private static final int PRIX_ARZAK  = 3_500;
+    private static final int PRIX_EVERGREEN = 12_500;
+    private static final int PRIX_BIXROW = 12_500;
+    private static final int PRIX_FREED = 12_500;
+   
+    private static final int PRIX_STING = 50_000;
+    private static final int PRIX_ROGUE = 50_000;
 
     private final GameContext ctx;
     private final Scanner     scanner;
@@ -38,15 +44,25 @@ public class MenuBoutiqueArene {
                          + joueurArene.getPointsBoutique() + " pts");
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  PERSONNAGES");
-        afficherLigne("1", "Loke",  "B", PRIX_LOKE,  dejaRecruté("Loke"));
-        afficherLigne("2", "Levy",  "B", PRIX_LEVY,  dejaRecruté("Levy"));
+        afficherLigne("1", "Biscka",  "B", PRIX_BISKA,  dejaRecruté("Biscka"));
+        afficherLigne("2", "Arzak",  "B", PRIX_ARZAK,  dejaRecruté("Arzak"));
+        afficherLigne("3", "Evergreen", "A", PRIX_EVERGREEN, dejaRecruté("Evergreen"));
+        afficherLigne("4", "Bixrow", "A", PRIX_BIXROW, dejaRecruté("Bixrow"));
+        afficherLigne("5", "Freed", "A", PRIX_FREED, dejaRecruté("Freed"));
+        afficherLigne("6", "Sting", "S", PRIX_STING, dejaRecruté("Sting"));
+        afficherLigne("7", "ROGUE", "S", PRIX_ROGUE, dejaRecruté("Rogue"));
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  [0] Retour");
         System.out.print("  Choix : ");
 
         return switch (scanner.nextLine().trim()) {
-            case "1" -> { acheterPersonnage("Loke",  PRIX_LOKE);  yield true; }
-            case "2" -> { acheterPersonnage("Levy",  PRIX_LEVY);  yield true; }
+            case "1" -> { acheterPersonnage("Biscka",  PRIX_BISKA);  yield true; }
+            case "2" -> { acheterPersonnage("Arzak",  PRIX_ARZAK);  yield true; }
+            case "3" -> { acheterPersonnage("Evergreen",  PRIX_EVERGREEN);  yield true; }
+            case "4" -> { acheterPersonnage("Bixrow",  PRIX_BIXROW);  yield true; }
+            case "5" -> { acheterPersonnage("Freed",  PRIX_FREED);  yield true; }
+            case "6" -> { acheterPersonnage("Sting",  PRIX_STING);  yield true; }
+            case "7" -> { acheterPersonnage("Rogue",  PRIX_ROGUE);  yield true; }
             case "0" -> false;
             default  -> { System.out.println("  Choix invalide."); yield true; }
         };
@@ -89,8 +105,13 @@ public class MenuBoutiqueArene {
         joueurArene.setPointsBoutique(joueurArene.getPointsBoutique() - prix);
 
         PersonnageBase perso = switch (nom) {
-            case "Loke"  -> new perso_Loke();
-            case "Levy"  -> new perso_Levy();
+            case "Biska" -> new perso_Biska();
+            case "Arzack" -> new perso_Arzak();
+            case "Evergreen"  -> new perso_Evergreen();
+            case "Bixrow"  -> new perso_Bixrow();
+            case "Freed" -> new perso_Freed();
+            case "Sting" -> new perso_Sting();
+            case "Rogue" -> new perso_Rogue();
             default       -> null;
         };
 

@@ -34,7 +34,7 @@ public class perso_Yuka extends PersonnageBase {
         initialiserVieMax();
     }
 
-    @Override
+   @Override
     public String[] getNomsAttaques() {
         return new String[]{"Ondulation — Hadô", "Onde Explosive", "Annulation Totale des Magies"};
     }
@@ -42,37 +42,43 @@ public class perso_Yuka extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka projette une Ondulation (Hadô) qui neutralise la magie de " + cible.getNom() + " !");
+        log.add("Yuka projette une Ondulation qui neutralise la magie de " + cible.getNom() + " et le frappe !");
         Combat.attaquer(this, cible, log);
+        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("L'onde de Yuka entre en collision avec la magie de " + cible.getNom() + " — EXPLOSION !");
+        log.add("L'onde de Yuka entre en collision avec la magie de " + cible.getNom() + " — une explosion dévaste la cible !");
         double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 2), log);
-        Combat.appliquerEffet(this, cible, new ReductionDefense(0.15, 2), log);
+        Combat.appliquerEffet(cible,this,new BuffTauxEsquive(0.15,2),log );
+        
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka déploie ses Ondulations sur toute l'équipe ennemie — toutes les magies sont annulées !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        log.add("Yuka déploie une vague d'Ondulations qui annule toutes les magies ennemies !");
+        Purification.purifier(this, 3, log);
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                Purification.purifier(cible, 3, log);
-                double degats = (this.getAttaque() * 0.65) * multiplicateurRage;
+                
+                double degats = this.getAttaque() * 0.65;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
+                
             }
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Ondulation — Hadô : 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Onde Explosive : 130% ATK, réduit ATK de 20% et DEF de 15%."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Annulation Totale : Purge buffs, 65% ATK à tous (x rage), réduit ATK de 15%."); }
+    @Override public void descriptionAttaqueBase() {
+        System.out.println("Ondulation — Hadô : Inflige 100% ATK, réduit ATK de 10% pendant 2 tours.");
+    }
+    @Override public void descriptionAttaqueSpeciale() {
+        System.out.println("Onde Explosive : Inflige 130% ATK, réduit ATK de 20% et DEF de 15% pendant 2 tours.");
+    }
+    @Override public void descriptionAttaqueUltime() {
+        System.out.println("Annulation Totale : Purge buffs ennemis, inflige 65% ATK à tous, réduit leur ATK de 15%.");
+    }
 }

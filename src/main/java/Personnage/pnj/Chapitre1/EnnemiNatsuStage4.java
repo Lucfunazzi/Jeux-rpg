@@ -27,7 +27,7 @@ public class EnnemiNatsuStage4 extends PersonnageBase {
          double mult = 1.20;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 500.0 * mult * niv;
+        this.vie     = 200.0 * mult * niv;
         this.attaque = 420.0 * mult * niv;
         this.defense = 120.0 * mult * niv;
         this.vitesse =  130.0 * mult * vit;
@@ -39,6 +39,7 @@ public class EnnemiNatsuStage4 extends PersonnageBase {
         this.taux_blocage      = 0.08;
         this.reduction_blocage = 0.10;
         this.degats_renvoi     = 0.80;
+        initialiserVieMax();
     }
 
     @Override

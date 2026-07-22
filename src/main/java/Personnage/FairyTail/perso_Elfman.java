@@ -9,19 +9,19 @@ public class perso_Elfman extends PersonnageBase {
     public perso_Elfman() {
         this.nom = "Elfman";
         this.niveau = 1;
-        this.type="Elementaliste";
-        this.role = "DPS";
-        this.rarete = "C";
-        double multiplicateurRarete = 1.00;
-        this.vie = 380 * multiplicateurRarete;
-        this.attaque = 125 * multiplicateurRarete;
-        this.defense = 90 * multiplicateurRarete;
-        this.vitesse = 80 * multiplicateurRarete;
+        this.type="Chevalier";
+        this.role = "Tank";
+        this.rarete = "B";
+        double multiplicateurRarete = 1.20;
+        this.vie = 420 * multiplicateurRarete;
+        this.attaque = 135 * multiplicateurRarete;
+        this.defense = 120 * multiplicateurRarete;
+        this.vitesse = 90 * multiplicateurRarete;
         this.taux_critiques = 0.08;
         this.degat_critiques = 1.30;
         this.taux_precisions = 100.00;
-        this.taux_esquives = 0.05;
-        this.taux_blocage = 0.10;
+        this.taux_esquives = 0.08;
+        this.taux_blocage = 0.15;
         this.reduction_blocage = 0.15;
         this.degats_renvoi = 0.80;
         initialiserVieMax();
@@ -44,7 +44,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     log.add("Elfman utilise Prise du demon !");
     double degats = this.getAttaque() * 1.10;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-    Combat.appliquerEffet(this, new BuffAttaque(0.10, 1), log);
+    Combat.appliquerEffet(this, new BuffBlocage(0.15, 1), log);
 }
 
 @Override
@@ -62,9 +62,9 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
         }
     }
     if (cible == null) return;
-    double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
+    double degats = (this.getAttaque() * 0.80) * multiplicateurRage;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-    Combat.appliquerEffet(this, new BuffAttaque(0.10, 2), log);
+    Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
 }
     @Override
     public void descriptionAttaqueBase() {

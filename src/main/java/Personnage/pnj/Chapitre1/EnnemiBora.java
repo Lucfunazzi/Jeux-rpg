@@ -42,13 +42,13 @@ public class EnnemiBora extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Fouet de la Protubérance", "Douche Écarlate", "Typhon de la Protubérance"};
+        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Bague de charme"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora invoque son sceau magique et projette des faisceaux ardents en arc sur " + cible.getNom() + " !");
+        log.add("Bora fait un coup de poing " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
        
     }
@@ -56,7 +56,7 @@ public class EnnemiBora extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora disperse une pluie de sphères de flammes écarlates sur " + cible.getNom() + " et ses alliés !");
+        log.add("Bora utilise Fouet de la Protubérance " + cible.getNom());
        double degats = this.getAttaque() *1.20;
        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
        Combat.appliquerEffet(this, new BuffPrecision(1, 2), log);
@@ -67,7 +67,7 @@ public class EnnemiBora extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bague de charme  !");
+        log.add("Bora utilise Bague de charme  !");
         
             PersonnageBase cible = null;
     for (PersonnageBase p : equipeEnnemie) {
@@ -95,12 +95,12 @@ public class EnnemiBora extends PersonnageBase {
     }
 }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Fouet de la Protubérance — Inflige 100% ATK, brûle 1 tour (5% PV/tour).");
+        System.out.println("Coup de poings — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Douche Écarlate — Inflige 75% ATK à tous les ennemis, brûle chacun 1 tour (4% PV/tour).");
+        System.out.println("Fouet de la Protubérance — Inflige 120% ATK à un ennemi, augmente sa précision de 100% pendatns 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Typhon de la Protubérance — Inflige 110% ATK à tous, brûle 2 tours (6% PV/tour), 30% d'endormissement.");
+        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible.");
     }
 }

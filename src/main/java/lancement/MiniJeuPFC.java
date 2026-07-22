@@ -14,6 +14,10 @@ public class MiniJeuPFC {
     private static final int PARCHEMINS_MANCHE1B = 2;
     private static final int PARCHEMINS_MANCHE2B = 4;
     private static final int PARCHEMINS_MANCHE3B = 7;
+    private static final int COUT_PARTIEA = 400;
+    private static final int PARCHEMINS_MANCHE1A = 2;
+    private static final int PARCHEMINS_MANCHE2A = 3;
+    private static final int PARCHEMINS_MANCHE3A = 5;
     private static final double REMBOURSEMENT_MANCHE1 = 0.80;
     private static final double REMBOURSEMENT_MANCHE2 = 0.60;
     private static final double REMBOURSEMENT_MANCHE3 = 0.30;
@@ -138,6 +142,63 @@ public class MiniJeuPFC {
         return parcheminsTotaux;
     }
 
+    public int jouerA(Personnage_principale joueur, Scanner scanner) {
+        if (joueur.getOr() < COUT_PARTIEA) {
+            System.out.println("Pas assez d'or ! Il faut " + COUT_PARTIEA + " or pour jouer.");
+            return 0;
+        }
+
+        // Deduire le cout
+        joueur.ajouterOr(-COUT_PARTIEA);
+        System.out.println("\n--- Debut de la partie (" + COUT_PARTIEA + " or depenses) ---");
+
+        int parcheminsTotaux = 0;
+
+        // === MANCHE 1 ===
+        System.out.println("\n[ Manche 1 ] Gain si victoire : " + PARCHEMINS_MANCHE1A + " parchemins");
+        boolean gagneM1 = jouerManche(scanner);
+
+        if (!gagneM1) {
+            int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE1);
+            joueur.ajouterOr(remboursement);
+            System.out.println("Defaite a la manche 1. Remboursement : " + remboursement + " or.");
+            return 0;
+        }
+        parcheminsTotaux += PARCHEMINS_MANCHE1A;
+        System.out.println("Victoire ! +" + PARCHEMINS_MANCHE1A + " parchemins A.");
+
+        // === MANCHE 2 ===
+        System.out.println("\n[ Manche 2 ] Gain si victoire : " + PARCHEMINS_MANCHE2A + " parchemins supplementaires");
+        boolean gagneM2 = jouerManche(scanner);
+
+        if (!gagneM2) {
+            int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE2);
+            joueur.ajouterOr(remboursement);
+            System.out.println("Defaite a la manche 2. Remboursement : " + remboursement + " or.");
+            System.out.println("Parchemins conserves : " + parcheminsTotaux);
+            return parcheminsTotaux;
+        }
+        parcheminsTotaux += PARCHEMINS_MANCHE2A;
+        System.out.println("Victoire ! +" + PARCHEMINS_MANCHE2A + " parchemins A.");
+
+        // === MANCHE 3 ===
+        System.out.println("\n[ Manche 3 ] Gain si victoire : " + PARCHEMINS_MANCHE3A + " parchemins supplementaires");
+        boolean gagneM3 = jouerManche(scanner);
+
+        if (!gagneM3) {
+            int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE3);
+            joueur.ajouterOr(remboursement);
+            System.out.println("Defaite a la manche 3. Remboursement : " + remboursement + " or.");
+            System.out.println("Parchemins conserves : " + parcheminsTotaux);
+            return parcheminsTotaux;
+        }
+        parcheminsTotaux += PARCHEMINS_MANCHE3A;
+        System.out.println("Victoire ! +" + PARCHEMINS_MANCHE3A + " parchemins A.");
+        System.out.println("Partie parfaite ! Total : " + parcheminsTotaux + " parchemins A gagnes !");
+
+        return parcheminsTotaux;
+    }
+
     /**
      * Joue une manche de PFC.
      * @return true si le joueur gagne, false sinon (egalite = rejouer)
@@ -258,8 +319,48 @@ public class MiniJeuPFC {
     parcheminsTotaux += PARCHEMINS_MANCHE3B;
 
     return parcheminsTotaux;
-    
+
     }
+
+    public int jouerAutoA(Personnage_principale joueur) {
+    if (joueur.getOr() < COUT_PARTIEA) {
+        System.out.println("Pas assez d'or ! Il faut " + COUT_PARTIEA + " or pour jouer.");
+        return 0;
+    }
+
+    joueur.ajouterOr(-COUT_PARTIEA);
+    int parcheminsTotaux = 0;
+
+    // Manche 1
+    boolean gagneM1 = jouerMancheAuto();
+    if (!gagneM1) {
+        int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE1);
+        joueur.ajouterOr(remboursement);
+        return 0;
+    }
+    parcheminsTotaux += PARCHEMINS_MANCHE1A;
+
+    // Manche 2
+    boolean gagneM2 = jouerMancheAuto();
+    if (!gagneM2) {
+        int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE2);
+        joueur.ajouterOr(remboursement);
+        return parcheminsTotaux;
+    }
+    parcheminsTotaux += PARCHEMINS_MANCHE2A;
+
+    // Manche 3
+    boolean gagneM3 = jouerMancheAuto();
+    if (!gagneM3) {
+        int remboursement = (int)(COUT_PARTIEA * REMBOURSEMENT_MANCHE3);
+        joueur.ajouterOr(remboursement);
+        return parcheminsTotaux;
+    }
+    parcheminsTotaux += PARCHEMINS_MANCHE3A;
+
+    return parcheminsTotaux;
+    }
+
 private boolean jouerMancheAuto() {
     int choixJoueur = random.nextInt(3) + 1;
     int choixIA     = random.nextInt(3) + 1;
@@ -290,6 +391,7 @@ private boolean jouerMancheAuto() {
 
     public int getCoutPartieC() { return COUT_PARTIEC; }
     public int getCoutPartieB(){return COUT_PARTIEB;}
+    public int getCoutPartieA(){return COUT_PARTIEA;}
 }
 
 

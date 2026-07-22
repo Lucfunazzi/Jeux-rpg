@@ -51,7 +51,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
             this.ajouterRage(50);
             return;
         }
-        double degats = this.getAttaque() * 1.20;
+        double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
 
@@ -65,7 +65,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
         double totalAbsorbe = 0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.70;
+                double degats = this.getAttaque() * 2.20;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Malediction(3, 0.20), log);
                 // Drain : vole 10% des PV max de chaque ennemi touché
@@ -95,7 +95,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
         }
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
+                double degats = (this.getAttaque() * 2.50) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Paralysie(3, 0.60), log);
                 Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.20, 2), log);

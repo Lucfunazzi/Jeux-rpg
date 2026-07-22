@@ -33,7 +33,7 @@ public class perso_DucEverlue extends PersonnageBase {
         initialiserVieMax();
     }
 
-    @Override
+      @Override
     public String[] getNomsAttaques() {
         return new String[]{"Nage — Diver", "Rebond de Terre", "Invocation de Virgo"};
     }
@@ -41,14 +41,15 @@ public class perso_DucEverlue extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Everlue plonge dans le sol et surgit sous " + cible.getNom() + " !");
+        log.add("Le Duc Everlue plonge dans le sol et surgit sous " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
+        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Everlue se met en boule et rebondit frénétiquement sur tous les ennemis !");
+        log.add("Everlue se met en boule et rebondit frénétiquement sur " + cible.getNom() + " et ses alliés !");
         for (PersonnageBase c : equipeEnnemie) {
             if (c.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
@@ -61,29 +62,40 @@ public class perso_DucEverlue extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Everlue ouvre la Porte de la Vierge — Virgo sous sa forme colossale entre dans la bataille !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-        Combat.appliquerEffet(this, new BuffDefense(0.20, 3), log);
-        for (PersonnageBase allie : equipeAlliee) {
-            if (allie.estVivant()) Combat.appliquerEffet(this, allie, new Regeneration(0.06, 2), log);
+        log.add("Le Duc Everlue ouvre la Porte de la Vierge et invoque Virgo sous sa forme colossale !");
+        
+       
+              PersonnageBase cible = null;
+    for (PersonnageBase p : equipeEnnemie) {
+        if (p.estVivant() && p.getRole().equals("Tank")) {
+            cible = p;
+            break;
         }
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+    }
+    if (cible == null) {
+        for (PersonnageBase p : equipeEnnemie) {
+            if (p.estVivant()) {
+                cible = p;
+                break;
             }
         }
     }
 
+    if (cible == null) return;
+    
+     double degats = this.getAttaque() * 1.20;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+    Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+    
+    }
+
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Nage — Diver : Inflige 100% ATK.");
+        System.out.println("Nage — Diver : Plonge dans le sol et surgit sous la cible, inflige 100% ATK, 20% d'étourdissement.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Rebond de Terre : 70% ATK à tous les ennemis, réduit leur ATK de 10%.");
+        System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (70% ATK chacun), réduit leur ATK de 10%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Invocation de Virgo : +20% DEF, soigne alliés (6% PV/tour), 90% ATK à tous + étourdissement.");
+        System.out.println("Invocation de Virgo : inflige 120% ATK à un seul ennemi + étourdissement.");
     }
 }

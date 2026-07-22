@@ -36,7 +36,7 @@ public class perso_Angel extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Angel utilise Aile Celeste sur " + cible.getNom() + " !");
+        log.add("Angel utilise epée de calium " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
@@ -44,7 +44,7 @@ public class perso_Angel extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Angel invoque Caelum — le laser celeste !");
+        log.add("Angel invoque Caelum !");
 
         boolean lucyAlliee   = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Lucy"));
         boolean yukinoAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
@@ -73,7 +73,7 @@ public class perso_Angel extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Angel invoque Aries — le Belier celeste !");
+        log.add("Angel invoque Aries !");
 
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) {
@@ -96,7 +96,7 @@ public class perso_Angel extends PersonnageBase {
             Combat.appliquerEffet(this, ennemi, new ReductionAttaque(reductionATK, 2), log);
         }
 
-        log.add("  Aries charge sur toute l'equipe ennemie !");
+        
     }
 
     @Override

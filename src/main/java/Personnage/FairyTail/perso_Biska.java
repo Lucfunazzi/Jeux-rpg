@@ -51,7 +51,7 @@ public class perso_Biska extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Bisca utilise Stinger Shot !");
-        double degats = this.getAttaque() * 1.20;
+        double degats = this.getAttaque() * 0.80;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Saignement(2, 0.03), log);
 
@@ -79,7 +79,7 @@ public class perso_Biska extends PersonnageBase {
         int ciblesAttaquees = 0;
         for (PersonnageBase ennemi : ennemisVivants) {
             if (ciblesAttaquees < 2) {
-                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Saignement(2, 0.03), log);
                 ciblesAttaquees++;

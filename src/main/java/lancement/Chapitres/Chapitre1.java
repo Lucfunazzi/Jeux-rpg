@@ -91,9 +91,9 @@ public class Chapitre1 {
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1DPS());
                          return new Stage(1, "Prologue", 100, 10, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiMage2DPS()); ennemis.add(new EnnemiBora());
+            case 2  -> {  ennemis.add(new EnnemiBora());
                          return new Stage(2, "Bora le charmeur", 150, 15, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage2DPS()); ennemis.add(new EnnemiMage5Tank());
+            case 3  -> { ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage2DPS()); 
                          return new Stage(3, "Chemin vers fairy tail", 220, 20, ennemis); }
             case 4  -> { ennemis.add(new EnnemiNatsuStage4()); ennemis.add(new EnnemiGrayStage4());
                          return new Stage(4, "L'arrivée de la reine des fées", 290, 25, ennemis); }
@@ -101,14 +101,14 @@ public class Chapitre1 {
                          return new Stage(5, "Premier mission pour Lucy", 360, 30, ennemis); }
             case 6  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiEvaro());
                          return new Stage(6, "Le duc evarlo", 430, 35, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage8DPS());
+            case 7  -> { ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage2DPS());
                          ennemis.add(new EnnemiMage6Debuff()); ennemis.add(new EnnemiMage4Buff());
                          return new Stage(7, "Retour a fairy tail ", 500, 40, ennemis); }
             case 8  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage7DPS());
                          ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage7DPS());
                          return new Stage(8, "Eisen Wald", 580, 45, ennemis); }
             case 9  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage7DPS());
-                         ennemis.add(new EnnemiMage8DPS());  ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff());
+                         ennemis.add(new EnnemiEligor());  ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff());
                          return new Stage(9, "Eligor le mage de vent", 680, 50, ennemis); }
             case 10 -> { ennemis.add(new EnnemiLullaby(1));
                          return new Stage(10, "La flute maudite", 860, 55, ennemis); }
@@ -149,10 +149,11 @@ public class Chapitre1 {
         erzaTemporaire.setNiveau(70);
         erzaTemporaire.setVie(10000);
         erzaTemporaire.setVieMax(10000);
-        erzaTemporaire.setAttaque(600);
-        erzaTemporaire.setDefense(200);
+        erzaTemporaire.setAttaque(4500);
+        erzaTemporaire.setDefense(10);
         erzaTemporaire.setVitesse(4000);
-        
+        erzaTemporaire.ajouterRage(100);
+
     ArrayList<PersonnageBase> equipeOriginale = ctx.formation.getEquipe();
     ArrayList<PersonnageBase> equipeAvecErza = new ArrayList<>();
     equipeAvecErza.add(erzaTemporaire);

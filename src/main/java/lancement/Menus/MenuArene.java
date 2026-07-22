@@ -312,24 +312,19 @@ public class MenuArene {
             // ── Rang C ──
                         case "Alzack"      -> new perso_Arzak();
                         case "Bisca"       -> new perso_Biska();
-                        case "Max"         -> new perso_Max();
-                        case "Droy"        -> new perso_Droy();
-                        case "Jet"         -> new perso_Jett();
-                        case "Warren"      -> new perso_Warren();
                         case "Nab"         -> new perso_Nab();
             case "Elfman"           -> new perso_Elfman();
    
             // ── Rang B ──
-                        case "Romeo"       -> new perso_Romeo();
+                       
                         case "Levy"        -> new perso_Levy();
                         case "Lisanna"     -> new perso_Lisanna();
-                        case "Elfman Bête" -> new perso_ElfmanBete();
+                     
                                                           
       
             case "Cana"             -> new perso_Kana();
             case "Loke"             -> new perso_Loke();
-            case "Bickslow"         -> new perso_Bixrow();
-            case "Evergreen"        -> new perso_Evergreen();
+            
          
             // ── Rang A ──
            
@@ -340,6 +335,8 @@ public class MenuArene {
             case "Gajeel"           -> new perso_Gajeel();
             case "Jubia"            -> new perso_Jubia_4elements();
             case "Wendy"            -> new perso_Wendy();
+            case "Bickslow"         -> new perso_Bixrow();
+            case "Evergreen"        -> new perso_Evergreen();
            
             // ── Rang S ──
            

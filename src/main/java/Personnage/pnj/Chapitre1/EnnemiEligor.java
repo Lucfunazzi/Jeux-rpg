@@ -1,10 +1,7 @@
 package Personnage.pnj.Chapitre1;
 
 import Combat.Combat;
-import Effets.BuffDefense;
-import Effets.ReductionAttaque;
-import Effets.ReductionVitesse;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -76,9 +73,11 @@ public class EnnemiEligor extends PersonnageBase {
                 double degats = this.getAttaque() * 0.50;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 
-                Combat.appliquerEffet(this, cible, new ReductionVitesse(0.10, 2), log);
+                
             }
+            
         }
+        Combat.appliquerEffet(this, new BuffTauxEsquive(0.10, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

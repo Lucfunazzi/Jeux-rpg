@@ -69,7 +69,7 @@ public class EnnemiTobi extends PersonnageBase {
         log.add("Tobi se lance dans un assaut frénétique et lacère toute l'équipe ennemie de ses griffes !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 if (Math.random() < 0.35) {
                     Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
@@ -85,6 +85,6 @@ public class EnnemiTobi extends PersonnageBase {
         System.out.println("Griffe Paralysante Renforcée — Inflige 135% ATK, paralyse la cible 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Assaut de Griffes — Inflige 80% ATK à tous, 35% de chance de paralyser chacun 1 tour.");
+        System.out.println("Assaut de Griffes — Inflige 70% ATK à tous, 35% de chance de paralyser chacun 1 tour.");
     }
 }

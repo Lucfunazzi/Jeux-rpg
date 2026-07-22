@@ -57,6 +57,7 @@ public class SauvegardeData {
     // ── Recrutement ───────────────────────────────────────────────────────
     public int parcheminC;
     public int parcheminB;
+    public int parcheminA;
 
     // ── Tirages ───────────────────────────────────────────────────────────
     public int parcheminTirageOrdinaire = 0;

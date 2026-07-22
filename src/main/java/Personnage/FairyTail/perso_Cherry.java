@@ -33,7 +33,7 @@ public class perso_Cherry extends PersonnageBase {
         initialiserVieMax();
     }
 
-    @Override
+     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Arbre Marionnette", "Contrôle des Esprits", "Marionnette de l'Amour"};
     }
@@ -43,35 +43,45 @@ public class perso_Cherry extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cherry anime un arbre géant qui attaque " + cible.getNom() + " de ses branches !");
         Combat.attaquer(this, cible, log);
+        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry tente de prendre le contrôle des invocations de " + cible.getNom() + " !");
+        log.add("Cherry tente de prendre le contrôle des invocations de " + cible.getNom() );
         double degats = this.getAttaque() * 1.10;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Silence(2), log);
+        
+       
         Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry déclenche la Marionnette de l'Amour — toute la forêt se dresse contre les ennemis !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        log.add("Cherry libère la Marionnette de l'Amour — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = (this.getAttaque() * 0.85) * multiplicateurRage;
+                double degats = this.getAttaque() * 0.50;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Silence(2), log);
-                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.12, 2), log);
+                
+               
+                
+            }
+            if (Math.random() < 0.30){
+                 Combat.appliquerEffet(this, cible, new Silence(2), log);
             }
         }
     }
 
-    @Override public void descriptionAttaqueBase() { System.out.println("Arbre Marionnette — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Contrôle des Esprits — 110% ATK, silence 2 tours, réduit ATK de 15%."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Marionnette de l'Amour — 85% ATK à tous (x rage), silence 2 tours, réduit ATK de 12%."); }
+    @Override public void descriptionAttaqueBase() {
+        System.out.println("Arbre Marionnette — Inflige 100% ATK");
+    }
+    @Override public void descriptionAttaqueSpeciale() {
+        System.out.println("Contrôle des Esprits — Inflige 110% ATK et réduit l'ATK de 15% de la cible.");
+    }
+    @Override public void descriptionAttaqueUltime() {
+        System.out.println("Marionnette de l'Amour — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");
+    }
 }

@@ -5,34 +5,13 @@ import Personnage.PersonnageBase;
 import Personnage.FairyTail.perso_Aria;
 import Personnage.FairyTail.perso_Arzak;
 import Personnage.FairyTail.perso_Biska;
-import Personnage.FairyTail.perso_Elfman;
-import Personnage.FairyTail.perso_Max;
-import Personnage.FairyTail.perso_Droy;
-import Personnage.FairyTail.perso_Jett;
-import Personnage.FairyTail.perso_Warren;
 import Personnage.FairyTail.perso_Nab;
-import Personnage.FairyTail.perso_Romeo;
 import Personnage.FairyTail.perso_Levy;
 import Personnage.FairyTail.perso_Lisanna;
-import Personnage.FairyTail.perso_ElfmanBete;
 import Personnage.FairyTail.perso_Bixrow;
 import Personnage.FairyTail.perso_Evergreen;
 import Personnage.FairyTail.perso_Kana;
 import Personnage.FairyTail.perso_Loke;
-import Personnage.FairyTail.perso_Angel;
-import Personnage.FairyTail.perso_Freed;
-import Personnage.FairyTail.perso_Gajeel;
-import Personnage.FairyTail.perso_Gray;
-import Personnage.FairyTail.perso_Jubia_4elements;
-import Personnage.FairyTail.perso_Lucy;
-import Personnage.FairyTail.perso_Natsu;
-import Personnage.FairyTail.perso_Wendy;
-import Personnage.FairyTail.perso_Erza;
-import Personnage.FairyTail.perso_Mirajane;
-import Personnage.FairyTail.perso_Natsu_Etherion;
-import Personnage.FairyTail.perso_Rogue;
-import Personnage.FairyTail.perso_Sting;
-import Personnage.FairyTail.perso_Yukino;
 import Personnage.FairyTail.perso_Bora;
 import Personnage.FairyTail.perso_Cherry;
 import Personnage.FairyTail.perso_DucEverlue;
@@ -43,9 +22,9 @@ import Personnage.FairyTail.perso_Sol;
 import Personnage.FairyTail.perso_Tobi;
 import Personnage.FairyTail.perso_Totomaru;
 import Personnage.FairyTail.perso_Yuka;
-import Personnage.FairyTail.perso_Lucas;
-import Personnage.FairyTail.perso_Mirajane_Halphas;
 import Personnage.FairyTail.perso_Elfman;
+import Personnage.FairyTail.perso_Lucy;
+import Personnage.FairyTail.perso_Jubia_4elements;
 import Equipement.ParcheminXP;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,55 +34,51 @@ import lancement.GameContext;
 
 public class MenuRecrutement {
 
-    private static final int PARCHEMINS_REQUIS_C  = 100;
-    private static final int PARCHEMINS_REQUIS_B  = 250;
+    private static final int PARCHEMINS_REQUIS_C  = 350;
+    private static final int PARCHEMINS_REQUIS_B  = 500;
+    private static final int PARCHEMINS_REQUIS_A = 1250;
     private static final int COUT_PARCHEMIN_XP_C  = 3;
     private static final int COUT_PARCHEMIN_XP_B  = 8;
     private static final int NIVEAU_REQUIS_PAGE1  = 6;
     private static final int NIVEAU_REQUIS_PAGE2  = 20;
+    private static final int NIVEAU_REQUIS_PAGE3 = 40;
 
     // ── Données statiques des personnages recrutables ─────────────────────
     // Évite d'instancier des objets complets juste pour afficher nom + rôle
     private record InfoPerso(String nom, String role) {}
 
     private static final List<InfoPerso> PAGE1 = List.of(
-        new InfoPerso("Alzack",      "DPS"),
-        new InfoPerso("Bisca",       "DPS"),
-        new InfoPerso("Elfman",      "DPS"),
-        new InfoPerso("Max",         "DPS"),
-        new InfoPerso("Droy",        "Support"),
-        new InfoPerso("Jet",         "DPS"),
-        new InfoPerso("Warren",      "Support"),
-        new InfoPerso("Nab",         "Tank"),
-        new InfoPerso("Romeo",       "DPS"),
-        new InfoPerso("Bora",        "DPS"),
+        
+        
+      
+       
         new InfoPerso("Duc Everlue", "Tank"),
         new InfoPerso("Eligoal",     "DPS"),
         new InfoPerso("Cherry",      "Support"),
         new InfoPerso("Tobi",        "DPS"),
-        new InfoPerso("Yuka",        "Support")
+        new InfoPerso("Yuka",        "Tank")
     );
 
     private static final List<InfoPerso> PAGE2 = List.of(
-        new InfoPerso("Bickslow",    "DPS"),
-        new InfoPerso("Evergreen",   "Support"),
+       
         new InfoPerso("Cana",        "Support"),
-        new InfoPerso("Loke",        "DPS"),
         new InfoPerso("Levy",        "Support"),
         new InfoPerso("Lisanna",     "Support"),
-        new InfoPerso("Elfman Bête", "Tank"),
-        new InfoPerso("Lyon",        "DPS"),
+        new InfoPerso("Elfman", "Tank"),
+        new InfoPerso("Leon",        "DPS"),
         new InfoPerso("Totomaru",    "DPS"),
         new InfoPerso("Sol",         "Tank")
     );
 
     private static final List<InfoPerso> PAGE3 = List.of(
         new InfoPerso("Aria",        "DPS"),
-        new InfoPerso("José Porla",  "DPS")
+        new InfoPerso("Lucy", "Support"),
+        new InfoPerso("Jubia (phantom Lord)", "Support")
     );
 
     private int parcheminC = 0;
     private int parcheminB = 0;
+    private int parcheminA = 0;
 
     private final MiniJeuPFC miniJeu = new MiniJeuPFC();
 
@@ -123,14 +98,16 @@ public class MenuRecrutement {
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", joueur.getOr())
                     + "  |  Parchemins C : " + parcheminC
-                    + "  |  Parchemins B : " + parcheminB);
+                    + "  |  Parchemins B : " + parcheminB
+                    + "  |  Parchemins A : " + parcheminA);
             System.out.println();
             System.out.println("1. Page 1 — Rang C  (Niv." + NIVEAU_REQUIS_PAGE1 + " requis)");
             System.out.println("2. Page 2 — Rang B  (Niv." + NIVEAU_REQUIS_PAGE2 + " requis)");
-            System.out.println("3. Page 3 — Rang A  (a venir)");
+            System.out.println("3. Page 3 — Rang A  (Niv." + NIVEAU_REQUIS_PAGE3 + " requis)");
             System.out.println("4. Acheter des Parchemins XP");
             System.out.println("5. Mini-jeu PFC — Rang C (" + miniJeu.getCoutPartieC() + " or)");
             System.out.println("6. Mini-jeu PFC — Rang B (" + miniJeu.getCoutPartieB() + " or)");
+            System.out.println("7. Mini-jeu PFC — Rang A (" + miniJeu.getCoutPartieA() + " or)");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -139,20 +116,26 @@ public class MenuRecrutement {
                                           PARCHEMINS_REQUIS_C, NIVEAU_REQUIS_PAGE1);
                 case "2" -> afficherPage(ctx, scanner, "B", PAGE2,
                                           PARCHEMINS_REQUIS_B, NIVEAU_REQUIS_PAGE2);
-                case "3" -> afficherPage3();
+                case "3" -> afficherPage(ctx,scanner,"A",PAGE3,
+                        PARCHEMINS_REQUIS_A,NIVEAU_REQUIS_PAGE3);
                 case "4" -> menuAchatParcheminXP(ctx, scanner);
                 case "5" -> menuMiniJeu(ctx, scanner, "C");
                 case "6" -> menuMiniJeu(ctx, scanner, "B");
+                case "7" -> menuMiniJeu(ctx, scanner, "A");
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
         }
     }
 
-    // ── Mini-jeu (C et B fusionnés) ───────────────────────────────────────
+    // ── Mini-jeu (C, B et A) ────────────────────────────────────────────
     private void menuMiniJeu(GameContext ctx, Scanner scanner, String rang) {
         Personnage_principale joueur = ctx.joueur;
-        int coutPartie = rang.equals("C") ? miniJeu.getCoutPartieC() : miniJeu.getCoutPartieB();
+        int coutPartie = switch (rang) {
+            case "C" -> miniJeu.getCoutPartieC();
+            case "B" -> miniJeu.getCoutPartieB();
+            default  -> miniJeu.getCoutPartieA();
+        };
 
         System.out.println("\n1. Jouer 1 partie (" + coutPartie + " or)");
         System.out.println("2. Jouer 10 parties automatiquement (" + (coutPartie * 10) + " or)");
@@ -160,14 +143,14 @@ public class MenuRecrutement {
 
         switch (scanner.nextLine().trim()) {
             case "1" -> {
-                int gagnes = rang.equals("C")
-                        ? miniJeu.jouer(joueur, scanner)
-                        : miniJeu.jouerB(joueur, scanner);
+                int gagnes = switch (rang) {
+                    case "C" -> miniJeu.jouer(joueur, scanner);
+                    case "B" -> miniJeu.jouerB(joueur, scanner);
+                    default  -> miniJeu.jouerA(joueur, scanner);
+                };
                 if (gagnes > 0) {
                     ajouterParchemins(rang, gagnes);
-                    int total = rang.equals("C") ? parcheminC : parcheminB;
-                    int requis = rang.equals("C") ? PARCHEMINS_REQUIS_C : PARCHEMINS_REQUIS_B;
-                    System.out.println("Parchemins " + rang + " : " + total + "/" + requis);
+                    System.out.println("Parchemins " + rang + " : " + getParchemins(rang) + "/" + getParcheminsRequis(rang));
                     ctx.sauvegarde.sauvegarder(ctx);
                 }
             }
@@ -177,21 +160,37 @@ public class MenuRecrutement {
                 } else {
                     int totalGagnes = 0;
                     for (int i = 0; i < 10; i++) {
-                        totalGagnes += rang.equals("C")
-                                ? miniJeu.jouerAutoC(joueur)
-                                : miniJeu.jouerAutoB(joueur);
+                        totalGagnes += switch (rang) {
+                            case "C" -> miniJeu.jouerAutoC(joueur);
+                            case "B" -> miniJeu.jouerAutoB(joueur);
+                            default  -> miniJeu.jouerAutoA(joueur);
+                        };
                     }
                     ajouterParchemins(rang, totalGagnes);
-                    int total = rang.equals("C") ? parcheminC : parcheminB;
-                    int requis = rang.equals("C") ? PARCHEMINS_REQUIS_C : PARCHEMINS_REQUIS_B;
                     System.out.println("10 parties terminees !");
                     System.out.println("Total parchemins " + rang + " gagnes : " + totalGagnes);
-                    System.out.println("Parchemins " + rang + " : " + total + "/" + requis);
+                    System.out.println("Parchemins " + rang + " : " + getParchemins(rang) + "/" + getParcheminsRequis(rang));
                     ctx.sauvegarde.sauvegarder(ctx);
                 }
             }
             default -> System.out.println("Choix invalide.");
         }
+    }
+
+    private int getParchemins(String rang) {
+        return switch (rang) {
+            case "C" -> parcheminC;
+            case "B" -> parcheminB;
+            default  -> parcheminA;
+        };
+    }
+
+    private int getParcheminsRequis(String rang) {
+        return switch (rang) {
+            case "C" -> PARCHEMINS_REQUIS_C;
+            case "B" -> PARCHEMINS_REQUIS_B;
+            default  -> PARCHEMINS_REQUIS_A;
+        };
     }
 
     // ── Achat de Parchemins XP ────────────────────────────────────────────
@@ -272,10 +271,15 @@ public class MenuRecrutement {
 
         boolean retour = false;
         while (!retour) {
-            int parcheminsActuels = rang.equals("C") ? parcheminC : parcheminB;
+            int parcheminsActuels = getParchemins(rang);
+            String numeroPage = switch (rang) {
+                case "C" -> "1";
+                case "B" -> "2";
+                default  -> "3";
+            };
 
             System.out.println("\n========================================");
-            System.out.println("       PAGE " + (rang.equals("C") ? "1" : "2") + " — RANG " + rang);
+            System.out.println("       PAGE " + numeroPage + " — RANG " + rang);
             System.out.println("========================================");
             System.out.println("Parchemins " + rang + " : " + parcheminsActuels + "/" + parcheminsRequis);
             System.out.println();
@@ -318,27 +322,17 @@ public class MenuRecrutement {
                 continue;
             }
 
-            if (rang.equals("C")) parcheminC -= parcheminsRequis;
-            else                  parcheminB -= parcheminsRequis;
+            switch (rang) {
+                case "C" -> parcheminC -= parcheminsRequis;
+                case "B" -> parcheminB -= parcheminsRequis;
+                default  -> parcheminA -= parcheminsRequis;
+            }
 
             recrutes.add(recrute);
             System.out.println(">> " + recrute.getNom() + " a rejoint vos allies !");
-            System.out.println("Parchemins " + rang + " restants : "
-                    + (rang.equals("C") ? parcheminC : parcheminB));
+            System.out.println("Parchemins " + rang + " restants : " + getParchemins(rang));
             ctx.sauvegarde.sauvegarder(ctx);
         }
-    }
-
-    // ── Page 3 — Rang A/S ─────────────────────────────────────────────────
-    private void afficherPage3() {
-        System.out.println("\n========================================");
-        System.out.println("       PAGE 3 — RANG A/S");
-        System.out.println("========================================");
-        System.out.println("  Personnages disponibles :");
-        for (InfoPerso p : PAGE3) {
-            System.out.println("  - " + p.nom() + " (" + p.role() + ")");
-        }
-        System.out.println("  (Recrutement Rang A/S a venir dans une future mise a jour)");
     }
 
     // ── Factory ───────────────────────────────────────────────────────────
@@ -347,19 +341,13 @@ public class MenuRecrutement {
             case "Alzack"      -> new perso_Arzak();
             case "Bisca"       -> new perso_Biska();
             case "Elfman"      -> new perso_Elfman();
-            case "Max"         -> new perso_Max();
-            case "Droy"        -> new perso_Droy();
-            case "Jet"         -> new perso_Jett();
-            case "Warren"      -> new perso_Warren();
             case "Nab"         -> new perso_Nab();
-            case "Romeo"       -> new perso_Romeo();
             case "Bickslow"    -> new perso_Bixrow();
             case "Evergreen"   -> new perso_Evergreen();
             case "Cana"        -> new perso_Kana();
             case "Loke"        -> new perso_Loke();
             case "Levy"        -> new perso_Levy();
             case "Lisanna"     -> new perso_Lisanna();
-            case "Elfman Bête" -> new perso_ElfmanBete();
             case "Bora"        -> new perso_Bora();
             case "Duc Everlue" -> new perso_DucEverlue();
             case "Eligoal"     -> new perso_Eligor();
@@ -371,19 +359,20 @@ public class MenuRecrutement {
             case "José Porla"  -> new perso_Jose();
             case "Totomaru"    -> new perso_Totomaru();
             case "Sol"         -> new perso_Sol();
+            case "Lucy"        -> new perso_Lucy();
+            case "Jubia (phantom Lord" -> new perso_Jubia_4elements();
             default            -> null;
         };
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────
     private void ajouterParchemins(String rang, int montant) {
-        if (rang.equals("C")) {
-            parcheminC += montant;
-            System.out.println("+ " + montant + " parchemins C ! (Total : " + parcheminC + ")");
-        } else {
-            parcheminB += montant;
-            System.out.println("+ " + montant + " parchemins B ! (Total : " + parcheminB + ")");
+        switch (rang) {
+            case "C" -> parcheminC += montant;
+            case "B" -> parcheminB += montant;
+            default  -> parcheminA += montant;
         }
+        System.out.println("+ " + montant + " parchemins " + rang + " ! (Total : " + getParchemins(rang) + ")");
     }
 
     private boolean dejaRecruteParNom(String nom, ArrayList<PersonnageBase> liste) {
@@ -393,9 +382,12 @@ public class MenuRecrutement {
     // ── Getters / Setters (sauvegarde) ────────────────────────────────────
     public int getParcheminC() { return parcheminC; }
     public int getParcheminB() { return parcheminB; }
+    public int getParcheminA() { return parcheminA; }
     public void setParcheminC(int v) { this.parcheminC = v; }
     public void setParcheminB(int v) { this.parcheminB = v; }
+    public void setParcheminA(int v) { this.parcheminA = v; }
 
     public void ajouterParcheminC(int montant) { ajouterParchemins("C", montant); }
     public void ajouterParcheminB(int montant) { ajouterParchemins("B", montant); }
+    public void ajouterParcheminA(int montant) { ajouterParchemins("A", montant); }
 }

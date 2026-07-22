@@ -33,55 +33,67 @@ public class perso_Bora extends PersonnageBase {
         this.degats_renvoi     = 0.80;
         initialiserVieMax();
     }
-
-    @Override
+ @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Fouet de la Protubérance", "Douche Écarlate", "Typhon de la Protubérance"};
+        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Bague de charme"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora projette des faisceaux ardents en arc sur " + cible.getNom() + " !");
+        log.add("Bora fait un coup de poing " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
+       
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora disperse une pluie de sphères de flammes écarlates sur l'équipe ennemie !");
-        for (PersonnageBase c : equipeEnnemie) {
-            if (c.estVivant()) {
-                double degats = this.getAttaque() * 0.75;
-                Combat.appliquerDegatsAvecLog(this, c, degats, log);
-                Combat.appliquerEffet(this, c, new Brulure(1, 0.04), log);
-            }
+        log.add("Bora utilise Fouet de la Protubérance " + cible.getNom());
+       double degats = this.getAttaque() *1.20;
+       Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+       Combat.appliquerEffet(this, new BuffPrecision(1, 2), log);
+           
         }
-    }
+    
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora libère le Typhon de la Protubérance — une colonne de feu en spirale dévaste tout !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = (this.getAttaque() * 1.10) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Brulure(2, 0.06), log);
-                if (Math.random() < 0.30) Combat.appliquerEffet(this, cible, new Sommeil(1), log);
+        log.add("Bora utilise Bague de charme  !");
+        
+            PersonnageBase cible = null;
+    for (PersonnageBase p : equipeEnnemie) {
+        if (p.estVivant() && p.getRole().equals("Tank")) {
+            cible = p;
+            break;
+        }
+    }
+    if (cible == null) {
+        for (PersonnageBase p : equipeEnnemie) {
+            if (p.estVivant()) {
+                cible = p;
+                break;
             }
         }
     }
 
+    if (cible == null) return; // sécurité : tous KO
+
+    double degats = this.getAttaque() * 0.80;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+
+    if (Math.random() < 0.30) {
+        Combat.appliquerEffet(this, cible, new Sommeil(1), log);
+    }
+}
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Fouet de la Protubérance — 100% ATK.");
+        System.out.println("Coup de poings — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Douche Écarlate — 75% ATK à tous les ennemis, brûle chacun 1 tour (4% PV/tour).");
+        System.out.println("Fouet de la Protubérance — Inflige 120% ATK à un ennemi, augmente sa précision de 100% pendatns 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Typhon de la Protubérance — 110% ATK à tous (x rage), brûle 2 tours, 30% d'endormissement.");
+        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible.");
     }
 }

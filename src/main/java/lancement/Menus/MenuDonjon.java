@@ -181,25 +181,19 @@ public class MenuDonjon {
             case NORMAL -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Nab (C) | DPS: Alzack (C), Jet (C), Bisca (C) | Support: Warren (C)
+                        // Tank: Nab (C) | DPS: Alzack (C), Bisca (C)
                         ennemis.add(niv(new perso_Nab(),     niv));
                         ennemis.add(niv(new perso_Arzak(),  niv));
-                        ennemis.add(niv(new perso_Jett(),     niv));
                         ennemis.add(niv(new perso_Biska(),   niv));
-                        ennemis.add(niv(new perso_Warren(),  niv));
                     }
                     case AFFINAGE -> {
-                        // Tank: Elfman Bête (B) | DPS: Max (C), Droy (C) | Support: Levy (B), Lisanna (B)
-                        ennemis.add(niv(new perso_ElfmanBete(), niv));
-                        ennemis.add(niv(new perso_Max(),        niv));
-                        ennemis.add(niv(new perso_Droy(),       niv));
+                        // Support: Levy (B), Lisanna (B)
                         ennemis.add(niv(new perso_Levy(),       niv));
                         ennemis.add(niv(new perso_Lisanna(),    niv));
                     }
                     case XP -> {
-                        // Tank: Nab (C) | DPS: Romeo (C), Elfman (C), Bickslow (B) | Support: Evergreen (B)
+                        // Tank: Nab (C) | DPS: Elfman (C), Bickslow (B) | Support: Evergreen (B)
                         ennemis.add(niv(new perso_Nab(),       niv));
-                        ennemis.add(niv(new perso_Romeo(),     niv));
                         ennemis.add(niv(new perso_Elfman(),    niv));
                         ennemis.add(niv(new perso_Bixrow(),  niv));
                         ennemis.add(niv(new perso_Evergreen(), niv));
@@ -211,8 +205,7 @@ public class MenuDonjon {
             case DIFFICILE -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Elfman Bête (B) | DPS: Loke (B), Gajeel (A), Angel (A) | Support: Levy (B)
-                        ennemis.add(niv(new perso_ElfmanBete(), niv));
+                        // DPS: Loke (B), Gajeel (A), Angel (A) | Support: Levy (B)
                         ennemis.add(niv(new perso_Loke(),       niv));
                         ennemis.add(niv(new perso_Gajeel(),     niv));
                         ennemis.add(niv(new perso_Angel(),      niv));
