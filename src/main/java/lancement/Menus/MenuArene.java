@@ -209,7 +209,7 @@ public class MenuArene {
      * Pour les vrais joueurs, on essaie creerPersonnage() normalement.
      */
     /** Crée le PP adverse IA au bon niveau et avec les compétences exclusives à sa classe. */
-    private PersonnageBase creerPersonnagePrincipalIA(String marqueur, int niveauCible) {
+    public static PersonnageBase creerPersonnagePrincipalIA(String marqueur, int niveauCible) {
         if (marqueur == null || !marqueur.startsWith("PP_")) return null;
 
         String classe = marqueur.replace("PP_", "");

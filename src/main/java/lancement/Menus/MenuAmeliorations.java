@@ -15,9 +15,9 @@ import lancement.GameContext;
  */
 public class MenuAmeliorations {
 
-    private static final String MATERIAU_AFFINAGE = "Pierre d'affinage";
-    private static final int    NIVEAU_DEBLOCAGE_AFFINAGE = 20;
-    private static final int    NIVEAU_MAX_AFFINAGE       = 100;
+    public static final String MATERIAU_AFFINAGE = "Pierre d'affinage";
+    public static final int    NIVEAU_DEBLOCAGE_AFFINAGE = 20;
+    public static final int    NIVEAU_MAX_AFFINAGE       = 100;
 
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale     joueur               = ctx.joueur;
@@ -196,50 +196,62 @@ public class MenuAmeliorations {
         try {
             int niveauCible = Integer.parseInt(scanner.nextLine().trim());
             if (niveauCible == 0) return;
-            if (niveauCible <= niveauActuel) {
-                System.out.println("Le niveau cible doit etre superieur au niveau actuel ("
-                        + niveauActuel + ").");
-                return;
-            }
 
-            // Calculer le cout total
-            int coutTotal = 0;
-            for (int n = niveauActuel; n < niveauCible; n++) {
-                coutTotal += calculerCoutFortificationNiveau(n);
-            }
-
+            int coutTotal = calculerCoutTotalFortification(niveauActuel, niveauCible);
             System.out.println("Cout total pour Fort." + niveauActuel
                     + " -> Fort." + niveauCible + " : " + coutTotal + " or");
             System.out.println("Or disponible : " + String.format("%.0f", joueur.getOr()));
 
-            // Plafond : niveau de fortification max = niveau du joueur
-            if (niveauCible > joueur.getNiveau()) {
-                System.out.println("Fortification maximale atteinte ! (Fort." + joueur.getNiveau()
-                        + " max au niveau " + joueur.getNiveau() + ")");
-                return;
-            }
-
-            if (joueur.getOr() < coutTotal) {
-                System.out.println("Or insuffisant !");
-                return;
-            }
-
             System.out.print("Confirmer ? (1 : Oui / 0 : Non) : ");
             if (!scanner.nextLine().trim().equals("1")) return;
 
-            joueur.retirerOr(coutTotal);
-            equip.setNiveauFortification(niveauCible);
-            System.out.println("Fortification reussie ! "
-                    + equip.getNomAffiche() + " est maintenant Fort." + niveauCible);
-            System.out.println("Nouveaux bonus : " + equip.getDescriptionBonus());
+            System.out.println(appliquerFortification(joueur, equip, niveauCible));
 
         } catch (NumberFormatException ex) {
             System.out.println("Entree invalide.");
         }
     }
 
+    /** Cout total pour passer de niveauActuel a niveauCible. */
+    public int calculerCoutTotalFortification(int niveauActuel, int niveauCible) {
+        int total = 0;
+        for (int n = niveauActuel; n < niveauCible; n++) total += calculerCoutFortificationNiveau(n);
+        return total;
+    }
+
+    /**
+     * Applique une fortification jusqu'au niveau cible si les conditions sont remplies
+     * (niveau cible valide, plafond = niveau du joueur, or suffisant). Retourne le message resultat.
+     * Reutilisable par la console et l'interface graphique.
+     */
+    public String appliquerFortification(Personnage_principale joueur, Equipement equip, int niveauCible) {
+        int niveauActuel = equip.getNiveauFortification();
+        if (niveauActuel >= joueur.getNiveau()) {
+            return "Cet equipement est deja a la fortification maximale !";
+        }
+        if (niveauCible <= niveauActuel) {
+            return "Le niveau cible doit etre superieur au niveau actuel (" + niveauActuel + ").";
+        }
+        if (niveauCible > joueur.getNiveau()) {
+            return "Fortification maximale atteinte ! (Fort." + joueur.getNiveau()
+                    + " max au niveau " + joueur.getNiveau() + ")";
+        }
+
+        int coutTotal = calculerCoutTotalFortification(niveauActuel, niveauCible);
+        if (joueur.getOr() < coutTotal) {
+            return "Or insuffisant ! (cout : " + coutTotal + " or, vous avez : "
+                    + String.format("%.0f", joueur.getOr()) + ")";
+        }
+
+        joueur.retirerOr(coutTotal);
+        equip.setNiveauFortification(niveauCible);
+        return "Fortification reussie ! " + equip.getNomAffiche() + " est maintenant Fort." + niveauCible
+                + "\nCout : " + coutTotal + " or"
+                + "\nNouveaux bonus : " + equip.getDescriptionBonus();
+    }
+
     /** Cout pour passer du niveau n au niveau n+1 : 200 × (n + 1) */
-    private int calculerCoutFortificationNiveau(int niveauActuel) {
+    public static int calculerCoutFortificationNiveau(int niveauActuel) {
         return 200 * (niveauActuel + 1);
     }
 
@@ -383,32 +395,52 @@ public class MenuAmeliorations {
                 return;
             }
 
-            // Calcul cout total
-            int coutTotal = 0;
-            for (int n = niveauActuel + 1; n <= niveauCible; n++) {
-                coutTotal += n * 2;
-            }
-
+            int coutTotal = calculerCoutTotalAffinage(niveauActuel, niveauCible);
             System.out.println("Cout total : " + coutTotal + " pierres d'affinage");
             System.out.println("Pierres disponibles : " + pierresDisponibles);
-
-            if (pierresDisponibles < coutTotal) {
-                System.out.println("Pierres d'affinage insuffisantes !");
-                return;
-            }
 
             System.out.print("Confirmer ? (1 : Oui / 0 : Non) : ");
             if (!scanner.nextLine().trim().equals("1")) return;
 
-            inventaire.retirerMateriau(MATERIAU_AFFINAGE, coutTotal);
-            equip.setNiveauAffinage(niveauCible);
-            System.out.println("Affinage reussi ! " + equip.getNomAffiche()
-                    + " -> Aff." + niveauCible + " (+" + niveauCible + "%)");
-            System.out.println("Nouveaux bonus : " + equip.getDescriptionBonus());
+            System.out.println(appliquerAffinage(equip, inventaire, niveauCible));
 
         } catch (NumberFormatException ex) {
             System.out.println("Entree invalide.");
         }
+    }
+
+    /** Cout total (en pierres d'affinage) pour passer de niveauActuel a niveauCible. */
+    public int calculerCoutTotalAffinage(int niveauActuel, int niveauCible) {
+        int total = 0;
+        for (int n = niveauActuel + 1; n <= niveauCible; n++) total += n * 2;
+        return total;
+    }
+
+    /**
+     * Applique un affinage jusqu'au niveau cible si les conditions sont remplies
+     * (niveau cible valide, pierres suffisantes). Retourne le message resultat.
+     * Reutilisable par la console et l'interface graphique.
+     */
+    public String appliquerAffinage(Equipement equip, Inventaire inventaire, int niveauCible) {
+        int niveauActuel = equip.getNiveauAffinage();
+        if (niveauActuel >= NIVEAU_MAX_AFFINAGE) {
+            return equip.getNom() + " a atteint le niveau d'affinage maximum !";
+        }
+        if (niveauCible <= niveauActuel || niveauCible > NIVEAU_MAX_AFFINAGE) {
+            return "Niveau invalide.";
+        }
+
+        int coutTotal = calculerCoutTotalAffinage(niveauActuel, niveauCible);
+        int pierresDisponibles = inventaire.getQuantiteMateriau(MATERIAU_AFFINAGE);
+        if (pierresDisponibles < coutTotal) {
+            return "Pierres d'affinage insuffisantes ! (cout : " + coutTotal + ", vous avez : " + pierresDisponibles + ")";
+        }
+
+        inventaire.retirerMateriau(MATERIAU_AFFINAGE, coutTotal);
+        equip.setNiveauAffinage(niveauCible);
+        return "Affinage reussi ! " + equip.getNomAffiche() + " -> Aff." + niveauCible + " (+" + niveauCible + "%)"
+                + "\nCout : " + coutTotal + " pierres"
+                + "\nNouveaux bonus : " + equip.getDescriptionBonus();
     }
 
     // =========================================================================

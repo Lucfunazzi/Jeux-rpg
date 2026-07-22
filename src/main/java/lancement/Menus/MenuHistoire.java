@@ -59,11 +59,11 @@ public class MenuHistoire {
             System.out.println("            CHAPITRES");
             System.out.println("========================================");
 
-            afficherLigneChapitreAvecCoffres(ctx, 1, false, "1. Chapitre 1 — L'Eveil", true);
+            afficherLigneChapitreAvecCoffres(ctx, 1, false, "1. Chapitre 1 — Prologue", true);
             if (chapitre1.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 2, false, "2. Chapitre 2 — L'Examen Ninja", true);
+                afficherLigneChapitreAvecCoffres(ctx, 2, false, "2. Chapitre 2 — L'Île de Galuna", true);
             if (chapitre2.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 3, false, "3. Chapitre 3 — Le Tournoi du Tenkaichi", true);
+                afficherLigneChapitreAvecCoffres(ctx, 3, false, "3. Chapitre 3 — Phantom Lord", true);
 
             System.out.println("0. Retour");
             System.out.println();

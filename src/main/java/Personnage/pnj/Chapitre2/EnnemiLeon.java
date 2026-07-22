@@ -9,7 +9,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Lyon Bastia — Chef des mages de l'île Galuna, rang B.
+ * Leon Bastia — Chef des mages de l'île Galuna, rang B.
  * Magie Ice-Make STATIQUE (crée des créatures de glace animées),
  * contrairement à Gray qui utilise Ice-Make dynamique.
  * Sort signature : Ice-Make : Lion / Ice-Make : Oiseau de glace.
@@ -20,7 +20,7 @@ public class EnnemiLeon extends PersonnageBase {
     public EnnemiLeon() { this(18); }
 
     public EnnemiLeon(int niveau) {
-        this.nom    = "Lyon";
+        this.nom    = "Leon";
         this.niveau = niveau;
         this.type   = "Chevalier";
         this.role   = "DPS";
@@ -53,7 +53,7 @@ public class EnnemiLeon extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Lyon façonne un oiseau de glace qui fond sur " + cible.getNom() + " !");
+        log.add("Leon façonne un oiseau de glace qui fond sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
         
     }
@@ -61,7 +61,7 @@ public class EnnemiLeon extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Lyon invoque un lion de glace qui lacère " + cible.getNom() + " !");
+        log.add("Leon invoque un lion de glace qui lacère " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         
@@ -73,7 +73,7 @@ public class EnnemiLeon extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Lyon libère un tigre polaire colossal — la créature de glace s'abat sur toute l'équipe ennemie !");
+        log.add("Leon libère un tigre polaire colossal — la créature de glace s'abat sur toute l'équipe ennemie !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 1.10;

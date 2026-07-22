@@ -63,6 +63,13 @@ public class MenuEtoilesPerso {
         new InfoPerso("Mirajane Halphas", "SS", "Mage")
     );
 
+    /** Catalogue accessible depuis l'exterieur (ex: interface graphique) sous forme {nom, rarete, classe}. */
+    public static List<String[]> getCatalogue() {
+        List<String[]> resultat = new ArrayList<>();
+        for (InfoPerso info : CATALOGUE) resultat.add(new String[]{info.nom(), info.rarete(), info.classe()});
+        return resultat;
+    }
+
     public void afficher(GameContext ctx, Scanner scanner) {
         boolean retour = false;
         while (!retour) {

@@ -23,6 +23,16 @@ public class EquipementFactory {
                 Equipement.TypeArme.GANTS, 20, 0, 0, 0);
     }
 
+    public static Equipement lanceC() {
+        return new Equipement("Lance de fer", Equipement.Slot.ARME, Equipement.Rarete.C,
+                Equipement.TypeArme.LANCE, 20, 0, 0, 0);
+    }
+
+    public static Equipement fouetC() {
+        return new Equipement("Fouet de cuir", Equipement.Slot.ARME, Equipement.Rarete.C,
+                Equipement.TypeArme.FOUET, 20, 0, 0, 0);
+    }
+
     public static Equipement couvreCheC() {
         return new Equipement("Coiffe de Guilde", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.C,
                 Equipement.TypeArme.AUCUN, 0, 0, 50, 0);
@@ -50,15 +60,16 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang C correspondant au type du personnage.
-     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
+     * @param type "Chevalier", "Chasseur de Dragon"/"ChasseurDeDragon", "Mage"/"Elementaliste"
+     *             ou "Constellationniste"/"Invocateur"
      */
     public static Equipement armeC(String type) {
-        return switch (type) {
-            case "Chasseur de Dragon"  -> kunaiC();
-            case "Mage"     -> batonC();
-            case "Chevalier"           -> gantsArmeC();
-            case "Constellationniste"  -> batonC();
-            default         -> kunaiC();
+        return switch (normaliserType(type)) {
+            case "ChasseurDeDragon" -> gantsArmeC();
+            case "Elementaliste"    -> batonC();
+            case "Chevalier"        -> lanceC();
+            case "Invocateur"       -> fouetC();
+            default                 -> kunaiC();
         };
     }
 
@@ -77,6 +88,16 @@ public class EquipementFactory {
     public static Equipement gantsArmeB() {
         return new Equipement("Gants renforces", Equipement.Slot.ARME, Equipement.Rarete.B,
                 Equipement.TypeArme.GANTS, 40, 0, 0, 0);
+    }
+
+    public static Equipement lanceB() {
+        return new Equipement("Lance d'acier", Equipement.Slot.ARME, Equipement.Rarete.B,
+                Equipement.TypeArme.LANCE, 40, 0, 0, 0);
+    }
+
+    public static Equipement fouetB() {
+        return new Equipement("Fouet renforce", Equipement.Slot.ARME, Equipement.Rarete.B,
+                Equipement.TypeArme.FOUET, 40, 0, 0, 0);
     }
 
     public static Equipement couvreCheB() {
@@ -106,15 +127,16 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang B correspondant au type du personnage.
-     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
+     * @param type "Chevalier", "Chasseur de Dragon"/"ChasseurDeDragon", "Mage"/"Elementaliste"
+     *             ou "Constellationniste"/"Invocateur"
      */
     public static Equipement armeB(String type) {
-        return switch (type) {
-            case "Chasseur de Dragon"  -> kunaiB();
-            case "Mage"     -> batonB();
-            case "Chevalier"           -> gantsArmeB();
-            case "Constellationniste"  -> batonB();
-            default         -> kunaiB();
+        return switch (normaliserType(type)) {
+            case "ChasseurDeDragon" -> gantsArmeB();
+            case "Elementaliste"    -> batonB();
+            case "Chevalier"        -> lanceB();
+            case "Invocateur"       -> fouetB();
+            default                 -> kunaiB();
         };
     }
 
@@ -133,6 +155,16 @@ public class EquipementFactory {
     public static Equipement gantsArmeA() {
         return new Equipement("Gants de Titane", Equipement.Slot.ARME, Equipement.Rarete.A,
                 Equipement.TypeArme.GANTS, 70, 0, 0, 0);
+    }
+
+    public static Equipement lanceA() {
+        return new Equipement("Lance Celeste", Equipement.Slot.ARME, Equipement.Rarete.A,
+                Equipement.TypeArme.LANCE, 70, 0, 0, 0);
+    }
+
+    public static Equipement fouetA() {
+        return new Equipement("Fouet Stellaire", Equipement.Slot.ARME, Equipement.Rarete.A,
+                Equipement.TypeArme.FOUET, 70, 0, 0, 0);
     }
 
     public static Equipement couvreCheA() {
@@ -162,15 +194,47 @@ public class EquipementFactory {
 
     /**
      * Retourne l'arme rang A correspondant au type du personnage.
-     * @param type "Chevalier", "Chasseur de Dragon", "Mage" ou "Constellationniste"
+     * @param type "Chevalier", "Chasseur de Dragon"/"ChasseurDeDragon", "Mage"/"Elementaliste"
+     *             ou "Constellationniste"/"Invocateur"
      */
     public static Equipement armeA(String type) {
+        return switch (normaliserType(type)) {
+            case "ChasseurDeDragon" -> gantsArmeA();
+            case "Elementaliste"    -> batonA();
+            case "Chevalier"        -> lanceA();
+            case "Invocateur"       -> fouetA();
+            default                 -> kunaiA();
+        };
+    }
+
+    // ── Compatibilite arme / classe (utilisee par les menus Inventaire/Personnages) ──
+
+    /**
+     * Normalise les deux conventions de nommage coexistant dans le code :
+     * le nom de classe affiche au joueur ("Mage", "Chasseur de Dragon", "Constellationniste")
+     * et la cle interne utilisee par les personnages recrutes ("Elementaliste", "ChasseurDeDragon", "Invocateur").
+     */
+    private static String normaliserType(String type) {
+        if (type == null) return "";
         return switch (type) {
-            case "Chasseur de Dragon"  -> kunaiA();
-            case "Mage"     -> batonA();
-            case "Chevalier"           -> gantsArmeA();
-            case "Constellationniste"  -> batonA();
-            default         -> kunaiA();
+            case "Chasseur de Dragon", "ChasseurDeDragon" -> "ChasseurDeDragon";
+            case "Mage", "Elementaliste"                  -> "Elementaliste";
+            case "Constellationniste", "Invocateur"       -> "Invocateur";
+            case "Chevalier"                              -> "Chevalier";
+            default -> type;
+        };
+    }
+
+    /** Determine si une piece d'equipement peut etre portee par un personnage du type donne. */
+    public static boolean estCompatibleArme(String type, Equipement e) {
+        if (e.getSlot() != Equipement.Slot.ARME) return true;
+        if (e.getTypeArme() == Equipement.TypeArme.AUCUN) return true;
+        return switch (normaliserType(type)) {
+            case "ChasseurDeDragon" -> e.getTypeArme() == Equipement.TypeArme.GANTS;
+            case "Elementaliste"    -> e.getTypeArme() == Equipement.TypeArme.BATON;
+            case "Chevalier"        -> e.getTypeArme() == Equipement.TypeArme.LANCE;
+            case "Invocateur"       -> e.getTypeArme() == Equipement.TypeArme.FOUET;
+            default                 -> false;
         };
     }
 

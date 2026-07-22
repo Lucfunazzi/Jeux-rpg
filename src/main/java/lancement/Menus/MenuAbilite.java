@@ -29,7 +29,7 @@ public class MenuAbilite {
 
             System.out.println("1. Arbre 1 — Nouvelle Spéciale"
                     + (arbre.isNoeud10Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 1) + "]" : ""));
-            System.out.println("2. Arbre 2 — Nouvel Ultime"
+            System.out.println("2. Arbre 2 — Nouvel Spéciale"
                     + (arbre.isNoeud10Arbre2Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 2) + "]" : ""));
             System.out.println("3. Arbre 3 — Nouvelle Spéciale"
                     + (!arbre.isArbre3Debloque()
@@ -99,7 +99,7 @@ public class MenuAbilite {
                 NoeudArbre n = getNoeud(arbre, numArbre, choix);
 
                 if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE) {
-                    debloquerNoeudCompetence(ctx, arbre, numArbre, choix);
+                    System.out.println(debloquerNoeudCompetence(ctx, arbre, numArbre, choix));
                 } else {
                     String resultat = arbre.tenterDebloquer(numArbre, choix);
                     if (resultat.equals("OK")) {
@@ -113,7 +113,7 @@ public class MenuAbilite {
         }
     }
 
-    private NoeudArbre getNoeud(ArbreCompetences arbre, int numArbre, int index) {
+    public static NoeudArbre getNoeud(ArbreCompetences arbre, int numArbre, int index) {
         return switch (numArbre) {
             case 1 -> arbre.getNoeud(index);
             case 2 -> arbre.getNoeudArbre2(index);
@@ -121,7 +121,8 @@ public class MenuAbilite {
         };
     }
 
-    private void debloquerNoeudCompetence(GameContext ctx,
+    /** Debloque un noeud de type competence speciale (avec activation automatique). Retourne le message resultat. */
+    public static String debloquerNoeudCompetence(GameContext ctx,
                                            ArbreCompetences arbre,
                                            int numArbre, int indexNoeud) {
         Personnage_principale joueur = ctx.joueur;
@@ -129,38 +130,36 @@ public class MenuAbilite {
         String nomComp = getNomCompetence(joueur.getChoixClasses(), numArbre);
 
         if (n.isDebloque()) {
-            System.out.println("\n  " + nomComp + " est déjà débloquée et active.");
-        } else {
-            String resultat = arbre.tenterDebloquer(numArbre, indexNoeud);
-            if (resultat.equals("OK")) {
-                // Activer automatiquement la nouvelle compétence
-                switch (numArbre) {
-                    case 1 -> {
-                        joueur.activerArbre1();
-                        System.out.println(">> Nouvelle spéciale débloquée : " + nomComp + " !");
-                        System.out.println("   Votre attaque spéciale est maintenant remplacée par " + nomComp + ".");
-                    }
-                    case 2 -> {
-                        joueur.activerArbre2();
-                        System.out.println(">> Nouvelle spéciale débloquée : " + nomComp + " !");
-                        System.out.println("   Votre attaque ultime est maintenant remplacée par la spéciale " + nomComp + ".");
-                    }
-                    default -> {
-                        System.out.println(">> Nouvelle spéciale débloquée : " + nomComp + " !");
-                        RangJoueur rangJoueur = ctx.rangJoueur;
-                        if (rangJoueur.getRang() == RangJoueur.Rang.C) {
-                            rangJoueur.setRang(RangJoueur.Rang.B);
-                            System.out.println(">> Félicitations ! L'Arbre 3 complété vous fait passer Rang B !");
-                            System.out.println("   Multiplicateur de stats : x"
-                                    + String.format("%.2f", rangJoueur.getMultiplicateur()));
-                        }
-                    }
+            return nomComp + " est deja debloquee et active.";
+        }
+
+        String resultat = arbre.tenterDebloquer(numArbre, indexNoeud);
+        if (!resultat.equals("OK")) return resultat;
+
+        StringBuilder sb = new StringBuilder();
+        switch (numArbre) {
+            case 1 -> {
+                joueur.activerArbre1();
+                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !\n");
+                sb.append("Votre attaque speciale est maintenant remplacee par ").append(nomComp).append(".");
+            }
+            case 2 -> {
+                joueur.activerArbre2();
+                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !\n");
+                sb.append("Votre attaque ultime est maintenant remplacee par la speciale ").append(nomComp).append(".");
+            }
+            default -> {
+                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !");
+                RangJoueur rangJoueur = ctx.rangJoueur;
+                if (rangJoueur.getRang() == RangJoueur.Rang.C) {
+                    rangJoueur.setRang(RangJoueur.Rang.B);
+                    sb.append("\nFelicitations ! L'Arbre 3 complete vous fait passer Rang B !\n");
+                    sb.append("Multiplicateur de stats : x").append(String.format("%.2f", rangJoueur.getMultiplicateur()));
                 }
-                System.out.println("   Points restants : " + arbre.getPointsDisponibles());
-            } else {
-                System.out.println(resultat);
             }
         }
+        sb.append("\nPoints restants : ").append(arbre.getPointsDisponibles());
+        return sb.toString();
     }
 
     // ── Noms des compétences d'arbre par classe ───────────────────────────

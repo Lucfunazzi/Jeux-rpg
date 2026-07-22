@@ -155,45 +155,10 @@ public class MenuTirage_recrutement {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> {
-                    if (parcheminOrdinaire < 1) System.out.println("Parchemins insuffisants.");
-                    else {
-                        parcheminOrdinaire--;
-                        List<ResultatTirage> res = List.of(tirageOrdinaireUnitaire());
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "2" -> {
-                    if (parcheminOrdinaire < 10)
-                        System.out.println("Parchemins insuffisants (besoin : 10, vous avez : " + parcheminOrdinaire + ").");
-                    else {
-                        parcheminOrdinaire -= 10;
-                        List<ResultatTirage> res = tirageOrdinaireDix();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "3" -> {
-                    if (coupons < COUT_COUPON_ORD_1)
-                        System.out.printf("Coupons insuffisants (besoin : %d, vous avez : %d).%n", COUT_COUPON_ORD_1, coupons);
-                    else {
-                        ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_1);
-                        List<ResultatTirage> res = List.of(tirageOrdinaireUnitaire());
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "4" -> {
-                    if (coupons < COUT_COUPON_ORD_10)
-                        System.out.printf("Coupons insuffisants (besoin : %d, vous avez : %d).%n", COUT_COUPON_ORD_10, coupons);
-                    else {
-                        ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_10);
-                        List<ResultatTirage> res = tirageOrdinaireDix();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
+                case "1" -> System.out.println(tirageOrdinaireX1(ctx));
+                case "2" -> System.out.println(tirageOrdinaireX10(ctx));
+                case "3" -> System.out.println(tirageOrdinaireCouponX1(ctx));
+                case "4" -> System.out.println(tirageOrdinaireCouponX10(ctx));
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -263,45 +228,10 @@ public class MenuTirage_recrutement {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> {
-                    if (parcheminElite < 1) System.out.println("Parchemins insuffisants.");
-                    else {
-                        parcheminElite--;
-                        List<ResultatTirage> res = tirageEliteUnitaire();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "2" -> {
-                    if (parcheminElite < 10)
-                        System.out.println("Parchemins insuffisants (besoin : 10, vous avez : " + parcheminElite + ").");
-                    else {
-                        parcheminElite -= 10;
-                        List<ResultatTirage> res = tirageEliteDix();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "3" -> {
-                    if (coupons < COUT_COUPON_ELI_1)
-                        System.out.printf("Coupons insuffisants (besoin : %d, vous avez : %d).%n", COUT_COUPON_ELI_1, coupons);
-                    else {
-                        ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_1);
-                        List<ResultatTirage> res = tirageEliteUnitaire();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
-                case "4" -> {
-                    if (coupons < COUT_COUPON_ELI_10)
-                        System.out.printf("Coupons insuffisants (besoin : %d, vous avez : %d).%n", COUT_COUPON_ELI_10, coupons);
-                    else {
-                        ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_10);
-                        List<ResultatTirage> res = tirageEliteDix();
-                        afficherResultats(res, ctx); appliquerResultats(res, ctx);
-                        ctx.sauvegarde.sauvegarder(ctx);
-                    }
-                }
+                case "1" -> System.out.println(tirageEliteX1(ctx));
+                case "2" -> System.out.println(tirageEliteX10(ctx));
+                case "3" -> System.out.println(tirageEliteCouponX1(ctx));
+                case "4" -> System.out.println(tirageEliteCouponX10(ctx));
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -369,35 +299,108 @@ public class MenuTirage_recrutement {
     }
 
     // ════════════════════════════════════════════════════════════════════════
+    // ACCES PUBLIC (console + interface graphique)
+    // ════════════════════════════════════════════════════════════════════════
+
+    public String tirageOrdinaireX1(GameContext ctx) {
+        if (parcheminOrdinaire < 1) return "Parchemins insuffisants.";
+        parcheminOrdinaire--;
+        return executerTirage(List.of(tirageOrdinaireUnitaire()), ctx);
+    }
+
+    public String tirageOrdinaireX10(GameContext ctx) {
+        if (parcheminOrdinaire < 10)
+            return "Parchemins insuffisants (besoin : 10, vous avez : " + parcheminOrdinaire + ").";
+        parcheminOrdinaire -= 10;
+        return executerTirage(tirageOrdinaireDix(), ctx);
+    }
+
+    public String tirageOrdinaireCouponX1(GameContext ctx) {
+        int coupons = ctx.joueur.getCoupons();
+        if (coupons < COUT_COUPON_ORD_1)
+            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_1, coupons);
+        ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_1);
+        return executerTirage(List.of(tirageOrdinaireUnitaire()), ctx);
+    }
+
+    public String tirageOrdinaireCouponX10(GameContext ctx) {
+        int coupons = ctx.joueur.getCoupons();
+        if (coupons < COUT_COUPON_ORD_10)
+            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_10, coupons);
+        ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_10);
+        return executerTirage(tirageOrdinaireDix(), ctx);
+    }
+
+    public String tirageEliteX1(GameContext ctx) {
+        if (parcheminElite < 1) return "Parchemins insuffisants.";
+        parcheminElite--;
+        return executerTirage(tirageEliteUnitaire(), ctx);
+    }
+
+    public String tirageEliteX10(GameContext ctx) {
+        if (parcheminElite < 10)
+            return "Parchemins insuffisants (besoin : 10, vous avez : " + parcheminElite + ").";
+        parcheminElite -= 10;
+        return executerTirage(tirageEliteDix(), ctx);
+    }
+
+    public String tirageEliteCouponX1(GameContext ctx) {
+        int coupons = ctx.joueur.getCoupons();
+        if (coupons < COUT_COUPON_ELI_1)
+            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_1, coupons);
+        ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_1);
+        return executerTirage(tirageEliteUnitaire(), ctx);
+    }
+
+    public String tirageEliteCouponX10(GameContext ctx) {
+        int coupons = ctx.joueur.getCoupons();
+        if (coupons < COUT_COUPON_ELI_10)
+            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_10, coupons);
+        ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_10);
+        return executerTirage(tirageEliteDix(), ctx);
+    }
+
+    public int getCoutCouponOrdX1()  { return COUT_COUPON_ORD_1; }
+    public int getCoutCouponOrdX10() { return COUT_COUPON_ORD_10; }
+    public int getCoutCouponEliX1()  { return COUT_COUPON_ELI_1; }
+    public int getCoutCouponEliX10() { return COUT_COUPON_ELI_10; }
+    public int getPityA()  { return PITY_A; }
+    public int getPityS()  { return PITY_S; }
+    public int getPitySS() { return PITY_SS; }
+
+    private String executerTirage(List<ResultatTirage> resultats, GameContext ctx) {
+        String message = formaterResultats(resultats, ctx);
+        appliquerResultats(resultats, ctx);
+        ctx.sauvegarde.sauvegarder(ctx);
+        return message;
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
     // APPLICATION & AFFICHAGE
     // ════════════════════════════════════════════════════════════════════════
 
-    private void afficherResultats(List<ResultatTirage> resultats, GameContext ctx) {
-        System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║         RESULTATS DU TIRAGE          ║");
-        System.out.println("╠══════════════════════════════════════╣");
+    private String formaterResultats(List<ResultatTirage> resultats, GameContext ctx) {
+        StringBuilder sb = new StringBuilder("RESULTATS DU TIRAGE\n\n");
 
         for (ResultatTirage r : resultats) {
             boolean dejaRecru = !r.estFragments &&
                     GestionnaireEtoilesPerso.dejaRecruteParNom(ctx.personnagesRecruites, r.nom);
-            String suffixe = dejaRecru ? " → DOUBLON (fragments)" : "";
+            String suffixe = dejaRecru ? "  -> DOUBLON (fragments)" : "";
 
             if (r.estFragments) {
-                System.out.printf("║  [%2s] %-22s  x%d frags%s%n",
-                        r.rarete, r.nom, r.quantiteFragments, "");
+                sb.append(String.format("[%2s] %-22s  x%d frags%n", r.rarete, r.nom, r.quantiteFragments));
             } else {
                 String etoile = switch (r.rarete) {
-                    case "SS" -> "★★★★★";
-                    case "S"  -> "★★★★ ";
-                    case "A"  -> "★★★  ";
-                    case "B"  -> "★★   ";
-                    default   -> "★    ";
+                    case "SS" -> "*****";
+                    case "S"  -> "**** ";
+                    case "A"  -> "***  ";
+                    case "B"  -> "**   ";
+                    default   -> "*    ";
                 };
-                System.out.printf("║  %s [%2s] %-22s%s%n",
-                        etoile, r.rarete, r.nom, suffixe);
+                sb.append(String.format("%s [%2s] %-22s%s%n", etoile, r.rarete, r.nom, suffixe));
             }
         }
-        System.out.println("╚══════════════════════════════════════╝");
+        return sb.toString().trim();
     }
 
     private void appliquerResultats(List<ResultatTirage> resultats, GameContext ctx) {

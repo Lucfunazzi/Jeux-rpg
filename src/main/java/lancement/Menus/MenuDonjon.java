@@ -21,8 +21,8 @@ import java.util.Scanner;
 
 public class MenuDonjon {
 
-    private static final int NIV_DIFFICILE = 25;
-    private static final int NIV_EXTREME   = 50;
+    public static final int NIV_DIFFICILE = 25;
+    public static final int NIV_EXTREME   = 50;
 
     public void afficher(GameContext ctx, Scanner scanner) {
         ctx.gestionnaireDonjon.mettreAJour();
@@ -116,15 +116,26 @@ public class MenuDonjon {
         }
     }
 
-    private void lancerRun(TypeDonjon type, Difficulte diff,
-                            GameContext ctx, Scanner scanner) {
+    /** Resultat d'une tentative de run : indique si le combat a bien ete lance,
+     *  s'il est gagne, et fournit l'instantane + les evenements pour la relecture GUI. */
+    public record ResultatRun(boolean lance, boolean victoire,
+                               java.util.List<Combat.Combat.PersonnageSnapshot> etatInitial,
+                               java.util.List<Combat.Combat.CombatEvent> evenements) {}
+
+    public boolean lancerRun(TypeDonjon type, Difficulte diff,
+                              GameContext ctx, Scanner scanner) {
+        return lancerRunAvecEvenements(type, diff, ctx, scanner).victoire();
+    }
+
+    public ResultatRun lancerRunAvecEvenements(TypeDonjon type, Difficulte diff,
+                                                GameContext ctx, Scanner scanner) {
         if (!ctx.gestionnaireDonjon.peutFaireRun(type, diff)) {
             System.out.println("Plus de runs disponibles pour aujourd'hui !");
-            return;
+            return new ResultatRun(false, false, null, null);
         }
         if (ctx.formation.getEquipe().isEmpty()) {
             System.out.println("Votre formation est vide ! Ajoutez des personnages d'abord.");
-            return;
+            return new ResultatRun(false, false, null, null);
         }
 
         StageDonjon stage = creerStage(type, diff, ctx);
@@ -136,6 +147,7 @@ public class MenuDonjon {
             ctx.sauvegarde.sauvegarder(ctx);
             System.out.println(">> Partie sauvegardee automatiquement.");
         }
+        return new ResultatRun(true, victoire, stage.getEtatInitial(), stage.getEvenements());
     }
 
     private StageDonjon creerStage(TypeDonjon type, Difficulte diff, GameContext ctx) {
@@ -267,7 +279,7 @@ public class MenuDonjon {
         return p;
     }
 
-    private boolean estDebloque(Difficulte diff, GameContext ctx) {
+    public static boolean estDebloque(Difficulte diff, GameContext ctx) {
         return switch (diff) {
             case NORMAL    -> true;
             case DIFFICILE -> ctx.joueur.getNiveau() >= NIV_DIFFICILE;
@@ -275,13 +287,13 @@ public class MenuDonjon {
         };
     }
 
-    private String nomType(TypeDonjon type) {
+    public static String nomType(TypeDonjon type) {
         return switch (type) { case OR -> "de l'Or"; case AFFINAGE -> "de l'Affinage"; case XP -> "de l'Experience"; };
     }
-    private String nomDiff(Difficulte diff) {
+    public static String nomDiff(Difficulte diff) {
         return switch (diff) { case NORMAL -> "Normal   "; case DIFFICILE -> "Difficile"; case EXTREME -> "Extreme  "; };
     }
-    private String descriptionRecompense(TypeDonjon type, Difficulte diff) {
+    public static String descriptionRecompense(TypeDonjon type, Difficulte diff) {
         return switch (type) {
             case OR -> switch (diff) { case NORMAL -> "15 000 or"; case DIFFICILE -> "50 000 or"; case EXTREME -> "500 000 or"; };
             case AFFINAGE -> switch (diff) { case NORMAL -> "10 pierres d'affinage"; case DIFFICILE -> "50 pierres d'affinage"; case EXTREME -> "150 pierres d'affinage"; };

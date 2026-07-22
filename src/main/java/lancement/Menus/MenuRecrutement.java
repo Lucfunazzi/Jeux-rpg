@@ -82,6 +82,43 @@ public class MenuRecrutement {
 
     private final MiniJeuPFC miniJeu = new MiniJeuPFC();
 
+    /** Accès pour l'interface graphique : {nom, role} par page (1, 2 ou 3). */
+    public static List<String[]> getPage(int numero) {
+        List<InfoPerso> liste = switch (numero) {
+            case 1  -> PAGE1;
+            case 2  -> PAGE2;
+            default -> PAGE3;
+        };
+        List<String[]> resultat = new ArrayList<>();
+        for (InfoPerso p : liste) resultat.add(new String[]{p.nom(), p.role()});
+        return resultat;
+    }
+
+    public static int getNiveauRequisPage(int numero) {
+        return switch (numero) {
+            case 1  -> NIVEAU_REQUIS_PAGE1;
+            case 2  -> NIVEAU_REQUIS_PAGE2;
+            default -> NIVEAU_REQUIS_PAGE3;
+        };
+    }
+
+    public static int getParcheminsRequisPage(int numero) {
+        return switch (numero) {
+            case 1  -> PARCHEMINS_REQUIS_C;
+            case 2  -> PARCHEMINS_REQUIS_B;
+            default -> PARCHEMINS_REQUIS_A;
+        };
+    }
+
+    public static String getRangPage(int numero) {
+        return switch (numero) { case 1 -> "C"; case 2 -> "B"; default -> "A"; };
+    }
+
+    public int getCoutParcheminXpC() { return COUT_PARCHEMIN_XP_C; }
+    public int getCoutParcheminXpB() { return COUT_PARCHEMIN_XP_B; }
+
+    public MiniJeuPFC getMiniJeu() { return miniJeu; }
+
     // ── Menu principal ────────────────────────────────────────────────────
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale joueur = ctx.joueur;
@@ -336,7 +373,7 @@ public class MenuRecrutement {
     }
 
     // ── Factory ───────────────────────────────────────────────────────────
-    private PersonnageBase creerPersonnage(String nom) {
+    public PersonnageBase creerPersonnage(String nom) {
         return switch (nom) {
             case "Alzack"      -> new perso_Arzak();
             case "Bisca"       -> new perso_Biska();
@@ -351,7 +388,7 @@ public class MenuRecrutement {
             case "Bora"        -> new perso_Bora();
             case "Duc Everlue" -> new perso_DucEverlue();
             case "Eligoal"     -> new perso_Eligor();
-            case "Lyon"        -> new perso_Leon();
+            case "Leon"        -> new perso_Leon();
             case "Cherry"      -> new perso_Cherry();
             case "Tobi"        -> new perso_Tobi();
             case "Yuka"        -> new perso_Yuka();
@@ -360,7 +397,7 @@ public class MenuRecrutement {
             case "Totomaru"    -> new perso_Totomaru();
             case "Sol"         -> new perso_Sol();
             case "Lucy"        -> new perso_Lucy();
-            case "Jubia (phantom Lord" -> new perso_Jubia_4elements();
+            case "Jubia (phantom Lord)" -> new perso_Jubia_4elements();
             default            -> null;
         };
     }

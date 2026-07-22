@@ -2,6 +2,7 @@ package lancement.Menus;
 
 import Equipement.CarteOr;
 import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
@@ -425,13 +426,7 @@ public class MenuInventaire {
     }
 
     private boolean estCompatible(PersonnageBase cible, Equipement e) {
-        if (e.getSlot() != Equipement.Slot.ARME) return true;
-        return switch (cible.getType()) {
-            case "Ninja"    -> e.getTypeArme() == Equipement.TypeArme.KUNAI;
-            case "Mage"     -> e.getTypeArme() == Equipement.TypeArme.BATON;
-            case "Guerrier" -> e.getTypeArme() == Equipement.TypeArme.GANTS;
-            default         -> false;
-        };
+        return EquipementFactory.estCompatibleArme(cible.getType(), e);
     }
 
     private PersonnageBase choisirPersonnage(GameContext ctx, Scanner scanner) {

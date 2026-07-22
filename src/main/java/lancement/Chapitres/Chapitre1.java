@@ -25,7 +25,7 @@ public class Chapitre1 {
 
         while (!retour) {
             System.out.println("\n========================================");
-            System.out.println("      CHAPITRE 1 — Prologue : L'Éveil");
+            System.out.println("      CHAPITRE 1 — Prologue ");
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr()));
             System.out.println();
@@ -51,72 +51,84 @@ public class Chapitre1 {
             } else if (!stagesDebloques[choix]) {
                 System.out.println("Ce stage est verrouille. Terminez d'abord le stage precedent.");
             } else {
-                Stage stage        = construireStage(choix);
-                boolean estNouveau = !stagesReussis[choix];
-                Stage.ResultatStage resultatStage;
-                if (choix == 4) {
-                    resultatStage = lancerStage4AvecErza(ctx, stage, estNouveau);
-                } else if (choix == 10) {
-                    resultatStage = lancerStage10AvecN_G_E(ctx, stage, estNouveau);
-                } else {
-                    resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
-                }
-                boolean victoire = resultatStage.victoire;
-                    
-                if (victoire) {
-                    stagesReussis[choix] = true;
-                    if (choix < NB_STAGES) {
-                        stagesDebloques[choix + 1] = true;
-                        System.out.println(">> Stage " + (choix + 1) + " debloque !");
-                    } else {
-                        System.out.println(">> Vous avez termine le Chapitre 1 !");
-                    }
-
-                    
-                    ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
-                    ctx.gestionnaireQuetes.notifierStageFini(1, choix, false,
-                            ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
-                    ctx.gestionnaireEtoiles.mettreAJour(1, choix, false,
-                            resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
-
-
-                }
+                lancerStage(ctx, choix);
             }
         }
     }
 
+    /**
+     * Lance le stage donne (avec les invites speciaux stage 4/10) et applique les recompenses
+     * en cas de victoire. Suppose que le stage est deja debloque. Reutilisable par la console
+     * et l'interface graphique.
+     */
+    public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        Stage stage        = construireStage(numero);
+        boolean estNouveau = !stagesReussis[numero];
+        Stage.ResultatStage resultatStage;
+        if (numero == 4) {
+            resultatStage = lancerStage4AvecErza(ctx, stage, estNouveau);
+        } else if (numero == 10) {
+            resultatStage = lancerStage10AvecN_G_E(ctx, stage, estNouveau);
+        } else {
+            resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        }
+
+        if (resultatStage.victoire) {
+            stagesReussis[numero] = true;
+            if (numero < NB_STAGES) {
+                stagesDebloques[numero + 1] = true;
+                System.out.println(">> Stage " + (numero + 1) + " debloque !");
+            } else {
+                System.out.println(">> Vous avez termine le Chapitre 1 !");
+            }
+
+            ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
+            ctx.gestionnaireQuetes.notifierStageFini(1, numero, false,
+                    ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
+            ctx.gestionnaireEtoiles.mettreAJour(1, numero, false,
+                    resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
+        }
+        return resultatStage;
+    }
+
+    // Palier de niveau du chapitre 1 : les ennemis vont de niveau 1 (stage 1) a 10 (stage 10).
+    private static final int PALIER_NIVEAU = 0;
+
+    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
+
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
+        int niveau = niveauPourStage(numero);
 
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiMage1DPS());
+            case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(1, "Prologue", 100, 10, ennemis); }
-            case 2  -> {  ennemis.add(new EnnemiBora());
+            case 2  -> {  ennemis.add(new EnnemiBora(niveau));
                          return new Stage(2, "Bora le charmeur", 150, 15, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage2DPS()); 
+            case 3  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(3, "Chemin vers fairy tail", 220, 20, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiNatsuStage4()); ennemis.add(new EnnemiGrayStage4());
+            case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau));
                          return new Stage(4, "L'arrivée de la reine des fées", 290, 25, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage1DPS());
+            case 5  -> { ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(5, "Premier mission pour Lucy", 360, 30, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiEvaro());
+            case 6  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiEvaro(niveau));
                          return new Stage(6, "Le duc evarlo", 430, 35, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage2DPS());
-                         ennemis.add(new EnnemiMage6Debuff()); ennemis.add(new EnnemiMage4Buff());
+            case 7  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
                          return new Stage(7, "Retour a fairy tail ", 500, 40, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage7DPS());
-                         ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage7DPS());
+            case 8  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
+                         ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
                          return new Stage(8, "Eisen Wald", 580, 45, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage7DPS());
-                         ennemis.add(new EnnemiEligor());  ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff());
+            case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiEligor(niveau));  ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
                          return new Stage(9, "Eligor le mage de vent", 680, 50, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiLullaby(1));
+            case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
                          return new Stage(10, "La flute maudite", 860, 55, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
-    private String getTitreStage(int numero) {
+    public String getTitreStage(int numero) {
         return switch (numero) {
             case 1  -> "Prologue";
             case 2  -> "Bora le charmeur";

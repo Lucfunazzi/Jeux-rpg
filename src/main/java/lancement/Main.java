@@ -1,16 +1,5 @@
 package lancement;
 
-import lancement.ChapitreElite.Chapitre1Elite;
-import lancement.ChapitreElite.Chapitre2Elite;
-import lancement.ChapitreElite.Chapitre3Elite;
-import lancement.Chapitres.Chapitre1;
-import lancement.Chapitres.Chapitre2;
-import lancement.Chapitres.Chapitre3;
-import lancement.Gestionnaires.GestionnaireTitres;
-import lancement.Gestionnaires.GestionnaireSauvegarde;
-import lancement.Gestionnaires.GestionnaireEnergie;
-import lancement.Gestionnaires.GestionnaireQuetes;
-import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Menus.MenuAbilite;
 import lancement.Menus.MenuAmeliorations;
 import lancement.Menus.MenuArene;
@@ -21,19 +10,14 @@ import lancement.Menus.MenuInventaire;
 import lancement.Menus.MenuPersonnage;
 import lancement.Menus.MenuQuetes;
 import lancement.Menus.MenuRang;
-import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuRecrutementRare;
-import lancement.Menus.MenuEtoilesPerso;
-import lancement.Menus.MenuTirage_recrutement;
 import lancement.Menus.MenuCompagnons;
 import lancement.Menus.Menu_Pet;
-import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
 import Joueur.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import Equipement.Inventaire;
 
 public class Main {
 
@@ -42,26 +26,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         // ── Construction du GameContext ────────────────────────────────────
-        GameContext ctx = new GameContext();
-        ctx.sauvegarde           = new GestionnaireSauvegarde();
-        ctx.inventaire           = new Inventaire();
-        ctx.menuRecrutement      = new MenuRecrutement();
-        ctx.menuEtoilesPerso     = new MenuEtoilesPerso();
-        ctx.menuTirage           = new MenuTirage_recrutement();
-        ctx.chapitre1            = new Chapitre1();
-        ctx.chapitre2            = new Chapitre2();
-        ctx.chapitre3            = new Chapitre3();
-        ctx.gestionnaireQuetes   = new GestionnaireQuetes();
-        ctx.gestionnaireEnergie  = new GestionnaireEnergie();
-        ctx.rangJoueur           = new RangJoueur();
-        ctx.gestionnaireTitres   = new GestionnaireTitres();
-        ctx.gestionnaireDonjon   = new GestionnaireDonjon();
-        ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
-        ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
-        ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
-        ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
-        ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
-        ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
+        GameContext ctx = GameContext.creerContexteBase();
 
         // ── Menus ─────────────────────────────────────────────────────────
         MenuInventaire      menuInventaire      = new MenuInventaire();
@@ -94,32 +59,7 @@ public class Main {
             if (scanner.nextLine().trim().equals("1")) {
                 SauvegardeData data = ctx.sauvegarde.charger(pseudo);
                 if (data != null) {
-                    ctx.joueur               = ctx.sauvegarde.restaurerJoueur(data, ctx);
-                    ctx.personnagesRecruites = ctx.sauvegarde.restaurerPersonnagesRecruites(data);
-                    ctx.sauvegarde.restaurerCompagnons(ctx.gestionnaireCompagnons, data);
-                    ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
-                    ctx.sauvegarde.restaurerFormation(ctx.formation, data, ctx.personnagesRecruites);
-                    ctx.sauvegarde.restaurerChapitre1(ctx.chapitre1, data);
-                    ctx.sauvegarde.restaurerChapitre1Elite(ctx.chapitre1Elite, data);
-                    ctx.sauvegarde.restaurerChapitre2(ctx.chapitre2, data);
-                    ctx.sauvegarde.restaurerChapitre3(ctx.chapitre3, data);
-                    ctx.sauvegarde.restaurerChapitre2Elite2(ctx.chapitre2Elite, data);
-                    ctx.sauvegarde.restaurerChapitre3Elite(ctx.chapitre3Elite, data);
-                    ctx.sauvegarde.restaurerInventaire(ctx.inventaire, data);
-                    ctx.sauvegarde.restaurerQuetes(ctx.gestionnaireQuetes, data);
-                    ctx.sauvegarde.restaurerEnergie(ctx.gestionnaireEnergie, data);
-                    ctx.sauvegarde.restaurerRangEtTitres(ctx.rangJoueur, ctx.gestionnaireTitres, data);
-                    ctx.sauvegarde.restaurerDonjon(ctx.gestionnaireDonjon, data);
-                    ctx.menuRecrutement.setParcheminC(data.parcheminC);
-                    ctx.menuRecrutement.setParcheminB(data.parcheminB);
-                    ctx.menuRecrutement.setParcheminA(data.parcheminA);
-                    ctx.menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
-                    ctx.menuTirage.setParcheminElite(data.parcheminTirageElite);
-                    ctx.menuTirage.setCompteurPityA(data.tirageEliteCompteurPityA);
-                    ctx.menuTirage.setCompteurPityS(data.tirageEliteCompteurSansS);
-                    ctx.menuTirage.setCompteurPitySS(data.tirageEliteCompteurSansSS);
-                    ctx.sauvegarde.restaurerEtoiles(ctx.gestionnaireEtoiles, data);
-                    ctx.coupons = data.coupons;
+                    ctx.restaurerDepuis(data);
                     System.out.println("\nPartie chargee ! Bon retour, " + ctx.joueur.getNom() + " !");
                 } else {
                     System.out.println("Erreur de chargement. Creation d'une nouvelle partie.");

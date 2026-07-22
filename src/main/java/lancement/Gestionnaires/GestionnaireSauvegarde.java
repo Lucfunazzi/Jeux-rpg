@@ -66,6 +66,7 @@ import lancement.Titre;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
+import lancement.Menus.MenuRecrutement;
 import lancement.EtoilesStage;
 import java.util.Map;
 import java.net.URI;
@@ -545,7 +546,7 @@ public class GestionnaireSauvegarde {
     }
 
    public PersonnageBase creerPersonnageParNom(String nom) {
-    return switch (nom) {
+    PersonnageBase p = switch (nom) {
         // Rang C
         case "Alzack"         -> new perso_Arzak();
         case "Bisca"          -> new perso_Biska();
@@ -578,6 +579,11 @@ public class GestionnaireSauvegarde {
         case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
         default               -> null;
     };
+    // Repli sur la fabrique du Recrutement normal (Cherry, Duc Everlue, Tobi, Yuka,
+    // Leon, Totomaru, Sol, Aria, Bora, Eligoal...) qui n'etait pas connue ici,
+    // ce qui faisait disparaitre silencieusement ces personnages au rechargement.
+    if (p == null) p = new MenuRecrutement().creerPersonnage(nom);
+    return p;
 }
 
     private void appliquerNiveaux(PersonnageBase p, SauvegardeData.PersonnageData pd) {

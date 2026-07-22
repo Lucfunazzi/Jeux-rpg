@@ -14,13 +14,13 @@ import lancement.GameContext;
 
 public class MenuRecrutementRare {
 
-    private static final String MATERIAU_NATSU      = "Echarpe blanche d'Ignir";
-    private static final int    COUT_RECRUTEMENT    = 50;
-    private static final int    COUT_EVOLUTION      = 150;
+    public static final String MATERIAU_NATSU      = "Echarpe blanche d'Ignir";
+    public static final int    COUT_RECRUTEMENT    = 50;
+    public static final int    COUT_EVOLUTION      = 150;
 
-    private static final String MATERIAU_MIRAJANE   = "Aile de demon";
-    private static final int    COUT_MIRAJANE_S     = 100;
-    private static final int    COUT_MIRAJANE_SS    = 250;
+    public static final String MATERIAU_MIRAJANE   = "Aile de demon";
+    public static final int    COUT_MIRAJANE_S     = 100;
+    public static final int    COUT_MIRAJANE_SS    = 250;
 
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale      joueur               = ctx.joueur;
@@ -113,10 +113,7 @@ public class MenuRecrutementRare {
                 + " " + MATERIAU_NATSU + " ? (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
-        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_RECRUTEMENT);
-        ctx.personnagesRecruites.add(new perso_Natsu());
-        System.out.println(">> Natsu a rejoint vos allies !");
-        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.println(">> " + recruterNatsu(ctx));
     }
 
     // ── Evolution Natsu A → Natsu Etherion S ─────────────────────────────
@@ -132,26 +129,7 @@ public class MenuRecrutementRare {
         System.out.println("ATTENTION : Natsu [A] sera remplace definitivement. (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
-        PersonnageBase natsuA = null;
-        for (PersonnageBase p : ctx.personnagesRecruites) {
-            if (p.getNom().equals("Natsu")) { natsuA = p; break; }
-        }
-        if (natsuA == null) {
-            System.out.println("Erreur : Natsu introuvable dans les recrues.");
-            return;
-        }
-
-        ctx.formation.retirerPersonnage(natsuA);
-        ctx.personnagesRecruites.remove(natsuA);
-        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_EVOLUTION);
-
-        perso_Natsu_Etherion natsuS = new perso_Natsu_Etherion();
-        while (natsuS.getNiveau() < natsuA.getNiveau()) natsuS.monterDeNiveau();
-        ctx.personnagesRecruites.add(natsuS);
-
-        System.out.println(">> Natsu a evolue en Natsu Etherion [S] !");
-        System.out.println("   Natsu Etherion est desormais disponible dans votre formation.");
-        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.println(evoluerNatsu(ctx));
     }
 
     // ── Recrutement Mirajane S ────────────────────────────────────────────
@@ -166,10 +144,7 @@ public class MenuRecrutementRare {
                 + " " + MATERIAU_MIRAJANE + " ? (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
-        ctx.inventaire.retirerMateriau(MATERIAU_MIRAJANE, COUT_MIRAJANE_S);
-        ctx.personnagesRecruites.add(new perso_Mirajane());
-        System.out.println(">> Mirajane a rejoint vos allies !");
-        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.println(">> " + recruterMirajane(ctx));
     }
 
     // ── Evolution Mirajane S → Mirajane Halphas SS ───────────────────────
@@ -185,14 +160,72 @@ public class MenuRecrutementRare {
         System.out.println("ATTENTION : Mirajane [S] sera remplacee definitivement. (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
+        System.out.println(evoluerMirajane(ctx));
+    }
+
+    // ── Logique pure (reutilisable par la console et l'interface graphique) ─
+
+    /** Tente de recruter Natsu [A]. Retourne le message resultat (materiaux non deduits si echec). */
+    public String recruterNatsu(GameContext ctx) {
+        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
+        if (possede < COUT_RECRUTEMENT) {
+            return "Materiaux insuffisants : " + possede + "/" + COUT_RECRUTEMENT + " " + MATERIAU_NATSU;
+        }
+        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_RECRUTEMENT);
+        ctx.personnagesRecruites.add(new perso_Natsu());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Natsu a rejoint vos allies !";
+    }
+
+    /** Tente de faire evoluer Natsu [A] en Natsu Etherion [S]. */
+    public String evoluerNatsu(GameContext ctx) {
+        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
+        if (possede < COUT_EVOLUTION) {
+            return "Materiaux insuffisants : " + possede + "/" + COUT_EVOLUTION + " " + MATERIAU_NATSU;
+        }
+
+        PersonnageBase natsuA = null;
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p.getNom().equals("Natsu")) { natsuA = p; break; }
+        }
+        if (natsuA == null) return "Erreur : Natsu introuvable dans les recrues.";
+
+        ctx.formation.retirerPersonnage(natsuA);
+        ctx.personnagesRecruites.remove(natsuA);
+        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_EVOLUTION);
+
+        perso_Natsu_Etherion natsuS = new perso_Natsu_Etherion();
+        while (natsuS.getNiveau() < natsuA.getNiveau()) natsuS.monterDeNiveau();
+        ctx.personnagesRecruites.add(natsuS);
+        ctx.sauvegarde.sauvegarder(ctx);
+
+        return "Natsu a evolue en Natsu Etherion [S] !\nNatsu Etherion est desormais disponible dans votre formation.";
+    }
+
+    /** Tente de recruter Mirajane [S]. */
+    public String recruterMirajane(GameContext ctx) {
+        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        if (possede < COUT_MIRAJANE_S) {
+            return "Materiaux insuffisants : " + possede + "/" + COUT_MIRAJANE_S + " " + MATERIAU_MIRAJANE;
+        }
+        ctx.inventaire.retirerMateriau(MATERIAU_MIRAJANE, COUT_MIRAJANE_S);
+        ctx.personnagesRecruites.add(new perso_Mirajane());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Mirajane a rejoint vos allies !";
+    }
+
+    /** Tente de faire evoluer Mirajane [S] en Mirajane Halphas [SS]. */
+    public String evoluerMirajane(GameContext ctx) {
+        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        if (possede < COUT_MIRAJANE_SS) {
+            return "Materiaux insuffisants : " + possede + "/" + COUT_MIRAJANE_SS + " " + MATERIAU_MIRAJANE;
+        }
+
         PersonnageBase miraS = null;
         for (PersonnageBase p : ctx.personnagesRecruites) {
             if (p.getNom().equals("Mirajane")) { miraS = p; break; }
         }
-        if (miraS == null) {
-            System.out.println("Erreur : Mirajane introuvable dans les recrues.");
-            return;
-        }
+        if (miraS == null) return "Erreur : Mirajane introuvable dans les recrues.";
 
         ctx.formation.retirerPersonnage(miraS);
         ctx.personnagesRecruites.remove(miraS);
@@ -201,14 +234,13 @@ public class MenuRecrutementRare {
         perso_Mirajane_Halphas miraSS = new perso_Mirajane_Halphas();
         while (miraSS.getNiveau() < miraS.getNiveau()) miraSS.monterDeNiveau();
         ctx.personnagesRecruites.add(miraSS);
-
-        System.out.println(">> Mirajane a eveille sa forme demoniaque ultime !");
-        System.out.println("   Mirajane Halphas [SS] est desormais disponible dans votre formation.");
         ctx.sauvegarde.sauvegarder(ctx);
+
+        return "Mirajane a eveille sa forme demoniaque ultime !\nMirajane Halphas [SS] est desormais disponible dans votre formation.";
     }
 
     // ── Utilitaire ────────────────────────────────────────────────────────
-    private boolean dejaRecruteParNom(String nom,
+    public static boolean dejaRecruteParNom(String nom,
                                        ArrayList<PersonnageBase> liste) {
         for (PersonnageBase p : liste)
             if (p.getNom().equalsIgnoreCase(nom)) return true;

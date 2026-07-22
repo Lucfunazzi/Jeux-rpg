@@ -8,7 +8,7 @@ public class Equipement {
         C, B, A, S
     }
     public enum TypeArme {
-        EPEE, LANCE, BATON, KUNAI, GANTS, AUCUN
+        EPEE, LANCE, BATON, KUNAI, GANTS, FOUET, AUCUN
     }
 
     private final String   nom;

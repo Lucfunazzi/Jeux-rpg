@@ -89,60 +89,76 @@ public class Chapitre3Elite {
                 System.out.println("Stage invalide.");
             } else if (!stagesDebloques[choix]) {
                 System.out.println("Ce stage est verrouille. Terminez d'abord le stage precedent.");
-            } else if (!ctx.gestionnaireEnergie.peutFaireRunElite(choix)) {
-                System.out.println("Limite de runs atteinte pour ce stage aujourd'hui (10/10).");
-            } else if (!ctx.gestionnaireEnergie.consommerEnergie(5)) {
-                System.out.println("Pas assez d'energie ! (il faut 5, vous avez "
-                        + ctx.gestionnaireEnergie.getEnergie() + ")");
             } else {
-                ctx.gestionnaireEnergie.enregistrerRunElite(choix);
-                Stage stage        = construireStage(choix, ctx);
-                boolean estNouveau = !stagesReussis[choix];
-                Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
-
-                if (resultatStage.victoire) {
-                    stagesReussis[choix] = true;
-
-                    if (choix < NB_STAGES) {
-                        stagesDebloques[choix + 1] = true;
-                        System.out.println(">> Stage " + (choix + 1) + " debloque !");
-                    } else {
-                        System.out.println(">> Felicitations ! Vous avez termine le Chapitre 3 Elite !");
-                    }
-
-                    if (estNouveau && !premiereVictoire[choix]) {
-                        premiereVictoire[choix] = true;
-                        int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 10);
-                        System.out.println("   + " + ajoute + "x " + CarteOr.NIVEAU_2.nom
-                                + " (premiere victoire) !");
-                    } else {
-                        if (Math.random() < CHANCE_CARTE_OR_REPLAY) {
-                            int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 1);
-                            if (ajoute > 0)
-                                System.out.println("   + 1x " + CarteOr.NIVEAU_2.nom + " !");
-                        }
-                    }
-
-                    double chanceFragment = (choix == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
-                    if (Math.random() < chanceFragment) {
-                        List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
-                        FragmentEquipement fragment = catalogue.get((int) (Math.random() * catalogue.size()));
-                        ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
-                        int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
-                        System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
-                                fragment.getNomFragment(), total, FragmentEquipement.QUANTITE_REQUISE);
-                    }
-
-                    ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
-                    ctx.gestionnaireQuetes.notifierStageFini(3, choix, true,
-                            ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
-                    ctx.gestionnaireEtoiles.mettreAJour(3, choix, true,
-                            resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
-
-                    ctx.sauvegarde.sauvegarder(ctx);
-                }
+                lancerStage(ctx, choix);
             }
         }
+    }
+
+    /**
+     * Verifie les runs/energie, lance le stage donne et applique les recompenses en cas de
+     * victoire. Suppose que le stage est deja debloque. Retourne null si le stage n'a pas pu
+     * etre lance (runs epuises ou energie insuffisante — message imprime dans ce cas).
+     * Reutilisable par la console et l'interface graphique.
+     */
+    public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        if (!ctx.gestionnaireEnergie.peutFaireRunElite(numero)) {
+            System.out.println("Limite de runs atteinte pour ce stage aujourd'hui (10/10).");
+            return null;
+        }
+        if (!ctx.gestionnaireEnergie.consommerEnergie(5)) {
+            System.out.println("Pas assez d'energie ! (il faut 5, vous avez "
+                    + ctx.gestionnaireEnergie.getEnergie() + ")");
+            return null;
+        }
+
+        ctx.gestionnaireEnergie.enregistrerRunElite(numero);
+        Stage stage        = construireStage(numero, ctx);
+        boolean estNouveau = !stagesReussis[numero];
+        Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+
+        if (resultatStage.victoire) {
+            stagesReussis[numero] = true;
+
+            if (numero < NB_STAGES) {
+                stagesDebloques[numero + 1] = true;
+                System.out.println(">> Stage " + (numero + 1) + " debloque !");
+            } else {
+                System.out.println(">> Felicitations ! Vous avez termine le Chapitre 3 Elite !");
+            }
+
+            if (estNouveau && !premiereVictoire[numero]) {
+                premiereVictoire[numero] = true;
+                int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 10);
+                System.out.println("   + " + ajoute + "x " + CarteOr.NIVEAU_2.nom
+                        + " (premiere victoire) !");
+            } else {
+                if (Math.random() < CHANCE_CARTE_OR_REPLAY) {
+                    int ajoute = ctx.inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 1);
+                    if (ajoute > 0)
+                        System.out.println("   + 1x " + CarteOr.NIVEAU_2.nom + " !");
+                }
+            }
+
+            double chanceFragment = (numero == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
+            if (Math.random() < chanceFragment) {
+                List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
+                FragmentEquipement fragment = catalogue.get((int) (Math.random() * catalogue.size()));
+                ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
+                int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
+                System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
+                        fragment.getNomFragment(), total, FragmentEquipement.QUANTITE_REQUISE);
+            }
+
+            ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
+            ctx.gestionnaireQuetes.notifierStageFini(3, numero, true,
+                    ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
+            ctx.gestionnaireEtoiles.mettreAJour(3, numero, true,
+                    resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
+
+            ctx.sauvegarde.sauvegarder(ctx);
+        }
+        return resultatStage;
     }
 
     private Stage construireStage(int numero, GameContext ctx) {
@@ -253,7 +269,7 @@ public class Chapitre3Elite {
         }
     }
 
-    private String getTitreStage(int numero) {
+    public String getTitreStage(int numero) {
         return switch (numero) {
             case 1  -> "[ELITE] L'assaut de Phantom Lord Renforcé";
             case 2  -> "[ELITE] Totomaru — Sept Flammes d'Élite";

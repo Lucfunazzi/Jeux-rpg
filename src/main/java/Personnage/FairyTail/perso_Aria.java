@@ -6,7 +6,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Alya (Aria) — Elementaliste, rang A.
+ * Aria — Elementaliste, rang A.
  * Magie des Espaces Aériens (Airspace) : attaques invisibles de vent/air.
  * Metsu : draine toute la magie de la cible. Zetsu : jets d'air multiples. Zéro : aspire l'air.
  * Le plus puissant des Element 4 de Phantom Lord. Porte un bandeau pour contenir sa magie.
@@ -14,7 +14,7 @@ import java.util.List;
 public class perso_Aria extends PersonnageBase {
 
     public perso_Aria() {
-        this.nom    = "Alya";
+        this.nom    = "Aria";
         this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "A";
@@ -42,14 +42,14 @@ public class perso_Aria extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
+        log.add("Aria projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
         Combat.attaquer(this, cible, log);
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya place ses mains vers " + cible.getNom() + " — METSU ! Sa magie est complètement aspirée !");
+        log.add("Aria place ses mains vers " + cible.getNom() + " — METSU ! Sa magie est complètement aspirée !");
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         
@@ -59,7 +59,7 @@ public class perso_Aria extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace autour des ennemis !");
+        log.add("Aria retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace autour des ennemis !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         Combat.appliquerEffet(this, new BuffAttaque(0.25, 2), log);

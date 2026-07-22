@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="lancement.gui.EcranQuetesController"
+            styleClass="root-menu">
+    <top>
+        <Label text="QUETES" styleClass="titre" BorderPane.alignment="CENTER">
+            <BorderPane.margin><Insets top="20" bottom="10"/></BorderPane.margin>
+        </Label>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox fx:id="quetesBox" alignment="TOP_LEFT" spacing="14">
+                <padding><Insets top="10" bottom="10" left="30" right="30"/></padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox alignment="CENTER" spacing="10">
+            <padding><Insets top="10" bottom="20"/></padding>
+            <Button text="Reclamer une recompense" onAction="#onReclamer" styleClass="menu-bouton"/>
+            <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+        </VBox>
+    </bottom>
+</BorderPane>

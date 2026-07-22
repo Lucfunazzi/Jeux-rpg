@@ -9,7 +9,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Alya (Aria) — Element 4 de Phantom Lord, Magie des Espaces Aériens (Airspace), rang A.
+ * Aria — Element 4 de Phantom Lord, Magie des Espaces Aériens (Airspace), rang A.
  * Le plus puissant des Element 4. Porte un bandeau sur les yeux pour contenir sa puissance.
  * Ses attaques sont INVISIBLES.
  * Metsu : draine complètement la magie de la cible (presque tué Makarof).
@@ -21,7 +21,7 @@ public class EnnemiAria extends PersonnageBase {
     public EnnemiAria() { this(30); }
 
     public EnnemiAria(int niveau) {
-        this.nom    = "Alya";
+        this.nom    = "Aria";
         this.niveau = niveau;
         this.type   = "Elementaliste";
         this.role   = "DPS";
@@ -54,7 +54,7 @@ public class EnnemiAria extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
+        log.add("Aria projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
         Combat.attaquer(this, cible, log);
         
     }
@@ -62,7 +62,7 @@ public class EnnemiAria extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya place ses mains ouvertes vers " + cible.getNom() + " — METSU ! Sa magie est aspirée et se dissipe dans l'air !");
+        log.add("Aria place ses mains ouvertes vers " + cible.getNom() + " — METSU ! Sa magie est aspirée et se dissipe dans l'air !");
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Malediction(2,0.25), log);
@@ -72,7 +72,7 @@ public class EnnemiAria extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Alya retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace adverse !");
+        log.add("Aria retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace adverse !");
         Combat.appliquerEffet(this, new BuffAttaque(0.25, 2), log);
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {

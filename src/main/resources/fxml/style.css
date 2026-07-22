@@ -1,0 +1,90 @@
+.root-menu {
+    -fx-background-color: #1b1b28;
+}
+
+.titre {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f2c14e;
+}
+
+.menu-bouton {
+    -fx-font-size: 16px;
+    -fx-pref-width: 220px;
+    -fx-background-color: #2e2e42;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 10 20 10 20;
+}
+
+.menu-bouton:hover {
+    -fx-background-color: #45456a;
+}
+
+.texte {
+    -fx-font-size: 15px;
+    -fx-text-fill: #d8d8e8;
+}
+
+.scroll-pane, .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.classe-bouton {
+    -fx-pref-width: 260px;
+    -fx-pref-height: 80px;
+    -fx-font-size: 13px;
+    -fx-text-alignment: center;
+}
+
+.dialog-pane {
+    -fx-background-color: #1b1b28;
+}
+
+.dialog-pane .label,
+.dialog-pane .content.label,
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #d8d8e8;
+}
+
+.dialog-pane .button-bar .button,
+.dialog-pane .combo-box .list-cell {
+    -fx-text-fill: #1b1b28;
+}
+
+.zone-mono {
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 13px;
+}
+
+.zone-mono .content {
+    -fx-background-color: #12121c;
+}
+
+.zone-mono, .zone-mono .scroll-pane, .zone-mono .scroll-pane .viewport {
+    -fx-background-color: #12121c;
+    -fx-text-fill: #d8d8e8;
+}
+
+.carte-combat {
+    -fx-background-color: #2e2e42;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
+}
+
+.carte-combat-hit {
+    -fx-border-color: #e05656;
+    -fx-background-color: #452e2e;
+}
+
+.carte-combat-heal {
+    -fx-border-color: #56c98a;
+    -fx-background-color: #2e4538;
+}
+
+.carte-combat-ko {
+    -fx-opacity: 0.4;
+}

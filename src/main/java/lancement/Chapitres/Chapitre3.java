@@ -48,27 +48,36 @@ public class Chapitre3 {
             } else if (!stagesDebloques[choix]) {
                 System.out.println("Ce stage est verrouille. Terminez d'abord le stage precedent.");
             } else {
-                Stage stage        = construireStage(choix);
-                boolean estNouveau = !stagesReussis[choix];
-                Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
-
-                if (resultatStage.victoire) {
-                    stagesReussis[choix] = true;
-                    if (choix < NB_STAGES) {
-                        stagesDebloques[choix + 1] = true;
-                        System.out.println(">> Stage " + (choix + 1) + " debloque !");
-                    } else {
-                        System.out.println(">> Félicitations ! Vous avez vaincu Phantom Lord !");
-                    }
-
-                    ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
-                    ctx.gestionnaireQuetes.notifierStageFini(3, choix, false,
-                            ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
-                    ctx.gestionnaireEtoiles.mettreAJour(3, choix, false,
-                            resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
-                }
+                lancerStage(ctx, choix);
             }
         }
+    }
+
+    /**
+     * Lance le stage donne et applique les recompenses en cas de victoire.
+     * Suppose que le stage est deja debloque. Reutilisable par la console et l'interface graphique.
+     */
+    public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        Stage stage        = construireStage(numero);
+        boolean estNouveau = !stagesReussis[numero];
+        Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+
+        if (resultatStage.victoire) {
+            stagesReussis[numero] = true;
+            if (numero < NB_STAGES) {
+                stagesDebloques[numero + 1] = true;
+                System.out.println(">> Stage " + (numero + 1) + " debloque !");
+            } else {
+                System.out.println(">> Félicitations ! Vous avez vaincu Phantom Lord !");
+            }
+
+            ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
+            ctx.gestionnaireQuetes.notifierStageFini(3, numero, false,
+                    ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
+            ctx.gestionnaireEtoiles.mettreAJour(3, numero, false,
+                    resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
+        }
+        return resultatStage;
     }
 
     private Stage construireStage(int numero) {
@@ -179,7 +188,7 @@ public class Chapitre3 {
         }
     }
 
-    private String getTitreStage(int numero) {
+    public String getTitreStage(int numero) {
         return switch (numero) {
             case 1  -> "L'assaut de Phantom Lord";
             case 2  -> "Totomaru — Sept Flammes";

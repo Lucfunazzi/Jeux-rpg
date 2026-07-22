@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="lancement.gui.EcranCreaturesSacreesController"
+      alignment="CENTER" spacing="16" styleClass="root-menu">
+    <Label text="CREATURES SACREES" styleClass="titre"/>
+    <Label fx:id="infoLabel" styleClass="texte" wrapText="true" maxWidth="420"/>
+
+    <VBox fx:id="actionsBox" alignment="CENTER" spacing="8">
+        <padding><Insets top="10"/></padding>
+    </VBox>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+    </Button>
+</VBox>

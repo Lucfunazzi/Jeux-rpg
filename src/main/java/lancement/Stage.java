@@ -17,13 +17,19 @@ public class Stage {
         public final boolean sansAllieMort;
         public final boolean enMoinsDe10Tours;
         public final int     toursUtilises;
+        public final List<Combat.PersonnageSnapshot> etatInitial;
+        public final List<Combat.CombatEvent> evenements;
 
         public ResultatStage(boolean victoire, boolean sansAllieMort,
-                             boolean enMoinsDe10Tours, int toursUtilises) {
+                             boolean enMoinsDe10Tours, int toursUtilises,
+                             List<Combat.PersonnageSnapshot> etatInitial,
+                             List<Combat.CombatEvent> evenements) {
             this.victoire         = victoire;
             this.sansAllieMort    = sansAllieMort;
             this.enMoinsDe10Tours = enMoinsDe10Tours;
             this.toursUtilises    = toursUtilises;
+            this.etatInitial      = etatInitial;
+            this.evenements       = evenements;
         }
     }
 
@@ -73,9 +79,10 @@ public class Stage {
 
         // Combat
         double bonusTitre = ctx.gestionnaireTitres.getBonusActif();
+        List<Combat.PersonnageSnapshot> etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
         Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
 
-        combat.lancerCombat();
+        List<Combat.CombatEvent> evenements = combat.lancerCombatEnregistre();
 
         // Retirer BuffTitre après le combat
         for (PersonnageBase perso : equipeAlliee)
@@ -137,7 +144,7 @@ public class Stage {
             System.out.println(">> Partie sauvegardee automatiquement.");
         }
 
-        return new ResultatStage(victoire, sansAllieMort, enMoinsDe10, toursUtilises);
+        return new ResultatStage(victoire, sansAllieMort, enMoinsDe10, toursUtilises, etatInitial, evenements);
     }
 
     private boolean tousKO(ArrayList<PersonnageBase> equipe) {

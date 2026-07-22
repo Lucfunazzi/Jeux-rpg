@@ -392,6 +392,58 @@ private boolean jouerMancheAuto() {
     public int getCoutPartieC() { return COUT_PARTIEC; }
     public int getCoutPartieB(){return COUT_PARTIEB;}
     public int getCoutPartieA(){return COUT_PARTIEA;}
+
+    // ── API manuelle pour l'interface graphique ────────────────────────────
+    // Chaque manche est resolue coup par coup (1=Pierre, 2=Feuille, 3=Ciseaux),
+    // sans passer par un Scanner : l'appelant (ecran GUI) fournit le choix
+    // du joueur et recupere le resultat pour l'afficher / enchainer.
+
+    public record ResultatManche(int choixJoueur, int choixIA, int resultat) {
+        public String nomJoueur() { return MiniJeuPFC.nomChoixStatique(choixJoueur); }
+        public String nomIA()     { return MiniJeuPFC.nomChoixStatique(choixIA); }
+    }
+
+    /** Resout une manche a partir du choix du joueur (1/2/3). L'IA joue aleatoirement. */
+    public ResultatManche jouerUneManche(int choixJoueur) {
+        int choixIA = random.nextInt(3) + 1;
+        return new ResultatManche(choixJoueur, choixIA, evaluer(choixJoueur, choixIA));
+    }
+
+    public int getCoutPartie(String rang) {
+        return switch (rang) {
+            case "C" -> COUT_PARTIEC;
+            case "B" -> COUT_PARTIEB;
+            default  -> COUT_PARTIEA;
+        };
+    }
+
+    /** Recompense en parchemins pour la manche gagnee (1, 2 ou 3) du rang donne. */
+    public int getRecompenseManche(String rang, int manche) {
+        return switch (rang) {
+            case "C" -> switch (manche) { case 1 -> PARCHEMINS_MANCHE1C; case 2 -> PARCHEMINS_MANCHE2C; default -> PARCHEMINS_MANCHE3C; };
+            case "B" -> switch (manche) { case 1 -> PARCHEMINS_MANCHE1B; case 2 -> PARCHEMINS_MANCHE2B; default -> PARCHEMINS_MANCHE3B; };
+            default  -> switch (manche) { case 1 -> PARCHEMINS_MANCHE1A; case 2 -> PARCHEMINS_MANCHE2A; default -> PARCHEMINS_MANCHE3A; };
+        };
+    }
+
+    /** Remboursement (en or) quand le joueur perd a la manche donnee (1, 2 ou 3). */
+    public int getRemboursement(String rang, int mancheEchouee) {
+        double taux = switch (mancheEchouee) {
+            case 1  -> REMBOURSEMENT_MANCHE1;
+            case 2  -> REMBOURSEMENT_MANCHE2;
+            default -> REMBOURSEMENT_MANCHE3;
+        };
+        return (int) (getCoutPartie(rang) * taux);
+    }
+
+    private static String nomChoixStatique(int choix) {
+        return switch (choix) {
+            case 1 -> "Pierre";
+            case 2 -> "Feuille";
+            case 3 -> "Ciseaux";
+            default -> "?";
+        };
+    }
 }
 
 

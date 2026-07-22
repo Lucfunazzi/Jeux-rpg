@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="lancement.gui.EcranCombatController"
+            styleClass="root-menu">
+    <top>
+        <VBox alignment="CENTER" spacing="4">
+            <padding><Insets top="14" bottom="6"/></padding>
+            <Label text="COMBAT" styleClass="titre"/>
+            <Label fx:id="etapeLabel" styleClass="texte"/>
+        </VBox>
+    </top>
+    <center>
+        <HBox spacing="20" alignment="TOP_CENTER">
+            <padding><Insets left="20" right="20" top="4"/></padding>
+            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane">
+                <VBox fx:id="equipeJoueurBox" spacing="10" alignment="TOP_CENTER"/>
+            </ScrollPane>
+            <VBox alignment="CENTER">
+                <Label text="VS" styleClass="titre"/>
+            </VBox>
+            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane">
+                <VBox fx:id="equipeAdverseBox" spacing="10" alignment="TOP_CENTER"/>
+            </ScrollPane>
+        </HBox>
+    </center>
+    <bottom>
+        <VBox spacing="10" alignment="CENTER">
+            <padding><Insets left="20" right="20" top="10" bottom="16"/></padding>
+            <TextArea fx:id="logArea" editable="false" wrapText="true" prefHeight="150" styleClass="zone-mono"/>
+            <Label fx:id="banniereLabel" styleClass="titre" visible="false" managed="false"/>
+            <HBox spacing="12" alignment="CENTER">
+                <Button fx:id="suivantButton" text="Suivant ▶" onAction="#onSuivant" styleClass="menu-bouton"/>
+                <Button fx:id="autoButton" text="Lecture auto ▶▶" onAction="#onAuto" styleClass="menu-bouton"/>
+                <Button fx:id="passerButton" text="Passer a la fin ⏭" onAction="#onPasser" styleClass="menu-bouton"/>
+                <Button fx:id="continuerButton" text="Continuer" onAction="#onContinuer" styleClass="menu-bouton" visible="false" managed="false"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

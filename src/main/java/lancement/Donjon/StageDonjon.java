@@ -11,6 +11,7 @@ import lancement.Gestionnaires.GestionnaireDonjon.TypeDonjon;
 import lancement.Gestionnaires.GestionnaireDonjon.Difficulte;
 import lancement.Gestionnaires.GestionnaireTitres;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Un combat de donjon.
@@ -27,6 +28,10 @@ public class StageDonjon {
     private final int    recompenseOr;
     private final int    recompensePierres;    // pierres d'affinage (0 si donjon or/xp)
     private final ParcheminXP recompenseParchemin; // null si donjon or/affinage
+
+    // Instantane et evenements du dernier combat lance (pour la relecture visuelle GUI)
+    private List<Combat.PersonnageSnapshot> etatInitial;
+    private List<Combat.CombatEvent> evenements;
 
     public StageDonjon(TypeDonjon type, Difficulte difficulte,
                        ArrayList<PersonnageBase> ennemis,
@@ -77,8 +82,9 @@ public class StageDonjon {
         }
 
         double bonusTitre = gestionnaireTitres.getBonusActif();
+        etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
         Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
-        combat.lancerCombat();
+        evenements = combat.lancerCombatEnregistre();
 
         // Retirer BuffTitre apres combat
         for (PersonnageBase perso : equipeAlliee) {
@@ -217,4 +223,7 @@ public class StageDonjon {
             case EXTREME  -> "Extreme";
         };
     }
+
+    public List<Combat.PersonnageSnapshot> getEtatInitial() { return etatInitial; }
+    public List<Combat.CombatEvent> getEvenements() { return evenements; }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="lancement.gui.EcranAbilitesController"
+      alignment="CENTER" spacing="16" styleClass="root-menu">
+    <Label text="ARBRE DE COMPETENCES" styleClass="titre"/>
+    <Label fx:id="infoLabel" styleClass="texte" wrapText="true"/>
+
+    <VBox alignment="CENTER" spacing="8">
+        <padding><Insets top="10"/></padding>
+        <Button fx:id="boutonArbre1" onAction="#onArbre1" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
+        <Button fx:id="boutonArbre2" onAction="#onArbre2" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
+        <Button fx:id="boutonArbre3" onAction="#onArbre3" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
+    </VBox>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+    </Button>
+</VBox>

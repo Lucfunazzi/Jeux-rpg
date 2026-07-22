@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="lancement.gui.EcranArbreController"
+            styleClass="root-menu">
+    <top>
+        <VBox alignment="CENTER" spacing="6">
+            <padding><Insets top="20" bottom="10"/></padding>
+            <Label fx:id="titreLabel" styleClass="titre"/>
+            <Label fx:id="pointsLabel" styleClass="texte"/>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox fx:id="noeudsBox" alignment="CENTER" spacing="6">
+                <padding><Insets top="10" bottom="10" left="60" right="60"/></padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox alignment="CENTER" spacing="10">
+            <padding><Insets top="10" bottom="20"/></padding>
+            <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+        </VBox>
+    </bottom>
+</BorderPane>

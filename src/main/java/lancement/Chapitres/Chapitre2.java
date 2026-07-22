@@ -52,122 +52,135 @@ public class Chapitre2 {
             } else if (!stagesDebloques[choix]) {
                 System.out.println("Ce stage est verrouille. Terminez d'abord le stage precedent.");
             } else {
-                Stage stage        = construireStage(choix);
-                boolean estNouveau = !stagesReussis[choix];
-                Stage.ResultatStage resultatStage = switch (choix) {
-                    case 3 -> {
-                        perso_Lucy invite = new perso_Lucy();
-                        invite.setNiveau(15);
-                        invite.setVie(900);
-                        invite.setVieMax(900);
-                        invite.setAttaque(140);
-                        invite.setDefense(95);
-                        invite.setVitesse(160);
-                        yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
-                    }
-                    case 4, 5 -> {
-                        perso_Natsu invite = new perso_Natsu();
-                        invite.setNiveau(18);
-                        invite.setVie(1100);
-                        invite.setVieMax(1100);
-                        invite.setAttaque(220);
-                        invite.setDefense(130);
-                        invite.setVitesse(140);
-                        yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
-                    }
-                    case 6, 8 -> {
-                        perso_Gray invite = new perso_Gray();
-                        invite.setNiveau(19);
-                        invite.setVie(950);
-                        invite.setVieMax(950);
-                        invite.setAttaque(210);
-                        invite.setDefense(140);
-                        invite.setVitesse(120);
-                        yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
-                    }
-                    case 9  -> lancerStage9AvecUl(ctx, stage, estNouveau);
-                    default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
-                };
-                boolean victoire = resultatStage.victoire;
-
-                if (victoire) {
-                    stagesReussis[choix] = true;
-                    if (choix < NB_STAGES) {
-                        stagesDebloques[choix + 1] = true;
-                        System.out.println(">> Stage " + (choix + 1) + " debloque !");
-                    } else {
-                        System.out.println(">> Félicitations ! Vous avez sauvé l'île de Galuna !");
-                        // Cadeau de fin de chapitre 2 — première victoire uniquement
-                        if (estNouveau) {
-                            ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 50);
-                            System.out.println(">> Cadeau : +50 Echarpe(s) blanche d'Ignir !");
-                            System.out.println("   Vous pouvez maintenant recruter Natsu"
-                                    + " dans le Recrutement Rare !");
-                        }
-                    }
-
-                   
-                    ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
-                    ctx.gestionnaireQuetes.notifierStageFini(2, choix, false,
-                            ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
-                    ctx.gestionnaireEtoiles.mettreAJour(2, choix, false,
-                            resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
-                }
+                lancerStage(ctx, choix);
             }
         }
     }
 
+    /**
+     * Lance le stage donne (avec les invites temporaires stage 3/4/5/6/8/9) et applique
+     * les recompenses en cas de victoire. Suppose que le stage est deja debloque.
+     * Reutilisable par la console et l'interface graphique.
+     */
+    public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        Stage stage        = construireStage(numero);
+        boolean estNouveau = !stagesReussis[numero];
+        Stage.ResultatStage resultatStage = switch (numero) {
+            case 3 -> {
+                perso_Lucy invite = new perso_Lucy();
+                invite.setNiveau(15);
+                invite.setVie(900);
+                invite.setVieMax(900);
+                invite.setAttaque(140);
+                invite.setDefense(95);
+                invite.setVitesse(160);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 4, 5 -> {
+                perso_Natsu invite = new perso_Natsu();
+                invite.setNiveau(18);
+                invite.setVie(1100);
+                invite.setVieMax(1100);
+                invite.setAttaque(220);
+                invite.setDefense(130);
+                invite.setVitesse(140);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 6, 8 -> {
+                perso_Gray invite = new perso_Gray();
+                invite.setNiveau(19);
+                invite.setVie(950);
+                invite.setVieMax(950);
+                invite.setAttaque(210);
+                invite.setDefense(140);
+                invite.setVitesse(120);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 9  -> lancerStage9AvecUl(ctx, stage, estNouveau);
+            default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        };
+
+        if (resultatStage.victoire) {
+            stagesReussis[numero] = true;
+            if (numero < NB_STAGES) {
+                stagesDebloques[numero + 1] = true;
+                System.out.println(">> Stage " + (numero + 1) + " debloque !");
+            } else {
+                System.out.println(">> Félicitations ! Vous avez sauvé l'île de Galuna !");
+                if (estNouveau) {
+                    ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 50);
+                    System.out.println(">> Cadeau : +50 Echarpe(s) blanche d'Ignir !");
+                    System.out.println("   Vous pouvez maintenant recruter Natsu"
+                            + " dans le Recrutement Rare !");
+                }
+            }
+
+            ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
+            ctx.gestionnaireQuetes.notifierStageFini(2, numero, false,
+                    ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);
+            ctx.gestionnaireEtoiles.mettreAJour(2, numero, false,
+                    resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
+        }
+        return resultatStage;
+    }
+
+    // Palier de niveau du chapitre 2 : les ennemis vont de niveau 11 (stage 1) a 20 (stage 10).
+    private static final int PALIER_NIVEAU = 10;
+
+    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
+
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
+        int niveau = niveauPourStage(numero);
         // recompenseXP = 0 : la montée de niveau passe exclusivement par les quêtes
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage1DPS());
-                         ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage3Soigneur());
-                         ennemis.add(new EnnemiMage2DPS());
-                         return new Stage(1, "Prologue Chapitre 2", 1500, 0, ennemis); } 
-            
-            case 2  -> { ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage2DPS());
-                        ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage3Soigneur());
-                         ennemis.add(new EnnemiMage2DPS());
+            case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau));
+                         return new Stage(1, "Prologue Chapitre 2", 1500, 0, ennemis); }
+
+            case 2  -> { ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                        ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(2, "Arrivée a l'ile de galuna", 1800, 0, ennemis); }
-            
-            case 3  -> { ennemis.add(new EnnemiCherry()); ennemis.add(new EnnemiMage2DPS()); ennemis.add(new EnnemiMage1DPS()); 
-                         ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage4Buff());
-            
+
+            case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+
                          return new Stage(3, "Lucy VS Cherry", 2100, 0, ennemis); } // Lucy rejoint l'equipe : voir lancerStage3AvecLucy
-            
-            case 4  -> { ennemis.add(new EnnemiYuka()); ennemis.add(new EnnemiMage3Soigneur());
-                         ennemis.add(new EnnemiMage2DPS()); ennemis.add(new EnnemiMage1DPS());
-                         ennemis.add(new EnnemiMage6Debuff());
-                         
+
+            case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau));
+
                          return new Stage(4, "Yuka contre Natsu", 2500, 0, ennemis); } // Natsu rejoint l'equipe : voir lancerStageAvecNatsu
-            
-            case 5  -> { ennemis.add(new EnnemiTobi()); ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage2DPS());
-                         ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage1DPS());
-            
+
+            case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+
                          return new Stage(5, "Tobi contre Natsu", 2800, 0, ennemis); }// Natsu rejoint l'equipe : voir lancerStageAvecNatsu
-            
-            case 6  -> { ennemis.add(new EnnemiLeon()); ennemis.add(new EnnemiMage1DPS());
-                         ennemis.add(new EnnemiMage6Debuff()); ennemis.add(new EnnemiMage3Soigneur());
-                         ennemis.add(new EnnemiMage9Tank());
-                         
+
+            case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage9Tank(niveau));
+
                          return new Stage(6, "Gray vs Leon 1", 3200, 0, ennemis); }//Gray rejoint l'equipe : voir lancerStageAvecGray
-            
-            case 7  -> { ennemis.add(new EnnemiHomme_mysterieux()); ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage2DPS());
-                           ennemis.add(new EnnemiMage5Tank()); //combat avec Natsu contre  homme mysterieux ( ultia en gros combat demonstation)
+
+            case 7  -> { ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                           ennemis.add(new EnnemiMage5Tank(niveau)); //combat avec Natsu contre  homme mysterieux ( ultia en gros combat demonstation)
                          return new Stage(7, "Natsu contre l'homme mysterieux", 3800, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon()); ennemis.add(new EnnemiMage1DPS()); ennemis.add(new EnnemiMage5Tank()); // Gray rejoint l'equipe : voir lancerStageAvecGray
-                        ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage3Soigneur());
+            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); // Gray rejoint l'equipe : voir lancerStageAvecGray
+                        ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          return new Stage(8, "Gray vs Leon part 2", 4300, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiDeliora_passe()); // Combat flashback : Ul seule contre Deliora, voir lancerStage9AvecUl
+            case 9  -> { ennemis.add(new EnnemiDeliora_passe()); // Combat flashback (niveau fixe) : Ul seule contre Deliora, voir lancerStage9AvecUl
                          return new Stage(9, "Le passé de Gray", 4800, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiDeliora());
+            case 10 -> { ennemis.add(new EnnemiDeliora(niveau));
                          return new Stage(10, "Deliora le demon", 5500, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
-    private String getTitreStage(int numero) {
+    public String getTitreStage(int numero) {
         return switch (numero) {
             case 1  -> "Débarquement sur l'île maudite";
             case 2  -> "Tobi, mage de glace de l'île";

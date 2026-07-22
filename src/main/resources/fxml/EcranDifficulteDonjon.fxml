@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="lancement.gui.EcranDifficulteDonjonController"
+      alignment="CENTER" spacing="16" styleClass="root-menu">
+    <Label fx:id="titreLabel" styleClass="titre"/>
+
+    <VBox fx:id="difficultesBox" alignment="CENTER" spacing="10">
+        <padding><Insets top="10"/></padding>
+    </VBox>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+    </Button>
+</VBox>

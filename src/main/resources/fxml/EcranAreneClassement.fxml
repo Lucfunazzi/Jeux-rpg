@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="lancement.gui.EcranAreneClassementController"
+      alignment="CENTER" spacing="10" styleClass="root-menu">
+    <Label text="CLASSEMENT" styleClass="titre"/>
+    <TextArea fx:id="classementArea" editable="false" wrapText="false"
+              styleClass="zone-mono" prefHeight="380"/>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
+        <VBox.margin><Insets top="10" bottom="10"/></VBox.margin>
+    </Button>
+</VBox>

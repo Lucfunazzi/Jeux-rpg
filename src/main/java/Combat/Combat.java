@@ -12,6 +12,50 @@ public class Combat {
     private double bonusTitre  = 0.0;
     private int toursUtilises  = 0;
     private boolean donnerXP   = true;
+    private List<CombatEvent> evenements; // non-null uniquement pendant lancerCombatEnregistre()
+
+    /** Etat d'un personnage a un instant T, pour rejouer le combat visuellement (barres PV/rage). */
+    public static final class PersonnageSnapshot {
+        public final String nom;
+        public final String role;
+        public final String rarete;
+        public final double vie;
+        public final double vieMax;
+        public final double rage;
+        public final boolean vivant;
+        public final boolean coteJoueur;
+        public final List<String> effets;
+
+        PersonnageSnapshot(PersonnageBase p, boolean coteJoueur) {
+            this.nom        = p.getNom();
+            this.role       = p.getRole();
+            this.rarete     = p.getRarete();
+            this.vie        = Math.max(0, p.getVie());
+            this.vieMax     = p.getVieMax();
+            this.rage       = p.getRage();
+            this.vivant     = p.estVivant();
+            this.coteJoueur = coteJoueur;
+            this.effets     = new ArrayList<>();
+            for (Effet e : p.getEffetsActifs()) {
+                if (!e.estTermine()) this.effets.add(e.getNom());
+            }
+        }
+    }
+
+    /** Une etape du combat (une action, un tick d'effets, un debut de tour ou la fin du combat). */
+    public static final class CombatEvent {
+        public final String titre;
+        public final List<String> lignes;
+        public final List<PersonnageSnapshot> etat;
+        public final boolean finDeCombat;
+
+        CombatEvent(String titre, List<String> lignes, List<PersonnageSnapshot> etat, boolean finDeCombat) {
+            this.titre       = titre;
+            this.lignes      = lignes;
+            this.etat        = etat;
+            this.finDeCombat = finDeCombat;
+        }
+    }
 
     public Combat(List<PersonnageBase> equipeJoueur,
                   List<PersonnageBase> equipeAdverse) {
@@ -105,6 +149,41 @@ public class Combat {
 
     // BOUCLE DE COMBAT
 
+    /**
+     * Lance le combat comme lancerCombat(), mais enregistre chaque etape
+     * (action, tick d'effets, tour, fin) avec un instantane des PV/rage de
+     * tous les personnages, pour permettre une relecture visuelle tour par tour.
+     */
+    public List<CombatEvent> lancerCombatEnregistre() {
+        evenements = new ArrayList<>();
+        lancerCombat();
+        List<CombatEvent> resultat = evenements;
+        evenements = null;
+        return resultat;
+    }
+
+    private void enregistrer(String titre, List<String> lignes) {
+        enregistrer(titre, lignes, false);
+    }
+
+    private void enregistrer(String titre, List<String> lignes, boolean fin) {
+        if (evenements == null) return;
+        evenements.add(new CombatEvent(titre, new ArrayList<>(lignes), snapshotEquipes(equipeJoueur, equipeAdverse), fin));
+    }
+
+    /**
+     * Instantane des deux equipes (PV/rage/etat) a un instant T.
+     * A appeler AVANT lancerCombatEnregistre() pour recuperer l'etat de depart
+     * (equipes a pleine vie) que l'ecran de combat utilisera comme point de reference.
+     */
+    public static List<PersonnageSnapshot> snapshotEquipes(List<PersonnageBase> equipeJoueur,
+                                                            List<PersonnageBase> equipeAdverse) {
+        List<PersonnageSnapshot> etat = new ArrayList<>();
+        for (PersonnageBase p : equipeJoueur)  etat.add(new PersonnageSnapshot(p, true));
+        for (PersonnageBase p : equipeAdverse) etat.add(new PersonnageSnapshot(p, false));
+        return etat;
+    }
+
     public void lancerCombat() {
         System.out.println("\n=== COMBAT ===\n");
 
@@ -122,6 +201,7 @@ public class Combat {
         while (!equipeKO(equipeJoueur) && !equipeKO(equipeAdverse) && numeroTour <= MAX_TOURS) {
             System.out.println("\n--- Tour " + numeroTour + " ---");
             toursUtilises = numeroTour;
+            enregistrer("Tour " + numeroTour, List.of());
 
             afficherEffetsGroupes(equipeJoueur);
             afficherEffetsGroupes(equipeAdverse);
@@ -129,6 +209,7 @@ public class Combat {
             for (PersonnageBase perso : equipeJoueur) if (perso.estVivant()) perso.appliquerEffets(logEffets);
             for (PersonnageBase perso : equipeAdverse) if (perso.estVivant()) perso.appliquerEffets(logEffets);
             for (String ligne : logEffets) System.out.println(ligne);
+            if (!logEffets.isEmpty()) enregistrer("Effets", logEffets);
 
             afficherRage(equipeJoueur);
             afficherRage(equipeAdverse);
@@ -146,19 +227,27 @@ public class Combat {
                 boolean estDuCoteJoueur = equipeJoueur.contains(attaquant);
 
                 if (attaquant.aEffet(Petrification.class)) {
-                    System.out.println("[PETRIFICATION] " + attaquant.getNom() + " est petrife et ne peut pas agir !");
+                    String msg = "[PETRIFICATION] " + attaquant.getNom() + " est petrife et ne peut pas agir !";
+                    System.out.println(msg);
+                    enregistrer(attaquant.getNom(), List.of(msg));
                     continue;
                 }
                 if (attaquant.aEffet(Gel.class)) {
-                    System.out.println("[GEL] " + attaquant.getNom() + " est gele et passe son tour !");
+                    String msg = "[GEL] " + attaquant.getNom() + " est gele et passe son tour !";
+                    System.out.println(msg);
+                    enregistrer(attaquant.getNom(), List.of(msg));
                     continue;
                 }
                 if (attaquant.aEffet(Etourdissement.class)) {
-                    System.out.println("[ETOURDISSEMENT] " + attaquant.getNom() + " est etourdi et ne peut pas agir !");
+                    String msg = "[ETOURDISSEMENT] " + attaquant.getNom() + " est etourdi et ne peut pas agir !";
+                    System.out.println(msg);
+                    enregistrer(attaquant.getNom(), List.of(msg));
                     continue;
                 }
                 if (attaquant.aEffet(Sommeil.class)) {
-                    System.out.println("[SOMMEIL] " + attaquant.getNom() + " dort profondement...");
+                    String msg = "[SOMMEIL] " + attaquant.getNom() + " dort profondement...";
+                    System.out.println(msg);
+                    enregistrer(attaquant.getNom(), List.of(msg));
                     continue;
                 }
                 Paralysie paralysie = attaquant.getEffet(Paralysie.class);
@@ -192,6 +281,7 @@ public class Combat {
 
                 if (attaquant.getRage() >= 100) {
                     System.out.println("\n[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
+                    log.add("[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
                     attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
                     attaquant.reinitialiserRage();
 
@@ -199,10 +289,12 @@ public class Combat {
                     Silence silence = attaquant.getEffet(Silence.class);
                     if (silence != null && silence.empecheSpeciale()) {
                         System.out.println("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
+                        log.add("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         attaquer(attaquant, cible, log);
                         attaquant.ajouterRage(20);
                     } else {
                         System.out.println("\n[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
+                        log.add("[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
                         attaquant.attaqueSpeciale(cible, alliesVirtuels, ennemisVirtuels, log);
                         attaquant.setSpecialeUtilisee(true);
                     }
@@ -222,19 +314,25 @@ public class Combat {
                 for (String ligne : log) {
                     System.out.println(ligne);
                 }
+                if (!log.isEmpty()) enregistrer(attaquant.getNom(), log);
             }
             numeroTour++;
         }
 
         System.out.println("\n=== FIN DU COMBAT ===");
+        String resultatFinal;
         if (equipeKO(equipeAdverse)) {
-            System.out.println("Votre equipe a gagne !");
+            resultatFinal = "Votre equipe a gagne !";
+            System.out.println(resultatFinal);
             if (donnerXP) donnerExperience();
         } else if (equipeKO(equipeJoueur)) {
-            System.out.println("Votre equipe a perdu !");
+            resultatFinal = "Votre equipe a perdu !";
+            System.out.println(resultatFinal);
         } else {
-            System.out.println("Combat termine apres " + MAX_TOURS + " tours sans vainqueur. Defaite par epuisement.");
+            resultatFinal = "Combat termine apres " + MAX_TOURS + " tours sans vainqueur. Defaite par epuisement.";
+            System.out.println(resultatFinal);
         }
+        enregistrer("Fin du combat", List.of(resultatFinal), true);
     }
 
     private void afficherEffetsGroupes(List<PersonnageBase> equipe) {

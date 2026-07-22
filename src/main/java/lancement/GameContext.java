@@ -67,4 +67,63 @@ public class GameContext {
     public String dernierCoffreArene = null;
 
     public GameContext() {}
+
+    /**
+     * Construit un GameContext avec tous les managers/chapitres de base initialisés
+     * (sans joueur/formation, qui dépendent du choix nouvelle-partie / chargement).
+     * Utilisé par le lancement console (Main) et par l'interface graphique.
+     */
+    public static GameContext creerContexteBase() {
+        GameContext ctx = new GameContext();
+        ctx.sauvegarde           = new GestionnaireSauvegarde();
+        ctx.inventaire           = new Inventaire();
+        ctx.menuRecrutement      = new MenuRecrutement();
+        ctx.menuEtoilesPerso     = new MenuEtoilesPerso();
+        ctx.menuTirage           = new MenuTirage_recrutement();
+        ctx.chapitre1            = new Chapitre1();
+        ctx.chapitre2            = new Chapitre2();
+        ctx.chapitre3            = new Chapitre3();
+        ctx.gestionnaireQuetes   = new GestionnaireQuetes();
+        ctx.gestionnaireEnergie  = new GestionnaireEnergie();
+        ctx.rangJoueur           = new RangJoueur();
+        ctx.gestionnaireTitres   = new GestionnaireTitres();
+        ctx.gestionnaireDonjon   = new GestionnaireDonjon();
+        ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
+        ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
+        ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
+        ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
+        ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
+        ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
+        return ctx;
+    }
+
+    /** Restaure ce contexte (joueur, formation, progression...) depuis une sauvegarde chargee. */
+    public void restaurerDepuis(SauvegardeData data) {
+        this.joueur               = sauvegarde.restaurerJoueur(data, this);
+        this.personnagesRecruites = sauvegarde.restaurerPersonnagesRecruites(data);
+        sauvegarde.restaurerCompagnons(gestionnaireCompagnons, data);
+        this.formation             = new Formation(this.joueur, gestionnaireCompagnons);
+        sauvegarde.restaurerFormation(this.formation, data, this.personnagesRecruites);
+        sauvegarde.restaurerChapitre1(chapitre1, data);
+        sauvegarde.restaurerChapitre1Elite(chapitre1Elite, data);
+        sauvegarde.restaurerChapitre2(chapitre2, data);
+        sauvegarde.restaurerChapitre3(chapitre3, data);
+        sauvegarde.restaurerChapitre2Elite2(chapitre2Elite, data);
+        sauvegarde.restaurerChapitre3Elite(chapitre3Elite, data);
+        sauvegarde.restaurerInventaire(inventaire, data);
+        sauvegarde.restaurerQuetes(gestionnaireQuetes, data);
+        sauvegarde.restaurerEnergie(gestionnaireEnergie, data);
+        sauvegarde.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
+        sauvegarde.restaurerDonjon(gestionnaireDonjon, data);
+        menuRecrutement.setParcheminC(data.parcheminC);
+        menuRecrutement.setParcheminB(data.parcheminB);
+        menuRecrutement.setParcheminA(data.parcheminA);
+        menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
+        menuTirage.setParcheminElite(data.parcheminTirageElite);
+        menuTirage.setCompteurPityA(data.tirageEliteCompteurPityA);
+        menuTirage.setCompteurPitySS(data.tirageEliteCompteurSansSS);
+        menuTirage.setCompteurPityS(data.tirageEliteCompteurSansS);
+        sauvegarde.restaurerEtoiles(gestionnaireEtoiles, data);
+        this.coupons = data.coupons;
+    }
 }

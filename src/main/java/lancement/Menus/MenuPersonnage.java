@@ -3,6 +3,7 @@ package lancement.Menus;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Equipement.Inventaire;
 import Equipement.ParcheminXP;
 import lancement.Formation;
@@ -287,10 +288,20 @@ public class MenuPersonnage {
             }
         }
 
-        // Appliquer les parchemins un par un (arrêt anticipé si niveau max atteint)
+        System.out.println("\n>> " + appliquerParcheminsXP(cible, ctx, rarete, quantite));
+    }
+
+    /**
+     * Applique jusqu'a {@code quantite} parchemins XP de la rarete donnee sur {@code cible}
+     * (arret anticipe si le niveau max autorise est atteint). Retourne le message resultat.
+     * Reutilisable par la console et l'interface graphique.
+     */
+    public String appliquerParcheminsXP(PersonnageBase cible, GameContext ctx,
+                                          ParcheminXP.Rarete rarete, int quantite) {
+        int niveauMax = ctx.joueur.getNiveau();
         ParcheminXP parchemin = new ParcheminXP(rarete);
         int xpTotaleAccordee = 0;
-        int parchminsUtilises = 0;
+        int parcheminsUtilises = 0;
 
         for (int i = 0; i < quantite; i++) {
             if (cible.getNiveau() >= niveauMax) break;
@@ -302,18 +313,19 @@ public class MenuPersonnage {
             ctx.inventaire.retirerParcheminXP(rarete);
             cible.gagnerExperience(xpAccordee);
             xpTotaleAccordee += xpAccordee;
-            parchminsUtilises++;
-        }
-
-        System.out.println("\n>> " + parchminsUtilises + "x " + parchemin.getNom()
-                + " utilise(s) sur " + cible.getNom() + " !");
-        System.out.println("   +" + xpTotaleAccordee + " XP au total.");
-
-        if (parchminsUtilises < quantite) {
-            System.out.println("   (Arret anticipe — niveau max " + niveauMax + " atteint)");
+            parcheminsUtilises++;
         }
 
         ctx.sauvegarde.sauvegarder(ctx);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(parcheminsUtilises).append("x ").append(parchemin.getNom())
+          .append(" utilise(s) sur ").append(cible.getNom()).append(" !\n");
+        sb.append("+").append(xpTotaleAccordee).append(" XP au total.");
+        if (parcheminsUtilises < quantite) {
+            sb.append("\n(Arret anticipe - niveau max ").append(niveauMax).append(" atteint)");
+        }
+        return sb.toString();
     }
 
     /**
@@ -423,21 +435,12 @@ public class MenuPersonnage {
     }
 
     private boolean estCompatible(PersonnageBase perso, Equipement e) {
-        if (e.getSlot() != Equipement.Slot.ARME) return true;
-        if (e.getTypeArme() == Equipement.TypeArme.AUCUN) return true;
         String type = perso.getType();
-        if (type == null) {
-            if (perso instanceof Joueur.Personnage_principale pp)
-                type = pp.getChoixClasses();
+        if (type == null && perso instanceof Joueur.Personnage_principale pp) {
+            type = pp.getChoixClasses();
         }
         if (type == null) return true;
-        return switch (type) {
-            case "Chasseur de Dragon" -> e.getTypeArme() == Equipement.TypeArme.LANCE;
-            case "Mage"     -> e.getTypeArme() == Equipement.TypeArme.BATON;
-            case "Chevalier"          -> e.getTypeArme() == Equipement.TypeArme.EPEE;
-                case "Constellationniste" -> e.getTypeArme() == Equipement.TypeArme.BATON;
-            default         -> true;
-        };
+        return EquipementFactory.estCompatibleArme(type, e);
     }
 
     private String nomSlot(Equipement.Slot slot) {
