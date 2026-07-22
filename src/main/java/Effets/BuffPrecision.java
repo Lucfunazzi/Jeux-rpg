@@ -5,7 +5,6 @@ import java.util.List;
 public class BuffPrecision implements Effet {
     private int toursRestants;
     private double pourcentage;
-    private double bonusApplique;
 
     public BuffPrecision(double pourcentage, int tours) {
         this.pourcentage = pourcentage;
@@ -14,20 +13,16 @@ public class BuffPrecision implements Effet {
 
     @Override
     public void appliquer(PersonnageBase cible) {
-        bonusApplique = cible.getTauxPrecisions() * pourcentage;
-        cible.setPrecisions(cible.getTauxPrecisions() + bonusApplique);
-        System.out.println(cible.getNom() + " gagne " + (pourcentage * 100)
+        System.out.println(cible.getNom() + " gagne " + (int)(pourcentage * 100)
                 + "% de precision pendant " + toursRestants + " tour(s) !");
     }
 
     @Override
     public void tick(PersonnageBase cible) {
-        
+        toursRestants--;
         if (toursRestants <= 0) {
-            cible.setPrecisions(cible.getTauxPrecisions() - bonusApplique);
             System.out.println("Le buff de precision de " + cible.getNom() + " se termine !");
         }
-        toursRestants--;
     }
 
     @Override
@@ -36,21 +31,20 @@ public class BuffPrecision implements Effet {
     @Override
     public String getNom() { return "Buff Precision"; }
 
+    public double getPourcentage() { return pourcentage; }
+
     @Override
     public void appliquer(PersonnageBase cible, List<String> log) {
-        bonusApplique = cible.getTauxPrecisions() * pourcentage;
-        cible.setPrecisions(cible.getTauxPrecisions() + bonusApplique);
-        log.add(cible.getNom() + " gagne " + (pourcentage * 100)
+        log.add(cible.getNom() + " gagne " + (int)(pourcentage * 100)
                 + "% de precision pendant " + toursRestants + " tour(s) !");
     }
 
     @Override
     public void tick(PersonnageBase cible, List<String> log) {
+        toursRestants--;
         if (toursRestants <= 0) {
-            cible.setPrecisions(cible.getTauxPrecisions() - bonusApplique);
             log.add("Le buff de precision de " + cible.getNom() + " se termine !");
         }
-        toursRestants--;
     }
 
 }

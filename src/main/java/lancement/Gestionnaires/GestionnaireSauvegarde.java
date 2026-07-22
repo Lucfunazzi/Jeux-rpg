@@ -113,6 +113,7 @@ public class GestionnaireSauvegarde {
         // Arbre de compétences
         data.arbreNoeudDebloques      = joueur.getArbreCompetences().getEtatNoeuds();
         data.arbreNoeudDebloques2     = joueur.getArbreCompetences().getEtatNoeuds2();
+        data.arbreNoeudDebloques3     = joueur.getArbreCompetences().getEtatNoeuds3();
         data.arbrePointsDisponibles   = joueur.getArbreCompetences().getPointsDisponibles();
         data.arbre2Debloque           = joueur.getArbreCompetences().isArbre2Debloque();
         data.competenceSpecialeActive = joueur.getCompetenceSpecialeActive();
@@ -176,8 +177,9 @@ public class GestionnaireSauvegarde {
         if (ctx.menuTirage != null) {
             data.parcheminTirageOrdinaire    = ctx.menuTirage.getParcheminOrdinaire();
             data.parcheminTirageElite        = ctx.menuTirage.getParcheminElite();
-            data.tirageEliteCompteurSansS    = ctx.menuTirage.getCompteurSansSRang();
-            data.tirageEliteCompteurSansSS   = ctx.menuTirage.getCompteurSansSS();
+            data.tirageEliteCompteurPityA    = ctx.menuTirage.getCompteurPityA();
+            data.tirageEliteCompteurSansS    = ctx.menuTirage.getCompteurPityS();
+            data.tirageEliteCompteurSansSS   = ctx.menuTirage.getCompteurPitySS();
         }
 
         // Inventaire
@@ -319,6 +321,7 @@ public class GestionnaireSauvegarde {
         joueur.getArbreCompetences().setEtatNoeuds(data.arbreNoeudDebloques);
         joueur.getArbreCompetences().setPointsDisponibles(data.arbrePointsDisponibles);
         joueur.getArbreCompetences().setEtatNoeuds2(data.arbreNoeudDebloques2);
+        joueur.getArbreCompetences().setEtatNoeuds3(data.arbreNoeudDebloques3);
         joueur.getArbreCompetences().setArbre2Debloque(data.arbre2Debloque);
         joueur.setCompetenceSpecialeActive(data.competenceSpecialeActive);
         while (joueur.getNiveau() < data.joueurNiveau) joueur.monterDeNiveau();

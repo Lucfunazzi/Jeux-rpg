@@ -339,28 +339,67 @@ private void initialiserRecompensesPersonnages() {
         }
     }
 
-    // ── Quêtes visibles (dévoilées progressivement dans chaque groupe) ────
-    public ArrayList<QueteProgression> getQuetesVisibles() {
+    // ── Quêtes visibles ─────────────────────────────────────────────────
+    // Chaque piste (chapitre normal / chapitre élite) avance indépendamment :
+    // une seule quête à la fois par piste, révélée quand le stage correspondant
+    // se débloque réellement en jeu. Les pistes normale et élite d'un même
+    // chapitre sont donc simultanées. Une quête déjà réclamée disparaît de la
+    // liste pour éviter qu'elle ne s'allonge indéfiniment.
+    public ArrayList<QueteProgression> getQuetesVisibles(lancement.GameContext ctx) {
         ArrayList<QueteProgression> visibles = new ArrayList<>();
 
-        for (int i = 0; i < quetesProgression.size(); i++) {
-            QueteProgression q = quetesProgression.get(i);
-            boolean visible;
-            if (i == 0) {
-                visible = true;
-            } else {
-                QueteProgression precedente = quetesProgression.get(i - 1);
-                boolean memeGroupe = precedente.getChapitreRequis() == q.getChapitreRequis()
-                        && precedente.isElite() == q.isElite();
-                if (memeGroupe) {
-                    visible = precedente.isCompletee() || precedente.isReclamee();
-                } else {
-                    visible = true; // première d'un nouveau groupe toujours visible
-                }
+        for (QueteProgression q : quetesProgression) {
+            if (q.isCompletee() && q.isReclamee()) continue;
+            if (stageDebloque(ctx, q.getChapitreRequis(), q.getStageRequis(), q.isElite())) {
+                visibles.add(q);
             }
-            if (visible) visibles.add(q);
         }
         return visibles;
+    }
+
+    // Reflète les vraies conditions d'accès de MenuHistoire : un chapitre/élite
+    // n'est accessible qu'une fois son prérequis terminé, et le stage doit en
+    // plus être débloqué à l'intérieur de ce chapitre.
+    private boolean stageDebloque(lancement.GameContext ctx, int chapitre, int stage, boolean estElite) {
+        boolean accessible;
+        boolean[] stagesDebloques;
+
+        switch (chapitre) {
+            case 1 -> {
+                if (!estElite) {
+                    accessible      = true;
+                    stagesDebloques = ctx.chapitre1.getStagesDebloques();
+                } else {
+                    accessible      = ctx.chapitre1.getStagesReussis()[10];
+                    stagesDebloques = ctx.chapitre1Elite != null ? ctx.chapitre1Elite.getStagesDebloques() : null;
+                }
+            }
+            case 2 -> {
+                if (!estElite) {
+                    accessible      = ctx.chapitre1.getStagesReussis()[10];
+                    stagesDebloques = ctx.chapitre2.getStagesDebloques();
+                } else {
+                    accessible      = ctx.chapitre2Elite != null && ctx.chapitre2Elite.estDebloque();
+                    stagesDebloques = ctx.chapitre2Elite != null ? ctx.chapitre2Elite.getStagesDebloques() : null;
+                }
+            }
+            case 3 -> {
+                if (!estElite) {
+                    accessible      = ctx.chapitre2.getStagesReussis()[10];
+                    stagesDebloques = ctx.chapitre3 != null ? ctx.chapitre3.getStagesDebloques() : null;
+                } else {
+                    accessible      = ctx.chapitre3Elite != null && ctx.chapitre3Elite.estDebloque();
+                    stagesDebloques = ctx.chapitre3Elite != null ? ctx.chapitre3Elite.getStagesDebloques() : null;
+                }
+            }
+            default -> {
+                accessible      = false;
+                stagesDebloques = null;
+            }
+        }
+
+        return accessible && stagesDebloques != null
+                && stage < stagesDebloques.length && stagesDebloques[stage];
     }
 
     public QueteJournaliere getQueteJournaliere() { return queteJournaliere; }

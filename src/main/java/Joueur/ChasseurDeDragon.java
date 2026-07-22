@@ -69,7 +69,18 @@ public class ChasseurDeDragon implements Competences {
         Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
         Combat.appliquerEffet(cibleFinale, new Etourdissement(2), log);
     }
-    
+
+    // ── Spéciale Arbre 3 ───────────────────────────────────────────────────
+    @Override
+    public void competenceArbre3(Personnage_principale utilisateur, PersonnageBase cible,
+            List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
+        // TODO
+    }
+
+    @Override public void descriptionCompetenceArbre3() {
+        // TODO
+    }
+
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Poings du Dragon d'Eau — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }

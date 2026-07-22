@@ -31,7 +31,6 @@ import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
 import Joueur.*;
-import Personnage.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Equipement.Inventaire;
@@ -116,8 +115,9 @@ public class Main {
                     ctx.menuRecrutement.setParcheminA(data.parcheminA);
                     ctx.menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
                     ctx.menuTirage.setParcheminElite(data.parcheminTirageElite);
-                    ctx.menuTirage.setCompteurSansSRang(data.tirageEliteCompteurSansS);
-                    ctx.menuTirage.setCompteurSansSS(data.tirageEliteCompteurSansSS);
+                    ctx.menuTirage.setCompteurPityA(data.tirageEliteCompteurPityA);
+                    ctx.menuTirage.setCompteurPityS(data.tirageEliteCompteurSansS);
+                    ctx.menuTirage.setCompteurPitySS(data.tirageEliteCompteurSansSS);
                     ctx.sauvegarde.restaurerEtoiles(ctx.gestionnaireEtoiles, data);
                     ctx.coupons = data.coupons;
                     System.out.println("\nPartie chargee ! Bon retour, " + ctx.joueur.getNom() + " !");
@@ -243,7 +243,7 @@ public class Main {
     private static Personnage_principale creerNouveauJoueur(Scanner scanner, String pseudo, GameContext ctx) {
         Personnage_principale joueur = new Personnage_principale(pseudo, 1);
         joueur.setGameContext(ctx);
-        Competences competences = null;
+        Competences competences;
 
         System.out.println("\nChoisissez votre classe :\n");
         for (int i = 0; i < joueur.getClasses().length; i++)

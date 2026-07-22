@@ -22,6 +22,8 @@ public class RangJoueur {
                     return "Completez l'arbre 1 pour monter de rang.";
                 if (!arbre.isNoeud10Arbre2Debloque())
                     return "Completez l'arbre 2 pour monter de rang.";
+                if (!arbre.isNoeud10Arbre3Debloque())
+                    return "Completez l'arbre 3 pour monter de rang.";
             }
             default -> {
                 return "La condition pour passer au rang suivant n'est pas encore disponible.";

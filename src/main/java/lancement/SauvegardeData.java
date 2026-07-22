@@ -16,6 +16,7 @@ public class SauvegardeData {
 
     public boolean[] arbreNoeudDebloques     = new boolean[10];
     public boolean[] arbreNoeudDebloques2    = new boolean[10];
+    public boolean[] arbreNoeudDebloques3    = new boolean[10];
     public int       arbrePointsDisponibles  = 0;
     public boolean   arbre2Debloque          = false;
     public int       competenceSpecialeActive = 0;
@@ -62,6 +63,7 @@ public class SauvegardeData {
     // ── Tirages ───────────────────────────────────────────────────────────
     public int parcheminTirageOrdinaire = 0;
     public int parcheminTirageElite     = 0;
+    public int tirageEliteCompteurPityA  = 0;
     public int tirageEliteCompteurSansS = 0;
     public int tirageEliteCompteurSansSS = 0;
 

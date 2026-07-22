@@ -14,32 +14,28 @@ import java.util.Scanner;
  * Système de tirage gacha.
  *
  * ── TIRAGE ORDINAIRE ────────────────────────────────────────────────────────
- * Pool : tous les C (10), tous les B (17), 2 A sélectionnés (Naruto, Natsu).
- * Coût : 1 Parchemin de Tirage par tirage x1, 10 par tirage x10.
+ * Ne donne jamais de personnage complet de rang B ou A — uniquement des
+ * fragments, sauf 2% de chance d'obtenir un personnage complet de rang C.
  *
  * Par tirage unitaire :
- *   - 100% chance d'obtenir AU MOINS un rang C
- *   - 20%  chance d'obtenir un rang B  (sinon C)
- *   - 2%   chance d'obtenir un rang A  (sinon B ou C)
- *
- * Fragments possibles à la place d'un personnage (plus probable qu'un perso) :
- *   - C : 1-5 fragments du perso C
- *   - B : 1-3 fragments du perso B
- *   - A : 1-2 fragments du perso A
- * Probabilité d'obtenir des fragments plutôt qu'un perso : 60% C, 50% B, 40% A
+ *   -  2% : personnage complet rang C
+ *   - 70% : fragments rang C (2-5)
+ *   - 23% : fragments rang B (1-3)
+ *   -  5% : fragments rang A (1-2)
  *
  * ── TIRAGE ELITE ────────────────────────────────────────────────────────────
- * Pool : tous les A (20), tous les S (16), tous les SS (2).
- * Coût : 1 Parchemin Elite par tirage x1, 10 par tirage x10.
+ * Hors pity, ne donne jamais de personnage complet — uniquement des fragments.
+ * Trois pity indépendants, chacun ne se remet à zéro que lorsqu'il se déclenche
+ * lui-même (si plusieurs seuils tombent sur le même tirage, tous se déclenchent) :
+ *   - tous les 10 tirages  : 1 personnage complet rang A aléatoire
+ *   - tous les 150 tirages : 1 personnage complet rang S aléatoire
+ *   - tous les 500 tirages : 1 personnage complet rang SS aléatoire
  *
- * Par tirage unitaire :
- *   - 100% chance d'obtenir AU MOINS un rang A
- *   - Pity S   : garanti à 150 tirages cumulés sans rang S+
- *   - Pity SS  : garanti à 450 tirages cumulés sans rang SS
- *   - Hors pity : 5% S, 0.3% SS, le reste A
- *
- * Fragments possibles à la place (même logique, probabilités élevées) :
- *   - A : 1-2 frags, B : 1-3 frags, C : 1-5 frags dans le remplissage x10
+ * Fragments hors déclenchement de pity (un seul tirage aléatoire parmi) :
+ *   - 55% rang B  (2-5 frags)
+ *   - 35% rang A  (1-4 frags)
+ *   -  9% rang S  (1-2 frags)
+ *   -  1% rang SS (1 frag, très rare)
  *
  * Doublon → fragments : si le personnage est déjà recruté, il se convertit
  * automatiquement en fragments de ce personnage (1 doublon = coût_recrutement / 4).
@@ -55,48 +51,51 @@ public class MenuTirage_recrutement {
     public int  getParcheminElite()           { return parcheminElite; }
     public void setParcheminElite(int n)      { this.parcheminElite = n; }
 
-    // ── Compteurs pity Elite ──────────────────────────────────────────────
-    private int compteurSansSRang   = 0;   // tirages depuis dernier S ou SS
-    private int compteurSansSS      = 0;   // tirages depuis dernier SS
+    // ── Compteurs pity Elite (indépendants les uns des autres) ────────────
+    private int compteurPityA  = 0;   // tirages depuis le dernier rang A garanti
+    private int compteurPityS  = 0;   // tirages depuis le dernier rang S garanti
+    private int compteurPitySS = 0;   // tirages depuis le dernier rang SS garanti
 
-    public int  getCompteurSansSRang()       { return compteurSansSRang; }
-    public void setCompteurSansSRang(int n)  { this.compteurSansSRang = n; }
-    public int  getCompteurSansSS()          { return compteurSansSS; }
-    public void setCompteurSansSS(int n)     { this.compteurSansSS = n; }
+    public int  getCompteurPityA()      { return compteurPityA; }
+    public void setCompteurPityA(int n) { this.compteurPityA = n; }
+    public int  getCompteurPityS()      { return compteurPityS; }
+    public void setCompteurPityS(int n) { this.compteurPityS = n; }
+    public int  getCompteurPitySS()     { return compteurPitySS; }
+    public void setCompteurPitySS(int n){ this.compteurPitySS = n; }
 
+    private static final int PITY_A  = 10;
     private static final int PITY_S  = 150;
-    private static final int PITY_SS = 450;
+    private static final int PITY_SS = 500;
 
     private static final Random RNG = new Random();
 
     // ── Pool Tirage Ordinaire ─────────────────────────────────────────────
-    // 2 persos A sélectionnés dans la bannière ordinaire
     private static final List<String> POOL_A_ORDINAIRE = List.of("Gray", "Natsu");
 
     private static final List<String> POOL_B = List.of(
-        "Bickslow", "Cana", "Evergreen", "Loke",
-        "Levy", "Lisanna", "Elfman Bête"
+        "Cana", 
+        "Levy", "Lisanna","Elfman","Leon","Totomaru","Sol"
     );
 
     private static final List<String> POOL_C = List.of(
-        "Alzack", "Bisca", "Elfman", "Max", "Droy",
-        "Jet", "Warren", "Nab", "Romeo"
+        "Alzack", "Bisca","Bora","Eligoal","Duc Everlue","Cherry","Yuka","Tobi"
+        
     );
 
     // ── Pool Tirage Elite ─────────────────────────────────────────────────
     private static final List<String> POOL_A_ELITE = List.of(
         "Angel", "Freed", "Gajeel",
-        "Gray", "Jubia", "Lucy",
-        "Natsu", "Wendy"
+        "Gray", "Jubia (phantom lord)", "Lucy",
+        "Wendy","Bixrow","Evergreen","Aria"
     );
 
     private static final List<String> POOL_S = List.of(
-        "Erza", "Mirajane", "Natsu Etherion",
+        "Erza",
         "Rogue", "Sting", "Yukino"
     );
 
     private static final List<String> POOL_SS = List.of(
-        "Lucas", "Mirajane Halphas"
+        "Lucas"
     );
 
     // ── Rarete de chaque perso ────────────────────────────────────────────
@@ -116,11 +115,11 @@ public class MenuTirage_recrutement {
             System.out.println("            TIRAGES");
             System.out.println("========================================");
             System.out.printf("  Parchemins Ordinaires : %d%n", parcheminOrdinaire);
-            System.out.printf("  Parchemins Elite      : %d  (pity S : %d/%d | SS : %d/%d)%n",
-                    parcheminElite, compteurSansSRang, PITY_S, compteurSansSS, PITY_SS);
+            System.out.printf("  Parchemins Elite      : %d  (pity A : %d/%d | S : %d/%d | SS : %d/%d)%n",
+                    parcheminElite, compteurPityA, PITY_A, compteurPityS, PITY_S, compteurPitySS, PITY_SS);
             System.out.println();
-            System.out.println("1. Tirage Ordinaire  (pool : C / B / A limité)");
-            System.out.println("2. Tirage Elite      (pool : A / S / SS)");
+            System.out.println("1. Tirage Ordinaire  (fragments C/B/A, 2% perso complet C)");
+            System.out.println("2. Tirage Elite      (fragments B/A/S/SS, pity A/S/SS)");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -144,8 +143,8 @@ public class MenuTirage_recrutement {
         while (!retour) {
             int coupons = ctx.joueur.getCoupons();
             System.out.println("\n--- TIRAGE ORDINAIRE ---");
-            System.out.println("Pool : C (9 persos FT)  |  B (7 persos FT)  |  A (2 persos : Gray, Natsu)");
-            System.out.println("Taux par tirage : 100% C minimum  |  20% B  |  2% A");
+            System.out.println("Jamais de perso complet B/A — uniquement des fragments.");
+            System.out.println("Taux par tirage : 2% perso complet C  |  70% frags C  |  23% frags B  |  5% frags A");
             System.out.printf("Parchemins Ordinaires : %d  |  Coupons : %d%n", parcheminOrdinaire, coupons);
             System.out.println();
             System.out.println("1. Tirage x1  (1 parchemin ordinaire)");
@@ -201,66 +200,40 @@ public class MenuTirage_recrutement {
         }
     }
 
-    /** Effectue un tirage ordinaire unitaire. */
+    /** Effectue un tirage ordinaire unitaire : 2% perso complet C, sinon fragments C/B/A. */
     private ResultatTirage tirageOrdinaireUnitaire() {
         double roll = RNG.nextDouble();
 
         if (roll < 0.02) {
-            // 2% → rang A
-            String nom = POOL_A_ORDINAIRE.get(RNG.nextInt(POOL_A_ORDINAIRE.size()));
-            if (RNG.nextDouble() < 0.40) {
-                // 40% fragments à la place
-                int qte = 1 + RNG.nextInt(2); // 1-2
-                return ResultatTirage.fragments(nom, "A", qte);
-            }
-            return ResultatTirage.personnage(nom, "A");
+            // 2% → personnage complet rang C
+            String nom = POOL_C.get(RNG.nextInt(POOL_C.size()));
+            return ResultatTirage.personnage(nom, "C");
 
-        } else if (roll < 0.22) {
-            // 20% → rang B
+        } else if (roll < 0.72) {
+            // 70% → fragments rang C (2-5)
+            String nom = POOL_C.get(RNG.nextInt(POOL_C.size()));
+            int qte = 2 + RNG.nextInt(4); // 2-5
+            return ResultatTirage.fragments(nom, "C", qte);
+
+        } else if (roll < 0.95) {
+            // 23% → fragments rang B (1-3)
             String nom = POOL_B.get(RNG.nextInt(POOL_B.size()));
-            if (RNG.nextDouble() < 0.50) {
-                int qte = 1 + RNG.nextInt(3); // 1-3
-                return ResultatTirage.fragments(nom, "B", qte);
-            }
-            return ResultatTirage.personnage(nom, "B");
+            int qte = 1 + RNG.nextInt(3); // 1-3
+            return ResultatTirage.fragments(nom, "B", qte);
 
         } else {
-            // 78% → rang C
-            String nom = POOL_C.get(RNG.nextInt(POOL_C.size()));
-            if (RNG.nextDouble() < 0.60) {
-                int qte = 1 + RNG.nextInt(5); // 1-5
-                return ResultatTirage.fragments(nom, "C", qte);
-            }
-            return ResultatTirage.personnage(nom, "C");
+            // 5% → fragments rang A (1-2)
+            String nom = POOL_A_ORDINAIRE.get(RNG.nextInt(POOL_A_ORDINAIRE.size()));
+            int qte = 1 + RNG.nextInt(2); // 1-2
+            return ResultatTirage.fragments(nom, "A", qte);
         }
     }
 
-    /** Tirage x10 : garantit au moins 1 B (si aucun B+ dans les 9 premiers). */
     private List<ResultatTirage> tirageOrdinaireDix() {
         List<ResultatTirage> liste = new ArrayList<>();
-        boolean aObtenuBOuPlus = false;
-
-        for (int i = 0; i < 9; i++) {
-            ResultatTirage r = tirageOrdinaireUnitaire();
-            liste.add(r);
-            if (!r.rarete.equals("C")) aObtenuBOuPlus = true;
-        }
-
-        // 10e tirage : garanti B si rien de mieux n'est sorti
-        if (!aObtenuBOuPlus) {
-            String nom = POOL_B.get(RNG.nextInt(POOL_B.size()));
-            ResultatTirage r;
-            if (RNG.nextDouble() < 0.50) {
-                int qte = 1 + RNG.nextInt(3);
-                r = ResultatTirage.fragments(nom, "B", qte);
-            } else {
-                r = ResultatTirage.personnage(nom, "B");
-            }
-            liste.add(r);
-        } else {
+        for (int i = 0; i < 10; i++) {
             liste.add(tirageOrdinaireUnitaire());
         }
-
         return liste;
     }
 
@@ -275,11 +248,12 @@ public class MenuTirage_recrutement {
         while (!retour) {
             int coupons = ctx.joueur.getCoupons();
             System.out.println("\n--- TIRAGE ELITE ---");
-            System.out.printf("Pool : A (8 persos)  |  S (6 persos)  |  SS (2 persos)%n");
-            System.out.printf("Taux hors pity : 94.7%% A  |  5%% S  |  0.3%% SS%n");
-            System.out.printf("Pity S : %d tirages  |  Pity SS : %d tirages%n", PITY_S, PITY_SS);
-            System.out.printf("Parchemins Elite : %d  |  Coupons : %d  |  Pity S : %d/%d  |  Pity SS : %d/%d%n",
-                    parcheminElite, coupons, compteurSansSRang, PITY_S, compteurSansSS, PITY_SS);
+            System.out.println("Jamais de perso complet hors pity — uniquement des fragments.");
+            System.out.printf("Fragments : 55%% B  |  35%% A  |  9%% S  |  1%% SS (tres rare)%n");
+            System.out.printf("Pity A : tous les %d  |  Pity S : tous les %d  |  Pity SS : tous les %d%n",
+                    PITY_A, PITY_S, PITY_SS);
+            System.out.printf("Parchemins Elite : %d  |  Coupons : %d  |  Pity A : %d/%d  |  S : %d/%d  |  SS : %d/%d%n",
+                    parcheminElite, coupons, compteurPityA, PITY_A, compteurPityS, PITY_S, compteurPitySS, PITY_SS);
             System.out.println();
             System.out.println("1. Tirage x1  (1 parchemin elite)");
             System.out.println("2. Tirage x10 (10 parchemins elite)");
@@ -293,7 +267,7 @@ public class MenuTirage_recrutement {
                     if (parcheminElite < 1) System.out.println("Parchemins insuffisants.");
                     else {
                         parcheminElite--;
-                        List<ResultatTirage> res = List.of(tirageEliteUnitaire());
+                        List<ResultatTirage> res = tirageEliteUnitaire();
                         afficherResultats(res, ctx); appliquerResultats(res, ctx);
                         ctx.sauvegarde.sauvegarder(ctx);
                     }
@@ -313,7 +287,7 @@ public class MenuTirage_recrutement {
                         System.out.printf("Coupons insuffisants (besoin : %d, vous avez : %d).%n", COUT_COUPON_ELI_1, coupons);
                     else {
                         ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_1);
-                        List<ResultatTirage> res = List.of(tirageEliteUnitaire());
+                        List<ResultatTirage> res = tirageEliteUnitaire();
                         afficherResultats(res, ctx); appliquerResultats(res, ctx);
                         ctx.sauvegarde.sauvegarder(ctx);
                     }
@@ -334,77 +308,63 @@ public class MenuTirage_recrutement {
         }
     }
 
-    /** Un tirage elite unitaire avec gestion du pity. */
-    private ResultatTirage tirageEliteUnitaire() {
-        compteurSansSRang++;
-        compteurSansSS++;
+    /**
+     * Un tirage elite unitaire. Hors pity : fragments uniquement.
+     * Chaque pity (A/S/SS) est indépendant ; si plusieurs seuils tombent sur
+     * le même tirage, tous se déclenchent (le tirage renvoie alors plusieurs
+     * personnages complets).
+     */
+    private List<ResultatTirage> tirageEliteUnitaire() {
+        compteurPityA++;
+        compteurPityS++;
+        compteurPitySS++;
 
-        String rarete;
-        String nom;
+        List<ResultatTirage> resultats = new ArrayList<>();
 
-        // Pity SS en priorité
-        if (compteurSansSS >= PITY_SS) {
-            rarete = "SS";
-            nom = POOL_SS.get(RNG.nextInt(POOL_SS.size()));
-            compteurSansSS  = 0;
-            compteurSansSRang = 0;
+        if (compteurPityA >= PITY_A) {
+            String nom = POOL_A_ELITE.get(RNG.nextInt(POOL_A_ELITE.size()));
+            resultats.add(ResultatTirage.personnage(nom, "A"));
+            compteurPityA = 0;
+        }
+        if (compteurPityS >= PITY_S) {
+            String nom = POOL_S.get(RNG.nextInt(POOL_S.size()));
+            resultats.add(ResultatTirage.personnage(nom, "S"));
+            compteurPityS = 0;
+        }
+        if (compteurPitySS >= PITY_SS) {
+            String nom = POOL_SS.get(RNG.nextInt(POOL_SS.size()));
+            resultats.add(ResultatTirage.personnage(nom, "SS"));
+            compteurPitySS = 0;
+        }
 
-        } else if (compteurSansSRang >= PITY_S) {
-            // Pity S : tirage entre S et SS (10% de chance d'être SS quand pity S déclenche)
-            if (RNG.nextDouble() < 0.10) {
-                rarete = "SS";
-                nom = POOL_SS.get(RNG.nextInt(POOL_SS.size()));
-                compteurSansSS = 0;
-            } else {
-                rarete = "S";
-                nom = POOL_S.get(RNG.nextInt(POOL_S.size()));
-            }
-            compteurSansSRang = 0;
+        if (!resultats.isEmpty()) return resultats;
 
+        // Hors pity : fragments uniquement
+        double roll = RNG.nextDouble();
+        if (roll < 0.55) {
+            String nom = POOL_B.get(RNG.nextInt(POOL_B.size()));
+            int qte = 2 + RNG.nextInt(4); // 2-5
+            resultats.add(ResultatTirage.fragments(nom, "B", qte));
+        } else if (roll < 0.90) {
+            String nom = POOL_A_ELITE.get(RNG.nextInt(POOL_A_ELITE.size()));
+            int qte = 1 + RNG.nextInt(4); // 1-4
+            resultats.add(ResultatTirage.fragments(nom, "A", qte));
+        } else if (roll < 0.99) {
+            String nom = POOL_S.get(RNG.nextInt(POOL_S.size()));
+            int qte = 1 + RNG.nextInt(2); // 1-2
+            resultats.add(ResultatTirage.fragments(nom, "S", qte));
         } else {
-            double roll = RNG.nextDouble();
-            if (roll < 0.003) {
-                rarete = "SS";
-                nom = POOL_SS.get(RNG.nextInt(POOL_SS.size()));
-                compteurSansSS  = 0;
-                compteurSansSRang = 0;
-            } else if (roll < 0.053) {
-                rarete = "S";
-                nom = POOL_S.get(RNG.nextInt(POOL_S.size()));
-                compteurSansSRang = 0;
-            } else {
-                rarete = "A";
-                nom = POOL_A_ELITE.get(RNG.nextInt(POOL_A_ELITE.size()));
-            }
+            String nom = POOL_SS.get(RNG.nextInt(POOL_SS.size()));
+            resultats.add(ResultatTirage.fragments(nom, "SS", 1)); // toujours 1, tres rare
         }
-
-        // Fragments à la place ?
-        double chanceFrags = switch (rarete) {
-            case "A"  -> 0.45;
-            case "S"  -> 0.35;
-            case "SS" -> 0.20;
-            default   -> 0.50;
-        };
-        if (RNG.nextDouble() < chanceFrags) {
-            int qte = switch (rarete) {
-                case "A"  -> 1 + RNG.nextInt(2);  // 1-2
-                case "S"  -> 1;
-                case "SS" -> 1;
-                default   -> 1 + RNG.nextInt(3);
-            };
-            return ResultatTirage.fragments(nom, rarete, qte);
-        }
-        return ResultatTirage.personnage(nom, rarete);
+        return resultats;
     }
 
-    /** Tirage x10 elite : garantit au moins 1 A par tirage de 10. */
     private List<ResultatTirage> tirageEliteDix() {
         List<ResultatTirage> liste = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            liste.add(tirageEliteUnitaire());
+            liste.addAll(tirageEliteUnitaire());
         }
-        // Le x10 garantit déjà au moins A puisque le pool minimum est A —
-        // tous les résultats sont A ou mieux.
         return liste;
     }
 

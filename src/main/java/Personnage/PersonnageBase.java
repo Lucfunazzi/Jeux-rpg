@@ -15,6 +15,8 @@ import Effets.BuffBlocage;
 import Effets.BuffTauxCritique;
 import Effets.BuffDegatCritique;
 import Effets.BuffTauxEsquive;
+import Effets.BuffPrecision;
+import Effets.Aveuglement;
 import Effets.ReductionDefense;
 import Effets.ReductionAttaque;
 import Effets.ReductionVitesse;
@@ -165,11 +167,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         }
 
         boolean bloque = Math.random() < this.getTauxBlocage();
+        double multiplicateurDefense = 100.0 / (100.0 + this.getDefense() * 0.5);
+        degats *= multiplicateurDefense;
         if (bloque) {
             degats *= (1 - this.reduction_blocage);
-        } else {
-            double multiplicateurDefense = 100.0 / (100.0 + this.getDefense() * 0.5);
-            degats *= multiplicateurDefense;
         }
 
         Fragilite fragilite = getEffet(Fragilite.class);
@@ -369,7 +370,15 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         this.degatCritiquesBase = degat;
     }
 
-    @Override public double getTauxPrecisions() { return this.taux_precisions; }
+    @Override
+    public double getTauxPrecisions() {
+        BuffPrecision buff   = getEffet(BuffPrecision.class);
+        Aveuglement   debuff = getEffet(Aveuglement.class);
+        double base = this.taux_precisions;
+        if (buff   != null) base *= (1 + buff.getPourcentage());
+        if (debuff != null) base *= (1 - debuff.getPourcentage());
+        return base;
+    }
     public void setPrecisions(double precision) { this.taux_precisions = precision; }
 
     @Override

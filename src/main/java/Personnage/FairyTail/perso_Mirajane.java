@@ -36,13 +36,10 @@ public class perso_Mirajane extends PersonnageBase {
     @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Mirajane utilise Attaque du demon !");
-    boolean touche = Combat.attaqueTouche(this, cible);
+    boolean touche = Combat.attaquer(this, cible, log);
     if (!touche) {
-        log.add(cible.getNom() + " esquive !");
         this.ajouterRage(50);
-        return;
     }
-    Combat.attaquer(this, cible, log);
 }
 
 @Override

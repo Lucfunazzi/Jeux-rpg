@@ -2,9 +2,10 @@ package Joueur;
 
 public class ArbreCompetences {
 
-    // Deux arbres de 10 noeuds chacun
+    // Trois arbres de 10 noeuds chacun
     private final NoeudArbre[] noeuds1 = new NoeudArbre[10];
     private final NoeudArbre[] noeuds2 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds3 = new NoeudArbre[10];
     private int pointsDisponibles = 0;
 
     // ── Quel arbre 2 est débloqué ──────────────────────────────────────────
@@ -24,8 +25,7 @@ public class ArbreCompetences {
         noeuds1[8] = new NoeudArbre(9,  "+5% ATK de base",          10, NoeudArbre.TypeBonus.ATK, 0.05);
         noeuds1[9] = new NoeudArbre(10, "Nouvelle attaque speciale", 15, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
 
-        // ── Arbre 2 — budget 110 pts (Chapitre 1 Elite + Chapitre 2 Elite) ──
-        // Débloqué quand C2 Elite stage 10 est terminé
+        // ── Arbre 2 — budget 110 pts ──────────────────────────────────────
         // Bonus supérieurs à l'arbre 1, coûts : 5/8/10/11/12/13/14/16/8/13 = 110 pts
         noeuds2[0] = new NoeudArbre(1,  "+3% ATK de base",          5,  NoeudArbre.TypeBonus.ATK, 0.03);
         noeuds2[1] = new NoeudArbre(2,  "+3% DEF de base",          8,  NoeudArbre.TypeBonus.DEF, 0.03);
@@ -37,19 +37,37 @@ public class ArbreCompetences {
         noeuds2[7] = new NoeudArbre(8,  "+4% VIT de base",          16, NoeudArbre.TypeBonus.VIT, 0.04);
         noeuds2[8] = new NoeudArbre(9,  "+6% ATK de base",          8,  NoeudArbre.TypeBonus.ATK, 0.06);
         noeuds2[9] = new NoeudArbre(10, "Deuxieme attaque speciale", 13, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
+
+        // ── Arbre 3 — budget 120 pts ─────────────────────────────────────
+        // Débloqué automatiquement une fois l'Arbre 2 complété (nœud 10)
+        // Coûts : 6/9/11/12/13/14/15/17/9/14 = 120 pts
+        noeuds3[0] = new NoeudArbre(1,  "+4% ATK de base",          6,  NoeudArbre.TypeBonus.ATK, 0.04);
+        noeuds3[1] = new NoeudArbre(2,  "+4% DEF de base",          9,  NoeudArbre.TypeBonus.DEF, 0.04);
+        noeuds3[2] = new NoeudArbre(3,  "+6% PV de base",           11, NoeudArbre.TypeBonus.PV,  0.06);
+        noeuds3[3] = new NoeudArbre(4,  "+4% VIT de base",          12, NoeudArbre.TypeBonus.VIT, 0.04);
+        noeuds3[4] = new NoeudArbre(5,  "+5% ATK de base",          13, NoeudArbre.TypeBonus.ATK, 0.05);
+        noeuds3[5] = new NoeudArbre(6,  "+5% DEF de base",          14, NoeudArbre.TypeBonus.DEF, 0.05);
+        noeuds3[6] = new NoeudArbre(7,  "+7% PV de base",           15, NoeudArbre.TypeBonus.PV,  0.07);
+        noeuds3[7] = new NoeudArbre(8,  "+5% VIT de base",          17, NoeudArbre.TypeBonus.VIT, 0.05);
+        noeuds3[8] = new NoeudArbre(9,  "+7% ATK de base",          9,  NoeudArbre.TypeBonus.ATK, 0.07);
+        noeuds3[9] = new NoeudArbre(10, "Troisieme attaque speciale", 14, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
     }
 
     // ── Débloquer un nœud ─────────────────────────────────────────────────
     /**
-     * @param arbre  1 ou 2
+     * @param arbre  1, 2 ou 3
      * @param index  1–10
      */
     public String tenterDebloquer(int arbre, int index) {
-        NoeudArbre[] noeuds = arbre == 1 ? noeuds1 : noeuds2;
+        NoeudArbre[] noeuds = switch (arbre) {
+            case 1 -> noeuds1;
+            case 2 -> noeuds2;
+            default -> noeuds3;
+        };
         int i = index - 1;
 
-        if (arbre == 2 && !arbre2Debloque)
-            return "L'arbre 2 est verrouille. Terminez le Chapitre 2 Elite pour le debloquer.";
+        if (arbre == 3 && !isArbre3Debloque())
+            return "L'arbre 3 est verrouille. Terminez l'arbre 2 pour le debloquer.";
         if (i < 0 || i >= 10) return "Noeud invalide.";
         if (noeuds[i].isDebloque()) return "Noeud deja debloque.";
         if (i > 0 && !noeuds[i - 1].isDebloque())
@@ -61,8 +79,6 @@ public class ArbreCompetences {
         pointsDisponibles -= noeuds[i].getCoutPoints();
         noeuds[i].debloquer();
 
-        // L'arbre 2 se débloque via setArbre2Debloque() une fois C2 Elite terminé
-
         return "OK";
     }
 
@@ -71,7 +87,7 @@ public class ArbreCompetences {
         return tenterDebloquer(1, index);
     }
 
-    // ── Bonus cumulés (arbre 1 + arbre 2) ────────────────────────────────
+    // ── Bonus cumulés (arbre 1 + arbre 2 + arbre 3) ──────────────────────
     public double getBonusATK() { return bonusPar(NoeudArbre.TypeBonus.ATK); }
     public double getBonusDEF() { return bonusPar(NoeudArbre.TypeBonus.DEF); }
     public double getBonusPV()  { return bonusPar(NoeudArbre.TypeBonus.PV);  }
@@ -83,12 +99,16 @@ public class ArbreCompetences {
             if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
         for (NoeudArbre n : noeuds2)
             if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
+        for (NoeudArbre n : noeuds3)
+            if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
         return total;
     }
 
     public boolean isNoeud10Debloque()  { return noeuds1[9].isDebloque(); }
     public boolean isNoeud10Arbre2Debloque() { return noeuds2[9].isDebloque(); }
-    public boolean isArbre2Debloque()   { return arbre2Debloque; }
+    public boolean isNoeud10Arbre3Debloque() { return noeuds3[9].isDebloque(); }
+    public boolean isArbre2Debloque()   { return true; }
+    public boolean isArbre3Debloque()   { return isNoeud10Arbre2Debloque(); }
 
     // ── Points ────────────────────────────────────────────────────────────
     public void ajouterPoints(int pts)      { this.pointsDisponibles += pts; }
@@ -98,6 +118,7 @@ public class ArbreCompetences {
     // ── Accesseurs noeuds ─────────────────────────────────────────────────
     public NoeudArbre getNoeud(int index)           { return noeuds1[index - 1]; }
     public NoeudArbre getNoeudArbre2(int index)     { return noeuds2[index - 1]; }
+    public NoeudArbre getNoeudArbre3(int index)     { return noeuds3[index - 1]; }
 
     // ── Sérialisation ─────────────────────────────────────────────────────
     public boolean[] getEtatNoeuds() {
@@ -125,6 +146,18 @@ public class ArbreCompetences {
         if (etat == null) return;
         for (int i = 0; i < Math.min(etat.length, 10); i++)
             if (etat[i]) noeuds2[i].debloquer();
+    }
+
+    public boolean[] getEtatNoeuds3() {
+        boolean[] etat = new boolean[10];
+        for (int i = 0; i < 10; i++) etat[i] = noeuds3[i].isDebloque();
+        return etat;
+    }
+
+    public void setEtatNoeuds3(boolean[] etat) {
+        if (etat == null) return;
+        for (int i = 0; i < Math.min(etat.length, 10); i++)
+            if (etat[i]) noeuds3[i].debloquer();
     }
 
     public void setArbre2Debloque(boolean v) { this.arbre2Debloque = v; }

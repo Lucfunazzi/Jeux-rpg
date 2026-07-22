@@ -195,8 +195,7 @@ public class MenuDonjon {
                         // Tank: Nab (C) | DPS: Elfman (C), Bickslow (B) | Support: Evergreen (B)
                         ennemis.add(niv(new perso_Nab(),       niv));
                         ennemis.add(niv(new perso_Elfman(),    niv));
-                        ennemis.add(niv(new perso_Bixrow(),  niv));
-                        ennemis.add(niv(new perso_Evergreen(), niv));
+                        
                     }
                 }
             }
@@ -206,7 +205,7 @@ public class MenuDonjon {
                 switch (type) {
                     case OR -> {
                         // DPS: Loke (B), Gajeel (A), Angel (A) | Support: Levy (B)
-                        ennemis.add(niv(new perso_Loke(),       niv));
+                       
                         ennemis.add(niv(new perso_Gajeel(),     niv));
                         ennemis.add(niv(new perso_Angel(),      niv));
                         ennemis.add(niv(new perso_Levy(),       niv));

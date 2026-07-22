@@ -28,11 +28,13 @@ public class MenuRang {
                 System.out.println();
                 System.out.println("  Arbre 1 : " + (arbre.isNoeud10Debloque()
                         ? "[COMPLETE]" : "[" + progressionArbre(arbre, 1) + "/10 noeuds]"));
-                System.out.println("  Arbre 2 : " + (!arbre.isArbre2Debloque()
+                System.out.println("  Arbre 2 : " + (arbre.isNoeud10Arbre2Debloque()
+                        ? "[COMPLETE]" : "[" + progressionArbre(arbre, 2) + "/10 noeuds]"));
+                System.out.println("  Arbre 3 : " + (!arbre.isArbre3Debloque()
                         ? "[VERROUILLE]"
-                        : arbre.isNoeud10Arbre2Debloque()
+                        : arbre.isNoeud10Arbre3Debloque()
                             ? "[COMPLETE]"
-                            : "[" + progressionArbre(arbre, 2) + "/10 noeuds]"));
+                            : "[" + progressionArbre(arbre, 3) + "/10 noeuds]"));
             }
 
             System.out.println();
@@ -74,9 +76,11 @@ public class MenuRang {
     private int progressionArbre(ArbreCompetences arbre, int numArbre) {
         int count = 0;
         for (int i = 1; i <= 10; i++) {
-            boolean debloque = numArbre == 1
-                    ? arbre.getNoeud(i).isDebloque()
-                    : arbre.getNoeudArbre2(i).isDebloque();
+            boolean debloque = switch (numArbre) {
+                case 1 -> arbre.getNoeud(i).isDebloque();
+                case 2 -> arbre.getNoeudArbre2(i).isDebloque();
+                default -> arbre.getNoeudArbre3(i).isDebloque();
+            };
             if (debloque) count++;
         }
         return count;

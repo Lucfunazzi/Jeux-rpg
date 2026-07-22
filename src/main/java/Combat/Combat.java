@@ -282,10 +282,10 @@ public class Combat {
         return Math.random() < attaquant.getTauxCritique();
     }
 
-    public static void attaquer(PersonnageBase attaquant, PersonnageBase cible, List<String> log) {
+    public static boolean attaquer(PersonnageBase attaquant, PersonnageBase cible, List<String> log) {
         if (!attaqueTouche(attaquant, cible)) {
             log.add(cible.getNom() + " esquive !");
-            return;
+            return false;
         }
 
         double degats = calculerDegats(attaquant, cible);
@@ -346,6 +346,7 @@ public class Combat {
         if (absorption != null) {
             absorption.volerVie(attaquant, resultat.degatsAppliques, log);
         }
+        return true;
     }
 
     // METHODES CENTRALISEES
@@ -354,15 +355,20 @@ public class Combat {
      * Applique des dégâts d'une compétence avec log uniforme.
      * Remplace les appels directs à cible.subirDegats() dans les compétences.
      */
-    public static void appliquerDegatsAvecLog(PersonnageBase source, PersonnageBase cible,
+    public static boolean appliquerDegatsAvecLog(PersonnageBase source, PersonnageBase cible,
                                                double degats, List<String> log) {
+        if (source != null && !attaqueTouche(source, cible)) {
+            log.add(cible.getNom() + " esquive !");
+            return false;
+        }
+
         double pvAvant = cible.getVie();
         PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats);
         String nomSource = (source != null) ? source.getNom() : "Esprit Celeste";
 
         if (resultat.invincible) {
             log.add(cible.getNom() + " est invincible ! Degats bloques.");
-            return;
+            return false;
         }
 
         if (resultat.bouclierAbsorbe) {
@@ -388,6 +394,7 @@ public class Combat {
         if (resultat.ko) {
             log.add(cible.getNom() + " est KO !");
         }
+        return true;
     }
 
     /**

@@ -28,7 +28,7 @@ public class MenuQuetes {
             System.out.println("  Recompense  : " + qj.afficherRecompenses());
 
             System.out.println("\n[ Quetes de progression ]");
-            for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles()) {
+            for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles(ctx)) {
                 System.out.println("  " + q.getEtat() + q.getTitre());
                 System.out.println("    " + q.getDescription());
                 System.out.println("    Recompense : " + q.afficherRecompenses());
@@ -60,7 +60,7 @@ public class MenuQuetes {
         QueteJournaliere qj = ctx.gestionnaireQuetes.getQueteJournaliere();
         if (qj.isCompletee() && !qj.isReclamee()) reclamables.add(qj);
 
-        for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles())
+        for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles(ctx))
             if (q.isCompletee() && !q.isReclamee()) reclamables.add(q);
 
         if (reclamables.isEmpty()) {

@@ -4,15 +4,12 @@ import java.util.List;
 public class Aveuglement implements Effet {
     private int toursRestants;
     private double pourcentage;
-    private double malusApplique;
     public Aveuglement(double pourcentage, int tours) {
         this.pourcentage = pourcentage;
         this.toursRestants = tours;
     }
     @Override
     public void appliquer(PersonnageBase cible) {
-        malusApplique = cible.getTauxPrecisions() * pourcentage;
-        cible.setPrecisions(cible.getTauxPrecisions() - malusApplique);
         System.out.println(cible.getNom() + " est aveugle ! -" + (pourcentage * 100)
                 + "% de precision pendant " + toursRestants + " tour(s) !");
     }
@@ -20,7 +17,6 @@ public class Aveuglement implements Effet {
     public void tick(PersonnageBase cible) {
         toursRestants--;
         if (toursRestants <= 0) {
-            cible.setPrecisions(cible.getTauxPrecisions() + malusApplique);
             System.out.println("L'aveuglement de " + cible.getNom() + " se dissipe !");
         }
     }
@@ -29,10 +25,10 @@ public class Aveuglement implements Effet {
     @Override
     public String getNom() { return "Aveuglement"; }
 
+    public double getPourcentage() { return pourcentage; }
+
     @Override
     public void appliquer(PersonnageBase cible, List<String> log) {
-        malusApplique = cible.getTauxPrecisions() * pourcentage;
-        cible.setPrecisions(cible.getTauxPrecisions() - malusApplique);
         log.add(cible.getNom() + " est aveugle ! -" + (pourcentage * 100)
                 + "% de precision pendant " + toursRestants + " tour(s) !");
     }
@@ -41,7 +37,6 @@ public class Aveuglement implements Effet {
     public void tick(PersonnageBase cible, List<String> log) {
         toursRestants--;
         if (toursRestants <= 0) {
-            cible.setPrecisions(cible.getTauxPrecisions() + malusApplique);
             log.add("L'aveuglement de " + cible.getNom() + " se dissipe !");
         }
     }

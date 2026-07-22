@@ -71,6 +71,17 @@ public class Invocateur implements Competences {
         Combat.appliquerEffet(cibleFinale, new Etourdissement(2), log);
     }
 
+    // ── Spéciale Arbre 3 ───────────────────────────────────────────────────
+    @Override
+    public void competenceArbre3(Personnage_principale utilisateur, PersonnageBase cible,
+            List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
+        // TODO
+    }
+
+    @Override public void descriptionCompetenceArbre3() {
+        // TODO
+    }
+
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Invocation de Caelum — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }
