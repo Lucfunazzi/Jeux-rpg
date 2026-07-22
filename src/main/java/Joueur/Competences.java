@@ -10,7 +10,7 @@ import java.util.List;
  *   - attaqueSpeciale()  : compétence de base (toujours disponible)
  *   - ultime()           : ultime de base (toujours disponible)
  *   - competenceArbre()  : nouvelle spéciale débloquée via Arbre 1 (nœud 10)
- *   - competenceArbre2() : nouvel ultime débloqué via Arbre 2 (nœud 10)
+ *   - competenceArbre2() : nouvelle spéciale débloquée via Arbre 2 (nœud 10)
  */
 public interface Competences {
 
@@ -41,14 +41,14 @@ public interface Competences {
         System.out.println("Aucune description disponible.");
     }
 
-    /** Nouvel ultime débloqué par l'Arbre 2 (nœud 10). */
-    default void competenceArbre2(Personnage_principale utilisateur,
+    /** Nouvelle spéciale débloquée par l'Arbre 2 (nœud 10). */
+    default void competenceArbre2(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Ultime arbre 2 non implementee.");
+        log.add("Competence arbre non implementee pour cette classe.");
     }
 
     default void descriptionCompetenceArbre2() {
-        System.out.println("Ultime arbre 2 non implementee.");
+        System.out.println("Spéciale arbre 2 non implementee.");
     }
 }

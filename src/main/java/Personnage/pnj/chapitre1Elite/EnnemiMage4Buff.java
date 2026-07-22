@@ -1,20 +1,21 @@
 package Personnage.pnj.chapitre1Elite;
 
+
+
 import Personnage.PersonnageBase;
+import Effets.*;
 import Combat.Combat;
-import Effets.BuffAttaque;
-import Effets.Brulure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiGuerrier3Elite extends PersonnageBase {
+public class EnnemiMage4Buff extends PersonnageBase {
 
-    public EnnemiGuerrier3Elite() {
+    public EnnemiMage4Buff() {
         this(14);
     }
 
-    public EnnemiGuerrier3Elite(int niveau) {
-        this.nom    = "Gladiateur Fou";
+    public EnnemiMage4Buff(int niveau) {
+        this.nom    = "Sorcier de la prophétie";
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "DPS";
@@ -22,13 +23,13 @@ public class EnnemiGuerrier3Elite extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 212.1 * niv;
-        this.attaque = 132.6 * niv;
-        this.defense =  79.5 * niv;
-        this.vitesse =  57.9 * vit;
+        this.vie     = 230.0 * niv;
+        this.attaque =  92.0 * niv;
+        this.defense =  25.0 * niv;
+        this.vitesse =  80.0 * vit;
 
-        this.taux_critiques    = 0.19;
-        this.degat_critiques   = 1.40;
+        this.taux_critiques    = 0.12;
+        this.degat_critiques   = 1.50;
         this.taux_precisions   = 100.00;
         this.taux_esquives     = 0.06;
         this.taux_blocage      = 0.02;
@@ -45,34 +46,37 @@ public class EnnemiGuerrier3Elite extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " frappe " + cible.getNom() + " avec une rage incontrolee !");
-        double degats = this.getAttaque() * 1.60;
+        log.add(this.nom + " Meteorie " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 0.80;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
-    }
-
-    @Override
-    public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " tourbillonne sur tous les ennemis !");
-        for (PersonnageBase cible : equipeEnnemie) {
-            if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
-                Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Brulure(2, 0.05), log);
+        for (PersonnageBase e :equipeAlliee){
+            if (e.estVivant() && e.getRole().equals("Support")){
+                Combat.appliquerEffet(e, new BuffAttaque(0.10,2), log);
             }
         }
     }
 
+    @Override
+    public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add(this.nom + " Boost le taux critique de son équipe !");
+        for (PersonnageBase e : equipeAlliee) {
+            if (e.estVivant()){
+                Combat.appliquerEffet(e, new BuffTauxCritique(0.15,2), log);
+            }
+            
+        }
+    }
+
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Taillade", "Rage Incontrolee", "Tourbillon"};
+        return new String[]{"Eclair Maudit", "Explosion Arcanique", "Pluie de Maledictions"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Taillade : attaque de base sur la cible.");
+        System.out.println("Eclair Maudit : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Rage Incontrolee : inflige 160% ATK a la cible et augmente sa propre ATK de 20% pendant 2 tours.");
+        System.out.println("Explosion Arcanique : inflige 160% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tourbillon : inflige 130% ATK a toute l'equipe ennemie et applique Brulure (5% PV/tour) 2 tours.");
+        System.out.println("Pluie de Maledictions : inflige 135% ATK a toute l'equipe ennemie.");
     }
 }

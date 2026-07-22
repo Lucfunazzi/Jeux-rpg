@@ -79,15 +79,13 @@ public class EnnemiSol extends PersonnageBase {
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Sol liquéfie le sol sous les pieds ennemis — la Sonate de Plâtre les engloutit !");
         Combat.appliquerEffet(this, new BuffDefense(0.15, 3), log);
-        
-      for (PersonnageBase cibleTank : equipeEnnemie) {
-            if (cibleTank.estVivant() && cibleTank.getRole().equals("Tank")) {
-                double degats = this.getAttaque() * 0.80;
-                Combat.appliquerDegatsAvecLog(this, cibleTank, degats, log);
-                
-                Combat.appliquerEffet(this, cibleTank, new Etourdissement(2), log);
-            }
-      }
+
+        PersonnageBase cibleFinale = Combat.choisirCible(this, equipeEnnemie);
+        if (cibleFinale != null) {
+            double degats = this.getAttaque() * 0.80;
+            Combat.appliquerDegatsAvecLog(this, cibleFinale, degats, log);
+            Combat.appliquerEffet(this, cibleFinale, new Etourdissement(2), log);
+        }
     }
 
     @Override public void descriptionAttaqueBase() {

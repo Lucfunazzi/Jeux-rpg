@@ -53,7 +53,7 @@ public class Combat {
         return tousLesPersos;
     }
 
-    public PersonnageBase cibleMoinsPv(List<PersonnageBase> equipe) {
+    public static PersonnageBase cibleMoinsPv(List<PersonnageBase> equipe) {
         PersonnageBase cible = null;
         for (PersonnageBase perso : equipe) {
             if (perso.estVivant()) {
@@ -72,7 +72,7 @@ public class Combat {
 
     // CIBLAGE
 
-    public PersonnageBase choisirCible(PersonnageBase attaquant, List<PersonnageBase> equipeEnnemie) {
+    public static PersonnageBase choisirCible(PersonnageBase attaquant, List<PersonnageBase> equipeEnnemie) {
         Provocation provoc = attaquant.getEffet(Provocation.class);
         if (provoc != null) {
             PersonnageBase cibleForcee = provoc.getSource();
@@ -92,7 +92,7 @@ public class Combat {
         return cibleMoinsPv(equipeEnnemie);
     }
 
-    private PersonnageBase cibleParRole(List<PersonnageBase> equipe, String role) {
+    private static PersonnageBase cibleParRole(List<PersonnageBase> equipe, String role) {
         PersonnageBase meilleure = null;
         for (PersonnageBase perso : equipe) {
             if (perso.estVivant() && perso.getRole().equals(role)) {

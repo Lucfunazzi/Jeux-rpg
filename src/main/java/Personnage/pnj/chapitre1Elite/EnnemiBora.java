@@ -1,4 +1,5 @@
-package Personnage.FairyTail;
+package Personnage.pnj.chapitre1Elite;
+
 
 import Combat.Combat;
 import Effets.*;
@@ -6,34 +7,41 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Bora de Prominens — Elementaliste, rang C.
- * Magie de la Protubérance (Prominens) : flammes violettes.
- * Sorts : Tapis Écarlate (vol), Fouet de la Protubérance, Typhon de la Protubérance, Douche Écarlate.
- * Aussi : Charme Magique (bague) + Magie du Sommeil (bague).
+ * Bora de Prominens — Mage de la Protubérance, rang C.
+ * Arc Prologue : se faisait passer pour Salamander de Fairy Tail.
+ * Magie de la Protubérance (feu) : flammes violettes en spirale + Charme Magique + Magie du Sommeil.
+ * Sorts principaux : Fouet de la Protubérance, Typhon de la Protubérance, Douche Écarlate.
  */
-public class perso_Bora extends PersonnageBase {
+public class EnnemiBora extends PersonnageBase {
 
-    public perso_Bora() {
+    public EnnemiBora() { this(12); }
+
+    public EnnemiBora(int niveau) {
         this.nom    = "Bora";
+        this.niveau = niveau;
         this.type   = "Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
-        this.niveau = 1;
-        double mult = 1.00;
-        this.vie     = 300 * mult;
-        this.attaque = 115 * mult;
-        this.defense =  65 * mult;
-        this.vitesse =  85 * mult;
+
+        double niv = Math.pow(1.05, niveau - 1);
+        double vit = Math.pow(1.03, niveau - 1);
+        this.vie     = 150.0 * niv;
+        this.attaque =  85.0 * niv;
+        this.defense =  25.0 * niv;
+        this.vitesse =  75.0 * vit;
+
         this.taux_critiques    = 0.12;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.10;
-        this.taux_blocage      = 0.04;
+        this.taux_esquives     = 0.08;
+        this.taux_blocage      = 0.03;
         this.reduction_blocage = 0.05;
         this.degats_renvoi     = 0.80;
+
         initialiserVieMax();
     }
- @Override
+
+    @Override
     public String[] getNomsAttaques() {
         return new String[]{"Coup de poings", "Fouet de la Protubérance", "Bague de charme"};
     }

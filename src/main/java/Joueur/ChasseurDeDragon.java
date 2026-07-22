@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Chasseur de Dragon — magie draconique de l'eau.
  *
- * Spéciale de base : Poings du Dragon d'Eau      (100% ATK mono-cible Tank + 100% précision)
- * Ultime de base   : Hurlement du Dragon d'Eau   (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
- * Spéciale Arbre 1 : Écailles du Dragon d'Eau    (frappe + absorption)
- * Ultime  Arbre 2  : Forme Dragon — Inondation Abyssale (AoE dévastateur)
+ * Spéciale de base : Poings du Dragon d'Eau     (100% ATK mono-cible)
+ * Ultime de base   : Hurlement du Dragon d'Eau  (120% ATK mono-cible + 5% ATK aux DPS alliés)
+ * Spéciale Arbre 1 : Fouet du Dragon d'Eau      (frappe + réduction défense)
+ * Spéciale Arbre 2 : Tir à haute pression du dragon d'eau (frappe lourde + étourdissement)
  */
 public class ChasseurDeDragon implements Competences {
 
@@ -25,11 +25,9 @@ public class ChasseurDeDragon implements Competences {
     public void attaqueSpeciale(PersonnageBase utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Poings du Dragon d'Eau !");
-        PersonnageBase tank = equipeEnnemie.stream()
-                .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
-                .findFirst().orElse(cible);
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
         double degats = utilisateur.getAttaque() * 1.00;
-        Combat.appliquerDegatsAvecLog(utilisateur, tank, degats, log);
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
         Combat.appliquerEffet(utilisateur, new BuffPrecision(1.00, 2), log);
     }
 
@@ -38,14 +36,10 @@ public class ChasseurDeDragon implements Competences {
     public void ultime(PersonnageBase utilisateur, List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hurlement du Dragon d'Eau !");
-        PersonnageBase tank = equipeEnnemie.stream()
-                .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
-                .findFirst().orElse(
-                    equipeEnnemie.stream().filter(PersonnageBase::estVivant).findFirst().orElse(null)
-                );
-        if (tank != null) {
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        if (cibleFinale != null) {
             double degats = utilisateur.getAttaque() * 1.20;
-            Combat.appliquerDegatsAvecLog(utilisateur, tank, degats, log);
+            Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
         }
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant() && allie.getRole().equals("DPS")) {
@@ -58,32 +52,24 @@ public class ChasseurDeDragon implements Competences {
     @Override
     public void competenceArbre(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Écailles du Dragon d'Eau !");
-        double degats = utilisateur.getAttaque() * 1.70;
-        Combat.appliquerDegatsAvecLog(utilisateur, cible, degats, log);
-        double soin = degats * 0.20;
-        utilisateur.recevoirSoin(soin, log);
-        Combat.appliquerEffet(utilisateur, cible, new ReductionVitesse(0.25, 3), log);
+        log.add("Fouet du Dragon d'Eau !");
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        double degats = utilisateur.getAttaque() * 1.20;
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+        Combat.appliquerEffet(cibleFinale, new ReductionDefense(0.15,2), log);
     }
 
-    // ── Ultime Arbre 2 ───────────────────────────────────────────────────
+    // ── Spéciale Arbre 2 ───────────────────────────────────────────────────
     @Override
-    public void competenceArbre2(Personnage_principale utilisateur,
+    public void competenceArbre2(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Forme Dragon — Inondation Abyssale !");
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant()) {
-                double degats = utilisateur.getAttaque() * 1.50;
-                Combat.appliquerDegatsAvecLog(utilisateur, ennemi, degats, log);
-                Combat.appliquerEffet(utilisateur, ennemi, new ReductionVitesse(0.20, 2), log);
-                if (Math.random() < 0.40) {
-                    Combat.appliquerEffet(utilisateur, ennemi, new Trempe(2), log);
-                }
-            }
-        }
-        Combat.appliquerEffet(utilisateur, new BuffAttaque(0.20, 2), log);
+        log.add("Tir à hate préssion du dragon d'eau !");
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        double degats = utilisateur.getAttaque() * 1.50;
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+        Combat.appliquerEffet(cibleFinale, new Etourdissement(2), log);
     }
-
+    
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Poings du Dragon d'Eau — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }
@@ -91,9 +77,10 @@ public class ChasseurDeDragon implements Competences {
         System.out.println("Hurlement du Dragon d'Eau — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
     @Override public void descriptionCompetenceArbre() {
+        System.out.println("Fouet du dragon d'eau -- Inflige 120% ATK au Tank ennemi. Réduit la défense de la cible de 15% pendants 2 tours");
         
     }
     @Override public void descriptionCompetenceArbre2() {
-        
+        System.out.println("Tir à haute préssion du dragon d'eau -- Inflige 150% ATK au Tank ennemi. Etourdit la cible pendant 2 tours");
     }
 }

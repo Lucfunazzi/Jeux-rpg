@@ -123,8 +123,8 @@ public class MenuAbilite {
                     System.out.println("   Terminez le Chapitre 2 Elite pour débloquer l'Arbre 2.");
                 } else {
                     joueur.activerArbre2();
-                    System.out.println(">> Nouvel ultime débloqué : " + nomComp + " !");
-                    System.out.println("   Votre attaque ultime est maintenant remplacée par " + nomComp + ".");
+                    System.out.println(">> Nouvelle spéciale débloquée : " + nomComp + " !");
+                    System.out.println("   Votre attaque ultime est maintenant remplacée par la spéciale " + nomComp + ".");
                 }
                 System.out.println("   Points restants : " + arbre.getPointsDisponibles());
             } else {

@@ -1,36 +1,37 @@
 package Personnage.pnj.chapitre1Elite;
 
+
+
 import Personnage.PersonnageBase;
+import Effets.*;
 import Combat.Combat;
-import Effets.Silence;
-import Effets.Malediction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiMage2Elite extends PersonnageBase {
+public class EnnemiMage6Debuff extends PersonnageBase {
 
-    public EnnemiMage2Elite() {
-        this(8);
+    public EnnemiMage6Debuff() {
+        this(17);
     }
 
-    public EnnemiMage2Elite(int niveau) {
-        this.nom    = "Mage Ombral Ancien";
+    public EnnemiMage6Debuff(int niveau) {
+        this.nom    = "Invocateur cartessien";
         this.niveau = niveau;
-        this.type="Elementaliste";
-        this.role   = "DPS";
+        this.type="Invocateur";
+        this.role   = "Support";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 227.4 * niv;
-        this.attaque =  71.1 * niv;
-        this.defense =  56.9 * niv;
-        this.vitesse = 122.0 * vit;
+        this.vie     = 210.0 * niv;
+        this.attaque =  82.0 * niv;
+        this.defense =  28.0 * niv;
+        this.vitesse = 110.0 * vit;
 
-        this.taux_critiques    = 0.30;
-        this.degat_critiques   = 1.20;
+        this.taux_critiques    = 0.20;
+        this.degat_critiques   = 1.50;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.10;
+        this.taux_esquives     = 0.15;
         this.taux_blocage      = 0.02;
         this.reduction_blocage = 0.02;
         this.degats_renvoi     = 0.80;
@@ -45,34 +46,34 @@ public class EnnemiMage2Elite extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " invoque un orbe de tenebres sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.50;
+        log.add(this.nom + " invoque briseur de défense" + cible.getNom() + " !");
+        double degats = this.getAttaque() * 0.70;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Silence(1), log);
+        Combat.appliquerEffet(cible, new ReductionDefense(0.10,2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " declenche une tempete magique sur tous les ennemis !");
+        log.add(this.nom + " Invoque Vitesse Reduite !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
+                double degats = this.getAttaque() * 0.40;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Malediction(2, 0.10), log);
+                Combat.appliquerEffet(this,cible ,new ReductionVitesse(0.10,2), log);
             }
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Salve Magique", "Orbe de Tenebres", "Tempete Magique"};
+        return new String[]{"Frappe de l'Ombre", "Surgissement", "Disparition"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Salve Magique : attaque de base sur la cible.");
+        System.out.println("Frappe de l'Ombre : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Orbe de Tenebres : inflige 150% ATK a la cible et applique Silence 1 tour.");
+        System.out.println("Surgissement : inflige 170% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tempete Magique : inflige 130% ATK a toute l'equipe ennemie et applique Malediction 2 tours.");
+        System.out.println("Disparition : inflige 120% ATK a toute l'equipe ennemie.");
     }
 }

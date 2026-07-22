@@ -68,24 +68,9 @@ public class EnnemiBora extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Bora utilise Bague de charme  !");
-        
-            PersonnageBase cible = null;
-    for (PersonnageBase p : equipeEnnemie) {
-        if (p.estVivant() && p.getRole().equals("Tank")) {
-            cible = p;
-            break;
-        }
-    }
-    if (cible == null) {
-        for (PersonnageBase p : equipeEnnemie) {
-            if (p.estVivant()) {
-                cible = p;
-                break;
-            }
-        }
-    }
 
-    if (cible == null) return; // sécurité : tous KO
+        PersonnageBase cible = Combat.choisirCible(this, equipeEnnemie);
+        if (cible == null) return; // sécurité : tous KO
 
     double degats = this.getAttaque() * 0.80;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);

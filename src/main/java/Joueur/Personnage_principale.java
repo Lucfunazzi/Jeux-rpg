@@ -124,11 +124,14 @@ public class Personnage_principale extends PersonnageBase {
 
         boolean arbre2Actif = (competenceSpecialeActive == 2 || competenceSpecialeActive == 3);
         if (arbre2Actif) {
-            competenceChoisie.competenceArbre2(this, equipeAlliee, equipeEnnemie, log);
+            PersonnageBase cible = equipeEnnemie.stream()
+                    .filter(PersonnageBase::estVivant).findFirst().orElse(null);
+            competenceChoisie.competenceArbre2(this, cible, equipeAlliee, equipeEnnemie, log);
         } else {
             competenceChoisie.ultime(this, equipeAlliee, equipeEnnemie, log);
         }
     }
+
 
     // ── Descriptions ──────────────────────────────────────────────────────
     @Override public void descriptionAttaqueBase() {

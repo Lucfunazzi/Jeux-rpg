@@ -5,7 +5,6 @@ import Personnage.pnj.chapitre1Elite.*;
 import Personnage.pnj.Chapitre1.EnnemiBora;
 import Personnage.pnj.Chapitre1.EnnemiEvaro;
 import Personnage.pnj.Chapitre1.EnnemiEligor;
-import Personnage.pnj.chapitre1Elite.EnnemiMage3Elite;
 import Equipement.EquipementFactory;
 import Equipement.Equipement;
 import lancement.GameContext;
@@ -20,10 +19,8 @@ public class Chapitre1Elite {
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
     private final boolean[] stagesReussis   = new boolean[NB_STAGES + 1];
-    private final Chapitre1 chapitre1;
 
     public Chapitre1Elite(Chapitre1 chapitre1) {
-        this.chapitre1 = chapitre1;
         stagesDebloques[1] = true;
     }
 
@@ -107,52 +104,69 @@ public class Chapitre1Elite {
         // recompenseXP = 0 : la montée de niveau passe exclusivement par les quêtes
         switch (numero) {
             case 1 -> {
-                ennemis.add(new EnnemiMage1Elite());
+                ennemis.add(new EnnemiMage1DPS());ennemis.add(new EnnemiMage2DPS());
+                ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage4Buff());
                 Equipement arme = null;
                 int roll = new Random().nextInt(4);
                 if (roll == 0)      arme = EquipementFactory.kunaiC();
                 else if (roll == 1) arme = EquipementFactory.batonC();
                 else if (roll == 2) arme = EquipementFactory.gantsArmeC();
-                return new Stage(1, "[ELITE] Le Sentier Maudit", 200, 0, ennemis, arme);
+                return new Stage(1, "Prologue Elite", 200, 0, ennemis, arme);
             }
-            case 2  -> { ennemis.add(new EnnemiMage2Elite());
-                         return new Stage(2, "[ELITE] L'Ancien Reveil", 3000, 300, ennemis, EquipementFactory.couvreCheC()); }
-            case 3  -> { ennemis.add(new EnnemiEvaro());
-                         return new Stage(3, "[ELITE] Le Maitre Ninja", 4000, 310, ennemis, EquipementFactory.bottesC()); }
-            case 4  -> { ennemis.add(new EnnemiGuerrier1Elite()); ennemis.add(new EnnemiMage2Elite()); ennemis.add(new EnnemiMage2Elite());
-                         return new Stage(4, "[ELITE] La Triade Maudite", 5600, 320, ennemis, EquipementFactory.jambieresC()); }
-            case 5  -> { ennemis.add(new EnnemiGuerrier2Elite()); ennemis.add(new EnnemiMage3Elite()); ennemis.add(new EnnemiMage3Elite());
-                         return new Stage(5, "[ELITE] L'Avant-Garde", 6800, 330, ennemis, EquipementFactory.mainsC()); }
-            case 6  -> { ennemis.add(new EnnemiBora());
-                         return new Stage(6, "[ELITE] Le Loup du Desert", 7600, 340, ennemis, EquipementFactory.torseC()); }
-            case 7  -> { ennemis.add(new EnnemiNinja1Elite()); ennemis.add(new EnnemiGuerrier3Elite());
-                         ennemis.add(new EnnemiNinja2Elite()); ennemis.add(new EnnemiMage4Elite());
-                         return new Stage(7, "[ELITE] Les Quatre Predateurs", 8800, 350, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiGuerrier4Elite());
-                         ennemis.add(new EnnemiGuerrier4Elite()); ennemis.add(new EnnemiSoigneur1Elite()); ennemis.add(new EnnemiSoigneur1Elite());
-                         return new Stage(8, "[ELITE] L'Armee des Ombres", 10400, 360, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiTank2Elite()); ennemis.add(new EnnemiNinja3Elite());
-                         ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiSoigneur2Elite());
-                         return new Stage(9, "[ELITE] Les Generaux des Tenebres", 12400, 370, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiTank1Elite()); ennemis.add(new EnnemiEligor());
-                         ennemis.add(new EnnemiNinja3Elite()); ennemis.add(new EnnemiSoigneur1Elite()); ennemis.add(new EnnemiSoigneur2Elite());
-                         return new Stage(10, "[ELITE] Le Dragon de Feu", 16000, 380, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiMage2DPS()); ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage3Soigneur());
+                         ennemis.add(new EnnemiBora()); ennemis.add(new EnnemiMage1DPS());
+                         return new Stage(2, "Bora le charmeur Elite", 3000, 300, ennemis, EquipementFactory.couvreCheC()); }
+            
+            case 3  -> { ennemis.add(new EnnemiBora()); ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage2DPS());
+                        ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage5Tank());
+                         return new Stage(3, "Chemin vers fairy tail Elite", 4000, 310, ennemis, EquipementFactory.bottesC()); }
+            
+            case 4  -> { ennemis.add(new EnnemiNatsuStage4()); ennemis.add(new EnnemiGrayStage4()); ennemis.add(new EnnemiMage5Tank());
+                         return new Stage(4, "L'arrivée de la reine des fées Elite", 5600, 320, ennemis, EquipementFactory.jambieresC()); }
+            
+            case 5  -> { ennemis.add(new EnnemiMage5Tank()); ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff());
+                        ennemis.add(new EnnemiMage6Debuff()); ennemis.add(new EnnemiMage1DPS());
+                         return new Stage(5, "Premier mission pour Lucy Elite", 6800, 330, ennemis, EquipementFactory.mainsC()); }
+            
+            case 6  -> { ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiMage7DPS()); ennemis.add(new EnnemiMage2DPS());
+                        ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage1DPS());
+                         return new Stage(6, "Le duc evarlo Elite", 7600, 340, ennemis, EquipementFactory.torseC()); }
+            
+            
+            case 7  -> { ennemis.add(new EnnemiEvaro()); ennemis.add(new EnnemiBora());
+                         ennemis.add(new EnnemiMage8DPS()); ennemis.add(new EnnemiMage2DPS());
+                         ennemis.add(new EnnemiMage4Buff());
+                         return new Stage(7, "Retour a fairy tail Elite ", 8800, 350, ennemis); }
+            
+            
+            case 8  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiMage7DPS());
+                         ennemis.add(new EnnemiMage8DPS()); ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage6Debuff());
+                         return new Stage(8, "Eisen Wald Elite", 10400, 360, ennemis); }
+            
+            
+            case 9  -> { ennemis.add(new EnnemiMage9Tank()); ennemis.add(new EnnemiEligor());
+                         ennemis.add(new EnnemiMage3Soigneur()); ennemis.add(new EnnemiMage4Buff()); ennemis.add(new EnnemiMage6Debuff());
+                         return new Stage(9, "Eligor le mage de vent Elite", 12400, 370, ennemis); }
+            
+            case 10 -> { ennemis.add(new EnnemiLullaby(1));
+                        
+                         return new Stage(10, "La flute maudite Elite", 16000, 380, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     private String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "[ELITE] Le Sentier Maudit";
-            case 2  -> "[ELITE] L'Ancien Reveil";
-            case 3  -> "[ELITE] Le Maitre Ninja";
-            case 4  -> "[ELITE] La Triade Maudite";
-            case 5  -> "[ELITE] L'Avant-Garde";
-            case 6  -> "[ELITE] Le Loup du Desert";
-            case 7  -> "[ELITE] Les Quatre Predateurs";
-            case 8  -> "[ELITE] L'Armee des Ombres";
-            case 9  -> "[ELITE] Les Generaux des Tenebres";
-            case 10 -> "[ELITE] Le Dragon de Feu";
+            case 1  -> "Prologue Elite";
+            case 2  -> "Bora le charmeur Elite";
+            case 3  -> "Chemin vers fairy tail Elite";
+            case 4  -> "L'arrivée de la reine des fées Elite";
+            case 5  -> "Premier mission pour Lucy Elite";
+            case 6  -> "Le duc evarlo Elite";
+            case 7  -> "Retour a fairy tail Elite";
+            case 8  -> "Eisen Wald Elite";
+            case 9  -> "Eligor le mage de vent Elite";
+            case 10 -> "La flute maudite Elite";
             default -> "???";
         };
     }

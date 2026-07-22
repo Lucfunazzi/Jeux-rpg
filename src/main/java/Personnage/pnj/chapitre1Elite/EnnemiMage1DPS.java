@@ -1,38 +1,38 @@
 package Personnage.pnj.chapitre1Elite;
 
+
+
 import Personnage.PersonnageBase;
 import Combat.Combat;
-import Effets.Paralysie;
-import Effets.Trempe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnnemiTank2Elite extends PersonnageBase {
+public class EnnemiMage1DPS extends PersonnageBase {
 
-    public EnnemiTank2Elite() {
-        this(15);
+    public EnnemiMage1DPS() {
+        this(10);
     }
 
-    public EnnemiTank2Elite(int niveau) {
-        this.nom    = "Titan des Abysses";
+    public EnnemiMage1DPS(int niveau) {
+        this.nom    = "Mage Ombral";
         this.niveau = niveau;
         this.type="Elementaliste";
-        this.role   = "Tank";
+        this.role   = "DPS";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 404.1 * niv;
-        this.attaque = 101.0 * niv;
-        this.defense =  90.9 * niv;
-        this.vitesse =  72.7 * vit;
+        this.vie     = 180.0 * niv;
+        this.attaque =  45.0 * niv;
+        this.defense =  35.0 * niv;
+        this.vitesse =  55.0 * vit;
 
-        this.taux_critiques    = 0.10;
-        this.degat_critiques   = 1.20;
+        this.taux_critiques    = 0.05;
+        this.degat_critiques   = 1.30;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.08;
-        this.taux_blocage      = 0.28;
-        this.reduction_blocage = 0.35;
+        this.taux_esquives     = 0.05;
+        this.taux_blocage      = 0.02;
+        this.reduction_blocage = 0.02;
         this.degats_renvoi     = 0.80;
 
         initialiserVieMax();
@@ -45,36 +45,32 @@ public class EnnemiTank2Elite extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " broie " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.50;
+        log.add(this.nom + " incante un sort sombre sur " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (Math.random() < 0.35) {
-            Combat.appliquerEffet(this, cible, new Paralysie(1, 0.40), log);
-        }
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " provoque un raz-de-maree sur tous les ennemis !");
+        log.add(this.nom + " declenche une onde magique sur tous les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.30;
+                double degats = this.getAttaque() * 0.60;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Trempe(2), log);
             }
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Ecrasement", "Broiement", "Raz-de-Maree"};
+        return new String[]{"Projectile Magique", "Sort Sombre", "Onde Magique"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Ecrasement : attaque de base sur la cible.");
+        System.out.println("Projectile Magique : attaque de base magique sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Broiement : inflige 150% ATK a la cible. 35% de chance de Paralysie 1 tour.");
+        System.out.println("Sort Sombre : inflige 130% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Raz-de-Maree : inflige 130% ATK a toute l'equipe ennemie et applique Trempe 2 tours.");
+        System.out.println("Onde Magique : inflige 110% ATK a toute l'equipe ennemie.");
     }
 }

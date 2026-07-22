@@ -73,26 +73,10 @@ public class EnnemiEvaro extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Le Duc Everlue ouvre la Porte de la Vierge et invoque Virgo sous sa forme colossale !");
-        
-       
-              PersonnageBase cible = null;
-    for (PersonnageBase p : equipeEnnemie) {
-        if (p.estVivant() && p.getRole().equals("Tank")) {
-            cible = p;
-            break;
-        }
-    }
-    if (cible == null) {
-        for (PersonnageBase p : equipeEnnemie) {
-            if (p.estVivant()) {
-                cible = p;
-                break;
-            }
-        }
-    }
 
-    if (cible == null) return;
-    
+        PersonnageBase cible = Combat.choisirCible(this, equipeEnnemie);
+        if (cible == null) return;
+
      double degats = this.getAttaque() * 1.20;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, cible, new Etourdissement(1), log);

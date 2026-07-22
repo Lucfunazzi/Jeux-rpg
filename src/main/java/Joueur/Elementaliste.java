@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Mage — magie de glace et de cristaux, inspiré de Gray Fullbuster.
  *
- * Spéciale de base : Lance de Glace         (100% ATK mono-cible Tank + 100% précision)
- * Ultime de base   : Bazooka de Glace       (120% ATK mono-cible Tank + 5% ATK aux DPS alliés)
- * Spéciale Arbre 1 : Épée de Glace Éternelle (frappe lourde + gel + -DEF)
- * Ultime  Arbre 2  : Ice Make — Démon de Glace (AoE 3 cibles + gel massif)
+ * Spéciale de base : Lance de Glace      (100% ATK mono-cible)
+ * Ultime de base   : Bazooka de Glace    (120% ATK mono-cible + 5% ATK aux DPS alliés)
+ * Spéciale Arbre 1 : Rayon sacré         (frappe + réduction défense)
+ * Spéciale Arbre 2 : Décharge de foudre  (frappe lourde + étourdissement)
  */
 public class Elementaliste implements Competences {
 
@@ -25,11 +25,9 @@ public class Elementaliste implements Competences {
     public void attaqueSpeciale(PersonnageBase utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Lance de Glace !");
-        PersonnageBase tank = equipeEnnemie.stream()
-                .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
-                .findFirst().orElse(cible);
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
         double degats = utilisateur.getAttaque() * 1.00;
-        Combat.appliquerDegatsAvecLog(utilisateur, tank, degats, log);
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
         Combat.appliquerEffet(utilisateur, new BuffPrecision(1.00, 2), log);
     }
 
@@ -38,14 +36,10 @@ public class Elementaliste implements Competences {
     public void ultime(PersonnageBase utilisateur, List<PersonnageBase> equipeAlliee,
             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Bazooka de Glace !");
-        PersonnageBase tank = equipeEnnemie.stream()
-                .filter(e -> e.estVivant() && e.getRole().equals("Tank"))
-                .findFirst().orElse(
-                    equipeEnnemie.stream().filter(PersonnageBase::estVivant).findFirst().orElse(null)
-                );
-        if (tank != null) {
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        if (cibleFinale != null) {
             double degats = utilisateur.getAttaque() * 1.20;
-            Combat.appliquerDegatsAvecLog(utilisateur, tank, degats, log);
+            Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
         }
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant() && allie.getRole().equals("DPS")) {
@@ -58,45 +52,34 @@ public class Elementaliste implements Competences {
     @Override
     public void competenceArbre(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Épée de Glace Éternelle !");
-        double degats = utilisateur.getAttaque() * 1.90;
-        Combat.appliquerDegatsAvecLog(utilisateur, cible, degats, log);
-        Combat.appliquerEffet(utilisateur, cible, new ReductionDefense(0.20, 3), log);
-        if (Math.random() < 0.40) {
-            Combat.appliquerEffet(utilisateur, cible, new Gel(1), log);
-        }
+        log.add("Rayon sacré!");
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        double degats = utilisateur.getAttaque() * 1.20;
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+        Combat.appliquerEffet(cibleFinale, new ReductionDefense(0.15,2), log);
     }
 
-    // ── Ultime Arbre 2 ───────────────────────────────────────────────────
+    // ── Spéciale Arbre 2 ───────────────────────────────────────────────────
     @Override
-    public void competenceArbre2(Personnage_principale utilisateur,
+    public void competenceArbre2(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Ice Make — Démon de Glace !");
-        int touche = 0;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && touche < 3) {
-                double degats = utilisateur.getAttaque() * 1.60;
-                Combat.appliquerDegatsAvecLog(utilisateur, ennemi, degats, log);
-                Combat.appliquerEffet(utilisateur, ennemi, new ReductionDefense(0.15, 2), log);
-                if (Math.random() < 0.45) {
-                    Combat.appliquerEffet(utilisateur, ennemi, new Gel(1), log);
-                }
-                touche++;
-            }
-        }
-        Combat.appliquerEffet(utilisateur, new BuffDefense(0.20, 2), log);
+        log.add("Décharge de foudre !");
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        double degats = utilisateur.getAttaque() * 1.50;
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+        Combat.appliquerEffet(cibleFinale, new Etourdissement(2), log);
     }
-
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Lance de Glace — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
     }
     @Override public void descriptionUltime() {
         System.out.println("Bazooka de Glace — Inflige 120% ATK au Tank ennemi. +5% ATK aux DPS alliés (2 tours).");
     }
-    @Override public void descriptionCompetenceArbre() {
+     @Override public void descriptionCompetenceArbre() {
+        System.out.println("Rayon sacré -- Inflige 120% ATK au Tank ennemi. Réduit la défense de la cible de 15% pendants 2 tours");
         
     }
     @Override public void descriptionCompetenceArbre2() {
-        
+        System.out.println("Décharge de foudre -- Inflige 150% ATK au Tank ennemi. Etourdit la cible pendant 2 tours");
     }
 }

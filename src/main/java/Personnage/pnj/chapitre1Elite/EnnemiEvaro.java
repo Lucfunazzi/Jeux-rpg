@@ -1,28 +1,38 @@
-package Personnage.FairyTail;
+package Personnage.pnj.chapitre1Elite;
+
 
 import Combat.Combat;
-import Effets.*;
+import Effets.BuffDefense;
+import Effets.Etourdissement;
+import Effets.Regeneration;
+import Effets.ReductionAttaque;
 import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Duc Everlue (Ebar) — Invocateur, rang C.
- * Magie de la Terre : Nage/Diver (nage dans le sol), Rebond de Terre.
- * Magie des Constellations : invoquait Virgo (aujourd'hui perdu sa clé).
+ * Duc Everlue — Mage constellationniste et Mage de la Terre, rang C.
+ * Politicien corrompu de l'arc Daybreak. Possédait Virgo (Clef de la Vierge).
+ * Magie de la Terre : Nage (Diver) — plonge et nage dans le sol, Rebond de Terre.
+ * Magie des Constellations : invoque Virgo (forme de gorille géant).
  */
-public class perso_DucEverlue extends PersonnageBase {
+public class EnnemiEvaro extends PersonnageBase {
 
-    public perso_DucEverlue() {
+    public EnnemiEvaro() { this(14); }
+
+    public EnnemiEvaro(int niveau) {
         this.nom    = "Duc Everlue";
+        this.niveau = niveau;
         this.type   = "Invocateur";
         this.role   = "Tank";
         this.rarete = "C";
-        this.niveau = 1;
-        double mult = 1.00;
-        this.vie     = 360 * mult;
-        this.attaque =  70 * mult;
-        this.defense = 100 * mult;
-        this.vitesse =  60 * mult;
+
+        double niv = Math.pow(1.05, niveau - 1);
+        double vit = Math.pow(1.03, niveau - 1);
+        this.vie     = 280.0 * niv;
+        this.attaque =  55.0 * niv;
+        this.defense =  75.0 * niv;
+        this.vitesse =  50.0 * vit;
+
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;
         this.taux_precisions   = 100.00;
@@ -30,10 +40,11 @@ public class perso_DucEverlue extends PersonnageBase {
         this.taux_blocage      = 0.16;
         this.reduction_blocage = 0.18;
         this.degats_renvoi     = 0.80;
+
         initialiserVieMax();
     }
 
-      @Override
+    @Override
     public String[] getNomsAttaques() {
         return new String[]{"Nage — Diver", "Rebond de Terre", "Invocation de Virgo"};
     }

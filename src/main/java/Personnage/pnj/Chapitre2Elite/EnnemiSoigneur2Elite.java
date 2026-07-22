@@ -45,23 +45,9 @@ public class EnnemiSoigneur2Elite extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        PersonnageBase tank = null;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && ennemi.getRole().equals("Tank")) {
-                tank = ennemi;
-                break;
-            }
-        }
-        if (tank == null) {
-            for (PersonnageBase ennemi : equipeEnnemie) {
-                if (ennemi.estVivant()) {
-                    if (tank == null || ennemi.getVie() < tank.getVie())
-                        tank = ennemi;
-                }
-            }
-        }
-        if (tank != null) {
-            Combat.appliquerEffet(this, tank, new Etourdissement(1), log);
+        PersonnageBase cibleFinale = Combat.choisirCible(this, equipeEnnemie);
+        if (cibleFinale != null) {
+            Combat.appliquerEffet(this, cibleFinale, new Etourdissement(1), log);
         }
     }
 
@@ -74,15 +60,9 @@ public class EnnemiSoigneur2Elite extends PersonnageBase {
                 allie.recevoirSoin(soin, log);
             }
         }
-        PersonnageBase tank = null;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && ennemi.getRole().equals("Tank")) {
-                tank = ennemi;
-                break;
-            }
-        }
-        if (tank != null) {
-            Combat.appliquerEffet(this, tank, new Etourdissement(2), log);
+        PersonnageBase cibleFinale = Combat.choisirCible(this, equipeEnnemie);
+        if (cibleFinale != null) {
+            Combat.appliquerEffet(this, cibleFinale, new Etourdissement(2), log);
         }
     }
 

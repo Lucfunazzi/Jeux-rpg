@@ -1,37 +1,37 @@
 package Personnage.pnj.chapitre1Elite;
 
+
+
 import Personnage.PersonnageBase;
 import Combat.Combat;
-import Effets.Etourdissement;
-import Effets.ReductionDefense;
-import java.util.ArrayList;
+import Effets.*;
 import java.util.List;
 
-public class EnnemiGuerrier1Elite extends PersonnageBase {
+public class EnnemiMage9Tank extends PersonnageBase {
 
-    public EnnemiGuerrier1Elite() {
-        this(8);
+    public EnnemiMage9Tank() {
+        this(17);
     }
 
-    public EnnemiGuerrier1Elite(int niveau) {
-        this.nom    = "Guerrier de Pierre";
+    public EnnemiMage9Tank(int niveau) {
+        this.nom    = "Chevalier de l'ordre magique";
         this.niveau = niveau;
-        this.type="Elementaliste";
+        this.type="Chevalier";
         this.role   = "Tank";
         this.rarete = "C";
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 568.5 * niv;
-        this.attaque =  71.1 * niv;
-        this.defense = 106.6 * niv;
-        this.vitesse =  65.0 * vit;
+        this.vie     = 400.0 * niv;
+        this.attaque =  52.0 * niv;
+        this.defense =  92.0 * niv;
+        this.vitesse =  40.0 * vit;
 
-        this.taux_critiques    = 0.15;
+        this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.15;
-        this.taux_blocage      = 0.20;
+        this.taux_esquives     = 0.05;
+        this.taux_blocage      = 0.22;
         this.reduction_blocage = 0.25;
         this.degats_renvoi     = 0.80;
 
@@ -45,24 +45,22 @@ public class EnnemiGuerrier1Elite extends PersonnageBase {
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " frappe violemment " + cible.getNom() + " avec son arme !");
-        double degats = this.getAttaque() * 1.40;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (Math.random() < 0.30) {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
-        }
+        log.add(this.nom + " Rune de solidification ");
+        Combat.appliquerEffet(this, new BuffDefense(0.20,2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add(this.nom + " effectue une charge devastatrice sur tous les ennemis !");
+        log.add(this.nom + " Epée runique!");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.20;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new ReductionDefense(0.10, 2), log);
+                
             }
         }
+        
+        Combat.appliquerEffet(this, new Regeneration(0.2,2), log);
     }
 
     @Override public String[] getNomsAttaques() {
@@ -72,9 +70,9 @@ public class EnnemiGuerrier1Elite extends PersonnageBase {
         System.out.println("Coup de Bouclier : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Frappe Brutale : inflige 140% ATK a la cible. 30% de chance d'etourdir 1 tour.");
+        System.out.println("Frappe Brutale : inflige 140% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Charge Devastatrice : inflige 120% ATK a toute l'equipe ennemie et reduit leur DEF de 10% pendant 2 tours.");
+        System.out.println("Charge Devastatrice : inflige 120% ATK a toute l'equipe ennemie.");
     }
 }
