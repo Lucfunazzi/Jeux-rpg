@@ -21,9 +21,9 @@ public class perso_Sol extends PersonnageBase {
         this.niveau = 1;
         double mult = 1.30;
         this.vie     = 500 * mult;
-        this.attaque = 130 * mult;
-        this.defense = 155 * mult;
-        this.vitesse =  90 * mult;
+        this.attaque = 115 * mult;
+        this.defense = 140 * mult;
+        this.vitesse =  110 * mult;
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.15;
         this.taux_precisions   = 100.00;
@@ -54,10 +54,7 @@ public class perso_Sol extends PersonnageBase {
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (Math.random() < 0.50) {
             Combat.appliquerEffet(this, cible, new Confusion(2), log);
-        } else {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
         }
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.18, 2), log);
     }
 
     @Override
@@ -67,15 +64,15 @@ public class perso_Sol extends PersonnageBase {
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         Combat.appliquerEffet(this, new BuffDefense(0.30, 3), log);
-        for (PersonnageBase allie : equipeAlliee) {
-            if (allie.estVivant() && allie != this)
-                Combat.appliquerEffet(this, allie, new BuffDefense(0.15, 2), log);
-        }
+        
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+                if (Math.random()<0.30){
+                    Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+                }
+                
             }
         }
         double soin = this.getVieMax() * 0.10;
@@ -84,5 +81,5 @@ public class perso_Sol extends PersonnageBase {
 
     @Override public void descriptionAttaqueBase() { System.out.println("Show Time — Gravats de Pierre : 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Merci la Vie — Mémoire : 110% ATK, 50% confusion ou étourdissement, réduit ATK de 18%."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre : +30% DEF, alliés +15% DEF, 90% ATK à tous (x rage), étourdissement, draine 10% PV."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre :    90% ATK à tous les ennemis, 30% chance d'étourdir, draine 10% PV."); }
 }

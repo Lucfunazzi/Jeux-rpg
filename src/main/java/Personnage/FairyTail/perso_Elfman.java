@@ -44,7 +44,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     log.add("Elfman utilise Prise du demon !");
     double degats = this.getAttaque() * 1.10;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-    Combat.appliquerEffet(this, new BuffBlocage(0.15, 1), log);
+    Combat.appliquerEffet(this, new BuffBlocage(0.15, 2), log);
 }
 
 @Override
@@ -74,12 +74,12 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Prise du demon — inflige 110% ATK a une cible "
-                + "et gagne 10% d'attaque pendant 1 tour.");
+                + "et gagne 15% de blocage pendant 2 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Prise totale Forme bestiale — inflige 120% ATK a l'ennemi "
-                + "avec le moins de PV et gagne 10% d'attaque pendant 2 tours.");
+        System.out.println("Prise totale Forme bestiale — inflige 80% ATK a l'ennemi "
+                + "avec le moins de PV et gagne 15% de défense pendant 2 tours.");
     }
 }

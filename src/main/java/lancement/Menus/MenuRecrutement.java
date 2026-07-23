@@ -11,7 +11,7 @@ import Personnage.FairyTail.perso_Lisanna;
 import Personnage.FairyTail.perso_Bixrow;
 import Personnage.FairyTail.perso_Evergreen;
 import Personnage.FairyTail.perso_Kana;
-import Personnage.FairyTail.perso_Loke;
+
 import Personnage.FairyTail.perso_Bora;
 import Personnage.FairyTail.perso_Cherry;
 import Personnage.FairyTail.perso_DucEverlue;
@@ -61,7 +61,7 @@ public class MenuRecrutement {
 
     private static final List<InfoPerso> PAGE2 = List.of(
        
-        new InfoPerso("Cana",        "Support"),
+        new InfoPerso("Kana",        "Support"),
         new InfoPerso("Levy",        "Support"),
         new InfoPerso("Lisanna",     "Support"),
         new InfoPerso("Elfman", "Tank"),
@@ -400,8 +400,8 @@ public class MenuRecrutement {
             case "Nab"         -> new perso_Nab();
             case "Bickslow"    -> new perso_Bixrow();
             case "Evergreen"   -> new perso_Evergreen();
-            case "Cana"        -> new perso_Kana();
-            case "Loke"        -> new perso_Loke();
+            case "Kana"        -> new perso_Kana();
+            
             case "Levy"        -> new perso_Levy();
             case "Lisanna"     -> new perso_Lisanna();
             case "Bora"        -> new perso_Bora();

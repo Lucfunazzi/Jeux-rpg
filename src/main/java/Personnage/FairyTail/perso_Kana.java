@@ -7,7 +7,7 @@ import java.util.List;
 
 public class perso_Kana extends PersonnageBase {
     public perso_Kana() {
-        this.nom = "Cana";
+        this.nom = "Kana";
         this.niveau = 1;
         this.type="Elementaliste";
         this.role = "Support";

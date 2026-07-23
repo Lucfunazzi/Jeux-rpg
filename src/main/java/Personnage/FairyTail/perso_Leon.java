@@ -19,14 +19,14 @@ public class perso_Leon extends PersonnageBase {
         this.rarete = "B";
         this.niveau = 1;
         double mult = 1.30;
-        this.vie     = 360 * mult;
-        this.attaque = 150 * mult;
-        this.defense = 100 * mult;
-        this.vitesse = 120 * mult;
-        this.taux_critiques    = 0.18;
+        this.vie     = 380 * mult;
+        this.attaque = 170 * mult;
+        this.defense = 105 * mult;
+        this.vitesse = 130 * mult;
+        this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.35;
         this.taux_precisions   = 105.00;
-        this.taux_esquives     = 0.10;
+        this.taux_esquives     = 0.05;
         this.taux_blocage      = 0.06;
         this.reduction_blocage = 0.08;
         this.degats_renvoi     = 0.80;
@@ -79,9 +79,9 @@ public class perso_Leon extends PersonnageBase {
         System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK et réduit la VIT de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, réduit ATK de 20% pendant 2 tours, 35% de gel 1 tour.");
+        System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, et 35% de gel l'ennemi pendant 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 25%.");
+        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à toutes l'équipes ennemis, à 25% de gel les ennemis pendants 1 tour.");
     }
 }

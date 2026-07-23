@@ -24,7 +24,7 @@ import Personnage.FairyTail.perso_Lisanna;
 import Personnage.FairyTail.perso_Bixrow;
 import Personnage.FairyTail.perso_Evergreen;
 import Personnage.FairyTail.perso_Kana;
-import Personnage.FairyTail.perso_Loke;
+
 import Personnage.FairyTail.perso_Angel;
 import Personnage.FairyTail.perso_Freed;
 import Personnage.FairyTail.perso_Gajeel;
@@ -556,7 +556,7 @@ public class GestionnaireSauvegarde {
         case "Bickslow"       -> new perso_Bixrow();
         case "Evergreen"      -> new perso_Evergreen();
         case "Cana"           -> new perso_Kana();
-        case "Loke"           -> new perso_Loke();
+        
         case "Levy"           -> new perso_Levy();
         case "Lisanna"        -> new perso_Lisanna();
         // Rang A

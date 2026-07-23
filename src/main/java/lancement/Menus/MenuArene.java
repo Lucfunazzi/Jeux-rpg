@@ -323,7 +323,7 @@ public class MenuArene {
                                                           
       
             case "Cana"             -> new perso_Kana();
-            case "Loke"             -> new perso_Loke();
+            
             
          
             // ── Rang A ──

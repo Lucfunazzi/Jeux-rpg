@@ -5,12 +5,22 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Lisanna extends PersonnageBase {
     public perso_Lisanna() {
-        this.nom = "Lisanna"; this.niveau = 1; this.type="Elementaliste";
-        this.role = "Support"; this.rarete = "B";
+        this.nom = "Lisanna"; 
+        this.niveau = 1;
+        this.type="Elementaliste";
+        this.role = "Support";
+        this.rarete = "B";
         double m = 1.20;
-        this.vie=420*m; this.attaque=110*m; this.defense=105*m; this.vitesse=100*m;
-        this.taux_critiques=0.08; this.degat_critiques=1.15; this.taux_precisions=100;
-        this.taux_esquives=0.06; this.taux_blocage=0.10; this.reduction_blocage=0.12;
+        this.vie=420*m;
+        this.attaque=110*m;
+        this.defense=105*m;
+        this.vitesse=150*m;
+        this.taux_critiques=0.08;
+        this.degat_critiques=1.15;
+        this.taux_precisions=100;
+        this.taux_esquives=0.06; 
+        this.taux_blocage=0.10;
+        this.reduction_blocage=0.12;
         this.degats_renvoi=0.80; initialiserVieMax();
     }
     @Override public String[] getNomsAttaques() {
@@ -24,7 +34,7 @@ public class perso_Lisanna extends PersonnageBase {
         for (PersonnageBase al : a) if (al.estVivant()) {
             double soin = this.getAttaque()*0.70; al.recevoirSoin(soin, log);
         }
-        Combat.appliquerEffet(this, new BuffDefense(0.10, 2), log);
+        
     }
     @Override public void attaqueUltime(List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Lisanna prend sa forme de colombe et régénère l'équipe !");
