@@ -2,6 +2,7 @@ package lancement.gui;
 
 import Combat.Combat.CombatEvent;
 import Combat.Combat.PersonnageSnapshot;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,11 +149,43 @@ public class EcranCombatController {
         equipeAdverseBox.getChildren().clear();
         cartes = new CarteCombat[etat.size()];
 
+        List<Integer> indexJoueur = new ArrayList<>();
+        List<Integer> indexAdverse = new ArrayList<>();
+
         for (int i = 0; i < etat.size(); i++) {
             PersonnageSnapshot snap = etat.get(i);
-            CarteCombat carte = creerCarte(snap);
-            cartes[i] = carte;
-            (snap.coteJoueur ? equipeJoueurBox : equipeAdverseBox).getChildren().add(carte.racine);
+            cartes[i] = creerCarte(snap);
+            (snap.coteJoueur ? indexJoueur : indexAdverse).add(i);
+        }
+
+        // Regroupement visuel avant/milieu/arriere : Tank, puis Attaquants, puis Support.
+        ajouterCartesGroupees(equipeJoueurBox, etat, indexJoueur);
+        ajouterCartesGroupees(equipeAdverseBox, etat, indexAdverse);
+    }
+
+    private void ajouterCartesGroupees(VBox box, List<PersonnageSnapshot> etat, List<Integer> indices) {
+        List<Integer> tank = new ArrayList<>();
+        List<Integer> dps = new ArrayList<>();
+        List<Integer> support = new ArrayList<>();
+        for (int i : indices) {
+            switch (etat.get(i).role) {
+                case "Tank" -> tank.add(i);
+                case "Support" -> support.add(i);
+                default -> dps.add(i);
+            }
+        }
+        ajouterGroupe(box, "TANK", tank);
+        ajouterGroupe(box, "ATTAQUANTS", dps);
+        ajouterGroupe(box, "SUPPORT", support);
+    }
+
+    private void ajouterGroupe(VBox box, String titre, List<Integer> indices) {
+        if (indices.isEmpty()) return;
+        Label entete = new Label(titre);
+        entete.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-opacity: 0.6;");
+        box.getChildren().add(entete);
+        for (int i : indices) {
+            box.getChildren().add(cartes[i].racine);
         }
     }
 

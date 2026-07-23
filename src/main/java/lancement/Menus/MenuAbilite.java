@@ -29,8 +29,10 @@ public class MenuAbilite {
 
             System.out.println("1. Arbre 1 — Nouvelle Spéciale"
                     + (arbre.isNoeud10Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 1) + "]" : ""));
-            System.out.println("2. Arbre 2 — Nouvel Spéciale"
-                    + (arbre.isNoeud10Arbre2Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 2) + "]" : ""));
+            System.out.println("2. Arbre 2 — Nouvelle Spéciale"
+                    + (!arbre.isArbre2Debloque()
+                        ? " [VERROUILLÉ — terminez le Chapitre 2 Elite]"
+                        : arbre.isNoeud10Arbre2Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 2) + "]" : ""));
             System.out.println("3. Arbre 3 — Nouvelle Spéciale"
                     + (!arbre.isArbre3Debloque()
                         ? " [VERROUILLÉ — terminez l'Arbre 2]"
@@ -42,7 +44,12 @@ public class MenuAbilite {
 
             switch (scanner.nextLine().trim()) {
                 case "1" -> afficherArbre(ctx, arbre, 1, scanner);
-                case "2" -> afficherArbre(ctx, arbre, 2, scanner);
+                case "2" -> {
+                    if (!arbre.isArbre2Debloque())
+                        System.out.println("L'arbre 2 se débloque en terminant le Chapitre 2 Elite.");
+                    else
+                        afficherArbre(ctx, arbre, 2, scanner);
+                }
                 case "3" -> {
                     if (!arbre.isArbre3Debloque())
                         System.out.println("L'arbre 3 se débloque en terminant l'Arbre 2.");
@@ -146,7 +153,7 @@ public class MenuAbilite {
             case 2 -> {
                 joueur.activerArbre2();
                 sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !\n");
-                sb.append("Votre attaque ultime est maintenant remplacee par la speciale ").append(nomComp).append(".");
+                sb.append("Votre attaque speciale est maintenant remplacee par ").append(nomComp).append(".");
             }
             default -> {
                 sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !");

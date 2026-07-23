@@ -12,12 +12,15 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.Formation;
 import lancement.GameContext;
@@ -28,9 +31,9 @@ public class EcranFormationController {
 
     private GameContext ctx;
 
-    @FXML private Label tankLabel;
-    @FXML private Label attaquantsLabel;
-    @FXML private Label supportsLabel;
+    @FXML private HBox ligneTankBox;
+    @FXML private HBox ligneDpsBox;
+    @FXML private HBox ligneSupportBox;
     @FXML private Label competenceLabel;
     @FXML private Label liensLabel;
 
@@ -42,21 +45,20 @@ public class EcranFormationController {
     private void rafraichir() {
         Formation f = ctx.formation;
 
-        tankLabel.setText("Tank : " + (f.getTank() != null ? f.getTank().getNom() : "vide"));
+        ligneTankBox.getChildren().setAll(
+                f.getTank() != null ? creerCarte(f.getTank()) : creerCarteVide("Tank"));
 
-        StringBuilder attaquants = new StringBuilder(ctx.joueur.getNom() + " (vous)");
-        for (PersonnageBase a : f.getAttaquants()) attaquants.append(", ").append(a.getNom());
-        attaquantsLabel.setText("Attaquants : " + attaquants);
+        List<Node> dps = new ArrayList<>();
+        dps.add(creerCarte(ctx.joueur));
+        for (PersonnageBase a : f.getAttaquants()) dps.add(creerCarte(a));
+        ligneDpsBox.getChildren().setAll(dps);
 
         if (f.getSupports().isEmpty()) {
-            supportsLabel.setText("Supports : vide");
+            ligneSupportBox.getChildren().setAll(creerCarteVide("Support"));
         } else {
-            StringBuilder supports = new StringBuilder();
-            for (int i = 0; i < f.getSupports().size(); i++) {
-                if (i > 0) supports.append(", ");
-                supports.append(f.getSupports().get(i).getNom());
-            }
-            supportsLabel.setText("Supports : " + supports);
+            List<Node> supports = new ArrayList<>();
+            for (PersonnageBase s : f.getSupports()) supports.add(creerCarte(s));
+            ligneSupportBox.getChildren().setAll(supports);
         }
 
         competenceLabel.setText("Competence speciale active : " + nomCompetenceActive());
@@ -105,22 +107,6 @@ public class EcranFormationController {
 
         info("Formation", ctx.formation.retirerPersonnage(choisi));
         rafraichir();
-    }
-
-    @FXML
-    private void onVoirStats(ActionEvent event) {
-        List<PersonnageBase> tous = new ArrayList<>(ctx.formation.getEquipe());
-        List<PersonnageBase> disponibles = new ArrayList<>();
-        disponibles.add(ctx.joueur);
-        disponibles.addAll(ctx.personnagesRecruites);
-        for (PersonnageBase p : disponibles) if (!tous.contains(p)) tous.add(p);
-
-        if (tous.isEmpty()) { info("Statistiques", "Aucun personnage disponible."); return; }
-
-        PersonnageBase choisi = choisirPersonnage("Voir les statistiques", tous);
-        if (choisi == null) return;
-
-        info(choisi.getNom(), formaterStats(choisi));
     }
 
     @FXML
@@ -183,6 +169,40 @@ public class EcranFormationController {
 
     // ── Utilitaires ───────────────────────────────────────────────────────
 
+    /** Petite carte visuelle (rareté + PV) pour un slot de formation occupé. */
+    private Node creerCarte(PersonnageBase p) {
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nom = new Label(p.getNom());
+        nom.getStyleClass().add("texte");
+        nom.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+        HBox entete = new HBox(6, badge, nom);
+        entete.setAlignment(Pos.CENTER);
+
+        Label role = new Label(p.getRole());
+        role.setStyle("-fx-font-size: 11px; -fx-text-fill: #9a9ac0;");
+
+        VBox carte = new VBox(4, entete, role, GuiVisuels.creerBarrePV(110, 10, p.getVie(), p.getVieMax()));
+        carte.getStyleClass().add("carte-combat");
+        carte.setAlignment(Pos.CENTER);
+        carte.setPrefWidth(130);
+        return carte;
+    }
+
+    /** Carte grisée pour un slot de formation vide (ex: Tank non assigné). */
+    private Node creerCarteVide(String role) {
+        Label label = new Label(role + "\n[vide]");
+        label.getStyleClass().add("texte");
+        label.setStyle("-fx-opacity: 0.5; -fx-text-alignment: center;");
+        label.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+
+        VBox carte = new VBox(label);
+        carte.getStyleClass().add("carte-combat");
+        carte.setAlignment(Pos.CENTER);
+        carte.setPrefWidth(130);
+        carte.setPrefHeight(74);
+        return carte;
+    }
+
     private String nomCompetenceActive() {
         Personnage_principale joueur = ctx.joueur;
         return switch (joueur.getCompetenceSpecialeActive()) {
@@ -192,20 +212,6 @@ public class EcranFormationController {
                     ? joueur.getCompetencesChoisie().getNomsCompetences()[joueur.getChoixComp() - 1]
                     : "Aucune";
         };
-    }
-
-    private String formaterStats(PersonnageBase p) {
-        return "Role    : " + p.getRole() + " | Rarete : " + p.getRarete() + " | Type : " + p.getType() + "\n"
-             + "Niveau  : " + p.getNiveau() + " | XP : " + p.getExperience() + "/" + p.getExperienceMax() + "\n"
-             + "PV      : " + String.format("%.0f", p.getVieMax()) + "\n"
-             + "ATK     : " + String.format("%.0f", p.getAttaque()) + "\n"
-             + "DEF     : " + String.format("%.0f", p.getDefense()) + "\n"
-             + "VIT     : " + String.format("%.0f", p.getVitesse()) + "\n"
-             + "Crit    : " + String.format("%.0f", p.getTauxCritique() * 100) + "%"
-                  + " / Degat crit : " + String.format("%.0f", p.getTauxDegatCritique() * 100) + "%\n"
-             + "Esquive : " + String.format("%.0f", p.getTauxEsquives() * 100) + "%"
-                  + " | Blocage : " + String.format("%.0f", p.getTauxBlocage() * 100) + "%\n"
-             + "Attaques : " + String.join(", ", p.getNomsAttaques());
     }
 
     private PersonnageBase choisirPersonnage(String titre, List<PersonnageBase> options) {

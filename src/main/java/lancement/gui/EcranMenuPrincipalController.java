@@ -20,6 +20,9 @@ public class EcranMenuPrincipalController {
     private GameContext ctx;
 
     @FXML private Label enTeteLabel;
+    @FXML private Label ressourcesLabel;
+    @FXML private Label energieLabel;
+    @FXML private VBox xpBarBox;
     @FXML private VBox boutonsBox;
 
     public void initData(GameContext ctx) {
@@ -27,8 +30,16 @@ public class EcranMenuPrincipalController {
 
         enTeteLabel.setText("Joueur : " + ctx.joueur.getNom()
                 + "  |  Niv." + ctx.joueur.getNiveau()
-                + "  |  Or : " + String.format("%.0f", ctx.joueur.getOr())
                 + "  |  Rang : " + ctx.rangJoueur.getRangNom());
+
+        ressourcesLabel.setText("Or : " + String.format("%.0f", ctx.joueur.getOr())
+                + "  |  Coupons : " + ctx.joueur.getCoupons()
+                + "  |  Combativite : " + ctx.formation.getCombativite());
+
+        energieLabel.setText(ctx.gestionnaireEnergie.afficherEnergie());
+
+        xpBarBox.getChildren().setAll(
+                GuiVisuels.creerBarreXP(260, 8, ctx.joueur.getExperience(), ctx.joueur.getExperienceMax()));
 
         boolean chapitre2Fini      = ctx.chapitre2.getStagesReussis()[10];
         boolean chapitre1EliteFini = ctx.chapitre1Elite.getStagesReussis()[10];

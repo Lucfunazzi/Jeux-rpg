@@ -44,8 +44,10 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Erza enfile l'Armure Adamantine !");
+     double degats = this.getAttaque() * 1.30;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.30), log);
-    Combat.appliquerEffet(this, new BuffDefense(0.30, 3), log);
+    Combat.appliquerEffet(this, new BuffDefense(0.15, 3), log);
     Combat.appliquerEffet(this, new BuffBlocage(0.15, 3), log);
 }
 
@@ -72,13 +74,13 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Coup d'épée — inflige 120% ATK à une cible.");
+        System.out.println("Coup d'épée — inflige 100% ATK à une cible.");
     }
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Armure Adamantine — se protège avec un bouclier (50% PV max), "
-                + "augmente sa défense de 30% et son blocage de 15% pendant 3 tours.");
+        System.out.println("Armure Adamantine — attaque à 130% un ennemi se protège avec un bouclier (50% PV max), "
+                + "augmente sa défense de 15% et son blocage de 15% pendant 3 tours.");
     }
 
     @Override

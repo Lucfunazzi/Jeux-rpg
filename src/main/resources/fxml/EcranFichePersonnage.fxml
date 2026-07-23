@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -12,9 +13,11 @@
             fx:controller="lancement.gui.EcranFichePersonnageController"
             styleClass="root-menu">
     <top>
-        <Label fx:id="titreLabel" styleClass="titre" BorderPane.alignment="CENTER" wrapText="true">
+        <VBox alignment="CENTER" spacing="4">
             <BorderPane.margin><Insets top="20" bottom="10" left="20" right="20"/></BorderPane.margin>
-        </Label>
+            <HBox fx:id="badgeBox" alignment="CENTER" spacing="8"/>
+            <Label fx:id="titreLabel" styleClass="titre" wrapText="true"/>
+        </VBox>
     </top>
 
     <center>
@@ -22,7 +25,9 @@
             <VBox alignment="CENTER" spacing="14">
                 <padding><Insets top="10" bottom="10" left="30" right="30"/></padding>
 
+                <VBox fx:id="barresBox" alignment="CENTER" spacing="4" maxWidth="380"/>
                 <Label fx:id="statsLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
+                <Label fx:id="competencesLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
                 <Label fx:id="liensLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
                 <Label fx:id="setLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
 

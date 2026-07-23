@@ -47,7 +47,11 @@ public class EcranListeChapitresController {
             VBox carte = new VBox(8);
 
             if (!ligne.deverrouille()) {
-                Label verrouille = new Label(ligne.label() + "  [VERROUILLE]\n" + ligne.messageVerrouille());
+                // Le nom/sous-titre du chapitre reste cache tant qu'il n'est pas debloque.
+                int tiret = ligne.label().indexOf(" - ");
+                String nomGenerique = tiret >= 0 ? ligne.label().substring(0, tiret) : ligne.label();
+
+                Label verrouille = new Label(nomGenerique + "  [VERROUILLE]\n" + ligne.messageVerrouille());
                 verrouille.getStyleClass().add("texte");
                 verrouille.setWrapText(true);
                 carte.getChildren().add(verrouille);

@@ -117,6 +117,24 @@ public class Formation {
         return gestionnaireLiens.getLiensActifs(getEquipe());
     }
 
+    // ── Combativite (puissance totale de la formation) ────────────────────
+    /** Puissance d'un personnage : combinaison ponderee de ses stats de combat. */
+    public static int getPuissance(PersonnageBase p) {
+        return (int) Math.round(
+                p.getAttaque()  * 2.0
+              + p.getDefense()  * 1.5
+              + p.getVitesse()  * 1.0
+              + p.getVieMax()   * 0.1
+        );
+    }
+
+    /** Somme des puissances de tous les membres de la formation actuelle. */
+    public int getCombativite() {
+        int total = 0;
+        for (PersonnageBase p : getEquipe()) total += getPuissance(p);
+        return total;
+    }
+
     // ── Utilitaires ───────────────────────────────────────────────────────
     public int getTailleEquipe() {
         int total = 1;

@@ -131,46 +131,46 @@ public class Chapitre1Elite {
                 if (roll == 0)      arme = EquipementFactory.kunaiC();
                 else if (roll == 1) arme = EquipementFactory.batonC();
                 else if (roll == 2) arme = EquipementFactory.gantsArmeC();
-                return new Stage(1, "Prologue Elite", 200, 0, ennemis, arme);
+                return new Stage(1, "Prologue Elite", 100, 0, ennemis, arme);
             }
             case 2  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(2, "Bora le charmeur Elite", 3000, 300, ennemis, EquipementFactory.couvreCheC()); }
+                         return new Stage(2, "Bora le charmeur Elite", 1500, 300, ennemis, EquipementFactory.couvreCheC()); }
 
             case 3  -> { ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                         ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
-                         return new Stage(3, "Chemin vers fairy tail Elite", 4000, 310, ennemis, EquipementFactory.bottesC()); }
+                         return new Stage(3, "Chemin vers fairy tail Elite", 2000, 310, ennemis, EquipementFactory.bottesC()); }
 
             case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
-                         return new Stage(4, "L'arrivée de la reine des fées Elite", 5600, 320, ennemis, EquipementFactory.jambieresC()); }
+                         return new Stage(4, "L'arrivée de la reine des fées Elite", 2800, 320, ennemis, EquipementFactory.jambieresC()); }
 
             case 5  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(5, "Premier mission pour Lucy Elite", 6800, 330, ennemis, EquipementFactory.mainsC()); }
+                         return new Stage(5, "Premier mission pour Lucy Elite", 3400, 330, ennemis, EquipementFactory.mainsC()); }
 
             case 6  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiMage7DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                         ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(6, "Le duc evarlo Elite", 7600, 340, ennemis, EquipementFactory.torseC()); }
+                         return new Stage(6, "Le duc evarlo Elite", 3800, 340, ennemis, EquipementFactory.torseC()); }
 
 
             case 7  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiBora(niveau));
                          ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(7, "Retour a fairy tail Elite ", 8800, 350, ennemis); }
+                         return new Stage(7, "Retour a fairy tail Elite ", 4400, 350, ennemis); }
 
 
             case 8  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
                          ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
-                         return new Stage(8, "Eisen Wald Elite", 10400, 360, ennemis); }
+                         return new Stage(8, "Eisen Wald Elite", 5200, 360, ennemis); }
 
 
             case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiEligor(niveau));
                          ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
-                         return new Stage(9, "Eligor le mage de vent Elite", 12400, 370, ennemis); }
+                         return new Stage(9, "Eligor le mage de vent Elite", 6200, 370, ennemis); }
 
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
 
-                         return new Stage(10, "La flute maudite Elite", 16000, 380, ennemis); }
+                         return new Stage(10, "La flute maudite Elite", 8000, 380, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }

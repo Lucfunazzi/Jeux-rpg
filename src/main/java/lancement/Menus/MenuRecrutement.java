@@ -130,6 +130,9 @@ public class MenuRecrutement {
 
         boolean retour = false;
         while (!retour) {
+            int niveau = joueur.getNiveau();
+            List<Runnable> actions = new ArrayList<>();
+
             System.out.println("\n========================================");
             System.out.println("          MENU RECRUTEMENT");
             System.out.println("========================================");
@@ -138,29 +141,45 @@ public class MenuRecrutement {
                     + "  |  Parchemins B : " + parcheminB
                     + "  |  Parchemins A : " + parcheminA);
             System.out.println();
-            System.out.println("1. Page 1 — Rang C  (Niv." + NIVEAU_REQUIS_PAGE1 + " requis)");
-            System.out.println("2. Page 2 — Rang B  (Niv." + NIVEAU_REQUIS_PAGE2 + " requis)");
-            System.out.println("3. Page 3 — Rang A  (Niv." + NIVEAU_REQUIS_PAGE3 + " requis)");
-            System.out.println("4. Acheter des Parchemins XP");
-            System.out.println("5. Mini-jeu PFC — Rang C (" + miniJeu.getCoutPartieC() + " or)");
-            System.out.println("6. Mini-jeu PFC — Rang B (" + miniJeu.getCoutPartieB() + " or)");
-            System.out.println("7. Mini-jeu PFC — Rang A (" + miniJeu.getCoutPartieA() + " or)");
+
+            System.out.println((actions.size() + 1) + ". Page 1 — Rang C");
+            actions.add(() -> afficherPage(ctx, scanner, "C", PAGE1, PARCHEMINS_REQUIS_C, NIVEAU_REQUIS_PAGE1));
+
+            if (niveau >= NIVEAU_REQUIS_PAGE2) {
+                System.out.println((actions.size() + 1) + ". Page 2 — Rang B");
+                actions.add(() -> afficherPage(ctx, scanner, "B", PAGE2, PARCHEMINS_REQUIS_B, NIVEAU_REQUIS_PAGE2));
+            }
+            if (niveau >= NIVEAU_REQUIS_PAGE3) {
+                System.out.println((actions.size() + 1) + ". Page 3 — Rang A");
+                actions.add(() -> afficherPage(ctx, scanner, "A", PAGE3, PARCHEMINS_REQUIS_A, NIVEAU_REQUIS_PAGE3));
+            }
+
+            System.out.println((actions.size() + 1) + ". Acheter des Parchemins XP");
+            actions.add(() -> menuAchatParcheminXP(ctx, scanner));
+
+            System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang C (" + miniJeu.getCoutPartieC() + " or)");
+            actions.add(() -> menuMiniJeu(ctx, scanner, "C"));
+
+            if (niveau >= NIVEAU_REQUIS_PAGE2) {
+                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang B (" + miniJeu.getCoutPartieB() + " or)");
+                actions.add(() -> menuMiniJeu(ctx, scanner, "B"));
+            }
+            if (niveau >= NIVEAU_REQUIS_PAGE3) {
+                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang A (" + miniJeu.getCoutPartieA() + " or)");
+                actions.add(() -> menuMiniJeu(ctx, scanner, "A"));
+            }
+
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
-            switch (scanner.nextLine().trim()) {
-                case "1" -> afficherPage(ctx, scanner, "C", PAGE1,
-                                          PARCHEMINS_REQUIS_C, NIVEAU_REQUIS_PAGE1);
-                case "2" -> afficherPage(ctx, scanner, "B", PAGE2,
-                                          PARCHEMINS_REQUIS_B, NIVEAU_REQUIS_PAGE2);
-                case "3" -> afficherPage(ctx,scanner,"A",PAGE3,
-                        PARCHEMINS_REQUIS_A,NIVEAU_REQUIS_PAGE3);
-                case "4" -> menuAchatParcheminXP(ctx, scanner);
-                case "5" -> menuMiniJeu(ctx, scanner, "C");
-                case "6" -> menuMiniJeu(ctx, scanner, "B");
-                case "7" -> menuMiniJeu(ctx, scanner, "A");
-                case "0" -> retour = true;
-                default  -> System.out.println("Choix invalide.");
+            String choix = scanner.nextLine().trim();
+            if (choix.equals("0")) { retour = true; continue; }
+            try {
+                int n = Integer.parseInt(choix);
+                if (n >= 1 && n <= actions.size()) actions.get(n - 1).run();
+                else System.out.println("Choix invalide.");
+            } catch (NumberFormatException e) {
+                System.out.println("Choix invalide.");
             }
         }
     }

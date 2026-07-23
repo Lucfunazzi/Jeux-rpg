@@ -172,7 +172,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage2DPS(33));
                 e.add(new EnnemiMage9Tank(33));
                 e.add(new EnnemiMage3Soigneur(32));
-                return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 9000, 0, e);
+                return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 4500, 0, e);
             }
 
             // Stage 2 — Totomaru élite + escorte
@@ -182,7 +182,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage9Tank(35));
                 e.add(new EnnemiMage3Soigneur(34));
                 e.add(new EnnemiMage3Soigneur(34));
-                return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 11000, 0, e);
+                return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 5500, 0, e);
             }
 
             // Stage 3 — Sol élite + troupe lourde
@@ -192,7 +192,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage5Tank(36));
                 e.add(new EnnemiMage2DPS(35));
                 e.add(new EnnemiMage3Soigneur(35));
-                return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 13500, 0, e);
+                return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 6750, 0, e);
             }
 
             // Stage 4 — Totomaru + Sol élite ensemble
@@ -202,7 +202,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage3Soigneur(37));
                 e.add(new EnnemiMage9Tank(36));
                 e.add(new EnnemiMage3Soigneur(36));
-                return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 16000, 0, e);
+                return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 8000, 0, e);
             }
 
             // Stage 5 — Jubia élite + garde rapprochée
@@ -212,7 +212,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage9Tank(38));
                 e.add(new EnnemiMage5Tank(38));
                 e.add(new EnnemiMage3Soigneur(37));
-                return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 19000, 0, e);
+                return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 9500, 0, e);
             }
 
             // Stage 6 — Élément 4 complet élite
@@ -222,7 +222,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiSol(41));
                 e.add(new EnnemiMage3Soigneur(39));
                 e.add(new EnnemiMage9Tank(38));
-                return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 22000, 0, e);
+                return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 11000, 0, e);
             }
 
             // Stage 7 — Aria élite + escorte d'élite
@@ -232,7 +232,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage9Tank(40));
                 e.add(new EnnemiMage5Tank(40));
                 e.add(new EnnemiMage3Soigneur(39));
-                return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 26000, 0, e);
+                return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 13000, 0, e);
             }
 
             // Stage 8 — Aria + Élément 4 au complet élite
@@ -242,7 +242,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiTotomaru(42));
                 e.add(new EnnemiSol(42));
                 e.add(new EnnemiMage3Soigneur(40));
-                return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 30000, 0, e);
+                return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 15000, 0, e);
             }
 
             // Stage 9 — José élite + Aria + renforts maximum
@@ -252,7 +252,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiMage3Soigneur(41));
                 e.add(new EnnemiMage9Tank(40));
                 e.add(new EnnemiMage3Soigneur(40));
-                return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 35000, 0, e);
+                return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 17500, 0, e);
             }
 
             // Stage 10 — José boss + tout l'Élément 4 élite
@@ -262,7 +262,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiJubia_4elements(44));
                 e.add(new EnnemiTotomaru(43));
                 e.add(new EnnemiSol(43));
-                return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 42000, 0, e);
+                return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 21000, 0, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }

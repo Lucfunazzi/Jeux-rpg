@@ -20,6 +20,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.Formation;
 import lancement.GameContext;
@@ -34,8 +35,11 @@ public class EcranFichePersonnageController {
     private PersonnageBase perso;
     private Runnable onRetour;
 
+    @FXML private HBox badgeBox;
     @FXML private Label titreLabel;
+    @FXML private VBox barresBox;
     @FXML private Label statsLabel;
+    @FXML private Label competencesLabel;
     @FXML private Label liensLabel;
     @FXML private Label setLabel;
     @FXML private VBox slotsBox;
@@ -49,11 +53,15 @@ public class EcranFichePersonnageController {
     }
 
     private void rafraichir() {
+        badgeBox.getChildren().setAll(GuiVisuels.creerBadgeRarete(perso.getRarete()));
         titreLabel.setText(perso.getNom()
                 + "  Niv." + perso.getNiveau()
-                + "  [" + perso.getRarete() + "]"
                 + "  " + (perso.getType() != null ? perso.getType() : "")
                 + "  " + perso.getRole());
+
+        barresBox.getChildren().setAll(
+                GuiVisuels.creerBarrePV(380, 14, perso.getVie(), perso.getVieMax()),
+                GuiVisuels.creerBarreXP(380, 10, perso.getExperience(), perso.getExperienceMax()));
 
         int piecesC = compterPiecesRangC(perso);
 
@@ -71,8 +79,8 @@ public class EcranFichePersonnageController {
         double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + (piecesC >= 4 ? 0.02 : 0);
 
         StringBuilder stats = new StringBuilder("[ Stats ]\n");
-        stats.append(String.format("PV  : %.0f / %.0f  (equip +%.0f%s  +%.0f%%)%n",
-                perso.getVie(), perso.getVieMax(), perso.getBonusEquipementPV(),
+        stats.append(String.format("PV bonus : equip +%.0f%s  +%.0f%%%n",
+                perso.getBonusEquipementPV(),
                 bonusPVSet > 0 ? " +set" + (int) bonusPVSet : "", totalPctPV * 100));
         stats.append(String.format("ATK : %.0f  (equip +%.0f  +%.0f%%)%n",
                 perso.getAttaque(), perso.getBonusEquipementATK(), totalPctATK * 100));
@@ -82,10 +90,19 @@ public class EcranFichePersonnageController {
                 perso.getVitesse(), perso.getBonusEquipementVIT(), totalPctVIT * 100));
         stats.append(String.format("Crit : %.0f%%  Degat crit : x%.2f%n",
                 perso.getTauxCritique() * 100, perso.getTauxDegatCritique()));
-        stats.append(String.format("Esquive : %.0f%%  Blocage : %.0f%%%n",
+        stats.append(String.format("Esquive : %.0f%%  Blocage : %.0f%%",
                 perso.getTauxEsquives() * 100, perso.getTauxBlocage() * 100));
-        stats.append("XP : ").append(perso.getExperience()).append(" / ").append(perso.getExperienceMax());
         statsLabel.setText(stats.toString());
+
+        String[] nomsAttaques = perso.getNomsAttaques();
+        StringBuilder comp = new StringBuilder("[ Competences ]\n");
+        comp.append(nomsAttaques[0]).append(" (base)\n   ")
+            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueBase)).append("\n\n");
+        comp.append(nomsAttaques[1]).append(" (speciale)\n   ")
+            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueSpeciale)).append("\n\n");
+        comp.append(nomsAttaques[2]).append(" (ultime)\n   ")
+            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueUltime));
+        competencesLabel.setText(comp.toString());
 
         List<GestionnaireLiens.Lien> liensActifs = ctx.formation.getLiensActifs();
         if (liensActifs.isEmpty()) {

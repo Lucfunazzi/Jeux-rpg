@@ -62,6 +62,28 @@ public class EcranChoixClasseController {
     @FXML private void onChoixMage(ActionEvent e)               { creerJoueur(e, "Mage", competMage); }
     @FXML private void onChoixConstellationniste(ActionEvent e) { creerJoueur(e, "Constellationniste", competConstellationniste); }
 
+    @FXML private void onDetailsChevalier(ActionEvent e)         { afficherDetails("Chevalier", competChevalier); }
+    @FXML private void onDetailsChasseur(ActionEvent e)          { afficherDetails("Chasseur de Dragon", competChasseur); }
+    @FXML private void onDetailsMage(ActionEvent e)               { afficherDetails("Mage", competMage); }
+    @FXML private void onDetailsConstellationniste(ActionEvent e) { afficherDetails("Constellationniste", competConstellationniste); }
+
+    /** Apercu des competences d'une classe, consultable avant de valider le choix. */
+    private void afficherDetails(String nomClasse, Competences competences) {
+        String[] noms = competences.getNomsCompetences();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Attaque de base (100% ATK)\n\n");
+        sb.append(noms[0]).append(" (speciale)\n   ")
+          .append(GuiVisuels.capturerDescription(competences::descriptionAttaqueSpeciale)).append("\n\n");
+        sb.append(noms[1]).append(" (ultime)\n   ")
+          .append(GuiVisuels.capturerDescription(competences::descriptionUltime));
+
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION, sb.toString(), ButtonType.OK);
+        dialog.setTitle(nomClasse);
+        dialog.setHeaderText(null);
+        styliser(dialog);
+        dialog.showAndWait();
+    }
+
     private void creerJoueur(ActionEvent event, String classe, Competences competences) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
                 "Confirmer la classe " + classe + " ?\nCe choix est definitif, vous ne pourrez plus en changer.",

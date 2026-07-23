@@ -49,27 +49,28 @@ public class EcranRecrutementController {
 
         for (int page = 1; page <= 3; page++) {
             int niveauRequis = MenuRecrutement.getNiveauRequisPage(page);
+            if (niveau < niveauRequis) continue;
             String rang = MenuRecrutement.getRangPage(page);
-            String libelle = "Page " + page + " - Rang " + rang + "  (Niv." + niveauRequis + " requis)";
-            Button bouton = ajouterBouton(libelle);
+            Button bouton = ajouterBouton("Page " + page + " - Rang " + rang);
             int pageFinal = page;
-            if (niveau < niveauRequis) {
-                bouton.setDisable(true);
-            } else {
-                bouton.setOnAction(e -> ouvrirPage(e, pageFinal));
-            }
+            bouton.setOnAction(e -> ouvrirPage(e, pageFinal));
         }
 
         ajouterBouton("Acheter des Parchemins XP").setOnAction(e -> onAchatParchemins());
 
         MiniJeuPFC mj = mr.getMiniJeu();
-        ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or x10 auto)").setOnAction(e -> jouerAuto("C"));
-        ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or x10 auto)").setOnAction(e -> jouerAuto("B"));
-        ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or x10 auto)").setOnAction(e -> jouerAuto("A"));
-
-        ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or, manuel)").setOnAction(e -> jouerManuel("C"));
-        ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or, manuel)").setOnAction(e -> jouerManuel("B"));
-        ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or, manuel)").setOnAction(e -> jouerManuel("A"));
+        if (niveau >= MenuRecrutement.getNiveauRequisPage(1)) {
+            ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or x10 auto)").setOnAction(e -> jouerAuto("C"));
+            ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or, manuel)").setOnAction(e -> jouerManuel("C"));
+        }
+        if (niveau >= MenuRecrutement.getNiveauRequisPage(2)) {
+            ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or x10 auto)").setOnAction(e -> jouerAuto("B"));
+            ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or, manuel)").setOnAction(e -> jouerManuel("B"));
+        }
+        if (niveau >= MenuRecrutement.getNiveauRequisPage(3)) {
+            ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or x10 auto)").setOnAction(e -> jouerAuto("A"));
+            ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or, manuel)").setOnAction(e -> jouerManuel("A"));
+        }
     }
 
     private Button ajouterBouton(String libelle) {

@@ -492,6 +492,19 @@ public class Combat {
         if (resultat.ko) {
             log.add(cible.getNom() + " est KO !");
         }
+
+        if (resultat.bloque && source != null && source.estVivant()) {
+            double degatsRenvoi = cible.getAttaqueBase() * cible.getDegatsRenvoi();
+            double pvAvantRenvoi = source.getVie();
+            PersonnageBase.ResultatDegats resultatRenvoi = source.subirDegats(degatsRenvoi);
+            log.add("[RENVOI] " + cible.getNom() + " renvoie "
+                    + String.format("%.1f", degatsRenvoi) + " degats a " + source.getNom()
+                    + " (" + String.format("%.1f", pvAvantRenvoi) + " → "
+                    + (source.estVivant() ? String.format("%.1f", source.getVie()) + " PV)" : "KO !)"));
+            if (resultatRenvoi.ko) {
+                log.add(source.getNom() + " est KO !");
+            }
+        }
         return true;
     }
 

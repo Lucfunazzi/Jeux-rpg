@@ -73,12 +73,12 @@ public class perso_Bora extends PersonnageBase {
     }
 }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Coup de poings — Inflige 100% ATK");
+        System.out.println("Coup de poings — Inflige 100% ATK à un ennemi");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Fouet de la Protubérance — Inflige 120% ATK à un ennemi, augmente sa précision de 100% pendatns 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible.");
+        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible pendant 1 tour.");
     }
 }

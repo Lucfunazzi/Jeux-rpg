@@ -107,6 +107,13 @@ public class GestionnaireLiens {
             0.05, 0.05, 0.05, 0.05
         ));
 
+        liens.add(new Lien(
+            "Mages de Lamia Scale",
+            "Yuka, Cherry et Tobi ensemble : toute l'equipe gagne +2% PV et +2% VIT",
+            new String[]{"Yuka", "Cherry", "Tobi"},
+            0.00, 0.00, 0.02, 0.02
+        ));
+
         TOUS_LES_LIENS = Collections.unmodifiableList(liens);
     }
 

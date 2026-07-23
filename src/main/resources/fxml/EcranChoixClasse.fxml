@@ -12,19 +12,27 @@
     <Label text="CHOIX DE LA CLASSE" styleClass="titre"/>
     <Label fx:id="sousTitre" styleClass="texte"/>
 
-    <GridPane hgap="20" vgap="20" alignment="CENTER">
-        <Button fx:id="btnChevalier" onAction="#onChoixChevalier"
-                styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"
-                GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <Button fx:id="btnChasseur" onAction="#onChoixChasseur"
-                styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"
-                GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Button fx:id="btnMage" onAction="#onChoixMage"
-                styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"
-                GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <Button fx:id="btnConstellationniste" onAction="#onChoixConstellationniste"
-                styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"
-                GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <GridPane hgap="20" vgap="8" alignment="CENTER">
+        <VBox spacing="6" alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <Button fx:id="btnChevalier" onAction="#onChoixChevalier"
+                    styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"/>
+            <Button text="Voir les competences" onAction="#onDetailsChevalier" styleClass="menu-bouton"/>
+        </VBox>
+        <VBox spacing="6" alignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <Button fx:id="btnChasseur" onAction="#onChoixChasseur"
+                    styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"/>
+            <Button text="Voir les competences" onAction="#onDetailsChasseur" styleClass="menu-bouton"/>
+        </VBox>
+        <VBox spacing="6" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <Button fx:id="btnMage" onAction="#onChoixMage"
+                    styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"/>
+            <Button text="Voir les competences" onAction="#onDetailsMage" styleClass="menu-bouton"/>
+        </VBox>
+        <VBox spacing="6" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Button fx:id="btnConstellationniste" onAction="#onChoixConstellationniste"
+                    styleClass="menu-bouton,classe-bouton" wrapText="true" textAlignment="CENTER"/>
+            <Button text="Voir les competences" onAction="#onDetailsConstellationniste" styleClass="menu-bouton"/>
+        </VBox>
     </GridPane>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>

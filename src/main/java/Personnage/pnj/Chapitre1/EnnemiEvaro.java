@@ -1,6 +1,7 @@
 package Personnage.pnj.Chapitre1;
 
 import Combat.Combat;
+import Effets.BuffBlocage;
 import Effets.BuffDefense;
 import Effets.Etourdissement;
 import Effets.Regeneration;
@@ -62,11 +63,12 @@ public class EnnemiEvaro extends PersonnageBase {
         log.add("Everlue se met en boule et rebondit frénétiquement sur " + cible.getNom() + " et ses alliés !");
         for (PersonnageBase c : equipeEnnemie) {
             if (c.estVivant()) {
-                double degats = this.getAttaque() * 0.70;
+                double degats = this.getAttaque() * 0.60;
                 Combat.appliquerDegatsAvecLog(this, c, degats, log);
-                Combat.appliquerEffet(this, c, new ReductionAttaque(0.10, 2), log);
+                
             }
         }
+        Combat.appliquerEffet(this, new BuffBlocage(0.15, 2), log);
     }
 
     @Override
@@ -84,12 +86,12 @@ public class EnnemiEvaro extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Nage — Diver : Plonge dans le sol et surgit sous la cible, inflige 100% ATK, 20% d'étourdissement.");
+        System.out.println("Nage — Diver : Plonge dans le sol et surgit sous la cible, inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (70% ATK chacun), réduit leur ATK de 10%.");
+        System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (70% ATK chacun), Augmente son blocage de 15%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Invocation de Virgo : inflige 120% ATK à un seul ennemi + étourdissement.");
+        System.out.println("Invocation de Virgo : inflige 120% ATK à un seul ennemi + étourdit la cible pendant 1 tour.");
     }
 }

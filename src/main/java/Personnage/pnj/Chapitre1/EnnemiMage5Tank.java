@@ -25,14 +25,14 @@ public class EnnemiMage5Tank extends PersonnageBase {
         double vit = Math.pow(1.03, niveau - 1);
         this.vie     = 450.0 * niv;
         this.attaque =  55.0 * niv;
-        this.defense =  95.0 * niv;
+        this.defense =  50.0 * niv;
         this.vitesse =  75.0 * vit;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.12;
-        this.taux_blocage      = 0.18;
+        this.taux_esquives     = 0.10;
+        this.taux_blocage      = 0.10;
         this.reduction_blocage = 0.20;
         this.degats_renvoi     = 0.80;
 

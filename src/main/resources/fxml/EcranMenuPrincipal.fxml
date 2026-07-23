@@ -16,6 +16,9 @@
             <padding><Insets top="20" bottom="10"/></padding>
             <Label text="MENU PRINCIPAL" styleClass="titre"/>
             <Label fx:id="enTeteLabel" styleClass="texte"/>
+            <Label fx:id="ressourcesLabel" styleClass="texte"/>
+            <Label fx:id="energieLabel" styleClass="texte"/>
+            <VBox fx:id="xpBarBox" alignment="CENTER" spacing="2"/>
         </VBox>
     </top>
 

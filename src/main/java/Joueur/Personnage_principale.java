@@ -17,11 +17,10 @@ public class Personnage_principale extends PersonnageBase {
     private ArbreCompetences arbreCompetences = new ArbreCompetences();
 
     /**
-     * Quelle version de la spéciale / ultime est active :
-     *   0 = compétences de base (spéciale + ultime normales)
-     *   1 = spéciale remplacée par compétenceArbre  (nœud 10 arbre 1 débloqué)
-     *   2 = ultime  remplacée par competenceArbre2  (nœud 10 arbre 2 débloqué)
-     *   3 = les deux remplacées
+     * Quelle version de la spéciale est active (l'ultime n'est jamais remplacée) :
+     *   0 = spéciale de base
+     *   1 = spéciale remplacée par competenceArbre   (nœud 10 arbre 1 débloqué)
+     *   2 = spéciale remplacée par competenceArbre2  (nœud 10 arbre 2 débloqué)
      */
     private int competenceSpecialeActive = 0;
 
@@ -73,14 +72,13 @@ public class Personnage_principale extends PersonnageBase {
         if (competenceChoisie == null)
             return new String[]{"Attaque de base", "Attaque spéciale", "Attaque ultime"};
         String[] noms = competenceChoisie.getNomsCompetences();
-        // noms[0] = spéciale de base, noms[1] = ultime de base
-        String nomSpeciale = (competenceSpecialeActive == 1 || competenceSpecialeActive == 3)
-                ? getNomCompetenceArbre(choixClasse, 1)
-                : noms[0];
-        String nomUltime   = (competenceSpecialeActive == 2 || competenceSpecialeActive == 3)
-                ? getNomCompetenceArbre(choixClasse, 2)
-                : noms[1];
-        return new String[]{"Attaque de base", nomSpeciale, nomUltime};
+        // noms[0] = spéciale de base, noms[1] = ultime de base (jamais remplacée)
+        String nomSpeciale = switch (competenceSpecialeActive) {
+            case 1  -> getNomCompetenceArbre(choixClasse, 1);
+            case 2  -> getNomCompetenceArbre(choixClasse, 2);
+            default -> noms[0];
+        };
+        return new String[]{"Attaque de base", nomSpeciale, noms[1]};
     }
 
     /** Noms des compétences débloquées par l'arbre — dupliqué de MenuAbilite pour éviter la dépendance circulaire. */
@@ -109,11 +107,10 @@ public class Personnage_principale extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         if (competenceChoisie == null) { log.add("Aucune classe active !"); return; }
 
-        boolean arbre1Actif = (competenceSpecialeActive == 1 || competenceSpecialeActive == 3);
-        if (arbre1Actif) {
-            competenceChoisie.competenceArbre(this, cible, equipeAlliee, equipeEnnemie, log);
-        } else {
-            competenceChoisie.attaqueSpeciale(this, cible, equipeAlliee, equipeEnnemie, log);
+        switch (competenceSpecialeActive) {
+            case 1  -> competenceChoisie.competenceArbre(this, cible, equipeAlliee, equipeEnnemie, log);
+            case 2  -> competenceChoisie.competenceArbre2(this, cible, equipeAlliee, equipeEnnemie, log);
+            default -> competenceChoisie.attaqueSpeciale(this, cible, equipeAlliee, equipeEnnemie, log);
         }
     }
 
@@ -123,14 +120,7 @@ public class Personnage_principale extends PersonnageBase {
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         if (competenceChoisie == null) { log.add("Aucune classe active !"); return; }
 
-        boolean arbre2Actif = (competenceSpecialeActive == 2 || competenceSpecialeActive == 3);
-        if (arbre2Actif) {
-            PersonnageBase cible = equipeEnnemie.stream()
-                    .filter(PersonnageBase::estVivant).findFirst().orElse(null);
-            competenceChoisie.competenceArbre2(this, cible, equipeAlliee, equipeEnnemie, log);
-        } else {
-            competenceChoisie.ultime(this, equipeAlliee, equipeEnnemie, log);
-        }
+        competenceChoisie.ultime(this, equipeAlliee, equipeEnnemie, log);
     }
 
 
@@ -140,15 +130,15 @@ public class Personnage_principale extends PersonnageBase {
     }
     @Override public void descriptionAttaqueSpeciale() {
         if (competenceChoisie == null) { System.out.println("Aucune classe active."); return; }
-        boolean arbre1Actif = (competenceSpecialeActive == 1 || competenceSpecialeActive == 3);
-        if (arbre1Actif) competenceChoisie.descriptionCompetenceArbre();
-        else             competenceChoisie.descriptionAttaqueSpeciale();
+        switch (competenceSpecialeActive) {
+            case 1  -> competenceChoisie.descriptionCompetenceArbre();
+            case 2  -> competenceChoisie.descriptionCompetenceArbre2();
+            default -> competenceChoisie.descriptionAttaqueSpeciale();
+        }
     }
     @Override public void descriptionAttaqueUltime() {
         if (competenceChoisie == null) { System.out.println("Aucune classe active."); return; }
-        boolean arbre2Actif = (competenceSpecialeActive == 2 || competenceSpecialeActive == 3);
-        if (arbre2Actif) competenceChoisie.descriptionCompetenceArbre2();
-        else             competenceChoisie.descriptionUltime();
+        competenceChoisie.descriptionUltime();
     }
 
     // ── Getters / Setters ─────────────────────────────────────────────────
@@ -172,14 +162,14 @@ public class Personnage_principale extends PersonnageBase {
     public int  getCompetenceSpecialeActive()     { return competenceSpecialeActive; }
     public void setCompetenceSpecialeActive(int v){ this.competenceSpecialeActive = v; }
 
-    /** Active la spéciale arbre 1 sans toucher à l'ultime. */
+    /** Active la spéciale débloquée par l'arbre 1. */
     public void activerArbre1() {
-        competenceSpecialeActive = (competenceSpecialeActive == 2) ? 3 : 1;
+        competenceSpecialeActive = 1;
     }
 
-    /** Active l'ultime arbre 2 sans toucher à la spéciale. */
+    /** Active la spéciale débloquée par l'arbre 2. */
     public void activerArbre2() {
-        competenceSpecialeActive = (competenceSpecialeActive == 1) ? 3 : 2;
+        competenceSpecialeActive = 2;
     }
 
     // Compatibilité ascendante sauvegarde

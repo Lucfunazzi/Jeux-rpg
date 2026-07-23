@@ -143,25 +143,25 @@ public class Chapitre2Elite {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiMage1DPS(20));
-                         return new Stage(1, "[ELITE] Débarquement — La garde de l'île", 6000, 0, ennemis); }
+                         return new Stage(1, "[ELITE] Débarquement — La garde de l'île", 3000, 0, ennemis); }
             case 2  -> { ennemis.add(new EnnemiYuka(20)); ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiSoigneur1Elite(20));
-                         return new Stage(2, "[ELITE] Yuka et Tobi renforcés", 7500, 0, ennemis); }
+                         return new Stage(2, "[ELITE] Yuka et Tobi renforcés", 3750, 0, ennemis); }
             case 3  -> { ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiMage3Soigneur(21)); ennemis.add(new EnnemiTank1Elite(21));
-                         return new Stage(3, "[ELITE] Chery et l'annuleur d'élite", 9000, 0, ennemis); }
+                         return new Stage(3, "[ELITE] Chery et l'annuleur d'élite", 4500, 0, ennemis); }
             case 4  -> { ennemis.add(new EnnemiTobi(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiMage2DPS(21)); ennemis.add(new EnnemiSoigneur1Elite(21));
-                         return new Stage(4, "[ELITE] Le trio de l'île — Forme renforcée", 11000, 0, ennemis); }
+                         return new Stage(4, "[ELITE] Le trio de l'île — Forme renforcée", 5500, 0, ennemis); }
             case 5  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiMage3Soigneur(22)); ennemis.add(new EnnemiTank1Elite(22)); ennemis.add(new EnnemiSoigneur2Elite(22));
-                         return new Stage(5, "[ELITE] Leon Bastia d'élite", 13000, 0, ennemis); }
+                         return new Stage(5, "[ELITE] Leon Bastia d'élite", 6500, 0, ennemis); }
             case 6  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiTobi(22)); ennemis.add(new EnnemiYuka(22)); ennemis.add(new EnnemiCherry(22)); ennemis.add(new EnnemiMage2DPS(22));
-                         return new Stage(6, "[ELITE] L'île en guerre totale", 16000, 0, ennemis); }
+                         return new Stage(6, "[ELITE] L'île en guerre totale", 8000, 0, ennemis); }
             case 7  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiTank1Elite(23)); ennemis.add(new EnnemiSoigneur2Elite(23));
-                         return new Stage(7, "[ELITE] Leon — Maître des glaces d'élite", 19500, 0, ennemis); }
+                         return new Stage(7, "[ELITE] Leon — Maître des glaces d'élite", 9750, 0, ennemis); }
             case 8  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiTobi(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiMage3Soigneur(23));
-                         return new Stage(8, "[ELITE] Dernier bastion de l'île", 23000, 0, ennemis); }
+                         return new Stage(8, "[ELITE] Dernier bastion de l'île", 11500, 0, ennemis); }
             case 9  -> { ennemis.add(new EnnemiLeon(24)); ennemis.add(new EnnemiYuka(24)); ennemis.add(new EnnemiTank1Elite(24)); ennemis.add(new EnnemiSoigneur1Elite(24)); ennemis.add(new EnnemiSoigneur2Elite(24));
-                         return new Stage(9, "[ELITE] Leon — Résistance ultime", 27000, 0, ennemis); }
+                         return new Stage(9, "[ELITE] Leon — Résistance ultime", 13500, 0, ennemis); }
             case 10 -> { ennemis.add(new EnnemiLeon(25)); ennemis.add(new EnnemiYuka(25)); ennemis.add(new EnnemiCherry(25)); ennemis.add(new EnnemiTobi(25)); ennemis.add(new EnnemiSoigneur2Elite(25));
-                         return new Stage(10, "[ELITE] Leon — Le Pacte Brisé Ultime", 32000, 0, ennemis); }
+                         return new Stage(10, "[ELITE] Leon — Le Pacte Brisé Ultime", 16000, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }

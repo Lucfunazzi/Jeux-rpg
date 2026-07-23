@@ -91,7 +91,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage2DPS(22));
                 e.add(new EnnemiMage8DPS(21));
                 e.add(new EnnemiMage1DPS(21));
-                return new Stage(1, "L'assaut de Phantom Lord", 6000, 0, e);
+                return new Stage(1, "L'assaut de Phantom Lord", 3000, 0, e);
             }
 
             // Stage 2 — Totomaru + renforts
@@ -101,7 +101,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(24));
                 e.add(new EnnemiMage1DPS(23));
                 e.add(new EnnemiMage8DPS(23));
-                return new Stage(2, "Totomaru — Sept Flammes", 7500, 0, e);
+                return new Stage(2, "Totomaru — Sept Flammes", 3750, 0, e);
             }
 
             // Stage 3 — Sol + troupe solide
@@ -111,7 +111,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage5Tank(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage3Soigneur(24));
-                return new Stage(3, "Sol — L'Impénétrable", 9500, 0, e);
+                return new Stage(3, "Sol — L'Impénétrable", 4750, 0, e);
             }
 
             // Stage 4 — Totomaru + Sol ensemble
@@ -121,7 +121,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage9Tank(25));
                 e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(4, "L'Élément 4 se déploie", 11500, 0, e);
+                return new Stage(4, "L'Élément 4 se déploie", 5750, 0, e);
             }
 
             // Stage 5 — Jubia + troupe
@@ -131,7 +131,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(26));
                 e.add(new EnnemiMage5Tank(26));
                 e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(5, "Jubia — L'Eau qui emprisonne", 13500, 0, e);
+                return new Stage(5, "Jubia — L'Eau qui emprisonne", 6750, 0, e);
             }
 
             // Stage 6 — Élément 4 au complet (Jubia + Totomaru + Sol)
@@ -141,7 +141,7 @@ public class Chapitre3 {
                 e.add(new EnnemiSol(28));
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage8DPS(26));
-                return new Stage(6, "L'Élément 4 au complet", 16000, 0, e);
+                return new Stage(6, "L'Élément 4 au complet", 8000, 0, e);
             }
 
             // Stage 7 — Aria + escorte lourde
@@ -151,7 +151,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(28));
                 e.add(new EnnemiMage5Tank(27));
                 e.add(new EnnemiMage3Soigneur(27));
-                return new Stage(7, "Aria — Magie du Ciel Vide", 19000, 0, e);
+                return new Stage(7, "Aria — Magie du Ciel Vide", 9500, 0, e);
             }
 
             // Stage 8 — Aria + tout l'Élément 4
@@ -161,7 +161,7 @@ public class Chapitre3 {
                 e.add(new EnnemiTotomaru(29));
                 e.add(new EnnemiSol(29));
                 e.add(new EnnemiMage2DPS(27));
-                return new Stage(8, "L'Élément 4 — Dernière résistance", 22500, 0, e);
+                return new Stage(8, "L'Élément 4 — Dernière résistance", 11250, 0, e);
             }
 
             // Stage 9 — José + Aria + renforts d'élite
@@ -171,7 +171,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage3Soigneur(29));
                 e.add(new EnnemiMage9Tank(28));
                 e.add(new EnnemiMage3Soigneur(28));
-                return new Stage(9, "José — L'Ombre s'éveille", 27000, 0, e);
+                return new Stage(9, "José — L'Ombre s'éveille", 13500, 0, e);
             }
 
             // Stage 10 — José seul, boss ultime
@@ -181,7 +181,7 @@ public class Chapitre3 {
                 e.add(new EnnemiJubia_4elements(30));
                 e.add(new EnnemiTotomaru(30));
                 e.add(new EnnemiSol(30));
-                return new Stage(10, "José Porla — Maître de Phantom Lord", 34000, 0, e);
+                return new Stage(10, "José Porla — Maître de Phantom Lord", 17000, 0, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }

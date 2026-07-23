@@ -37,8 +37,15 @@ public class EcranAbilitesController {
 
         boutonArbre1.setText("Arbre 1 - Nouvelle Speciale"
                 + (arbre.isNoeud10Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 1) + "]" : ""));
-        boutonArbre2.setText("Arbre 2 - Nouvel Ultime"
-                + (arbre.isNoeud10Arbre2Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 2) + "]" : ""));
+
+        if (!arbre.isArbre2Debloque()) {
+            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale  [VERROUILLE - terminez le Chapitre 2 Elite]");
+            boutonArbre2.setDisable(true);
+        } else {
+            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale"
+                    + (arbre.isNoeud10Arbre2Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 2) + "]" : ""));
+            boutonArbre2.setDisable(false);
+        }
 
         if (!arbre.isArbre3Debloque()) {
             boutonArbre3.setText("Arbre 3 - Nouvelle Speciale  [VERROUILLE - terminez l'Arbre 2]");

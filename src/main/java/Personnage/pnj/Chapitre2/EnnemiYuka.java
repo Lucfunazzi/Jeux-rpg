@@ -25,8 +25,8 @@ public class EnnemiYuka extends PersonnageBase {
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
         this.vie     = 230.0 * niv;
-        this.attaque =  75.0 * niv;
-        this.defense =  60.0 * niv;
+        this.attaque =  80.0 * niv;
+        this.defense =  65.0 * niv;
         this.vitesse =  70.0 * vit;
 
         this.taux_critiques    = 0.08;
@@ -48,7 +48,7 @@ public class EnnemiYuka extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Yuka projette une Ondulation qui neutralise la magie de " + cible.getNom() + " et le frappe !");
+        log.add("Yuka projette une Ondulation sur " + cible.getNom() + " et le frappe !");
         Combat.attaquer(this, cible, log);
         
     }
@@ -56,7 +56,7 @@ public class EnnemiYuka extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("L'onde de Yuka entre en collision avec la magie de " + cible.getNom() + " — une explosion dévaste la cible !");
+        log.add("Yuka Lance Onde Explosive " + cible.getNom() + " — une explosion dévaste la cible !");
         double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(cible,this,new BuffTauxEsquive(0.15,2),log );
@@ -79,12 +79,12 @@ public class EnnemiYuka extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Ondulation — Hadô : Inflige 100% ATK, réduit ATK de 10% pendant 2 tours.");
+        System.out.println("Ondulation — Hadô : Inflige 100%.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Onde Explosive : Inflige 130% ATK, réduit ATK de 20% et DEF de 15% pendant 2 tours.");
+        System.out.println("Onde Explosive : Inflige 130% ATK à une cible, Augmente son esquive de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Annulation Totale : Purge buffs ennemis, inflige 65% ATK à tous, réduit leur ATK de 15%.");
+        System.out.println("Annulation Totale : Enleve tout ses débuffs, inflige 65% ATK à tous les ennemis.");
     }
 }

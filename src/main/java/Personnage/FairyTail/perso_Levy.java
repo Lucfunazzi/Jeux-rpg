@@ -5,13 +5,21 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Levy extends PersonnageBase {
     public perso_Levy() {
-        this.nom = "Levy"; this.niveau = 1; this.type="Elementaliste";
-        this.role = "Support"; this.rarete = "B";
+        this.nom = "Levy"; 
+        this.niveau = 1;
+        this.type="Elementaliste";
+        this.role = "Support";
+        this.rarete = "B";
         double m = 1.30;
-        this.vie=390*m; this.attaque=130*m; this.defense=100*m; this.vitesse=105*m;
-        this.taux_critiques=0.10; this.degat_critiques=1.20; this.taux_precisions=100;
-        this.taux_esquives=0.08; this.taux_blocage=0.06; this.reduction_blocage=0.08;
-        this.degats_renvoi=0.80; initialiserVieMax();
+        this.vie=390*m; 
+        this.attaque=130*m; 
+        this.defense=100*m; this.vitesse=105*m;
+        this.taux_critiques=0.10;
+        this.degat_critiques=1.20; this.taux_precisions=100;
+        this.taux_esquives=0.08;
+        this.taux_blocage=0.06; this.reduction_blocage=0.08;
+        this.degats_renvoi=0.80;
+        initialiserVieMax();
     }
     @Override public String[] getNomsAttaques() {
         return new String[]{"Script : Fer","Script : Flamme","Script : Solidifier"};

@@ -102,28 +102,28 @@ public class Chapitre1 {
 
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(1, "Prologue", 100, 10, ennemis); }
+                         return new Stage(1, "Prologue", 50, 10, ennemis); }
             case 2  -> {  ennemis.add(new EnnemiBora(niveau));
-                         return new Stage(2, "Bora le charmeur", 150, 15, ennemis); }
+                         return new Stage(2, "Bora le charmeur", 75, 15, ennemis); }
             case 3  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         return new Stage(3, "Chemin vers fairy tail", 220, 20, ennemis); }
+                         return new Stage(3, "Chemin vers fairy tail", 110, 20, ennemis); }
             case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau));
-                         return new Stage(4, "L'arrivée de la reine des fées", 290, 25, ennemis); }
+                         return new Stage(4, "L'arrivée de la reine des fées", 145, 25, ennemis); }
             case 5  -> { ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(5, "Premier mission pour Lucy", 360, 30, ennemis); }
+                         return new Stage(5, "Premier mission pour Lucy", 180, 30, ennemis); }
             case 6  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiEvaro(niveau));
-                         return new Stage(6, "Le duc evarlo", 430, 35, ennemis); }
+                         return new Stage(6, "Le duc evarlo", 215, 35, ennemis); }
             case 7  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(7, "Retour a fairy tail ", 500, 40, ennemis); }
+                         return new Stage(7, "Retour a fairy tail ", 250, 40, ennemis); }
             case 8  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
                          ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
-                         return new Stage(8, "Eisen Wald", 580, 45, ennemis); }
+                         return new Stage(8, "Eisen Wald", 290, 45, ennemis); }
             case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiEligor(niveau));  ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(9, "Eligor le mage de vent", 680, 50, ennemis); }
+                         return new Stage(9, "Eligor le mage de vent", 340, 50, ennemis); }
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
-                         return new Stage(10, "La flute maudite", 860, 55, ennemis); }
+                         return new Stage(10, "La flute maudite", 430, 55, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }

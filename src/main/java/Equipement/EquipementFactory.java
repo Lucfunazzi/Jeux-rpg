@@ -34,7 +34,7 @@ public class EquipementFactory {
     }
 
     public static Equipement couvreCheC() {
-        return new Equipement("Coiffe de Guilde", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.C,
+        return new Equipement("Coiffe en cuir", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.C,
                 Equipement.TypeArme.AUCUN, 0, 0, 50, 0);
     }
 
@@ -49,12 +49,12 @@ public class EquipementFactory {
     }
 
     public static Equipement jambieresC() {
-        return new Equipement("Pantalon renforce", Equipement.Slot.JAMBIERES, Equipement.Rarete.C,
+        return new Equipement("Pantalon en cuir", Equipement.Slot.JAMBIERES, Equipement.Rarete.C,
                 Equipement.TypeArme.AUCUN, 0, 0, 40, 0);
     }
 
     public static Equipement bottesC() {
-        return new Equipement("Bottes legeres", Equipement.Slot.BOTTES, Equipement.Rarete.C,
+        return new Equipement("Bottes en cuir", Equipement.Slot.BOTTES, Equipement.Rarete.C,
                 Equipement.TypeArme.AUCUN, 0, 0, 0, 10);
     }
 
@@ -81,48 +81,48 @@ public class EquipementFactory {
     }
 
     public static Equipement batonB() {
-        return new Equipement("Baton de Cristal", Equipement.Slot.ARME, Equipement.Rarete.B,
-                Equipement.TypeArme.BATON, 40, 0, 0, 0);
+        return new Equipement("Baton Crépusculaire", Equipement.Slot.ARME, Equipement.Rarete.B,
+                Equipement.TypeArme.BATON,100, 0, 0, 0);
     }
 
     public static Equipement gantsArmeB() {
-        return new Equipement("Gants renforces", Equipement.Slot.ARME, Equipement.Rarete.B,
+        return new Equipement("Gants Crépusculaire", Equipement.Slot.ARME, Equipement.Rarete.B,
                 Equipement.TypeArme.GANTS, 40, 0, 0, 0);
     }
 
     public static Equipement lanceB() {
-        return new Equipement("Lance d'acier", Equipement.Slot.ARME, Equipement.Rarete.B,
+        return new Equipement("Lance Crépusculaire", Equipement.Slot.ARME, Equipement.Rarete.B,
                 Equipement.TypeArme.LANCE, 40, 0, 0, 0);
     }
 
     public static Equipement fouetB() {
-        return new Equipement("Fouet renforce", Equipement.Slot.ARME, Equipement.Rarete.B,
+        return new Equipement("Fouet Crépusculaire", Equipement.Slot.ARME, Equipement.Rarete.B,
                 Equipement.TypeArme.FOUET, 40, 0, 0, 0);
     }
 
     public static Equipement couvreCheB() {
-        return new Equipement("Casque ninja", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.B,
+        return new Equipement("Casque Crépusculaire", Equipement.Slot.COUVRE_CHEF, Equipement.Rarete.B,
                 Equipement.TypeArme.AUCUN, 0, 0, 100, 0);
     }
 
     public static Equipement torseB() {
-        return new Equipement("Armure de mailles", Equipement.Slot.TORSE, Equipement.Rarete.B,
-                Equipement.TypeArme.AUCUN, 0, 30, 0, 0);
+        return new Equipement("Armure Crépusculaire", Equipement.Slot.TORSE, Equipement.Rarete.B,
+                Equipement.TypeArme.AUCUN, 0, 60, 0, 0);
     }
 
     public static Equipement mainsB() {
-        return new Equipement("Brassards d'acier", Equipement.Slot.MAINS, Equipement.Rarete.B,
-                Equipement.TypeArme.AUCUN, 0, 20, 0, 0);
+        return new Equipement("Brassards Crépusculaire", Equipement.Slot.MAINS, Equipement.Rarete.B,
+                Equipement.TypeArme.AUCUN, 0, 40, 0, 0);
     }
 
     public static Equipement jambieresB() {
-        return new Equipement("Jambières en acier", Equipement.Slot.JAMBIERES, Equipement.Rarete.B,
-                Equipement.TypeArme.AUCUN, 0, 0, 80, 0);
+        return new Equipement("Jambières Crépusculaire", Equipement.Slot.JAMBIERES, Equipement.Rarete.B,
+                Equipement.TypeArme.AUCUN, 0, 0, 120, 0);
     }
 
     public static Equipement bottesB() {
-        return new Equipement("Bottes de combat", Equipement.Slot.BOTTES, Equipement.Rarete.B,
-                Equipement.TypeArme.AUCUN, 0, 0, 0, 20);
+        return new Equipement("Bottes Crépusculaire", Equipement.Slot.BOTTES, Equipement.Rarete.B,
+                Equipement.TypeArme.AUCUN, 0, 0, 0, 80);
     }
 
     /**
@@ -144,7 +144,7 @@ public class EquipementFactory {
 
     public static Equipement kunaiA() {
         return new Equipement("Kunai du Vent", Equipement.Slot.ARME, Equipement.Rarete.A,
-                Equipement.TypeArme.KUNAI, 70, 0, 0, 0);
+                Equipement.TypeArme.KUNAI, 220, 0, 0, 0);
     }
 
     public static Equipement batonA() {

@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -37,17 +40,22 @@ public class EcranPersonnagesController {
             boolean dansFormation = ctx.formation.getEquipe().contains(p);
             String tag = dansFormation ? "  [F]" : "";
 
+            Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+
             Button bouton = new Button(p.getNom()
                     + "  Niv." + p.getNiveau()
-                    + "  [" + p.getRarete() + "]"
                     + "  " + (p.getType() != null ? p.getType() : "")
                     + "  " + p.getRole()
                     + tag + set);
             bouton.getStyleClass().add("menu-bouton");
             bouton.setWrapText(true);
-            bouton.setPrefWidth(420);
+            bouton.setPrefWidth(340);
             bouton.setOnAction(e -> ouvrirFiche(e, p));
-            persosBox.getChildren().add(bouton);
+
+            HBox ligne = new HBox(8, badge, bouton);
+            ligne.setAlignment(Pos.CENTER_LEFT);
+
+            persosBox.getChildren().add(ligne);
         }
     }
 

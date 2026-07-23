@@ -19,12 +19,12 @@ public class perso_Tobi extends PersonnageBase {
         this.rarete = "C";
         this.niveau = 1;
         double mult = 1.00;
-        this.vie     = 300 * mult;
-        this.attaque = 105 * mult;
+        this.vie     = 250 * mult;
+        this.attaque = 145 * mult;
         this.defense =  70 * mult;
-        this.vitesse = 105 * mult;
-        this.taux_critiques    = 0.10;
-        this.degat_critiques   = 1.20;
+        this.vitesse = 115 * mult;
+        this.taux_critiques    = 0.15;
+        this.degat_critiques   = 1.30;
         this.taux_precisions   = 100.00;
         this.taux_esquives     = 0.08;
         this.taux_blocage      = 0.04;
@@ -35,13 +35,13 @@ public class perso_Tobi extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Griffe Paralysante", "Griffe Paralysante Renforcée", "Assaut de Griffes"};
+        return new String[]{"Coup de Griffe", "Griffe Paralysante ", "Assaut de Griffes"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi lacère " + cible.getNom() + " de ses griffes paralysantes !");
+        log.add("Tobi lacère " + cible.getNom() + " de ses griffes  !");
         Combat.attaquer(this, cible, log);
         
         
@@ -50,7 +50,7 @@ public class perso_Tobi extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi concentre toute sa magie dans ses griffes et frappe " + cible.getNom() + " avec une puissance redoublée !");
+        log.add("Tobi  griffes et frappe " + cible.getNom() + " avec puissance!");
         double degats = this.getAttaque() * 1.35;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
@@ -72,10 +72,10 @@ public class perso_Tobi extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Griffe Paralysante — Inflige 100% ATK, 25% de chance de paralyser 1 tour.");
+        System.out.println("Coup de Griffe — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Griffe Paralysante Renforcée — Inflige 135% ATK, paralyse la cible 1 tour.");
+        System.out.println("Griffe Paralysante  — Inflige 135% ATK, paralyse la cible 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Assaut de Griffes — Inflige 70% ATK à tous, 35% de chance de paralyser chacun 1 tour.");

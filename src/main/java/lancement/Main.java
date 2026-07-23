@@ -180,42 +180,53 @@ public class Main {
         scanner.close();
     }
 
-    private static Personnage_principale creerNouveauJoueur(Scanner scanner, String pseudo, GameContext ctx) {
-        Personnage_principale joueur = new Personnage_principale(pseudo, 1);
-        joueur.setGameContext(ctx);
-        Competences competences;
-
-        System.out.println("\nChoisissez votre classe :\n");
-        for (int i = 0; i < joueur.getClasses().length; i++)
-            System.out.println((i + 1) + ". " + joueur.getClasses()[i]);
-
-        int choixClasseNum = 0;
-        while (choixClasseNum < 1 || choixClasseNum > joueur.getClasses().length) {
-            System.out.print("Votre choix : ");
-            try { choixClasseNum = Integer.parseInt(scanner.nextLine().trim()); }
-            catch (NumberFormatException e) { System.out.println("Entree invalide."); }
-        }
-        joueur.setChoixClasses(joueur.getClasses()[choixClasseNum - 1]);
-
-        competences = switch (joueur.getChoixClasses()) {
+    private static Competences competencesPour(String classe) {
+        return switch (classe) {
             case "Mage"                -> new Elementaliste();
             case "Chasseur de Dragon"  -> new ChasseurDeDragon();
             case "Chevalier"           -> new Chevalier();
             case "Constellationniste"  -> new Invocateur();
             default         -> null;
         };
+    }
 
-        // Afficher les compétences de départ (spéciale + ultime)
-        String[] nomCompetences = competences.getNomsCompetences();
-        System.out.println("\nVos compétences de départ :");
-        System.out.println("  Spéciale : " + nomCompetences[0]);
-        System.out.println("  Ultime   : " + nomCompetences[1]);
-        System.out.println("\nVoulez-vous voir la description de vos compétences ? (1 : Oui / 2 : Non) :");
-        String choixDesc = scanner.nextLine().trim();
-        if (choixDesc.equals("1")) {
-            competences.descriptionAttaqueSpeciale();
-            competences.descriptionUltime();
+    private static Personnage_principale creerNouveauJoueur(Scanner scanner, String pseudo, GameContext ctx) {
+        Personnage_principale joueur = new Personnage_principale(pseudo, 1);
+        joueur.setGameContext(ctx);
+
+        Competences competences = null;
+        String classeChoisie = null;
+
+        while (competences == null) {
+            System.out.println("\nChoisissez votre classe :\n");
+            for (int i = 0; i < joueur.getClasses().length; i++)
+                System.out.println((i + 1) + ". " + joueur.getClasses()[i]);
+            System.out.println("\nEntrez le numero d'une classe pour voir ses competences avant de valider.");
+
+            int choixClasseNum = 0;
+            while (choixClasseNum < 1 || choixClasseNum > joueur.getClasses().length) {
+                System.out.print("Votre choix : ");
+                try { choixClasseNum = Integer.parseInt(scanner.nextLine().trim()); }
+                catch (NumberFormatException e) { System.out.println("Entree invalide."); }
+            }
+            String classeApercu = joueur.getClasses()[choixClasseNum - 1];
+            Competences apercu = competencesPour(classeApercu);
+
+            String[] nomCompetences = apercu.getNomsCompetences();
+            System.out.println("\n[ " + classeApercu + " ]");
+            System.out.println("  Speciale : " + nomCompetences[0]);
+            apercu.descriptionAttaqueSpeciale();
+            System.out.println("  Ultime   : " + nomCompetences[1]);
+            apercu.descriptionUltime();
+
+            System.out.println("\nValider ce choix de classe ? (1 : Oui / 2 : Non, revoir les classes) :");
+            if (scanner.nextLine().trim().equals("1")) {
+                classeChoisie = classeApercu;
+                competences   = apercu;
+            }
         }
+
+        joueur.setChoixClasses(classeChoisie);
         System.out.println("\nD'autres compétences seront débloquées via l'Arbre de Compétences !");
         joueur.setCompetencesChoisie(competences);
         return joueur;

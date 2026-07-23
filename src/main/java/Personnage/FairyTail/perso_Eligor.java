@@ -35,7 +35,7 @@ public class perso_Eligor extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Lame de Vent Tranchante", "Mur Tempête", "Mur de Vent — Prison de Tornades"};
+        return new String[]{"Coup de Faux", "Lame de Vent", "Mur de Vent — Prison de Tornades"};
     }
 
     @Override
@@ -48,36 +48,37 @@ public class perso_Eligor extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal érige un Mur Tempête — son bouclier de vent dévaste " + cible.getNom() + " !");
-        Combat.appliquerEffet(this, new BuffDefense(0.25, 2), log);
-        double degats = this.getAttaque() * 1.25;
+        log.add("Eligoal Lance Lame de Vent " + cible.getNom() + " !");
+     
+        double degats = this.getAttaque() * 1.40;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 2), log);
+        
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal libère le Mur de Vent — une prison de tornades piège toute l'équipe ennemie !");
+        log.add("Eligoal libère Storm Bringer sur toute l'équipe ennemie !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
+                double degats = (this.getAttaque() * 0.70) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Silence(2), log);
-                Combat.appliquerEffet(this, cible, new ReductionVitesse(0.25, 2), log);
+                
+                Combat.appliquerEffet(this, cible, new Saignement(2,0.05), log);
             }
         }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Lame de Vent Tranchante — 100% ATK.");
+        System.out.println("Coup de Faux — 100% ATK à un ennemi.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Mur Tempête — +25% DEF, inflige 125% ATK, réduit ATK cible de 20%.");
+        System.out.println("Lame de Vent —  inflige 140% ATK à un ennemi.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Mur de Vent — 90% ATK à tous (x rage), silence 2 tours, réduit VIT de 25%.");
+        System.out.println("Storm Bringer— 70% ATK à tous les ennemis, inflige saignement pendants 2 tours (5% des pv).");
     }
 }

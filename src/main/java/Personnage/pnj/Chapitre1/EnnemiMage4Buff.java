@@ -24,7 +24,7 @@ public class EnnemiMage4Buff extends PersonnageBase {
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
         this.vie     = 230.0 * niv;
-        this.attaque =  92.0 * niv;
+        this.attaque =  70.0 * niv;
         this.defense =  25.0 * niv;
         this.vitesse =  80.0 * vit;
 

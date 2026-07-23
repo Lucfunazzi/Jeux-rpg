@@ -137,45 +137,45 @@ public class Chapitre2 {
             case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
-                         return new Stage(1, "Prologue Chapitre 2", 1500, 0, ennemis); }
+                         return new Stage(1, "Prologue Chapitre 2", 750, 0, ennemis); }
 
             case 2  -> { ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
-                         return new Stage(2, "Arrivée a l'ile de galuna", 1800, 0, ennemis); }
+                         return new Stage(2, "Arrivée a l'ile de galuna", 900, 0, ennemis); }
 
             case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
 
-                         return new Stage(3, "Lucy VS Cherry", 2100, 0, ennemis); } // Lucy rejoint l'equipe : voir lancerStage3AvecLucy
+                         return new Stage(3, "Lucy VS Cherry", 1050, 0, ennemis); } // Lucy rejoint l'equipe : voir lancerStage3AvecLucy
 
             case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau));
 
-                         return new Stage(4, "Yuka contre Natsu", 2500, 0, ennemis); } // Natsu rejoint l'equipe : voir lancerStageAvecNatsu
+                         return new Stage(4, "Yuka contre Natsu", 1250, 0, ennemis); } // Natsu rejoint l'equipe : voir lancerStageAvecNatsu
 
             case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
 
-                         return new Stage(5, "Tobi contre Natsu", 2800, 0, ennemis); }// Natsu rejoint l'equipe : voir lancerStageAvecNatsu
+                         return new Stage(5, "Tobi contre Natsu", 1400, 0, ennemis); }// Natsu rejoint l'equipe : voir lancerStageAvecNatsu
 
             case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage9Tank(niveau));
 
-                         return new Stage(6, "Gray vs Leon 1", 3200, 0, ennemis); }//Gray rejoint l'equipe : voir lancerStageAvecGray
+                         return new Stage(6, "Gray vs Leon 1", 1600, 0, ennemis); }//Gray rejoint l'equipe : voir lancerStageAvecGray
 
             case 7  -> { ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                            ennemis.add(new EnnemiMage5Tank(niveau)); //combat avec Natsu contre  homme mysterieux ( ultia en gros combat demonstation)
-                         return new Stage(7, "Natsu contre l'homme mysterieux", 3800, 0, ennemis); }
+                         return new Stage(7, "Natsu contre l'homme mysterieux", 1900, 0, ennemis); }
             case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); // Gray rejoint l'equipe : voir lancerStageAvecGray
                         ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         return new Stage(8, "Gray vs Leon part 2", 4300, 0, ennemis); }
+                         return new Stage(8, "Gray vs Leon part 2", 2150, 0, ennemis); }
             case 9  -> { ennemis.add(new EnnemiDeliora_passe()); // Combat flashback (niveau fixe) : Ul seule contre Deliora, voir lancerStage9AvecUl
-                         return new Stage(9, "Le passé de Gray", 4800, 0, ennemis); }
+                         return new Stage(9, "Le passé de Gray", 2400, 0, ennemis); }
             case 10 -> { ennemis.add(new EnnemiDeliora(niveau));
-                         return new Stage(10, "Deliora le demon", 5500, 0, ennemis); }
+                         return new Stage(10, "Deliora le demon", 2750, 0, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }

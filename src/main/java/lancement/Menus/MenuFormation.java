@@ -32,16 +32,14 @@ public class MenuFormation {
             System.out.println();
             System.out.println("1. Ajouter un personnage");
             System.out.println("2. Retirer un personnage");
-            System.out.println("3. Voir les statistiques");
-            System.out.println("4. Changer la competence speciale");
+            System.out.println("3. Changer la competence speciale");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
                 case "1" -> ajouterMenu(formation, personnagesDisponibles, scanner);
                 case "2" -> retirerMenu(formation, scanner);
-                case "3" -> voirStats(formation, personnagesDisponibles, scanner);
-                case "4" -> changerCompetenceSpeciale(joueur, scanner);
+                case "3" -> changerCompetenceSpeciale(joueur, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -122,42 +120,6 @@ public class MenuFormation {
         }
     }
     
-    private void voirStats(Formation formation,
-                        ArrayList<PersonnageBase> disponibles,
-                        Scanner scanner) {
-    // Fusionner equipe + disponibles non recrutes
-    ArrayList<PersonnageBase> tous = new ArrayList<>(formation.getEquipe());
-    for (PersonnageBase p : disponibles) {
-        if (!tous.contains(p)) tous.add(p);
-    }
-
-    if (tous.isEmpty()) {
-        System.out.println("Aucun personnage disponible.");
-        return;
-    }
-
-    System.out.println("\nChoisissez un personnage :");
-    for (int i = 0; i < tous.size(); i++) {
-        PersonnageBase p = tous.get(i);
-        System.out.println((i + 1) + ". " + p.getNom()
-                + " [" + p.getRole() + "] Niv." + p.getNiveau());
-    }
-    System.out.println("0. Annuler");
-    System.out.print("Votre choix : ");
-
-    try {
-        int choix = Integer.parseInt(scanner.nextLine().trim());
-        if (choix == 0) return;
-        if (choix < 1 || choix > tous.size()) {
-            System.out.println("Choix invalide.");
-            return;
-        }
-        afficherStats(tous.get(choix - 1));
-    } catch (NumberFormatException e) {
-        System.out.println("Entree invalide.");
-    }
-}
-
 // ── Changer la compétence spéciale active ─────────────────────────────
     private void changerCompetenceSpeciale(Personnage_principale joueur, Scanner scanner) {
         ArbreCompetences arbre  = joueur.getArbreCompetences();
@@ -232,18 +194,4 @@ public class MenuFormation {
         };
     }
 
-    private void afficherStats(PersonnageBase p) {
-    System.out.println("\n--- " + p.getNom() + " ---");
-    System.out.println("Role    : " + p.getRole() + " | Rarete : " + p.getRarete() + " | Type : " + p.getType());
-    System.out.println("Niveau  : " + p.getNiveau() + " | XP : " + p.getExperience() + "/" + p.getExperienceMax());
-    System.out.println("PV      : " + String.format("%.0f", p.getVieMax()));
-    System.out.println("ATK     : " + String.format("%.0f", p.getAttaque()));
-    System.out.println("DEF     : " + String.format("%.0f", p.getDefense()));
-    System.out.println("VIT     : " + String.format("%.0f", p.getVitesse()));
-    System.out.println("Crit    : " + String.format("%.0f", p.getTauxCritique() * 100) + "%"
-            + " / Degat crit : " + String.format("%.0f", p.getTauxDegatCritique() * 100) + "%");
-    System.out.println("Esquive : " + String.format("%.0f", p.getTauxEsquives() * 100) + "%"
-            + " | Blocage : " + String.format("%.0f", p.getTauxBlocage() * 100) + "%");
-    System.out.println("Attaques : " + String.join(", ", p.getNomsAttaques()));
-}
 }

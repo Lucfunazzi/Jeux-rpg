@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -19,17 +20,22 @@
     <center>
         <VBox alignment="CENTER" spacing="10">
             <padding><Insets left="30" right="30"/></padding>
-            <Label fx:id="tankLabel" styleClass="texte" wrapText="true"/>
-            <Label fx:id="attaquantsLabel" styleClass="texte" wrapText="true"/>
-            <Label fx:id="supportsLabel" styleClass="texte" wrapText="true"/>
-            <Label fx:id="competenceLabel" styleClass="texte" wrapText="true"/>
+
+            <Label text="AVANT" styleClass="texte" style="-fx-font-size: 11px; -fx-opacity: 0.6;"/>
+            <HBox fx:id="ligneTankBox" alignment="CENTER" spacing="14"/>
+            <HBox fx:id="ligneDpsBox" alignment="CENTER" spacing="14"/>
+            <HBox fx:id="ligneSupportBox" alignment="CENTER" spacing="14"/>
+            <Label text="ARRIERE" styleClass="texte" style="-fx-font-size: 11px; -fx-opacity: 0.6;"/>
+
+            <Label fx:id="competenceLabel" styleClass="texte" wrapText="true">
+                <VBox.margin><Insets top="10"/></VBox.margin>
+            </Label>
             <Label fx:id="liensLabel" styleClass="texte" wrapText="true"/>
 
             <VBox alignment="CENTER" spacing="8">
                 <padding><Insets top="20"/></padding>
                 <Button text="Ajouter un personnage" onAction="#onAjouter" styleClass="menu-bouton"/>
-                <Button text="Retirer un personnage" onAction="#onRetirer" styleClass="menu-bouton"/>
-                <Button text="Voir les statistiques" onAction="#onVoirStats" styleClass="menu-bouton"/>
+                <Button text="Retirer un personnage" onAction="#onRetirer" styleClass="menu-bouton-danger"/>
                 <Button text="Changer la competence speciale" onAction="#onChangerCompetence" styleClass="menu-bouton"/>
             </VBox>
         </VBox>

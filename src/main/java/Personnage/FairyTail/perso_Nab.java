@@ -5,13 +5,23 @@ import Personnage.PersonnageBase;
 import java.util.List;
 public class perso_Nab extends PersonnageBase {
     public perso_Nab() {
-        this.nom = "Nab"; this.niveau = 1; this.type = "Chevalier";
-        this.role = "Tank"; this.rarete = "C";
+        this.nom = "Nab"; 
+        this.niveau = 1;
+        this.type = "Chevalier";
+        this.role = "Tank"; 
+        this.rarete = "C";
         double m = 1.00;
-        this.vie=380*m; this.attaque=85*m; this.defense=95*m; this.vitesse=65*m;
-        this.taux_critiques=0.05; this.degat_critiques=1.10; this.taux_precisions=100;
-        this.taux_esquives=0.03; this.taux_blocage=0.18; this.reduction_blocage=0.20;
-        this.degats_renvoi=0.80; initialiserVieMax();
+        this.vie=380*m;
+        this.attaque=85*m; 
+        this.defense=95*m; 
+        this.vitesse=65*m;
+        this.taux_critiques=0.05; 
+        this.degat_critiques=1.10; this.taux_precisions=100;
+        this.taux_esquives=0.03; 
+        this.taux_blocage=0.15; 
+        this.reduction_blocage=0.20;
+        this.degats_renvoi=0.80; 
+        initialiserVieMax();
     }
     @Override public String[] getNomsAttaques() {
         return new String[]{"Coup de poing","Posture de défense","Forteresse animale"};
@@ -31,6 +41,6 @@ public class perso_Nab extends PersonnageBase {
         double soin = this.getVieMax()*0.10; this.recevoirSoin(soin, log);
     }
     @Override public void descriptionAttaqueBase() { System.out.println("Coup de poing — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Posture de défense — 80% ATK, +15% blocage 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Forteresse animale — , se soigne de 10% PV max."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Posture de défense — 80% ATK, +15% blocage pendant 2 tours."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Forteresse animale — , se soigne de 10% des PV max."); }
 }

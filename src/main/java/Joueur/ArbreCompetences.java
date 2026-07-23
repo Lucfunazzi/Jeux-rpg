@@ -66,6 +66,8 @@ public class ArbreCompetences {
         };
         int i = index - 1;
 
+        if (arbre == 2 && !isArbre2Debloque())
+            return "L'arbre 2 est verrouille. Terminez le Chapitre 2 Elite pour le debloquer.";
         if (arbre == 3 && !isArbre3Debloque())
             return "L'arbre 3 est verrouille. Terminez l'arbre 2 pour le debloquer.";
         if (i < 0 || i >= 10) return "Noeud invalide.";
@@ -107,7 +109,7 @@ public class ArbreCompetences {
     public boolean isNoeud10Debloque()  { return noeuds1[9].isDebloque(); }
     public boolean isNoeud10Arbre2Debloque() { return noeuds2[9].isDebloque(); }
     public boolean isNoeud10Arbre3Debloque() { return noeuds3[9].isDebloque(); }
-    public boolean isArbre2Debloque()   { return true; }
+    public boolean isArbre2Debloque()   { return arbre2Debloque; }
     public boolean isArbre3Debloque()   { return isNoeud10Arbre2Debloque(); }
 
     // ── Points ────────────────────────────────────────────────────────────

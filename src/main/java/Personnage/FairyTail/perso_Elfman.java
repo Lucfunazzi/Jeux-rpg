@@ -13,7 +13,7 @@ public class perso_Elfman extends PersonnageBase {
         this.role = "Tank";
         this.rarete = "B";
         double multiplicateurRarete = 1.20;
-        this.vie = 420 * multiplicateurRarete;
+        this.vie = 480 * multiplicateurRarete;
         this.attaque = 135 * multiplicateurRarete;
         this.defense = 120 * multiplicateurRarete;
         this.vitesse = 90 * multiplicateurRarete;
@@ -21,7 +21,7 @@ public class perso_Elfman extends PersonnageBase {
         this.degat_critiques = 1.30;
         this.taux_precisions = 100.00;
         this.taux_esquives = 0.08;
-        this.taux_blocage = 0.15;
+        this.taux_blocage = 0.05;
         this.reduction_blocage = 0.15;
         this.degats_renvoi = 0.80;
         initialiserVieMax();

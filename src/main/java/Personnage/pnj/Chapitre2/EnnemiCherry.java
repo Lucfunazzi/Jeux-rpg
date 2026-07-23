@@ -41,9 +41,9 @@ public class EnnemiCherry extends PersonnageBase {
         initialiserVieMax();
     }
 
-    @Override
+     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Arbre Marionnette", "Contrôle des Esprits", "Marionnette de l'Amour"};
+        return new String[]{"Arbre Marionnette", "Marionnette de l'amour ", "Forêt de l'Amour"};
     }
 
     @Override
@@ -57,18 +57,23 @@ public class EnnemiCherry extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry tente de prendre le contrôle des invocations de " + cible.getNom() );
-        double degats = this.getAttaque() * 1.10;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        
-       
-        Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
+        log.add("Cherry utilise marionnette de l'amour  ");
+          PersonnageBase cibleSoin = null;
+    for (PersonnageBase allie : equipeAlliee) {
+        if (allie.estVivant()) {
+            if (cibleSoin == null || allie.getVie() < cibleSoin.getVie())
+                cibleSoin = allie;
+        }
+    }
+    if (cibleSoin == null) return;
+    double soin = this.getAttaque() * 0.80;
+    cibleSoin.recevoirSoin(soin, log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry libère la Marionnette de l'Amour — la forêt entière se dresse contre les ennemis !");
+        log.add("Cherry libère la Forêt de l'amour — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.50;
