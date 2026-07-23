@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -84,8 +85,21 @@ public class EcranStagesController {
     private void lancerStage(int numero, Stage stage) {
         if (ligne.elite()) ctx.gestionnaireEnergie.mettreAJourRecharge();
 
+        if (ligne.elite() && !ctx.gestionnaireEnergie.peutFaireRunElite(numero)) {
+            info("Stage", "Limite de runs atteinte pour ce stage aujourd'hui (10/10).");
+            return;
+        }
+        if (ligne.elite() && ctx.gestionnaireEnergie.getEnergie() < 5) {
+            info("Stage", "Pas assez d'énergie ! (il faut 5, vous avez " + ctx.gestionnaireEnergie.getEnergie() + ")");
+            return;
+        }
+
         List<PersonnageBase> avant = new ArrayList<>(ctx.personnagesRecruites);
         lancement.Stage.ResultatStage resultat = ligne.lancerStage().apply(ctx, numero);
+        if (resultat == null) {
+            info("Stage", "Impossible de lancer ce stage pour le moment.");
+            return;
+        }
         List<PersonnageBase> nouveauxRecrues = new ArrayList<>(ctx.personnagesRecruites);
         nouveauxRecrues.removeAll(avant);
 
@@ -118,7 +132,7 @@ public class EcranStagesController {
             sb.append("+ ").append(r.carteOrQuantite).append("x ").append(r.carteOrNom).append("\n");
         }
         if (r.pointsAbilite > 0) {
-            sb.append("+ ").append(r.pointsAbilite).append(" point(s) d'habilete\n");
+            sb.append("+ ").append(r.pointsAbilite).append(" point(s) d'habileté\n");
         }
 
         Label texte = new Label(sb.toString().trim());
@@ -163,5 +177,14 @@ public class EcranStagesController {
     @FXML
     private void onRetour() {
         onRetour.run();
+    }
+
+    private void info(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("root-menu");
+        alert.showAndWait();
     }
 }

@@ -77,11 +77,11 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     }
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Carte de soin — soigne l'allie avec le moins de PV a hauteur de 130% ATK.");
+        System.out.println("Carte de soin — soigne l'allie avec le moins de PV a hauteur de 100% ATK.");
     }
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Carte de foudre — inflige 70% ATK a toute l'equipe adverse, "
-                + "paralyse pendant 2 tours et reduit l'attaque des DPS/Tank de 10% pendant 2 tours.");
+        System.out.println("Carte de foudre — inflige 60% ATK a toute l'equipe adverse "
+                + "et applique 30% de chance de paralysie pendant 2 tours.");
     }
 }

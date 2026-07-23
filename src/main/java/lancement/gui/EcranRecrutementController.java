@@ -147,7 +147,8 @@ public class EcranRecrutementController {
             default  -> mr.ajouterParcheminA(totalGagnes);
         }
         ctx.sauvegarde.sauvegarder(ctx);
-        info("Mini-jeu PFC", "10 parties terminees !\nTotal parchemins " + rang + " gagnes : " + totalGagnes);
+        info("Mini-jeu PFC", "10 parties terminees ! Depense : " + coutTotal + " or.\n"
+                + "Total parchemins " + rang + " gagnes : " + totalGagnes);
         rafraichir();
     }
 
@@ -208,8 +209,9 @@ public class EcranRecrutementController {
         int[] parcheminsTotaux = {0};
         boolean[] termine = {false};
 
+        int coutInitial = mj.getCoutPartie(rang);
         Runnable majTitre = () -> titreLabel.setText(
-                "Manche " + manche[0] + "/3  —  Parchemins " + rang + " gagnes : " + parcheminsTotaux[0]);
+                "Manche " + manche[0] + "/3  —  Depense : " + coutInitial + " or  —  Parchemins " + rang + " gagnes : " + parcheminsTotaux[0]);
         majTitre.run();
 
         java.util.function.IntConsumer jouerChoix = choix -> {

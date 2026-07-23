@@ -116,13 +116,20 @@ public final class GuiVisuels {
     public static Node creerFicheStat(String label, String valeur) {
         Label v = new Label(valeur);
         v.getStyleClass().add("item-nom");
+        v.setWrapText(true);
+        v.setMaxWidth(160);
+        v.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+
         Label l = new Label(label);
         l.getStyleClass().add("item-detail");
+        l.setWrapText(true);
+        l.setMaxWidth(160);
+        l.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         VBox box = new VBox(2, v, l);
         box.setAlignment(Pos.CENTER);
         box.getStyleClass().add("carte-item");
-        box.setPrefWidth(130);
+        box.setMinWidth(130);
         return box;
     }
 

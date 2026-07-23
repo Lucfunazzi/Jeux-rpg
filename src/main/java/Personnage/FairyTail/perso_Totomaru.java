@@ -74,6 +74,6 @@ public class perso_Totomaru extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() { System.out.println("Flamme Blanche — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Feu Orange Nauséabond — 140% ATK, empoisonne 2 tours ."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Feu Orange Nauséabond — 120% ATK, empoisonne 2 tours."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Flammes Arc-en-Ciel —  100% ATK à tous (x rage), brûle  2 tours."); }
 }

@@ -41,6 +41,6 @@ public class perso_Lisanna extends PersonnageBase {
         for (PersonnageBase al : a) if (al.estVivant()) Combat.appliquerEffet(this, al, new Regeneration(0.08,2), log);
     }
     @Override public void descriptionAttaqueBase() { System.out.println("Griffe animale — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Soin du coeur — soigne toute l'équipe de 70% ATK, +10% DEF 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Forme de colombe — régénère toute l'équipe 3 tours (8% PV max/tour)."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Soin du coeur — soigne toute l'équipe de 70% ATK."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Forme de colombe — régénère toute l'équipe 2 tours (8% PV max/tour)."); }
 }

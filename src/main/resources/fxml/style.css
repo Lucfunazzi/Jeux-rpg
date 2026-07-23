@@ -193,6 +193,14 @@
     -fx-opacity: 0.4;
 }
 
+.menu-bouton-combat-danger {
+    -fx-background-color: #5a2e2e;
+}
+
+.menu-bouton-combat-danger:hover {
+    -fx-background-color: #7a3a3a;
+}
+
 .banniere {
     -fx-font-size: 26px;
     -fx-font-weight: bold;

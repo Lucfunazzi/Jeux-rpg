@@ -17,7 +17,7 @@ public class Chevalier implements Competences {
 
     @Override
     public String[] getNomsCompetences() {
-        return new String[]{"Lance Électrique", "Lance des Ténèbres"};
+        return new String[]{"Lance Électrique", "Lance anémisthe"};
     }
 
     // ── Spéciale de base ─────────────────────────────────────────────────

@@ -63,7 +63,7 @@ public class ChasseurDeDragon implements Competences {
     @Override
     public void competenceArbre2(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tir à hate préssion du dragon d'eau !");
+        log.add("Tir à haute pression du dragon d'eau !");
         PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
         double degats = utilisateur.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);

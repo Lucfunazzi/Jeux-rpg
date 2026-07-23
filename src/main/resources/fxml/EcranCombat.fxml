@@ -41,6 +41,7 @@
             <TextArea fx:id="logArea" editable="false" wrapText="true" prefHeight="150" styleClass="zone-mono"/>
             <Label fx:id="banniereLabel" visible="false" managed="false"/>
             <HBox spacing="12" alignment="CENTER">
+                <Button fx:id="quitterButton" text="Quitter ✕" onAction="#onQuitter" styleClass="menu-bouton-combat,menu-bouton-combat-danger"/>
                 <Button fx:id="suivantButton" text="Suivant ▶" onAction="#onSuivant" styleClass="menu-bouton-combat"/>
                 <Button fx:id="autoButton" text="Lecture auto ▶▶" onAction="#onAuto" styleClass="menu-bouton-combat"/>
                 <Button fx:id="passerButton" text="Passer a la fin ⏭" onAction="#onPasser" styleClass="menu-bouton-combat"/>

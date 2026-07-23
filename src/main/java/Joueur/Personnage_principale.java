@@ -86,10 +86,10 @@ public class Personnage_principale extends PersonnageBase {
         if (classe == null) return "Compétence spéciale " + arbre;
         if (arbre == 3) return "Compétence spéciale (Arbre 3)";
         return switch (classe) {
-            case "Mage"               -> arbre == 1 ? "Épée de Glace Éternelle"      : "Ice Make — Démon de Glace";
-            case "Chasseur de Dragon" -> arbre == 1 ? "Écailles du Dragon d'Eau"     : "Forme Dragon — Inondation Abyssale";
-            case "Chevalier"          -> arbre == 1 ? "Changement d'Armure"          : "Armure du Ciel Brillant";
-            case "Constellationniste" -> arbre == 1 ? "Invocation : Leo"             : "Portes des Étoiles";
+            case "Mage"               -> arbre == 1 ? "Rayon sacré"                  : "Décharge de foudre";
+            case "Chasseur de Dragon" -> arbre == 1 ? "Fouet du Dragon d'Eau"        : "Tir à haute pression du dragon d'eau";
+            case "Chevalier"          -> arbre == 1 ? "Lance de Feu"                 : "Marteau vengeur";
+            case "Constellationniste" -> arbre == 1 ? "Invocation : Cancer"          : "Invocation : Virgo";
             default -> "Compétence spéciale " + arbre;
         };
     }

@@ -44,6 +44,7 @@ public class EcranCombatController {
     @FXML private GridPane equipeJoueurBox;
     @FXML private GridPane equipeAdverseBox;
     @FXML private TextArea logArea;
+    @FXML private Button quitterButton;
     @FXML private Button suivantButton;
     @FXML private Button autoButton;
     @FXML private Button passerButton;
@@ -476,5 +477,15 @@ public class EcranCombatController {
     @FXML
     private void onContinuer() {
         if (onTermine != null) onTermine.accept(victoire);
+    }
+
+    /** Sortie rapide en un clic, quel que soit l'avancement (avant meme le premier tour) : passe
+     * directement a la fin du combat deja resolu et revient a l'ecran precedent. */
+    @FXML
+    private void onQuitter() {
+        if (index < evenements.size()) {
+            onPasser();
+        }
+        onContinuer();
     }
 }

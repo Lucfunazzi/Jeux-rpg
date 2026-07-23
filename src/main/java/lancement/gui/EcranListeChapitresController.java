@@ -41,47 +41,69 @@ public class EcranListeChapitresController {
         GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
 
         for (LigneChapitre ligne : lignes) {
-            VBox carte = new VBox(8);
-
             if (!ligne.deverrouille()) {
-                // Le nom/sous-titre du chapitre reste cache tant qu'il n'est pas debloque.
-                int tiret = ligne.label().indexOf(" - ");
-                String nomGenerique = tiret >= 0 ? ligne.label().substring(0, tiret) : ligne.label();
-
-                Label verrouille = new Label(nomGenerique + "  [VERROUILLE]\n" + ligne.messageVerrouille());
-                verrouille.getStyleClass().add("texte");
-                verrouille.setWrapText(true);
-                carte.getChildren().add(verrouille);
-                lignesBox.getChildren().add(carte);
+                lignesBox.getChildren().add(carteVerrouillee(ligne));
                 continue;
             }
-
-            int etoiles = ge.compterEtoiles(ligne.numeroChapitre(), ligne.elite());
-            Label infoLabel = new Label(ligne.label() + "  [" + etoiles + "/30 etoiles]");
-            infoLabel.getStyleClass().add("texte");
-            infoLabel.setWrapText(true);
-
-            HBox boutons = new HBox(10);
-            boutons.setStyle("-fx-alignment: center;");
-
-            Button entrer = new Button("Entrer");
-            entrer.getStyleClass().add("menu-bouton");
-            entrer.setOnAction(e -> ouvrirStages(e, ligne));
-            boutons.getChildren().add(entrer);
-
-            boolean unCoffreDispo = ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 1)
-                    || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 2)
-                    || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 3);
-            if (unCoffreDispo) {
-                Button coffres = new Button("Coffres disponibles !");
-                coffres.getStyleClass().add("menu-bouton");
-                coffres.setOnAction(e -> ouvrirCoffres(ligne));
-                boutons.getChildren().add(coffres);
-            }
-
-            carte.getChildren().addAll(infoLabel, boutons);
-            lignesBox.getChildren().add(carte);
+            lignesBox.getChildren().add(carteChapitre(ligne, ge));
         }
+    }
+
+    /** Carte grisée mais explicite pour un chapitre pas encore débloqué (au lieu d'un simple label facile à manquer). */
+    private Node carteVerrouillee(LigneChapitre ligne) {
+        int tiret = ligne.label().indexOf(" - ");
+        String nomGenerique = tiret >= 0 ? ligne.label().substring(0, tiret) : ligne.label();
+
+        Label nom = new Label(nomGenerique);
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("🔒 Verrouillé — " + ligne.messageVerrouille());
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(420);
+
+        VBox texte = new VBox(4, nom, detail);
+        VBox carte = new VBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setOpacity(0.6);
+        carte.setPrefWidth(460);
+        return carte;
+    }
+
+    private Node carteChapitre(LigneChapitre ligne, GestionnaireEtoiles ge) {
+        int etoiles = ge.compterEtoiles(ligne.numeroChapitre(), ligne.elite());
+
+        Label nom = new Label(ligne.label());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(etoiles + " / 30 étoiles");
+        detail.getStyleClass().add("item-qte");
+
+        VBox texteBox = new VBox(4, nom, detail);
+
+        HBox boutons = new HBox(10);
+        boutons.setAlignment(Pos.CENTER_LEFT);
+
+        Button entrer = new Button("Entrer");
+        entrer.getStyleClass().add("menu-bouton");
+        entrer.setOnAction(e -> ouvrirStages(e, ligne));
+        boutons.getChildren().add(entrer);
+
+        boolean unCoffreDispo = ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 1)
+                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 2)
+                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 3);
+        if (unCoffreDispo) {
+            Button coffres = new Button("Coffres disponibles !");
+            coffres.getStyleClass().add("menu-bouton");
+            coffres.setOnAction(e -> ouvrirCoffres(ligne));
+            boutons.getChildren().add(coffres);
+        }
+
+        VBox contenu = new VBox(10, texteBox, boutons);
+        VBox carte = new VBox(contenu);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item-joueur");
+        carte.setPrefWidth(460);
+        return carte;
     }
 
     private void ouvrirStages(ActionEvent event, LigneChapitre ligne) {

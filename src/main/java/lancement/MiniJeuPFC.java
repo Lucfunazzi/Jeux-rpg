@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class MiniJeuPFC {
 
-    private static final int COUT_PARTIEC = 250;
+    private static final int COUT_PARTIEC = 1000;
     private static final int PARCHEMINS_MANCHE1C = 3;
     private static final int PARCHEMINS_MANCHE2C = 5;
     private static final int PARCHEMINS_MANCHE3C = 10;

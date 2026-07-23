@@ -42,6 +42,6 @@ public class perso_Levy extends PersonnageBase {
         }
     }
     @Override public void descriptionAttaqueBase() { System.out.println("Script : Fer — inflige 100% ATK a une cible."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Script : Flamme — inflige 120% ATK a une cible, 30% de chance de Silence pendant 1 tour."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Script : Flamme — inflige 120% ATK a une cible, 30% de chance de Brulure pendant 1 tour."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Script : Solidifier — applique +12% ATK et +10% DEF pendant 2 tours a toute l'equipe alliee."); }
 }

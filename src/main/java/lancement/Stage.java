@@ -165,7 +165,7 @@ public class Stage {
             if (estNouveauStage) {
                 pts = titre.contains("[ELITE]") ? 4 : 5;
                 ctx.joueur.getArbreCompetences().ajouterPoints(pts);
-                System.out.println("   + " + pts + " point(s) d'abilite !"
+                System.out.println("   + " + pts + " point(s) d'habileté !"
                         + " (Total : " + ctx.joueur.getArbreCompetences().getPointsDisponibles() + ")");
             }
 

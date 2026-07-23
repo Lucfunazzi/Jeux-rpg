@@ -69,9 +69,7 @@ public class perso_Sol extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 0.90) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                if (Math.random()<0.30){
-                    Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
-                }
+               
                 
             }
         }
@@ -80,6 +78,6 @@ public class perso_Sol extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() { System.out.println("Show Time — Gravats de Pierre : 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Merci la Vie — Mémoire : 110% ATK, 50% confusion ou étourdissement, réduit ATK de 18%."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre :    90% ATK à tous les ennemis, 30% chance d'étourdir, draine 10% PV."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Merci la Vie — Mémoire : 110% ATK, 50% de chance d'appliquer Confusion pendant 2 tours."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre : +30% DEF (3 tours) pour Sol, 90% ATK à tous les ennemis (x rage), puis Sol récupère 10% de ses PV max."); }
 }
