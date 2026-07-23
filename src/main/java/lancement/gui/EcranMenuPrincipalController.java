@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireCompagnons;
+import lancement.Gestionnaires.GestionnaireExamenS;
 import lancement.Gestionnaires.Gestionnaire_pet;
 
 public class EcranMenuPrincipalController {
@@ -61,6 +62,7 @@ public class EcranMenuPrincipalController {
         if (niveau >= Gestionnaire_pet.NIVEAU_DEBLOCAGE)            ajouterBouton("Creatures Sacrees", this::onCreaturesSacrees);
         if (niveau >= 6)                                            ajouterBouton("Etoiles & Fragments", this::onEtoiles);
         ajouterBouton("Tirages", this::onTirages);
+        if (niveau >= GestionnaireExamenS.NIVEAU_REQUIS)            ajouterBouton("Examen de Rang S", this::onExamenS);
     }
 
     private void ajouterBouton(String libelle) {
@@ -136,6 +138,10 @@ public class EcranMenuPrincipalController {
 
     private void onEtoiles(ActionEvent event) {
         naviguerVers(event, "/fxml/EcranEtoiles.fxml", c -> ((EcranEtoilesController) c).initData(ctx));
+    }
+
+    private void onExamenS(ActionEvent event) {
+        naviguerVers(event, "/fxml/EcranExamenS.fxml", c -> ((EcranExamenSController) c).initData(ctx));
     }
 
     private void naviguerVers(ActionEvent event, String fxml, Consumer<Object> initialiser) {

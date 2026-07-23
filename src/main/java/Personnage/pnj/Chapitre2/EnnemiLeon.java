@@ -30,7 +30,7 @@ public class EnnemiLeon extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 230.0 * mult * niv;
-        this.attaque =  95.0 * mult * niv;
+        this.attaque =  100.0 * mult * niv;
         this.defense =  65.0 * mult * niv;
         this.vitesse =  88.0 * mult * vit;
 

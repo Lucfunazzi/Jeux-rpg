@@ -72,6 +72,7 @@ public class SauvegardeData {
     public List<EquipementData>  joueurEquipementsPortes = new ArrayList<>();
     public List<ParcheminXPData> inventaireParcheminsXP  = new ArrayList<>();
     public List<CarteOrData>     inventaireCartesOr      = new ArrayList<>();
+    public List<PierreStackData> inventairePierres       = new ArrayList<>();
 
     // ── Donnees personnage ────────────────────────────────────────────────
     public static class PersonnageData {
@@ -100,6 +101,30 @@ public class SauvegardeData {
         }
     }
 
+    // ── Donnees pierre (socket) ────────────────────────────────────────────
+    public static class PierreData {
+        public String type;   // nom de l'enum Pierre.Type
+        public int    niveau;
+        public PierreData() {}
+        public PierreData(String type, int niveau) {
+            this.type   = type;
+            this.niveau = niveau;
+        }
+    }
+
+    // ── Donnees stock de pierres (inventaire) ─────────────────────────────
+    public static class PierreStackData {
+        public String type;   // nom de l'enum Pierre.Type
+        public int    niveau;
+        public int    quantite;
+        public PierreStackData() {}
+        public PierreStackData(String type, int niveau, int quantite) {
+            this.type     = type;
+            this.niveau   = niveau;
+            this.quantite = quantite;
+        }
+    }
+
     // ── Donnees parchemin XP ─────────────────────────────────────────────
     public static class ParcheminXPData {
         public String rarete;
@@ -123,6 +148,7 @@ public class SauvegardeData {
         public int    quantite            = 1;
         public int    niveauFortification = 0;
         public int    niveauAffinage      = 0;
+        public List<PierreData> pierres   = new ArrayList<>();
 
         public EquipementData() {}
         public EquipementData(String nom, String slot, String rarete, String typeArme,
@@ -166,6 +192,11 @@ public class SauvegardeData {
     // ── Donjon de ressources ──────────────────────────────────────────────
     public int[][]  donjonRuns        = new int[3][3];
     public String   donjonDernierReset;
+
+    // ── Examen de Rang S ──────────────────────────────────────────────────
+    public boolean[] examenSDejaReussi     = new boolean[11];
+    public boolean[] examenSFaitAujourdhui = new boolean[11];
+    public String    examenSDernierReset;
 
     // ── Etoiles & coffres ────────────────────────────────────────────────
     public List<EtoileData>   etoiles       = new ArrayList<>();

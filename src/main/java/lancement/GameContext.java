@@ -13,12 +13,14 @@ import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEnergie;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireEtoilesPerso;
+import lancement.Gestionnaires.GestionnaireExamenS;
 import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
 import lancement.Menus.MenuEtoilesPerso;
+import lancement.Menus.MenuExamenS;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuTirage_recrutement;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class GameContext {
     public GestionnaireEnergie           gestionnaireEnergie;
     public GestionnaireTitres            gestionnaireTitres;
     public GestionnaireDonjon            gestionnaireDonjon;
+    public GestionnaireExamenS           gestionnaireExamenS;
     public GestionnaireEtoiles           gestionnaireEtoiles;
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
     public GestionnaireCompagnons        gestionnaireCompagnons;
@@ -61,6 +64,7 @@ public class GameContext {
     public MenuRecrutement   menuRecrutement;
     public MenuEtoilesPerso  menuEtoilesPerso;
     public MenuTirage_recrutement        menuTirage;
+    public MenuExamenS       menuExamenS;
 
     // ── Divers ────────────────────────────────────────────────────────────
     public int    coupons            = 0;
@@ -88,6 +92,8 @@ public class GameContext {
         ctx.rangJoueur           = new RangJoueur();
         ctx.gestionnaireTitres   = new GestionnaireTitres();
         ctx.gestionnaireDonjon   = new GestionnaireDonjon();
+        ctx.gestionnaireExamenS  = new GestionnaireExamenS();
+        ctx.menuExamenS          = new MenuExamenS();
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
         ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
@@ -115,6 +121,7 @@ public class GameContext {
         sauvegarde.restaurerEnergie(gestionnaireEnergie, data);
         sauvegarde.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
         sauvegarde.restaurerDonjon(gestionnaireDonjon, data);
+        sauvegarde.restaurerExamenS(gestionnaireExamenS, data);
         menuRecrutement.setParcheminC(data.parcheminC);
         menuRecrutement.setParcheminB(data.parcheminB);
         menuRecrutement.setParcheminA(data.parcheminA);

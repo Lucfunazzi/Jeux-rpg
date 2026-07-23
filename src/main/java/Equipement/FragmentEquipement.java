@@ -13,8 +13,8 @@ public class FragmentEquipement {
     /** Nombre de fragments nécessaires pour créer un équipement. */
     public static final int QUANTITE_REQUISE = 20;
 
-    private final String     nomFragment;   // ex. "Fragment: Kunai du Vent"
-    private final String     nomEquipement; // ex. "Kunai du Vent"
+    private final String     nomFragment;   // ex. "Fragment: Baton de Foudre"
+    private final String     nomEquipement; // ex. "Baton de Foudre"
     private final Equipement.Slot   slot;
     private final Equipement.TypeArme typeArme;
 

@@ -63,10 +63,35 @@ public class Inventaire {
         }
     }
 
+    public static class StackPierre {
+        private final Pierre.Type type;
+        private final int niveau;
+        private int quantite;
+
+        public StackPierre(Pierre.Type type, int niveau, int quantite) {
+            this.type     = type;
+            this.niveau   = niveau;
+            this.quantite = quantite;
+        }
+
+        public Pierre.Type getType() { return type; }
+        public int getNiveau()       { return niveau; }
+        public int getQuantite()     { return quantite; }
+        public void ajouterQuantite(int n) { this.quantite += n; }
+        public void retirerQuantite(int n) { this.quantite -= n; }
+        public boolean estVide()     { return quantite <= 0; }
+
+        @Override
+        public String toString() {
+            return new Pierre(type, niveau) + " x" + quantite;
+        }
+    }
+
     private final ArrayList<StackEquipement> stacks      = new ArrayList<>();
     private final ArrayList<Materiau>        materiaux   = new ArrayList<>();
     private final ArrayList<StackParchemin>  parchemins  = new ArrayList<>();
     private final ArrayList<StackCarteOr>    cartesOr    = new ArrayList<>();
+    private final ArrayList<StackPierre>     pierres     = new ArrayList<>();
 
     // ── Équipements ───────────────────────────────────────────────────────
     public void ajouterEquipement(Equipement e) {
@@ -214,10 +239,58 @@ public class Inventaire {
 
     public ArrayList<StackCarteOr> getCartesOr() { return cartesOr; }
 
+    // ── Pierres (Force, Agilite, Precision, Attaque S, Contre, Critique, Blocage, Vie, Esquive) ──
+    public void ajouterPierre(Pierre.Type type, int niveau, int quantite) {
+        for (StackPierre s : pierres) {
+            if (s.getType() == type && s.getNiveau() == niveau) {
+                s.ajouterQuantite(quantite);
+                return;
+            }
+        }
+        pierres.add(new StackPierre(type, niveau, quantite));
+    }
+
+    public boolean retirerPierre(Pierre.Type type, int niveau, int quantite) {
+        for (int i = 0; i < pierres.size(); i++) {
+            StackPierre s = pierres.get(i);
+            if (s.getType() == type && s.getNiveau() == niveau && s.getQuantite() >= quantite) {
+                s.retirerQuantite(quantite);
+                if (s.estVide()) pierres.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getQuantitePierre(Pierre.Type type, int niveau) {
+        for (StackPierre s : pierres) {
+            if (s.getType() == type && s.getNiveau() == niveau) return s.getQuantite();
+        }
+        return 0;
+    }
+
+    public ArrayList<StackPierre> getPierres() { return pierres; }
+
+    /**
+     * Synthetise 2 pierres du meme type et niveau en 1 pierre de niveau superieur.
+     * @return "OK" si la synthese a reussi, un message d'erreur sinon.
+     */
+    public String synthetiserPierre(Pierre.Type type, int niveau) {
+        if (niveau >= Pierre.NIVEAU_MAX) {
+            return "Cette pierre est deja au niveau maximum (" + Pierre.NIVEAU_MAX + ").";
+        }
+        if (getQuantitePierre(type, niveau) < 2) {
+            return "Il faut 2 pierres de ce type et de ce niveau pour synthetiser.";
+        }
+        retirerPierre(type, niveau, 2);
+        ajouterPierre(type, niveau + 1, 1);
+        return "OK";
+    }
+
     // ── Utilitaire global ─────────────────────────────────────────────────
     public boolean estVide() {
         return stacks.isEmpty() && materiaux.isEmpty()
-                && parchemins.isEmpty() && cartesOr.isEmpty();
+                && parchemins.isEmpty() && cartesOr.isEmpty() && pierres.isEmpty();
     }
 
     // ── Affichage ─────────────────────────────────────────────────────────
@@ -260,6 +333,15 @@ public class Inventaire {
             }
             for (StackCarteOr s : cartesOr) {
                 System.out.println("  " + s);
+            }
+        }
+
+        System.out.println("\n[ Pierres (" + pierres.size() + " types) ]");
+        if (pierres.isEmpty()) {
+            System.out.println("  Aucune pierre.");
+        } else {
+            for (int i = 0; i < pierres.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + pierres.get(i));
             }
         }
     }

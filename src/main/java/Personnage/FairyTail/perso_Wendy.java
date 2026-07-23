@@ -38,9 +38,14 @@ public class perso_Wendy extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Wendy utilise Brise de soin !");
-        // Soin très léger sur un allié ciblé (cible = allié ici)
+        // Soin très léger sur l'allié le plus bas en vie (cible est un ennemi, jamais un allié)
+        PersonnageBase cibleSoin = equipeAlliee.stream()
+                .filter(PersonnageBase::estVivant)
+                .min(Comparator.comparingDouble(PersonnageBase::getVie))
+                .orElse(null);
+        if (cibleSoin == null) return;
         double montantSoin = this.getAttaque() * 0.40;
-        cible.recevoirSoin(montantSoin, log);
+        cibleSoin.recevoirSoin(montantSoin, log);
     }
 
     @Override

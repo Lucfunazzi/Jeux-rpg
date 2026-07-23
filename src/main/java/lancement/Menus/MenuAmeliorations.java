@@ -2,6 +2,7 @@ package lancement.Menus;
 
 import Equipement.Equipement;
 import Equipement.Inventaire;
+import Equipement.Pierre;
 import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class MenuAmeliorations {
             } else {
                 System.out.println("2. Affinage  [Debloque niveau " + NIVEAU_DEBLOCAGE_AFFINAGE + "]");
             }
+            System.out.println("3. Pierres");
 
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -50,6 +52,7 @@ public class MenuAmeliorations {
                                 + NIVEAU_DEBLOCAGE_AFFINAGE + " !");
                     }
                 }
+                case "3" -> menuPierres(joueur, personnagesRecruites, inventaire, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -441,6 +444,200 @@ public class MenuAmeliorations {
         return "Affinage reussi ! " + equip.getNomAffiche() + " -> Aff." + niveauCible + " (+" + niveauCible + "%)"
                 + "\nCout : " + coutTotal + " pierres"
                 + "\nNouveaux bonus : " + equip.getDescriptionBonus();
+    }
+
+    // =========================================================================
+    // PIERRES (Force, Agilite, Vie, Precision, Attaque S, Contre, Critique, Blocage, Esquive)
+    // =========================================================================
+
+    private void menuPierres(Personnage_principale joueur,
+                              ArrayList<PersonnageBase> personnagesRecruites,
+                              Inventaire inventaire,
+                              Scanner scanner) {
+        boolean retour = false;
+        while (!retour) {
+            System.out.println("\n--- PIERRES ---");
+            System.out.println("Chaque piece d'equipement a " + Equipement.NB_EMPLACEMENTS_PIERRES + " emplacements de pierres.");
+            System.out.println("2 pierres du meme type et niveau se synthetisent en 1 pierre de niveau superieur (max " + Pierre.NIVEAU_MAX + ").");
+            System.out.println();
+            System.out.println("1. Voir mon stock de pierres");
+            System.out.println("2. Synthetiser des pierres");
+            System.out.println("3. Gerer les pierres d'un equipement equipe");
+            System.out.println("4. Gerer les pierres d'un equipement dans l'inventaire");
+            System.out.println("0. Retour");
+            System.out.print("Votre choix : ");
+
+            switch (scanner.nextLine().trim()) {
+                case "1" -> afficherStockPierres(inventaire);
+                case "2" -> synthetiserPierresMenu(inventaire, scanner);
+                case "3" -> gererPierresEquipe(joueur, personnagesRecruites, inventaire, scanner);
+                case "4" -> gererPierresInventaire(inventaire, scanner);
+                case "0" -> retour = true;
+                default  -> System.out.println("Choix invalide.");
+            }
+        }
+    }
+
+    private void afficherStockPierres(Inventaire inventaire) {
+        ArrayList<Inventaire.StackPierre> stock = inventaire.getPierres();
+        if (stock.isEmpty()) {
+            System.out.println("Aucune pierre en stock.");
+            return;
+        }
+        System.out.println("\nStock de pierres :");
+        for (int i = 0; i < stock.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + stock.get(i));
+        }
+    }
+
+    private void synthetiserPierresMenu(Inventaire inventaire, Scanner scanner) {
+        ArrayList<Inventaire.StackPierre> eligibles = new ArrayList<>();
+        for (Inventaire.StackPierre s : inventaire.getPierres()) {
+            if (s.getQuantite() >= 2 && s.getNiveau() < Pierre.NIVEAU_MAX) eligibles.add(s);
+        }
+        if (eligibles.isEmpty()) {
+            System.out.println("Aucune pierre synthetisable (il faut 2 pierres identiques, niveau < " + Pierre.NIVEAU_MAX + ").");
+            return;
+        }
+
+        System.out.println("\nPierres synthetisables (2 pierres -> 1 de niveau superieur) :");
+        for (int i = 0; i < eligibles.size(); i++) {
+            Inventaire.StackPierre s = eligibles.get(i);
+            System.out.println("  " + (i + 1) + ". " + s + "  ->  " + new Pierre(s.getType(), s.getNiveau() + 1));
+        }
+        System.out.println("0. Annuler");
+        System.out.print("Votre choix : ");
+
+        try {
+            int choix = Integer.parseInt(scanner.nextLine().trim());
+            if (choix == 0) return;
+            if (choix < 1 || choix > eligibles.size()) {
+                System.out.println("Choix invalide.");
+                return;
+            }
+            Inventaire.StackPierre choisi = eligibles.get(choix - 1);
+            System.out.println(inventaire.synthetiserPierre(choisi.getType(), choisi.getNiveau()));
+        } catch (NumberFormatException ex) {
+            System.out.println("Entree invalide.");
+        }
+    }
+
+    private void gererPierresEquipe(Personnage_principale joueur,
+                                     ArrayList<PersonnageBase> personnagesRecruites,
+                                     Inventaire inventaire,
+                                     Scanner scanner) {
+        PersonnageBase cible = choisirPersonnage(joueur, personnagesRecruites, scanner);
+        if (cible == null) return;
+
+        ArrayList<Equipement> portes = cible.getEquipementsPortes();
+        if (portes.isEmpty()) {
+            System.out.println(cible.getNom() + " ne porte aucun equipement.");
+            return;
+        }
+
+        afficherListePierres(portes);
+        Equipement choisi = choisirEquipementDansListe(portes, scanner);
+        if (choisi == null) return;
+        gererPierresEquipement(choisi, inventaire, scanner);
+    }
+
+    private void gererPierresInventaire(Inventaire inventaire, Scanner scanner) {
+        ArrayList<Equipement> equips = inventaire.getEquipements();
+        if (equips.isEmpty()) {
+            System.out.println("Aucun equipement dans l'inventaire.");
+            return;
+        }
+
+        afficherListePierres(equips);
+        Equipement choisi = choisirEquipementDansListe(equips, scanner);
+        if (choisi == null) return;
+        gererPierresEquipement(choisi, inventaire, scanner);
+    }
+
+    private void afficherListePierres(ArrayList<Equipement> liste) {
+        System.out.println();
+        for (int i = 0; i < liste.size(); i++) {
+            Equipement e = liste.get(i);
+            int rempli = 0;
+            for (Pierre p : e.getPierres()) if (p != null) rempli++;
+            System.out.println((i + 1) + ". " + e + "  |  Pierres : " + rempli + "/" + Equipement.NB_EMPLACEMENTS_PIERRES);
+        }
+        System.out.println("0. Annuler");
+        System.out.print("Votre choix : ");
+    }
+
+    /** Ecran de gestion des 5 emplacements de pierres d'une piece d'equipement. Reutilisable par la GUI. */
+    private void gererPierresEquipement(Equipement equip, Inventaire inventaire, Scanner scanner) {
+        boolean retour = false;
+        while (!retour) {
+            System.out.println("\n--- Pierres de " + equip.getNomAffiche() + " ---");
+            for (int i = 0; i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) {
+                Pierre p = equip.getPierre(i);
+                System.out.println("  " + (i + 1) + ". " + (p != null ? p : "[vide]"));
+            }
+            System.out.println("0. Retour");
+            System.out.print("Choisissez un emplacement : ");
+
+            int emplacement;
+            try {
+                emplacement = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("Entree invalide.");
+                continue;
+            }
+            if (emplacement == 0) { retour = true; continue; }
+            if (emplacement < 1 || emplacement > Equipement.NB_EMPLACEMENTS_PIERRES) {
+                System.out.println("Emplacement invalide.");
+                continue;
+            }
+
+            int index = emplacement - 1;
+            Pierre actuelle = equip.getPierre(index);
+            if (actuelle != null) {
+                System.out.println("Cet emplacement contient : " + actuelle);
+                System.out.print("Retirer cette pierre ? (1 : Oui / 0 : Non) : ");
+                if (scanner.nextLine().trim().equals("1")) {
+                    equip.retirerPierre(index);
+                    inventaire.ajouterPierre(actuelle.getType(), actuelle.getNiveau(), 1);
+                    System.out.println("Pierre retiree et remise en stock.");
+                }
+            } else {
+                ArrayList<Inventaire.StackPierre> dispo = inventaire.getPierres();
+                if (dispo.isEmpty()) {
+                    System.out.println("Aucune pierre en stock.");
+                    continue;
+                }
+                System.out.println("\nPierres disponibles :");
+                for (int i = 0; i < dispo.size(); i++) {
+                    System.out.println("  " + (i + 1) + ". " + dispo.get(i));
+                }
+                System.out.println("0. Annuler");
+                System.out.print("Choisissez une pierre a inserer : ");
+
+                int choixPierre;
+                try {
+                    choixPierre = Integer.parseInt(scanner.nextLine().trim());
+                } catch (NumberFormatException ex) {
+                    System.out.println("Entree invalide.");
+                    continue;
+                }
+                if (choixPierre == 0) continue;
+                if (choixPierre < 1 || choixPierre > dispo.size()) {
+                    System.out.println("Choix invalide.");
+                    continue;
+                }
+
+                Inventaire.StackPierre choisi = dispo.get(choixPierre - 1);
+                Pierre nouvelle = new Pierre(choisi.getType(), choisi.getNiveau());
+                String resultat = equip.insererPierre(index, nouvelle);
+                if (resultat.equals("OK")) {
+                    inventaire.retirerPierre(choisi.getType(), choisi.getNiveau(), 1);
+                    System.out.println("Pierre inseree : " + nouvelle);
+                } else {
+                    System.out.println(resultat);
+                }
+            }
+        }
     }
 
     // =========================================================================

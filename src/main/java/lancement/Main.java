@@ -114,6 +114,7 @@ public class Main {
             if (ctx.joueur.getNiveau() >= Gestionnaire_pet.NIVEAU_DEBLOCAGE)      System.out.println("15. Créatures Sacrées");
             if (ctx.joueur.getNiveau() >= 6)                                                   System.out.println("16. Etoiles & Fragments");
             System.out.println("17. Tirages");
+            if (ctx.joueur.getNiveau() >= lancement.Gestionnaires.GestionnaireExamenS.NIVEAU_REQUIS) System.out.println("18. Examen de Rang S");
             System.out.println("12. Sauvegarder");
             System.out.println("0.  Quitter");
             System.out.print("Votre choix : ");
@@ -163,6 +164,10 @@ public class Main {
                     else System.out.println("Choix invalide.");
                 }
                 case "17" -> { ctx.menuTirage.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                case "18" -> {
+                    if (ctx.joueur.getNiveau() >= lancement.Gestionnaires.GestionnaireExamenS.NIVEAU_REQUIS) { ctx.menuExamenS.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
                 case "0"  -> {
                     if (modifieDepuisSauvegarde) {
                         System.out.println("Vous avez des modifications non sauvegardees.");

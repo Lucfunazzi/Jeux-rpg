@@ -128,6 +128,8 @@ public class MenuPersonnage {
                     + "  Degat crit : x" + String.format("%.2f", perso.getTauxDegatCritique()));
             System.out.println("  Esquive : " + String.format("%.0f", perso.getTauxEsquives() * 100) + "%"
                     + "  Blocage    : " + String.format("%.0f", perso.getTauxBlocage() * 100) + "%");
+            System.out.println("  Attaque S : " + String.format("%.0f", perso.getTauxAttaqueS())
+                    + "  Contre     : " + String.format("%.0f", perso.getTauxContre()));
             System.out.println("  XP : " + perso.getExperience() + " / " + perso.getExperienceMax());
 
             // Liens actifs

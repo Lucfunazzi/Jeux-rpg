@@ -26,6 +26,7 @@ import Effets.Brulure;
 import java.util.ArrayList;
 import java.util.List;
 import Equipement.Equipement;
+import Equipement.Pierre;
 import Effets.BuffTitre;
 import java.util.HashMap;
 
@@ -50,6 +51,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     protected double taux_precisions;
     protected double taux_esquives;
     protected double taux_blocage;
+    /** Attaque S : reduit l'efficacite du blocage adverse. 100 = neutre. */
+    protected double taux_attaque_s = 100.0;
+    /** Contre : reduit les chances de subir un coup critique. 100 = neutre. */
+    protected double taux_contre = 100.0;
     private double tauxCritiquesBase;
     private double degatCritiquesBase;
     private double tauxEsquivesBase;
@@ -58,6 +63,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     protected double degats_renvoi;
     private double rage = 0;
     private double rageMax = 100;
+    /** Vrai si la derniere attaque de base resolue via Combat.attaquer() etait un coup critique (pour le bonus de furie). */
+    private boolean dernierCoupCritique = false;
     protected boolean specialeUtilisee = false;
     private double bonusLienATK = 0.0;
     private double bonusLienDEF = 0.0;
@@ -161,12 +168,18 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     }
 
     public ResultatDegats subirDegats(double degats) {
+        return subirDegats(degats, 100.0);
+    }
+
+    /** @param tauxAttaqueSAttaquant Attaque S de l'attaquant (100 = neutre) : reduit l'efficacite du blocage. */
+    public ResultatDegats subirDegats(double degats, double tauxAttaqueSAttaquant) {
         Invincibilite invinc = getEffet(Invincibilite.class);
         if (invinc != null) {
             return new ResultatDegats(true, false, 0, false, false, 0, 0);
         }
 
-        boolean bloque = Math.random() < this.getTauxBlocage();
+        double blocageEffectif = Math.min(this.getTauxBlocage() / (tauxAttaqueSAttaquant / 100.0), 0.90);
+        boolean bloque = Math.random() < blocageEffectif;
         double multiplicateurDefense = 100.0 / (100.0 + this.getDefense() * 0.5);
         degats *= multiplicateurDefense;
         if (bloque) {
@@ -238,6 +251,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (soinEffectif > 0) {
             log.add("💚 " + this.nom + " recupere " + String.format("%.1f", soinEffectif)
                     + " PV (" + String.format("%.1f", pvAvant) + " → " + String.format("%.1f", this.vie) + " PV)");
+        } else {
+            log.add(this.nom + " est deja au maximum de PV.");
         }
     }
 
@@ -273,6 +288,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (bonusLienPV      > 0) base *= (1 + bonusLienPV);
         if (bonusCompagnonsPV > 0) base *= (1 + bonusCompagnonsPV);
         if (bonusCreaturePV  > 0) base += bonusCreaturePV;
+        double bonusPierreVie = getBonusPierreFraction(Pierre.Type.VIE);
+        if (bonusPierreVie > 0) base *= (1 + bonusPierreVie);
         return base;
     }
 
@@ -297,6 +314,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (bonusLienATK      > 0) base *= (1 + bonusLienATK);
         if (bonusCompagnonsATK > 0) base *= (1 + bonusCompagnonsATK);
         if (bonusCreatureATK  > 0) base += bonusCreatureATK;
+        double bonusPierreForce = getBonusPierreFraction(Pierre.Type.FORCE);
+        if (bonusPierreForce > 0) base *= (1 + bonusPierreForce);
         return base;
     }
 
@@ -340,6 +359,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (bonusLienVIT      > 0) base *= (1 + bonusLienVIT);
         if (bonusCompagnonsVIT > 0) base *= (1 + bonusCompagnonsVIT);
         if (bonusCreatureVIT  > 0) base += bonusCreatureVIT;
+        double bonusPierreAgilite = getBonusPierreFraction(Pierre.Type.AGILITE);
+        if (bonusPierreAgilite > 0) base *= (1 + bonusPierreAgilite);
         return base;
     }
 
@@ -351,7 +372,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     @Override
     public double getTauxCritique() {
         BuffTauxCritique buff = getEffet(BuffTauxCritique.class);
-        return buff != null ? tauxCritiquesBase + buff.getBonus() : tauxCritiquesBase;
+        double base = buff != null ? tauxCritiquesBase + buff.getBonus() : tauxCritiquesBase;
+        return base + getBonusPierreFraction(Pierre.Type.CRITIQUE);
     }
 
     public void setTauxCritique(double taux) {
@@ -374,7 +396,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getTauxPrecisions() {
         BuffPrecision buff   = getEffet(BuffPrecision.class);
         Aveuglement   debuff = getEffet(Aveuglement.class);
-        double base = this.taux_precisions;
+        double base = this.taux_precisions + getBonusPierrePoints(Pierre.Type.PRECISION);
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         return base;
@@ -384,7 +406,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     @Override
     public double getTauxEsquives() {
         BuffTauxEsquive buff = getEffet(BuffTauxEsquive.class);
-        return buff != null ? tauxEsquivesBase + buff.getBonus() : tauxEsquivesBase;
+        double base = buff != null ? tauxEsquivesBase + buff.getBonus() : tauxEsquivesBase;
+        return base + getBonusPierreFraction(Pierre.Type.ESQUIVE);
     }
 
     public void setTauxEsquives(double esquive) {
@@ -395,13 +418,23 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     @Override
     public double getTauxBlocage() {
         BuffBlocage buff = getEffet(BuffBlocage.class);
-        return buff != null ? tauxBlocageBase + buff.getPourcentage() : tauxBlocageBase;
+        double base = buff != null ? tauxBlocageBase + buff.getPourcentage() : tauxBlocageBase;
+        return base + getBonusPierreFraction(Pierre.Type.BLOCAGE);
     }
 
     public void setTauxBlocage(double blocage) {
         this.taux_blocage = blocage;
         this.tauxBlocageBase = blocage;
     }
+
+    public double getTauxAttaqueS() { return taux_attaque_s + getBonusPierrePoints(Pierre.Type.ATTAQUE_S); }
+    public void setTauxAttaqueS(double attaqueS) { this.taux_attaque_s = attaqueS; }
+
+    public double getTauxContre() { return taux_contre + getBonusPierrePoints(Pierre.Type.CONTRE); }
+    public void setTauxContre(double contre) { this.taux_contre = contre; }
+
+    public boolean isDernierCoupCritique() { return dernierCoupCritique; }
+    public void setDernierCoupCritique(boolean v) { this.dernierCoupCritique = v; }
 
     public double getAttaqueBase() { return attaqueBase; }
     public double getDegatsRenvoi() { return degats_renvoi; }
@@ -556,6 +589,19 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getBonusEquipementVIT() {
         return equipements.values().stream().mapToDouble(Equipement::getBonusVIT).sum();
+    }
+
+    // ── Bonus des pierres inserees dans les pieces equipees ────────────────
+    /** Somme brute des pierres du type donne (ex : 1.5 pour +1.5%), pour les stats deja exprimees en points 100. */
+    private double getBonusPierrePoints(Pierre.Type type) {
+        double total = 0;
+        for (Equipement e : equipements.values()) total += e.getBonusPierre(type);
+        return total;
+    }
+
+    /** Meme somme convertie en fraction (0.015 pour +1.5%), pour les stats exprimees en 0-1. */
+    private double getBonusPierreFraction(Pierre.Type type) {
+        return getBonusPierrePoints(type) / 100.0;
     }
 
     private int compterPiecesRangC() {

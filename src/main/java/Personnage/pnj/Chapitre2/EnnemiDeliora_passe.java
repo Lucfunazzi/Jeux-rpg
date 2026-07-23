@@ -32,10 +32,10 @@ public class EnnemiDeliora_passe extends PersonnageBase {
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.30;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.05;
-        this.taux_blocage      = 0.10;
-        this.reduction_blocage = 0.15;
-        this.degats_renvoi     = 0.80;
+        this.taux_esquives     = 0.00;
+        this.taux_blocage      = 0.00;
+        this.reduction_blocage = 0.00;
+        this.degats_renvoi     = 0.00;
 
         initialiserVieMax();
     }

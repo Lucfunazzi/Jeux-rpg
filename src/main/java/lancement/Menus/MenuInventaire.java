@@ -6,6 +6,7 @@ import Equipement.EquipementFactory;
 import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
+import Equipement.Pierre;
 import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class MenuInventaire {
             System.out.println("4. Equiper un set complet");
             System.out.println("5. Utiliser des Cartes d'Or");
             System.out.println("6. Synthetiser un equipement [A] (fragments)");
+            System.out.println("7. Ouvrir des Boites de pierre");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -39,6 +41,7 @@ public class MenuInventaire {
                 case "4" -> menuEquiperSet(ctx, scanner);
                 case "5" -> menuCartesOr(ctx, scanner);
                 case "6" -> menuSynthese(ctx, scanner);
+                case "7" -> menuOuvrirBoitesPierre(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -422,6 +425,36 @@ public class MenuInventaire {
         System.out.printf("   + %,d or gagne !%n", orGagne);
         System.out.printf("   Or total : %,.0f or%n", ctx.joueur.getOr());
 
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    // ── Boites de pierre (recompenses de l'Examen de Rang S) ───────────────
+    private void menuOuvrirBoitesPierre(GameContext ctx, Scanner scanner) {
+        int stock = ctx.inventaire.getQuantiteMateriau(MenuExamenS.MATERIAU_BOITE_PIERRE_LV1);
+        if (stock <= 0) {
+            System.out.println("Aucune " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + " en stock.");
+            return;
+        }
+
+        System.out.println("\nVous avez " + stock + " x " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + ".");
+        System.out.print("Combien en ouvrir ? (1-" + stock + ", 0 pour annuler) : ");
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (quantite == 0) return;
+        if (quantite < 1 || quantite > stock) {
+            System.out.println("Quantite invalide. Vous en avez " + stock + ".");
+            return;
+        }
+
+        for (int i = 0; i < quantite; i++) {
+            System.out.println(MenuExamenS.ouvrirBoite(ctx.inventaire));
+        }
         ctx.sauvegarde.sauvegarder(ctx);
     }
 

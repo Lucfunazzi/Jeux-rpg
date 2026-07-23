@@ -126,11 +126,12 @@ public class Chapitre1Elite {
             case 1 -> {
                 ennemis.add(new EnnemiMage1DPS(niveau));ennemis.add(new EnnemiMage2DPS(niveau));
                 ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                Equipement arme = null;
+                Equipement arme;
                 int roll = new Random().nextInt(4);
-                if (roll == 0)      arme = EquipementFactory.kunaiC();
+                if (roll == 0)      arme = EquipementFactory.lanceC();
                 else if (roll == 1) arme = EquipementFactory.batonC();
                 else if (roll == 2) arme = EquipementFactory.gantsArmeC();
+                else                arme = EquipementFactory.fouetC();
                 return new Stage(1, "Prologue Elite", 100, 0, ennemis, arme);
             }
             case 2  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));

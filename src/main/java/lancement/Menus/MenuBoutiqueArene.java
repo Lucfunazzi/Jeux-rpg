@@ -22,10 +22,10 @@ public class MenuBoutiqueArene {
     /** Catalogue accessible depuis l'exterieur (ex: interface graphique) sous forme {nom, rarete, prix}. */
     public static java.util.List<Object[]> getCatalogue() {
         return java.util.List.of(
-            new Object[]{"Bisca",     "B", PRIX_BISKA},
-            new Object[]{"Alzack",    "B", PRIX_ARZAK},
+            new Object[]{"Bisca",     "C", PRIX_BISKA},
+            new Object[]{"Alzack",    "C", PRIX_ARZAK},
             new Object[]{"Evergreen", "A", PRIX_EVERGREEN},
-            new Object[]{"Bickslow",  "A", PRIX_BIXROW},
+            new Object[]{"Bickslow",  "B", PRIX_BIXROW},
             new Object[]{"Freed",     "A", PRIX_FREED},
             new Object[]{"Sting",     "S", PRIX_STING},
             new Object[]{"Rogue",     "S", PRIX_ROGUE}
@@ -57,10 +57,10 @@ public class MenuBoutiqueArene {
                          + joueurArene.getPointsBoutique() + " pts");
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  PERSONNAGES");
-        afficherLigne("1", "Bisca",     "B", PRIX_BISKA,  dejaRecruté("Bisca"));
-        afficherLigne("2", "Alzack",    "B", PRIX_ARZAK,  dejaRecruté("Alzack"));
+        afficherLigne("1", "Bisca",     "C", PRIX_BISKA,  dejaRecruté("Bisca"));
+        afficherLigne("2", "Alzack",    "C", PRIX_ARZAK,  dejaRecruté("Alzack"));
         afficherLigne("3", "Evergreen", "A", PRIX_EVERGREEN, dejaRecruté("Evergreen"));
-        afficherLigne("4", "Bickslow",  "A", PRIX_BIXROW, dejaRecruté("Bickslow"));
+        afficherLigne("4", "Bickslow",  "B", PRIX_BIXROW, dejaRecruté("Bickslow"));
         afficherLigne("5", "Freed",     "A", PRIX_FREED, dejaRecruté("Freed"));
         afficherLigne("6", "Sting",     "S", PRIX_STING, dejaRecruté("Sting"));
         afficherLigne("7", "Rogue",     "S", PRIX_ROGUE, dejaRecruté("Rogue"));

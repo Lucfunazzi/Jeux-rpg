@@ -308,26 +308,38 @@ public class MenuArene {
     // ── Factory personnages ───────────────────────────────────────────────
 
     private PersonnageBase creerPersonnage(String nom) {
+        PersonnageBase p = creerPersonnageConnu(nom);
+        // Repli sur la fabrique du Recrutement normal pour tout personnage
+        // pas explicitement liste ci-dessous (evite les disparitions silencieuses
+        // si un nom est ajoute a un pool de GestionnaireArene sans etre duplique ici).
+        if (p == null) p = new MenuRecrutement().creerPersonnage(nom);
+        return p;
+    }
+
+    private PersonnageBase creerPersonnageConnu(String nom) {
         return switch (nom) {
             // ── Rang C ──
-                        case "Alzack"      -> new perso_Arzak();
-                        case "Bisca"       -> new perso_Biska();
-                        case "Nab"         -> new perso_Nab();
-            case "Elfman"           -> new perso_Elfman();
-   
+            case "Alzack"           -> new perso_Arzak();
+            case "Bisca"            -> new perso_Biska();
+            case "Nab"              -> new perso_Nab();
+            case "Duc Everlue"      -> new perso_DucEverlue();
+            case "Yuka"             -> new perso_Yuka();
+            case "Cherry"           -> new perso_Cherry();
+            case "Bora"             -> new perso_Bora();
+            case "Eligoal"          -> new perso_Eligor();
+            case "Tobi"             -> new perso_Tobi();
+
             // ── Rang B ──
-                       
-                        case "Levy"        -> new perso_Levy();
-                        case "Lisanna"     -> new perso_Lisanna();
-                     
-                                                          
-      
-            case "Cana"             -> new perso_Kana();
-            
-            
-         
+            case "Elfman"           -> new perso_Elfman();
+            case "Sol"              -> new perso_Sol();
+            case "Levy"             -> new perso_Levy();
+            case "Lisanna"          -> new perso_Lisanna();
+            case "Kana"             -> new perso_Kana();
+            case "Bickslow"         -> new perso_Bixrow();
+            case "Leon"             -> new perso_Leon();
+            case "Totomaru"         -> new perso_Totomaru();
+
             // ── Rang A ──
-           
             case "Natsu"            -> new perso_Natsu();
             case "Lucy"             -> new perso_Lucy();
             case "Gray"             -> new perso_Gray();
@@ -335,26 +347,24 @@ public class MenuArene {
             case "Gajeel"           -> new perso_Gajeel();
             case "Jubia"            -> new perso_Jubia_4elements();
             case "Wendy"            -> new perso_Wendy();
-            case "Bickslow"         -> new perso_Bixrow();
             case "Evergreen"        -> new perso_Evergreen();
-           
+            case "Angel"            -> new perso_Angel();
+            case "Aria"             -> new perso_Aria();
+
             // ── Rang S ──
-           
             case "Erza"             -> new perso_Erza();
             case "Mirajane"         -> new perso_Mirajane();
             case "Sting"            -> new perso_Sting();
             case "Rogue"            -> new perso_Rogue();
-            
-        
             case "Natsu Etherion"   -> new perso_Natsu_Etherion();
-            case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
-          
             case "Yukino"           -> new perso_Yukino();
+            case "José Pora"        -> new perso_Jose();
+
             // ── Rang SS ──
-            
-            // ── Rang A (suite) ──
-            case "Angel"            -> new perso_Angel();
-            // ── Personnages JSON (Akatsuki + nouveaux) ──
+            case "Lucas"            -> new perso_Lucas();
+            case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
+            case "Ul Milkovich"     -> new perso_Ul();
+
             default -> null;
         };
     }

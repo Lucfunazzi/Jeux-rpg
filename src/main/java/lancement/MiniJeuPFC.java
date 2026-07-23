@@ -6,18 +6,18 @@ import java.util.Scanner;
 
 public class MiniJeuPFC {
 
-    private static final int COUT_PARTIEC = 1000;
+    private static final int COUT_PARTIEC = 250;
     private static final int PARCHEMINS_MANCHE1C = 3;
     private static final int PARCHEMINS_MANCHE2C = 5;
     private static final int PARCHEMINS_MANCHE3C = 10;
     private static final int COUT_PARTIEB = 3000;
-    private static final int PARCHEMINS_MANCHE1B = 2;
-    private static final int PARCHEMINS_MANCHE2B = 4;
-    private static final int PARCHEMINS_MANCHE3B = 7;
+    private static final int PARCHEMINS_MANCHE1B = 1;
+    private static final int PARCHEMINS_MANCHE2B = 2;
+    private static final int PARCHEMINS_MANCHE3B = 3;
     private static final int COUT_PARTIEA = 5000;
-    private static final int PARCHEMINS_MANCHE1A = 2;
-    private static final int PARCHEMINS_MANCHE2A = 3;
-    private static final int PARCHEMINS_MANCHE3A = 5;
+    private static final int PARCHEMINS_MANCHE1A = 1;
+    private static final int PARCHEMINS_MANCHE2A = 1;
+    private static final int PARCHEMINS_MANCHE3A = 2;
     private static final double REMBOURSEMENT_MANCHE1 = 0.80;
     private static final double REMBOURSEMENT_MANCHE2 = 0.60;
     private static final double REMBOURSEMENT_MANCHE3 = 0.30;

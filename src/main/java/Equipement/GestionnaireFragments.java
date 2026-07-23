@@ -14,7 +14,6 @@ public class GestionnaireFragments {
     private static final List<FragmentEquipement> CATALOGUE = List.of(
 
         // Armes
-        new FragmentEquipement("Kunai du Vent",      Equipement.Slot.ARME, Equipement.TypeArme.KUNAI),
         new FragmentEquipement("Baton de Foudre",    Equipement.Slot.ARME, Equipement.TypeArme.BATON),
         new FragmentEquipement("Gants de Titane",    Equipement.Slot.ARME, Equipement.TypeArme.GANTS),
 

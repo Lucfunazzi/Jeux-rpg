@@ -21,10 +21,13 @@ public class Chapitre3 {
         boolean retour = false;
 
         while (!retour) {
+            ctx.gestionnaireEnergie.mettreAJourRecharge();
+
             System.out.println("\n========================================");
             System.out.println("   CHAPITRE 3 — Phantom Lord");
             System.out.println("========================================");
-            System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr()));
+            System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
+                    + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
             System.out.println();
 
             for (int i = 1; i <= NB_STAGES; i++) {
@@ -58,6 +61,13 @@ public class Chapitre3 {
      * Suppose que le stage est deja debloque. Reutilisable par la console et l'interface graphique.
      */
     public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        if (!ctx.gestionnaireEnergie.consommerEnergie(1)) {
+            System.out.println("Pas assez d'energie ! (il faut 1, vous avez "
+                    + ctx.gestionnaireEnergie.getEnergie() + ")");
+            return new Stage.ResultatStage(false, false, false, 0,
+                    java.util.List.of(), java.util.List.of());
+        }
+
         Stage stage        = construireStage(numero);
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
@@ -82,6 +92,8 @@ public class Chapitre3 {
 
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
+        // Recompenses tres faibles : la montee de niveau passe surtout par les quetes,
+        // mais un peu plus d'XP qu'au Chapitre 2 pour suivre la progression des chapitres.
         switch (numero) {
 
             // Stage 1 — Avant-garde Phantom Lord (soldats bas rang)
@@ -91,7 +103,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage2DPS(22));
                 e.add(new EnnemiMage8DPS(21));
                 e.add(new EnnemiMage1DPS(21));
-                return new Stage(1, "L'assaut de Phantom Lord", 3000, 0, e);
+                return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
 
             // Stage 2 — Totomaru + renforts
@@ -101,7 +113,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(24));
                 e.add(new EnnemiMage1DPS(23));
                 e.add(new EnnemiMage8DPS(23));
-                return new Stage(2, "Totomaru — Sept Flammes", 3750, 0, e);
+                return new Stage(2, "Totomaru — Sept Flammes", 375, 25, e);
             }
 
             // Stage 3 — Sol + troupe solide
@@ -111,7 +123,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage5Tank(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage3Soigneur(24));
-                return new Stage(3, "Sol — L'Impénétrable", 4750, 0, e);
+                return new Stage(3, "Sol — L'Impénétrable", 475, 28, e);
             }
 
             // Stage 4 — Totomaru + Sol ensemble
@@ -121,7 +133,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage9Tank(25));
                 e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(4, "L'Élément 4 se déploie", 5750, 0, e);
+                return new Stage(4, "L'Élément 4 se déploie", 575, 31, e);
             }
 
             // Stage 5 — Jubia + troupe
@@ -131,7 +143,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(26));
                 e.add(new EnnemiMage5Tank(26));
                 e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(5, "Jubia — L'Eau qui emprisonne", 6750, 0, e);
+                return new Stage(5, "Jubia — L'Eau qui emprisonne", 675, 35, e);
             }
 
             // Stage 6 — Élément 4 au complet (Jubia + Totomaru + Sol)
@@ -141,7 +153,7 @@ public class Chapitre3 {
                 e.add(new EnnemiSol(28));
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage8DPS(26));
-                return new Stage(6, "L'Élément 4 au complet", 8000, 0, e);
+                return new Stage(6, "L'Élément 4 au complet", 800, 39, e);
             }
 
             // Stage 7 — Aria + escorte lourde
@@ -151,7 +163,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage9Tank(28));
                 e.add(new EnnemiMage5Tank(27));
                 e.add(new EnnemiMage3Soigneur(27));
-                return new Stage(7, "Aria — Magie du Ciel Vide", 9500, 0, e);
+                return new Stage(7, "Aria — Magie du Ciel Vide", 950, 43, e);
             }
 
             // Stage 8 — Aria + tout l'Élément 4
@@ -161,7 +173,7 @@ public class Chapitre3 {
                 e.add(new EnnemiTotomaru(29));
                 e.add(new EnnemiSol(29));
                 e.add(new EnnemiMage2DPS(27));
-                return new Stage(8, "L'Élément 4 — Dernière résistance", 11250, 0, e);
+                return new Stage(8, "L'Élément 4 — Dernière résistance", 1125, 48, e);
             }
 
             // Stage 9 — José + Aria + renforts d'élite
@@ -171,7 +183,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage3Soigneur(29));
                 e.add(new EnnemiMage9Tank(28));
                 e.add(new EnnemiMage3Soigneur(28));
-                return new Stage(9, "José — L'Ombre s'éveille", 13500, 0, e);
+                return new Stage(9, "José — L'Ombre s'éveille", 1350, 54, e);
             }
 
             // Stage 10 — José seul, boss ultime
@@ -181,7 +193,7 @@ public class Chapitre3 {
                 e.add(new EnnemiJubia_4elements(30));
                 e.add(new EnnemiTotomaru(30));
                 e.add(new EnnemiSol(30));
-                return new Stage(10, "José Porla — Maître de Phantom Lord", 17000, 0, e);
+                return new Stage(10, "José Porla — Maître de Phantom Lord", 1700, 60, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }

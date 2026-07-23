@@ -291,7 +291,7 @@ public class Combat {
                         System.out.println("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         log.add("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         attaquer(attaquant, cible, log);
-                        attaquant.ajouterRage(20);
+                        attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 40 : 20);
                     } else {
                         System.out.println("\n[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
                         log.add("[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
@@ -301,11 +301,12 @@ public class Combat {
                 } else {
                     log.add(attaquant.getNom() + " lance une attaque de base sur " + cible.getNom());
                     boolean attaquantEstJoueur = equipeJoueur.contains(attaquant);
+                    attaquant.setDernierCoupCritique(false);
                     attaquant.attaqueBase(cible,
                             attaquantEstJoueur ? equipeJoueur  : equipeAdverse,
                             attaquantEstJoueur ? equipeAdverse : equipeJoueur,
                             log);
-                    attaquant.ajouterRage(50);
+                    attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 100 : 50);
                     log.add("[RAGE] " + attaquant.getNom() + " : "
                             + String.format("%.0f", attaquant.getRage()) + "/100");
                 }
@@ -366,7 +367,7 @@ public class Combat {
         // Précision réduit l'esquive : esquive effective = esquive / précision
         // Ex : 30% esquive vs 120% précision → 30/120 = 25% esquive réelle
         double precisionFactor = attaquant.getTauxPrecisions() / 100.0;
-        double esquiveEffective = Math.min(cible.getTauxEsquives() / precisionFactor, 0.95);
+        double esquiveEffective = Math.min(cible.getTauxEsquives() / precisionFactor, 0.90);
         return Math.random() >= esquiveEffective;
     }
 
@@ -376,24 +377,28 @@ public class Combat {
         return degatsBase;
     }
 
-    public static boolean estCritique(PersonnageBase attaquant) {
-        return Math.random() < attaquant.getTauxCritique();
+    /** @param cible Fournit le taux de Contre (100 = neutre) qui reduit les chances de subir un critique. */
+    public static boolean estCritique(PersonnageBase attaquant, PersonnageBase cible) {
+        double critiqueEffectif = Math.min(attaquant.getTauxCritique() / (cible.getTauxContre() / 100.0), 0.90);
+        return Math.random() < critiqueEffectif;
     }
 
     public static boolean attaquer(PersonnageBase attaquant, PersonnageBase cible, List<String> log) {
+        attaquant.setDernierCoupCritique(false);
         if (!attaqueTouche(attaquant, cible)) {
             log.add(cible.getNom() + " esquive !");
             return false;
         }
 
         double degats = calculerDegats(attaquant, cible);
-        if (estCritique(attaquant)) {
+        if (estCritique(attaquant, cible)) {
             degats *= attaquant.getTauxDegatCritique();
             log.add("Coup critique !");
+            attaquant.setDernierCoupCritique(true);
         }
 
         double pvAvant = cible.getVie();
-        PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats);
+        PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats, attaquant.getTauxAttaqueS());
 
         if (resultat.invincible) {
             log.add(cible.getNom() + " est invincible ! Degats bloques.");
@@ -461,7 +466,7 @@ public class Combat {
         }
 
         double pvAvant = cible.getVie();
-        PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats);
+        PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats, source != null ? source.getTauxAttaqueS() : 100.0);
         String nomSource = (source != null) ? source.getNom() : "Esprit Celeste";
 
         if (resultat.invincible) {

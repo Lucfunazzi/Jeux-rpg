@@ -18,6 +18,6 @@ public interface Statistiques {
     public double getTauxPrecisions();
     public double getTauxEsquives();
     public double getTauxBlocage();
-    
-    
+    public double getTauxAttaqueS();
+    public double getTauxContre();
 }

@@ -24,7 +24,7 @@ public class EnnemiMage7DPS extends PersonnageBase {
         double vit = Math.pow(1.03, niveau - 1);
         this.vie     = 265.0 * niv;
         this.attaque = 108.0 * niv;
-        this.defense =  42.0 * niv;
+        this.defense =  30.0 * niv;
         this.vitesse = 105.0 * vit;
 
         this.taux_critiques    = 0.20;

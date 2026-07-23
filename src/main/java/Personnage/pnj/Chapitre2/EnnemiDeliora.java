@@ -30,9 +30,9 @@ public class EnnemiDeliora extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 1100.0 * niv;
-        this.attaque =  220.0 * niv;
-        this.defense =  110.0 * niv;
+        this.vie     = 700.0 * niv;
+        this.attaque =  100.0 * niv;
+        this.defense =  50.0 * niv;
         this.vitesse =   90.0 * vit;
 
         this.taux_critiques    = 0.15;

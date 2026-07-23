@@ -90,8 +90,10 @@ public class EcranFichePersonnageController {
                 perso.getVitesse(), perso.getBonusEquipementVIT(), totalPctVIT * 100));
         stats.append(String.format("Crit : %.0f%%  Degat crit : x%.2f%n",
                 perso.getTauxCritique() * 100, perso.getTauxDegatCritique()));
-        stats.append(String.format("Esquive : %.0f%%  Blocage : %.0f%%",
+        stats.append(String.format("Esquive : %.0f%%  Blocage : %.0f%%%n",
                 perso.getTauxEsquives() * 100, perso.getTauxBlocage() * 100));
+        stats.append(String.format("Attaque S : %.0f  Contre : %.0f",
+                perso.getTauxAttaqueS(), perso.getTauxContre()));
         statsLabel.setText(stats.toString());
 
         String[] nomsAttaques = perso.getNomsAttaques();

@@ -70,7 +70,53 @@ public class EcranInventaireController {
             for (var s : inv.getCartesOr()) sb.append("  ").append(s).append("\n");
         }
 
+        sb.append("\n[ Pierres (").append(inv.getPierres().size()).append(" types) ]\n");
+        if (inv.getPierres().isEmpty()) {
+            sb.append("  Aucune pierre.\n");
+        } else {
+            for (var s : inv.getPierres()) sb.append("  ").append(s).append("\n");
+        }
+
         inventaireArea.setText(sb.toString().trim());
+    }
+
+    @FXML
+    private void onOuvrirBoitesPierre(ActionEvent event) {
+        int stock = ctx.inventaire.getQuantiteMateriau(lancement.Menus.MenuExamenS.MATERIAU_BOITE_PIERRE_LV1);
+        if (stock <= 0) {
+            info("Boites de pierre", "Aucune " + lancement.Menus.MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + " en stock.");
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog("1");
+        dialog.setTitle("Ouvrir des Boites de pierre");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Vous avez " + stock + " x " + lancement.Menus.MenuExamenS.MATERIAU_BOITE_PIERRE_LV1
+                + ".\nCombien en ouvrir ?");
+        styliser(dialog);
+        Optional<String> reponse = dialog.showAndWait();
+        if (reponse.isEmpty()) return;
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(reponse.get().trim());
+        } catch (NumberFormatException e) {
+            info("Boites de pierre", "Entree invalide.");
+            return;
+        }
+        if (quantite <= 0) return;
+        if (quantite > stock) {
+            info("Boites de pierre", "Quantite invalide. Vous en avez " + stock + ".");
+            return;
+        }
+
+        StringBuilder resultats = new StringBuilder();
+        for (int i = 0; i < quantite; i++) {
+            resultats.append(lancement.Menus.MenuExamenS.ouvrirBoite(ctx.inventaire)).append("\n");
+        }
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Boites de pierre", resultats.toString().trim());
+        rafraichir();
     }
 
     @FXML

@@ -32,6 +32,7 @@
             <Button text="Equiper un set complet" onAction="#onEquiperSet" styleClass="menu-bouton"/>
             <Button text="Utiliser des Cartes d'Or" onAction="#onCartesOr" styleClass="menu-bouton"/>
             <Button text="Synthetiser un equipement [A]" onAction="#onSynthese" styleClass="menu-bouton"/>
+            <Button text="Ouvrir des Boites de pierre" onAction="#onOuvrirBoitesPierre" styleClass="menu-bouton"/>
             <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
         </VBox>
     </bottom>

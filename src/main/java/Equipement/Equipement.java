@@ -8,7 +8,7 @@ public class Equipement {
         C, B, A, S
     }
     public enum TypeArme {
-        EPEE, LANCE, BATON, KUNAI, GANTS, FOUET, AUCUN
+        EPEE, LANCE, BATON, GANTS, FOUET, AUCUN
     }
 
     private final String   nom;
@@ -28,6 +28,10 @@ public class Equipement {
 
     private int niveauFortification = 0;
     private int niveauAffinage      = 0;
+
+    // ── Pierres (sockets) ───────────────────────────────────────────────────
+    public static final int NB_EMPLACEMENTS_PIERRES = 5;
+    private final Pierre[] pierres = new Pierre[NB_EMPLACEMENTS_PIERRES];
 
     public Equipement(String nom, Slot slot, Rarete rarete, TypeArme typeArme,
                       double bonusATK, double bonusDEF, double bonusPV, double bonusVIT) {
@@ -108,6 +112,52 @@ public class Equipement {
         return 1.0 + (niveauAffinage / 100.0);
     }
 
+    // ── Pierres (sockets) ────────────────────────────────────────────────
+    public Pierre getPierre(int emplacement) {
+        verifierEmplacement(emplacement);
+        return pierres[emplacement];
+    }
+
+    public Pierre[] getPierres() { return pierres; }
+
+    /**
+     * Insere une pierre dans l'emplacement donne, en remplacant celle deja presente le cas echeant.
+     * Refuse si une pierre du meme type occupe deja un autre emplacement de cette piece.
+     * @return "OK" si l'insertion a reussi, un message d'erreur sinon.
+     */
+    public String insererPierre(int emplacement, Pierre pierre) {
+        verifierEmplacement(emplacement);
+        for (int i = 0; i < NB_EMPLACEMENTS_PIERRES; i++) {
+            if (i != emplacement && pierres[i] != null && pierres[i].getType() == pierre.getType()) {
+                return "Une pierre de " + pierre.getNomType() + " est deja inseree sur cette piece.";
+            }
+        }
+        pierres[emplacement] = pierre;
+        return "OK";
+    }
+
+    public Pierre retirerPierre(int emplacement) {
+        verifierEmplacement(emplacement);
+        Pierre ancienne = pierres[emplacement];
+        pierres[emplacement] = null;
+        return ancienne;
+    }
+
+    private void verifierEmplacement(int emplacement) {
+        if (emplacement < 0 || emplacement >= NB_EMPLACEMENTS_PIERRES) {
+            throw new IllegalArgumentException("Emplacement de pierre invalide : " + emplacement);
+        }
+    }
+
+    /** Somme des bonus (%) de toutes les pierres du type donne inserees sur cette piece. */
+    public double getBonusPierre(Pierre.Type type) {
+        double total = 0;
+        for (Pierre p : pierres) {
+            if (p != null && p.getType() == type) total += p.getBonusPourcent();
+        }
+        return total;
+    }
+
     // ── Recalcul interne ──────────────────────────────────────────────────
     /**
      * Ordre : base -> x(1 + fortification) -> x(1 + affinage%)
@@ -161,9 +211,46 @@ public class Equipement {
         return sb.toString().trim();
     }
 
+    /** Nom affiche du type d'arme (ex. "Lance", "Baton"). Vide si ce n'est pas une arme. */
+    public String getNomTypeArme() {
+        return switch (typeArme) {
+            case LANCE -> "Lance";
+            case BATON -> "Baton";
+            case GANTS -> "Gants";
+            case FOUET -> "Fouet";
+            case EPEE  -> "Epee";
+            case AUCUN -> "";
+        };
+    }
+
+    /** Classe pouvant equiper ce type d'arme. Vide si ce n'est pas une arme. */
+    public String getClasseEquipable() {
+        return switch (typeArme) {
+            case LANCE -> "Chevalier";
+            case BATON -> "Mage";
+            case GANTS -> "Chasseur de Dragon";
+            case FOUET -> "Invocateur";
+            case EPEE, AUCUN -> "";
+        };
+    }
+
+    /** Description simple et lisible des effets de la piece (bonus + classe pour les armes). */
+    public String getDescription() {
+        StringBuilder sb = new StringBuilder();
+        if (bonusATKActuel > 0) sb.append("Augmente l'attaque de ").append((int) bonusATKActuel).append(". ");
+        if (bonusDEFActuel > 0) sb.append("Augmente la defense de ").append((int) bonusDEFActuel).append(". ");
+        if (bonusPVActuel  > 0) sb.append("Augmente les PV de ").append((int) bonusPVActuel).append(". ");
+        if (bonusVITActuel > 0) sb.append("Augmente la vitesse de ").append((int) bonusVITActuel).append(". ");
+        if (typeArme != TypeArme.AUCUN && !getClasseEquipable().isEmpty()) {
+            sb.append("Equipable par : ").append(getClasseEquipable())
+              .append(" (").append(getNomTypeArme()).append(").");
+        }
+        return sb.toString().trim();
+    }
+
     @Override
     public String toString() {
         return getNomRarete() + " " + getNomAffiche()
-                + " (" + getNomSlot() + ") — " + getDescriptionBonus();
+                + " (" + getNomSlot() + ") — " + getDescription();
     }
 }

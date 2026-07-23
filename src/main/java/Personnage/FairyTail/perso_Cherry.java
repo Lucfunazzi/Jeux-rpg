@@ -5,11 +5,7 @@ import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
-/**
- * Cherry (Sherry Brendy) — Elementaliste, rang C.
- * Magie des Poupées (Marionnettes) : contrôle objets, végétaux et esprits célestes.
- * Lamia Scale. Amoureuse de Lyon. Sort contre Lucy : contrôle de Taurus.
- */
+
 public class perso_Cherry extends PersonnageBase {
 
     public perso_Cherry() {
@@ -70,12 +66,10 @@ public class perso_Cherry extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.50;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                
-               
-                
-            }
-            if (Math.random() < 0.30){
-                 Combat.appliquerEffet(this, cible, new Silence(2), log);
+
+                if (Math.random() < 0.30) {
+                    Combat.appliquerEffet(this, cible, new Silence(2), log);
+                }
             }
         }
     }
@@ -84,9 +78,9 @@ public class perso_Cherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Contrôle des Esprits — Inflige 110% ATK et réduit l'ATK de 15% de la cible.");
+        System.out.println("Marionnette de l'amour — Soigne l'allié le plus bas en vie de 80% ATK.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Marionnette de l'Amour — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");
+        System.out.println("Forêt de l'Amour — Inflige 50% ATK à tous, 30% de chance de silence 2 tours sur chaque cible touchée.");
     }
 }

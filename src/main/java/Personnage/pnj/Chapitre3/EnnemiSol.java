@@ -32,7 +32,7 @@ public class EnnemiSol extends PersonnageBase {
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 320.0 * mult * niv;
         this.attaque =  85.0 * mult * niv;
-        this.defense = 100.0 * mult * niv;
+        this.defense = 45.0 * mult * niv;
         this.vitesse =  70.0 * mult * vit;
 
         this.taux_critiques    = 0.08;

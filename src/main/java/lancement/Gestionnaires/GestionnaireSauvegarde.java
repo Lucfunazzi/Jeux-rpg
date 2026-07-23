@@ -46,6 +46,7 @@ import Equipement.Equipement;
 import Equipement.Inventaire;
 import Equipement.Materiau;
 import Equipement.ParcheminXP;
+import Equipement.Pierre;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,6 +65,7 @@ import lancement.RangJoueur;
 import lancement.SauvegardeData;
 import lancement.Titre;
 import lancement.Gestionnaires.GestionnaireDonjon;
+import lancement.Gestionnaires.GestionnaireExamenS;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Menus.MenuRecrutement;
@@ -201,6 +203,11 @@ public class GestionnaireSauvegarde {
             data.inventaireCartesOr.add(
                 new SauvegardeData.CarteOrData(s.getCarte().name(), s.getQuantite()));
 
+        // Pierres (stock non equipe)
+        for (Inventaire.StackPierre s : ctx.inventaire.getPierres())
+            data.inventairePierres.add(
+                new SauvegardeData.PierreStackData(s.getType().name(), s.getNiveau(), s.getQuantite()));
+
         // Quêtes
         GestionnaireQuetes gq = ctx.gestionnaireQuetes;
         data.dernierRenouvellementQuete = gq.getDernierRenouvellement().toString();
@@ -263,6 +270,11 @@ public class GestionnaireSauvegarde {
         // Donjon
         data.donjonRuns         = ctx.gestionnaireDonjon.getRuns();
         data.donjonDernierReset = ctx.gestionnaireDonjon.getDernierReset().toString();
+
+        // Examen de Rang S
+        data.examenSDejaReussi     = ctx.gestionnaireExamenS.getDejaReussi();
+        data.examenSFaitAujourdhui = ctx.gestionnaireExamenS.getFaitAujourdhui();
+        data.examenSDernierReset   = ctx.gestionnaireExamenS.getDernierReset().toString();
 
         // Envoi Firebase
         String url     = URL_FIREBASE + "joueurs/" + securiser(joueur.getNom()) + ".json";
@@ -420,6 +432,14 @@ public class GestionnaireSauvegarde {
                     inventaire.ajouterCartesOr(niveau, cd.quantite);
                 } catch (IllegalArgumentException ignored) {}
             }
+
+        // Pierres (stock non equipe)
+        if (data.inventairePierres != null)
+            for (SauvegardeData.PierreStackData pd : data.inventairePierres) {
+                try {
+                    inventaire.ajouterPierre(Pierre.Type.valueOf(pd.type), pd.niveau, pd.quantite);
+                } catch (IllegalArgumentException ignored) {}
+            }
     }
 
     public void restaurerQuetes(GestionnaireQuetes gq, SauvegardeData data) {
@@ -512,6 +532,12 @@ public class GestionnaireSauvegarde {
         if (data.donjonDernierReset != null) gd.setDernierReset(LocalDate.parse(data.donjonDernierReset));
     }
 
+    public void restaurerExamenS(GestionnaireExamenS ge, SauvegardeData data) {
+        if (data.examenSDejaReussi != null)     ge.setDejaReussi(data.examenSDejaReussi);
+        if (data.examenSFaitAujourdhui != null) ge.setFaitAujourdhui(data.examenSFaitAujourdhui);
+        if (data.examenSDernierReset != null)   ge.setDernierReset(LocalDate.parse(data.examenSDernierReset));
+    }
+
     // ── Utilitaires privés ────────────────────────────────────────────────
     private String securiser(String nom) {
         return nom.trim().toLowerCase().replace(" ", "_");
@@ -529,6 +555,9 @@ public class GestionnaireSauvegarde {
         );
         ed.niveauFortification = e.getNiveauFortification();
         ed.niveauAffinage      = e.getNiveauAffinage();
+        for (Pierre p : e.getPierres()) {
+            ed.pierres.add(p != null ? new SauvegardeData.PierreData(p.getType().name(), p.getNiveau()) : null);
+        }
         return ed;
     }
 
@@ -542,6 +571,16 @@ public class GestionnaireSauvegarde {
         );
         e.setNiveauFortification(ed.niveauFortification);
         e.setNiveauAffinage(ed.niveauAffinage);
+        if (ed.pierres != null) {
+            for (int i = 0; i < ed.pierres.size() && i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) {
+                SauvegardeData.PierreData pd = ed.pierres.get(i);
+                if (pd != null) {
+                    try {
+                        e.insererPierre(i, new Pierre(Pierre.Type.valueOf(pd.type), pd.niveau));
+                    } catch (IllegalArgumentException ignored) {}
+                }
+            }
+        }
         return e;
     }
 
@@ -555,8 +594,8 @@ public class GestionnaireSauvegarde {
         // Rang B
         case "Bickslow"       -> new perso_Bixrow();
         case "Evergreen"      -> new perso_Evergreen();
-        case "Cana"           -> new perso_Kana();
-        
+        case "Kana"           -> new perso_Kana();
+
         case "Levy"           -> new perso_Levy();
         case "Lisanna"        -> new perso_Lisanna();
         // Rang A
@@ -577,6 +616,8 @@ public class GestionnaireSauvegarde {
         case "Yukino"         -> new perso_Yukino();
         case "Lucas"          -> new perso_Lucas();
         case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
+        case "José Pora"      -> new perso_Jose();
+        case "Ul Milkovich"   -> new perso_Ul();
         default               -> null;
     };
     // Repli sur la fabrique du Recrutement normal (Cherry, Duc Everlue, Tobi, Yuka,

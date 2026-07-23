@@ -8,11 +8,6 @@ public class EquipementFactory {
 
     // ── Rang C ────────────────────────────────────────────────────────────
 
-    public static Equipement kunaiC() {
-        return new Equipement("Kunai tranchant", Equipement.Slot.ARME, Equipement.Rarete.C,
-                Equipement.TypeArme.KUNAI, 20, 0, 0, 0);
-    }
-
     public static Equipement batonC() {
         return new Equipement("Baton de bois", Equipement.Slot.ARME, Equipement.Rarete.C,
                 Equipement.TypeArme.BATON, 20, 0, 0, 0);
@@ -69,16 +64,11 @@ public class EquipementFactory {
             case "Elementaliste"    -> batonC();
             case "Chevalier"        -> lanceC();
             case "Invocateur"       -> fouetC();
-            default                 -> kunaiC();
+            default -> throw new IllegalArgumentException("Classe inconnue : " + type);
         };
     }
 
     // ── Rang B ────────────────────────────────────────────────────────────
-
-    public static Equipement kunaiB() {
-        return new Equipement("Kunai en acier", Equipement.Slot.ARME, Equipement.Rarete.B,
-                Equipement.TypeArme.KUNAI, 40, 0, 0, 0);
-    }
 
     public static Equipement batonB() {
         return new Equipement("Baton Crépusculaire", Equipement.Slot.ARME, Equipement.Rarete.B,
@@ -136,16 +126,11 @@ public class EquipementFactory {
             case "Elementaliste"    -> batonB();
             case "Chevalier"        -> lanceB();
             case "Invocateur"       -> fouetB();
-            default                 -> kunaiB();
+            default -> throw new IllegalArgumentException("Classe inconnue : " + type);
         };
     }
 
     // ── Rang A (synthèse par fragments — Chapitre 3 Elite) ────────────────
-
-    public static Equipement kunaiA() {
-        return new Equipement("Kunai du Vent", Equipement.Slot.ARME, Equipement.Rarete.A,
-                Equipement.TypeArme.KUNAI, 220, 0, 0, 0);
-    }
 
     public static Equipement batonA() {
         return new Equipement("Baton de Foudre", Equipement.Slot.ARME, Equipement.Rarete.A,
@@ -203,7 +188,7 @@ public class EquipementFactory {
             case "Elementaliste"    -> batonA();
             case "Chevalier"        -> lanceA();
             case "Invocateur"       -> fouetA();
-            default                 -> kunaiA();
+            default -> throw new IllegalArgumentException("Classe inconnue : " + type);
         };
     }
 
@@ -245,7 +230,6 @@ public class EquipementFactory {
     public static Equipement creerEquipementA(String nom, Equipement.Slot slot,
                                               Equipement.TypeArme typeArme) {
         return switch (nom) {
-            case "Kunai du Vent"      -> kunaiA();
             case "Baton de Foudre"    -> batonA();
             case "Gants de Titane"    -> gantsArmeA();
             case "Heaume Sacré"       -> couvreCheA();

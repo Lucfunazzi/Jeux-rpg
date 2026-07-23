@@ -20,32 +20,27 @@ public class GestionnaireArene {
     private static final int TAILLE_CLASSEMENT = 100;
 
     // ── Pools par rareté et rôle ──────────────────────────────────────────
-    // Uniquement les personnages jouables existants dans le projet.
+    // Basés sur le nom, le rang (rarete) et le rôle réels des classes du
+    // package Personnage.FairyTail. Seuls les personnages déjà branchés
+    // dans creerPersonnageConnu() sont utilisés ici.
 
-    // TANKS   : Nab(C), Max(C), Elfman(C), ElfmanBete(B), Rogue(S), Erza(S)
-    private static final List<String> TANKS_C = List.of("Nab", "Max", "Elfman");
-    private static final List<String> TANKS_B = List.of("Nab", "Max", "Elfman", "ElfmanBete");
-    private static final List<String> TANKS_A = List.of("ElfmanBete", "Erza");
+    private static final List<String> TANKS_C = List.of("Nab", "Duc Everlue", "Yuka");
+    private static final List<String> TANKS_B = List.of("Elfman", "Sol");
+    // Aucun Tank de rang A n'existe dans le package : on réutilise les Tanks B.
+    private static final List<String> TANKS_A = TANKS_B;
     private static final List<String> TANKS_S = List.of("Erza", "Rogue");
 
-    // SUPPORTS : Warren(C), Droy(C), Kana(B), Evergreen(B), Levy(B), Lisanna(B),
-    //            Freed(A), Lucy(A), Jubia(A), Wendy(A), Yukino(S), Lucas(SS)
-    private static final List<String> SUPPORTS_C  = List.of("Warren", "Droy");
-    private static final List<String> SUPPORTS_B  = List.of("Warren", "Droy", "Kana", "Evergreen", "Levy", "Lisanna");
-    private static final List<String> SUPPORTS_A  = List.of("Freed", "Lucy", "Jubia", "Wendy");
-    private static final List<String> SUPPORTS_S  = List.of("Yukino", "Freed", "Wendy");
+    private static final List<String> SUPPORTS_C  = List.of("Cherry");
+    private static final List<String> SUPPORTS_B  = List.of("Kana", "Levy", "Lisanna");
+    private static final List<String> SUPPORTS_A  = List.of("Evergreen", "Freed", "Jubia", "Lucy", "Wendy");
+    private static final List<String> SUPPORTS_S  = List.of("Yukino");
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
-    // DPS : Arzak(C), Biska(C), Elfman(C), Jett(C), Romeo(C),
-    //       Bixrow(B), Loke(B),
-    //       Angel(A), Gajeel(A), Gray(A), Natsu(A),
-    //       Erza(S), Mirajane(S), Natsu_Etherion(S), Sting(S), Rogue(S),
-    //       Mirajane_Halphas(SS)
-    private static final List<String> DPS_C  = List.of("Arzak", "Biska", "Elfman", "Jett", "Romeo");
-    private static final List<String> DPS_B  = List.of("Arzak", "Biska", "Jett", "Romeo", "Bixrow", "Loke");
-    private static final List<String> DPS_A  = List.of("Bixrow", "Loke", "Angel", "Gajeel", "Gray", "Natsu");
-    private static final List<String> DPS_S  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Erza", "Mirajane", "Natsu_Etherion", "Sting", "Rogue");
-    private static final List<String> DPS_SS = List.of("Mirajane_Halphas");
+    private static final List<String> DPS_C  = List.of("Alzack", "Bisca", "Bora", "Eligoal", "Tobi");
+    private static final List<String> DPS_B  = List.of("Bickslow", "Leon", "Totomaru");
+    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria");
+    private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora");
+    private static final List<String> DPS_SS = List.of("Mirajane Halphas", "Ul Milkovich");
 
     private static final String[] CLASSES_IA = {"Chevalier", "Chasseur de Dragon", "Mage", "Constellationniste"};
 

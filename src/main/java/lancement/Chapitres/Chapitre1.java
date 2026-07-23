@@ -24,10 +24,13 @@ public class Chapitre1 {
         boolean retour = false;
 
         while (!retour) {
+            ctx.gestionnaireEnergie.mettreAJourRecharge();
+
             System.out.println("\n========================================");
             System.out.println("      CHAPITRE 1 — Prologue ");
             System.out.println("========================================");
-            System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr()));
+            System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
+                    + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
             System.out.println();
 
             for (int i = 1; i <= NB_STAGES; i++) {
@@ -62,6 +65,13 @@ public class Chapitre1 {
      * et l'interface graphique.
      */
     public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
+        if (!ctx.gestionnaireEnergie.consommerEnergie(1)) {
+            System.out.println("Pas assez d'energie ! (il faut 1, vous avez "
+                    + ctx.gestionnaireEnergie.getEnergie() + ")");
+            return new Stage.ResultatStage(false, false, false, 0,
+                    java.util.List.of(), java.util.List.of());
+        }
+
         Stage stage        = construireStage(numero);
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage;
@@ -100,30 +110,31 @@ public class Chapitre1 {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         int niveau = niveauPourStage(numero);
 
+        // Recompenses tres faibles : la montee de niveau passe exclusivement par les quetes.
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(1, "Prologue", 50, 10, ennemis); }
+                         return new Stage(1, "Prologue", 5, 1, ennemis); }
             case 2  -> {  ennemis.add(new EnnemiBora(niveau));
-                         return new Stage(2, "Bora le charmeur", 75, 15, ennemis); }
+                         return new Stage(2, "Bora le charmeur", 8, 2, ennemis); }
             case 3  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         return new Stage(3, "Chemin vers fairy tail", 110, 20, ennemis); }
+                         return new Stage(3, "Chemin vers fairy tail", 11, 2, ennemis); }
             case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau));
-                         return new Stage(4, "L'arrivée de la reine des fées", 145, 25, ennemis); }
+                         return new Stage(4, "L'arrivée de la reine des fées", 15, 3, ennemis); }
             case 5  -> { ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(5, "Premier mission pour Lucy", 180, 30, ennemis); }
+                         return new Stage(5, "Premier mission pour Lucy", 18, 3, ennemis); }
             case 6  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiEvaro(niveau));
-                         return new Stage(6, "Le duc evarlo", 215, 35, ennemis); }
+                         return new Stage(6, "Le duc evarlo", 22, 4, ennemis); }
             case 7  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(7, "Retour a fairy tail ", 250, 40, ennemis); }
+                         return new Stage(7, "Retour a fairy tail ", 25, 4, ennemis); }
             case 8  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
                          ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
-                         return new Stage(8, "Eisen Wald", 290, 45, ennemis); }
+                         return new Stage(8, "Eisen Wald", 29, 5, ennemis); }
             case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                          ennemis.add(new EnnemiEligor(niveau));  ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(9, "Eligor le mage de vent", 340, 50, ennemis); }
+                         return new Stage(9, "Eligor le mage de vent", 34, 5, ennemis); }
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
-                         return new Stage(10, "La flute maudite", 430, 55, ennemis); }
+                         return new Stage(10, "La flute maudite", 43, 6, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }

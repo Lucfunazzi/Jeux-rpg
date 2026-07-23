@@ -36,6 +36,11 @@ public class EcranAmeliorationsController {
         naviguer(event, "/fxml/EcranAffinage.fxml", c -> ((EcranAffinageController) c).initData(ctx));
     }
 
+    @FXML
+    private void onPierres(ActionEvent event) {
+        naviguer(event, "/fxml/EcranPierres.fxml", c -> ((EcranPierresController) c).initData(ctx));
+    }
+
     private void naviguer(ActionEvent event, String fxml, java.util.function.Consumer<Object> initialiser) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
