@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -23,14 +24,14 @@
     <center>
         <HBox spacing="20" alignment="TOP_CENTER">
             <padding><Insets left="20" right="20" top="4"/></padding>
-            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane">
-                <VBox fx:id="equipeJoueurBox" spacing="10" alignment="TOP_CENTER"/>
+            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="equipeJoueurBox" hgap="14" vgap="8" alignment="CENTER"/>
             </ScrollPane>
             <VBox alignment="CENTER">
-                <Label text="VS" styleClass="titre"/>
+                <Label text="VS" styleClass="vs-badge" alignment="CENTER"/>
             </VBox>
-            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane">
-                <VBox fx:id="equipeAdverseBox" spacing="10" alignment="TOP_CENTER"/>
+            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="equipeAdverseBox" hgap="14" vgap="8" alignment="CENTER"/>
             </ScrollPane>
         </HBox>
     </center>
@@ -38,12 +39,12 @@
         <VBox spacing="10" alignment="CENTER">
             <padding><Insets left="20" right="20" top="10" bottom="16"/></padding>
             <TextArea fx:id="logArea" editable="false" wrapText="true" prefHeight="150" styleClass="zone-mono"/>
-            <Label fx:id="banniereLabel" styleClass="titre" visible="false" managed="false"/>
+            <Label fx:id="banniereLabel" visible="false" managed="false"/>
             <HBox spacing="12" alignment="CENTER">
-                <Button fx:id="suivantButton" text="Suivant ▶" onAction="#onSuivant" styleClass="menu-bouton"/>
-                <Button fx:id="autoButton" text="Lecture auto ▶▶" onAction="#onAuto" styleClass="menu-bouton"/>
-                <Button fx:id="passerButton" text="Passer a la fin ⏭" onAction="#onPasser" styleClass="menu-bouton"/>
-                <Button fx:id="continuerButton" text="Continuer" onAction="#onContinuer" styleClass="menu-bouton" visible="false" managed="false"/>
+                <Button fx:id="suivantButton" text="Suivant ▶" onAction="#onSuivant" styleClass="menu-bouton-combat"/>
+                <Button fx:id="autoButton" text="Lecture auto ▶▶" onAction="#onAuto" styleClass="menu-bouton-combat"/>
+                <Button fx:id="passerButton" text="Passer a la fin ⏭" onAction="#onPasser" styleClass="menu-bouton-combat"/>
+                <Button fx:id="continuerButton" text="Continuer" onAction="#onContinuer" styleClass="menu-bouton-combat" visible="false" managed="false"/>
             </HBox>
         </VBox>
     </bottom>

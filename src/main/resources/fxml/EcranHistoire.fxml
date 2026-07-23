@@ -10,8 +10,9 @@
       fx:controller="lancement.gui.EcranHistoireController"
       alignment="CENTER" spacing="20" styleClass="root-menu">
     <Label text="HISTOIRE" styleClass="titre"/>
-    <Button text="Chapitres" onAction="#onChapitres" styleClass="menu-bouton"/>
-    <Button text="Chapitres Elite" onAction="#onChapitresElite" styleClass="menu-bouton"/>
+
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10"/>
+
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
         <VBox.margin><Insets top="20"/></VBox.margin>
     </Button>

@@ -18,8 +18,8 @@
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true">
-            <VBox fx:id="quetesBox" alignment="TOP_LEFT" spacing="14">
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox fx:id="quetesBox" alignment="TOP_LEFT" spacing="8">
                 <padding><Insets top="10" bottom="10" left="30" right="30"/></padding>
             </VBox>
         </ScrollPane>
@@ -28,7 +28,6 @@
     <bottom>
         <VBox alignment="CENTER" spacing="10">
             <padding><Insets top="10" bottom="20"/></padding>
-            <Button text="Reclamer une recompense" onAction="#onReclamer" styleClass="menu-bouton"/>
             <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
         </VBox>
     </bottom>

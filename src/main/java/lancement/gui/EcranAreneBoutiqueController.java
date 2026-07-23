@@ -2,11 +2,15 @@ package lancement.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.GameContext;
 import lancement.Gestionnaires.AreneData;
@@ -18,7 +22,7 @@ public class EcranAreneBoutiqueController {
     private AreneData joueurArene;
     private Runnable onRetour;
 
-    @FXML private Label pointsLabel;
+    @FXML private VBox pointsBox;
     @FXML private VBox catalogueBox;
 
     public void initData(GameContext ctx, AreneData joueurArene, Runnable onRetour) {
@@ -29,27 +33,42 @@ public class EcranAreneBoutiqueController {
     }
 
     private void rafraichir() {
-        pointsLabel.setText("Points boutique disponibles : " + joueurArene.getPointsBoutique() + " pts");
+        pointsBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Points boutique", joueurArene.getPointsBoutique() + " pts"));
 
-        catalogueBox.getChildren().clear();
+        FlowPane grille = new FlowPane(10, 10);
+        grille.setAlignment(Pos.CENTER);
         for (Object[] entree : MenuBoutiqueArene.getCatalogue()) {
             String nom = (String) entree[0];
             String rarete = (String) entree[1];
             int prix = (int) entree[2];
-            boolean possede = menuBoutiqueArene.dejaRecruté(nom);
-
-            Button bouton = new Button(nom + "  [" + rarete + "]  "
-                    + (possede ? "- Deja recrute" : prix + " pts"));
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(320);
-            if (possede) {
-                bouton.setDisable(true);
-            } else {
-                bouton.setOnAction(e -> acheter(nom, prix));
-            }
-            catalogueBox.getChildren().add(bouton);
+            grille.getChildren().add(carteBoutique(nom, rarete, prix));
         }
+        catalogueBox.getChildren().setAll(grille);
+    }
+
+    private Node carteBoutique(String nom, String rarete, int prix) {
+        boolean possede = menuBoutiqueArene.dejaRecruté(nom);
+
+        Label badge = GuiVisuels.creerBadgeRarete(rarete);
+        Label nomLabel = new Label(nom);
+        nomLabel.getStyleClass().add("item-nom");
+
+        Label prixLabel = new Label(possede ? "Déjà recruté" : prix + " pts");
+        prixLabel.getStyleClass().add(possede ? "item-vide" : "item-qte");
+
+        VBox texte = new VBox(4, nomLabel, prixLabel);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        if (possede) {
+            carte.setOpacity(0.55);
+        } else {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> acheter(nom, prix));
+        }
+        return carte;
     }
 
     private void acheter(String nom, int prix) {

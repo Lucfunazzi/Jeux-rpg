@@ -4,8 +4,10 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Menus.MenuAmeliorations;
@@ -14,34 +16,46 @@ public class EcranAmeliorationsController {
 
     private GameContext ctx;
 
-    @FXML private Button boutonAffinage;
+    @FXML private VBox choixBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
 
         boolean affinageDebloque = ctx.joueur.getNiveau() >= MenuAmeliorations.NIVEAU_DEBLOCAGE_AFFINAGE;
-        boutonAffinage.setText(affinageDebloque
-                ? "Affinage"
-                : "Affinage  [Debloque niveau " + MenuAmeliorations.NIVEAU_DEBLOCAGE_AFFINAGE + "]");
-        boutonAffinage.setDisable(!affinageDebloque);
+
+        Node carteFortification = GuiVisuels.creerCarteChoix("Fortification",
+                "Renforce l'équipement porté avec de l'or.", this::onFortification);
+
+        Node carteAffinage = GuiVisuels.creerCarteChoix("Affinage",
+                affinageDebloque
+                        ? "Améliore les statistiques d'une pièce avec des pierres d'affinage."
+                        : "Débloqué au niveau " + MenuAmeliorations.NIVEAU_DEBLOCAGE_AFFINAGE + ".",
+                this::onAffinage);
+        if (!affinageDebloque) {
+            carteAffinage.setOpacity(0.4);
+            carteAffinage.setCursor(Cursor.DEFAULT);
+            carteAffinage.setOnMouseClicked(null);
+        }
+
+        Node cartePierres = GuiVisuels.creerCarteChoix("Pierres",
+                "Synthétise et équipe des pierres (jades) sur l'équipement.", this::onPierres);
+
+        choixBox.getChildren().setAll(carteFortification, carteAffinage, cartePierres);
     }
 
-    @FXML
-    private void onFortification(ActionEvent event) {
+    private void onFortification(MouseEvent event) {
         naviguer(event, "/fxml/EcranFortification.fxml", c -> ((EcranFortificationController) c).initData(ctx));
     }
 
-    @FXML
-    private void onAffinage(ActionEvent event) {
+    private void onAffinage(MouseEvent event) {
         naviguer(event, "/fxml/EcranAffinage.fxml", c -> ((EcranAffinageController) c).initData(ctx));
     }
 
-    @FXML
-    private void onPierres(ActionEvent event) {
+    private void onPierres(MouseEvent event) {
         naviguer(event, "/fxml/EcranPierres.fxml", c -> ((EcranPierresController) c).initData(ctx));
     }
 
-    private void naviguer(ActionEvent event, String fxml, java.util.function.Consumer<Object> initialiser) {
+    private void naviguer(MouseEvent event, String fxml, java.util.function.Consumer<Object> initialiser) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             FXMLLoader loader = Navigation.changerEcran(stage, fxml);

@@ -11,7 +11,7 @@
       fx:controller="lancement.gui.EcranAreneBoutiqueController"
       alignment="CENTER" spacing="10" styleClass="root-menu">
     <Label text="BOUTIQUE DE L'ARENE" styleClass="titre"/>
-    <Label fx:id="pointsLabel" styleClass="texte"/>
+    <VBox fx:id="pointsBox" alignment="CENTER"/>
 
     <ScrollPane fitToWidth="true" prefHeight="360">
         <VBox fx:id="catalogueBox" alignment="CENTER" spacing="8">

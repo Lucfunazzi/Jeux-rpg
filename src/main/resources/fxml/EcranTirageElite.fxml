@@ -12,14 +12,11 @@
     <Label text="TIRAGE ELITE" styleClass="titre"/>
     <Label text="Jamais de perso complet hors pity - uniquement des fragments.&#10;55% frags B | 35% frags A | 9% frags S | 1% frags SS"
            styleClass="texte" wrapText="true" maxWidth="420"/>
-    <Label fx:id="resumeLabel" styleClass="texte" wrapText="true"/>
+    <VBox fx:id="statsBox" alignment="CENTER"/>
+    <VBox fx:id="pityBox" alignment="CENTER" spacing="4"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button fx:id="boutonX1" onAction="#onX1" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonX10" onAction="#onX10" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonCouponX1" onAction="#onCouponX1" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonCouponX10" onAction="#onCouponX10" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

@@ -37,8 +37,8 @@ public class GestionnaireArene {
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
     private static final List<String> DPS_C  = List.of("Alzack", "Bisca", "Bora", "Eligoal", "Tobi");
-    private static final List<String> DPS_B  = List.of("Bickslow", "Leon", "Totomaru");
-    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria");
+    private static final List<String> DPS_B  = List.of("Leon", "Totomaru");
+    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria", "Bickslow");
     private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora");
     private static final List<String> DPS_SS = List.of("Mirajane Halphas", "Ul Milkovich");
 

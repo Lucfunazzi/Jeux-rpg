@@ -11,13 +11,9 @@
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label text="DONJON DE RESSOURCES" styleClass="titre"/>
     <Label text="Chaque donjon offre 3 runs par jour (reset minuit)." styleClass="texte"/>
-    <Label fx:id="resumeLabel" styleClass="texte" wrapText="true"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button text="Donjon de l'Or" onAction="#onOr" styleClass="menu-bouton"/>
-        <Button text="Donjon de l'Affinage" onAction="#onAffinage" styleClass="menu-bouton"/>
-        <Button text="Donjon de l'Experience" onAction="#onXp" styleClass="menu-bouton"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

@@ -5,9 +5,12 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Menus.MenuAbilite;
@@ -16,10 +19,8 @@ public class EcranAbilitesController {
 
     private GameContext ctx;
 
-    @FXML private Label infoLabel;
-    @FXML private Button boutonArbre1;
-    @FXML private Button boutonArbre2;
-    @FXML private Button boutonArbre3;
+    @FXML private VBox statsBox;
+    @FXML private VBox choixBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -31,37 +32,44 @@ public class EcranAbilitesController {
         String[] noms = ctx.joueur.getNomsAttaques();
         String classe = ctx.joueur.getChoixClasses();
 
-        infoLabel.setText("Points disponibles : " + arbre.getPointsDisponibles() + "\n"
-                + "Speciale active : " + noms[1] + "\n"
-                + "Ultime active   : " + noms[2]);
+        FlowPane stats = new FlowPane(10, 10);
+        stats.setAlignment(Pos.CENTER);
+        stats.getChildren().addAll(
+                GuiVisuels.creerFicheStat("Points disponibles", String.valueOf(arbre.getPointsDisponibles())),
+                GuiVisuels.creerFicheStat("Spéciale active", noms[1]),
+                GuiVisuels.creerFicheStat("Ultime active", noms[2])
+        );
+        statsBox.getChildren().setAll(stats);
 
-        boutonArbre1.setText("Arbre 1 - Nouvelle Speciale"
-                + (arbre.isNoeud10Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 1) + "]" : ""));
-
-        if (!arbre.isArbre2Debloque()) {
-            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale  [VERROUILLE - terminez l'Arbre 1]");
-            boutonArbre2.setDisable(true);
-        } else {
-            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale"
-                    + (arbre.isNoeud10Arbre2Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 2) + "]" : ""));
-            boutonArbre2.setDisable(false);
-        }
-
-        if (!arbre.isArbre3Debloque()) {
-            boutonArbre3.setText("Arbre 3 - Nouvelle Speciale  [VERROUILLE - terminez l'Arbre 2]");
-            boutonArbre3.setDisable(true);
-        } else {
-            boutonArbre3.setText("Arbre 3 - Nouvelle Speciale"
-                    + (arbre.isNoeud10Arbre3Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 3) + "] - Rang B !" : ""));
-            boutonArbre3.setDisable(false);
-        }
+        choixBox.getChildren().setAll(
+                carteArbre(1, "Arbre 1 - Nouvelle Spéciale", true, arbre.isNoeud10Debloque(), classe),
+                carteArbre(2, "Arbre 2 - Nouvelle Spéciale", arbre.isArbre2Debloque(), arbre.isNoeud10Arbre2Debloque(), classe),
+                carteArbre(3, "Arbre 3 - Nouvelle Spéciale", arbre.isArbre3Debloque(), arbre.isNoeud10Arbre3Debloque(), classe)
+        );
     }
 
-    @FXML private void onArbre1(ActionEvent event) { ouvrirArbre(event, 1); }
-    @FXML private void onArbre2(ActionEvent event) { ouvrirArbre(event, 2); }
-    @FXML private void onArbre3(ActionEvent event) { ouvrirArbre(event, 3); }
+    private Node carteArbre(int numero, String titre, boolean accesDebloque, boolean completee, String classe) {
+        String description;
+        if (!accesDebloque) {
+            description = "Verrouillé — terminez l'arbre précédent.";
+        } else if (completee) {
+            description = "Débloqué : " + MenuAbilite.getNomCompetence(classe, numero)
+                    + (numero == 3 ? " — Rang B !" : "");
+        } else {
+            description = "Nouvelle spéciale à débloquer.";
+        }
 
-    private void ouvrirArbre(ActionEvent event, int numero) {
+        Node carte = GuiVisuels.creerCarteChoix(titre, description, e -> ouvrirArbre(e, numero));
+        if (completee) carte.getStyleClass().add("carte-item-joueur");
+        if (!accesDebloque) {
+            carte.setOpacity(0.4);
+            carte.setCursor(Cursor.DEFAULT);
+            carte.setOnMouseClicked(null);
+        }
+        return carte;
+    }
+
+    private void ouvrirArbre(MouseEvent event, int numero) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Runnable retour = () -> {
             try {

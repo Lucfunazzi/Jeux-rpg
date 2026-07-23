@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -21,7 +24,7 @@ public class EcranStagesController {
     private Runnable onRetour;
 
     @FXML private Label titreLabel;
-    @FXML private Label orLabel;
+    @FXML private VBox statsBox;
     @FXML private VBox stagesBox;
 
     public void initData(GameContext ctx, LigneChapitre ligne, Runnable onRetour) {
@@ -33,30 +36,49 @@ public class EcranStagesController {
     }
 
     private void rafraichir() {
-        orLabel.setText(ligne.elite()
-                ? "Or : " + String.format("%.0f", ctx.joueur.getOr()) + "  |  " + ctx.gestionnaireEnergie.afficherEnergie()
-                : "Or : " + String.format("%.0f", ctx.joueur.getOr()));
+        FlowPane stats = new FlowPane(10, 10);
+        stats.setAlignment(Pos.CENTER);
+        stats.getChildren().add(GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())));
+        if (ligne.elite()) {
+            stats.getChildren().add(GuiVisuels.creerFicheStat("Énergie", ctx.gestionnaireEnergie.afficherEnergie()));
+        }
+        statsBox.getChildren().setAll(stats);
 
         stagesBox.getChildren().clear();
         boolean[] reussis   = ligne.stagesReussis().get();
         boolean[] debloques = ligne.stagesDebloques().get();
 
         for (int i = 1; i <= 10; i++) {
-            String etat  = reussis[i] ? "[OK] " : debloques[i] ? "[  ] " : "[###] ";
-            String runs  = ligne.elite() ? "  (" + ctx.gestionnaireEnergie.getRunsEliteRestants(i) + "/10 runs)" : "";
-            String texte = etat + "Stage " + i + " - " + ligne.titreStage().apply(i) + runs;
-
-            Button bouton = new Button(texte);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setMaxWidth(Double.MAX_VALUE);
-            if (!debloques[i]) {
-                bouton.setDisable(true);
-            } else {
-                int numero = i;
-                bouton.setOnAction(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
-            }
-            stagesBox.getChildren().add(bouton);
+            stagesBox.getChildren().add(carteStage(i, reussis[i], debloques[i]));
         }
+    }
+
+    private Node carteStage(int numero, boolean reussi, boolean debloque) {
+        String etoiles = ctx.gestionnaireEtoiles.getEtoiles(ligne.numeroChapitre(), numero, ligne.elite()).afficher();
+        String runs = ligne.elite() ? "  ·  " + ctx.gestionnaireEnergie.getRunsEliteRestants(numero) + "/10 runs" : "";
+
+        Label nom = new Label("Stage " + numero + " - " + ligne.titreStage().apply(numero));
+        nom.getStyleClass().add("item-nom");
+        nom.setWrapText(true);
+        nom.setMaxWidth(320);
+
+        Label detail = new Label((debloque ? etoiles : "Verrouillé") + runs);
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.setMaxWidth(Double.MAX_VALUE);
+        carte.setPrefWidth(420);
+        carte.getStyleClass().add(reussi ? "carte-item-joueur" : "carte-item");
+
+        if (debloque) {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
+        } else {
+            carte.setOpacity(0.4);
+        }
+        return carte;
     }
 
     private void lancerStage(int numero, Stage stage) {

@@ -4,12 +4,14 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -36,31 +38,43 @@ public class EcranDifficulteDonjonController {
 
     private void rafraichir() {
         difficultesBox.getChildren().clear();
-
         for (Difficulte diff : Difficulte.values()) {
-            int niveauRequis = switch (diff) {
-                case NORMAL    -> 1;
-                case DIFFICILE -> MenuDonjon.NIV_DIFFICILE;
-                case EXTREME   -> MenuDonjon.NIV_EXTREME;
-            };
-            String recompense = MenuDonjon.descriptionRecompense(type, diff);
-            boolean debloque = MenuDonjon.estDebloque(diff, ctx);
-
-            String libelle = debloque
-                    ? MenuDonjon.nomDiff(diff) + "  [" + ctx.gestionnaireDonjon.getRunsRestants(type, diff) + "/3 runs]  " + recompense
-                    : MenuDonjon.nomDiff(diff) + "  [Debloque niveau " + niveauRequis + "]  " + recompense;
-
-            Button bouton = new Button(libelle);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(360);
-            if (!debloque) {
-                bouton.setDisable(true);
-            } else {
-                bouton.setOnAction(e -> lancer(diff, (Stage) ((Node) e.getSource()).getScene().getWindow()));
-            }
-            difficultesBox.getChildren().add(bouton);
+            difficultesBox.getChildren().add(carteDifficulte(diff));
         }
+    }
+
+    private Node carteDifficulte(Difficulte diff) {
+        int niveauRequis = switch (diff) {
+            case NORMAL    -> 1;
+            case DIFFICILE -> MenuDonjon.NIV_DIFFICILE;
+            case EXTREME   -> MenuDonjon.NIV_EXTREME;
+        };
+        String recompense = MenuDonjon.descriptionRecompense(type, diff);
+        boolean debloque = MenuDonjon.estDebloque(diff, ctx);
+
+        Label nom = new Label(MenuDonjon.nomDiff(diff));
+        nom.getStyleClass().add("item-nom");
+
+        Label detail = new Label(debloque
+                ? ctx.gestionnaireDonjon.getRunsRestants(type, diff) + "/3 runs  ·  " + recompense
+                : "Débloqué au niveau " + niveauRequis + "  ·  " + recompense);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(320);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(380);
+
+        if (debloque) {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> lancer(diff, (Stage) ((Node) e.getSource()).getScene().getWindow()));
+        } else {
+            carte.setOpacity(0.4);
+        }
+        return carte;
     }
 
     private void lancer(Difficulte diff, Stage stage) {

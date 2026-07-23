@@ -13,6 +13,9 @@ public class FragmentEquipement {
     /** Nombre de fragments nécessaires pour créer un équipement. */
     public static final int QUANTITE_REQUISE = 20;
 
+    /** Prefixe des noms de materiaux representant des fragments d'equipement dans l'inventaire. */
+    public static final String PREFIXE_FRAGMENT = "Fragment: ";
+
     private final String     nomFragment;   // ex. "Fragment: Baton de Foudre"
     private final String     nomEquipement; // ex. "Baton de Foudre"
     private final Equipement.Slot   slot;
@@ -22,7 +25,7 @@ public class FragmentEquipement {
         this.nomEquipement = nomEquipement;
         this.slot          = slot;
         this.typeArme      = typeArme;
-        this.nomFragment   = "Fragment: " + nomEquipement;
+        this.nomFragment   = PREFIXE_FRAGMENT + nomEquipement;
     }
 
     public String getNomFragment()   { return nomFragment; }

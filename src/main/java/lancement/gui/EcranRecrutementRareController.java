@@ -3,15 +3,16 @@ package lancement.gui;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -37,35 +38,55 @@ public class EcranRecrutementRareController {
         boolean natsuA = MenuRecrutementRare.dejaRecruteParNom("Natsu", ctx.personnagesRecruites);
         boolean natsuS = MenuRecrutementRare.dejaRecruteParNom("Natsu Etherion", ctx.personnagesRecruites);
 
-        ajouterLabel("[ Natsu ]");
-        ajouterLabel("Natsu [A]  -  " + MenuRecrutementRare.MATERIAU_NATSU + " : "
-                + possedeIgnir + "/" + MenuRecrutementRare.COUT_RECRUTEMENT
-                + (natsuA || natsuS ? "  [DEJA RECRUTE]" : ""));
-        if (!natsuA && !natsuS) {
-            ajouterBouton("Recruter Natsu [A]", e -> confirmerEtRecruterNatsu());
-        }
+        boutonsBox.getChildren().add(titreSection("Natsu"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "A", possedeIgnir,
+                MenuRecrutementRare.COUT_RECRUTEMENT, natsuA || natsuS, this::confirmerEtRecruterNatsu));
         if (natsuA) {
-            ajouterLabel("Natsu Etherion [S] (evolution)  -  " + MenuRecrutementRare.MATERIAU_NATSU + " : "
-                    + possedeIgnir + "/" + MenuRecrutementRare.COUT_EVOLUTION);
-            ajouterBouton("Evoluer vers Natsu Etherion [S]", e -> confirmerEtEvoluerNatsu());
+            boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "S", possedeIgnir,
+                    MenuRecrutementRare.COUT_EVOLUTION, false, this::confirmerEtEvoluerNatsu));
         }
 
         int possedeAile = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.MATERIAU_MIRAJANE);
         boolean miraS  = MenuRecrutementRare.dejaRecruteParNom("Mirajane", ctx.personnagesRecruites);
         boolean miraSS = MenuRecrutementRare.dejaRecruteParNom("Mirajane Halphas", ctx.personnagesRecruites);
 
-        ajouterLabel("[ Mirajane ]");
-        ajouterLabel("Mirajane [S]  -  " + MenuRecrutementRare.MATERIAU_MIRAJANE + " : "
-                + possedeAile + "/" + MenuRecrutementRare.COUT_MIRAJANE_S
-                + (miraS || miraSS ? "  [DEJA RECRUTE]" : ""));
-        if (!miraS && !miraSS) {
-            ajouterBouton("Recruter Mirajane [S]", e -> confirmerEtRecruterMirajane());
-        }
+        boutonsBox.getChildren().add(titreSection("Mirajane"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "S", possedeAile,
+                MenuRecrutementRare.COUT_MIRAJANE_S, miraS || miraSS, this::confirmerEtRecruterMirajane));
         if (miraS) {
-            ajouterLabel("Mirajane Halphas [SS] (evolution)  -  " + MenuRecrutementRare.MATERIAU_MIRAJANE + " : "
-                    + possedeAile + "/" + MenuRecrutementRare.COUT_MIRAJANE_SS);
-            ajouterBouton("Evoluer vers Mirajane Halphas [SS]", e -> confirmerEtEvoluerMirajane());
+            boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "SS", possedeAile,
+                    MenuRecrutementRare.COUT_MIRAJANE_SS, false, this::confirmerEtEvoluerMirajane));
         }
+    }
+
+    private Label titreSection(String texte) {
+        Label l = new Label(texte);
+        l.getStyleClass().add("section-titre");
+        return l;
+    }
+
+    private Node carteRecrutementRare(String nom, String rang, int possede, int cout, boolean dejaFait, Runnable action) {
+        Label badge = GuiVisuels.creerBadgeRarete(rang);
+        Label nomLabel = new Label(nom);
+        nomLabel.getStyleClass().add("item-nom");
+
+        VBox texte = new VBox(4, nomLabel, GuiVisuels.creerBarreProgression(180, 14, possede, cout));
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.setPrefWidth(300);
+
+        if (dejaFait) {
+            Label tag = new Label("Déjà recruté");
+            tag.getStyleClass().add("item-vide");
+            carte.getChildren().add(tag);
+            carte.getStyleClass().add("carte-item");
+            carte.setOpacity(0.5);
+        } else {
+            carte.getStyleClass().add(possede >= cout ? "carte-item-joueur" : "carte-item");
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> action.run());
+        }
+        return carte;
     }
 
     private void confirmerEtRecruterNatsu() {
@@ -101,23 +122,6 @@ public class EcranRecrutementRareController {
         styliser(confirm);
         Optional<ButtonType> resultat = confirm.showAndWait();
         return resultat.isPresent() && resultat.get() == ButtonType.YES;
-    }
-
-    private void ajouterLabel(String texte) {
-        Label label = new Label(texte);
-        label.getStyleClass().add("texte");
-        label.setWrapText(true);
-        boutonsBox.getChildren().add(label);
-    }
-
-    private Button ajouterBouton(String libelle, EventHandler<ActionEvent> action) {
-        Button bouton = new Button(libelle);
-        bouton.getStyleClass().add("menu-bouton");
-        bouton.setWrapText(true);
-        bouton.setPrefWidth(320);
-        bouton.setOnAction(action);
-        boutonsBox.getChildren().add(bouton);
-        return bouton;
     }
 
     @FXML

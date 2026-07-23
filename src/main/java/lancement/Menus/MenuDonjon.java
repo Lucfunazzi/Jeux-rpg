@@ -204,7 +204,7 @@ public class MenuDonjon {
                         ennemis.add(niv(new perso_Lisanna(),    niv));
                     }
                     case XP -> {
-                        // Tank: Nab (C) | DPS: Elfman (C), Bickslow (B) | Support: Evergreen (B)
+                        // Tank: Nab (C) | DPS: Elfman (C)
                         ennemis.add(niv(new perso_Nab(),       niv));
                         ennemis.add(niv(new perso_Elfman(),    niv));
                         

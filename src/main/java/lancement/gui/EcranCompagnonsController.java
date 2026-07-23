@@ -4,12 +4,14 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireCompagnons;
@@ -19,9 +21,9 @@ public class EcranCompagnonsController {
 
     private GameContext ctx;
 
-    @FXML private Label infoLabel;
-    @FXML private Label orLabel;
-    @FXML private Button actionButton;
+    @FXML private VBox compagnonBox;
+    @FXML private VBox orBox;
+    @FXML private VBox actionBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -31,25 +33,51 @@ public class EcranCompagnonsController {
     private void rafraichir() {
         GestionnaireCompagnons gc = ctx.gestionnaireCompagnons;
 
-        infoLabel.setText("Compagnon actif : " + gc.getType().nom + "\n"
-                + "Niveau : " + gc.getNiveau() + " / " + GestionnaireCompagnons.NIVEAU_MAX + "\n"
-                + String.format("Bonus equipe : +%.1f%% ATK/PV/DEF/VIT", gc.getBonusPourcentage()));
-        orLabel.setText("Or disponible : " + String.format("%.0f", ctx.joueur.getOr()));
+        Label nomLabel = new Label(gc.getType().nom);
+        nomLabel.getStyleClass().add("item-nom");
+        nomLabel.setStyle("-fx-font-size: 20px;");
 
+        Label niveauLabel = new Label("Niveau " + gc.getNiveau() + " / " + GestionnaireCompagnons.NIVEAU_MAX);
+        niveauLabel.getStyleClass().add("item-detail");
+
+        Label bonusLabel = new Label(String.format("Bonus équipe : +%.1f%% ATK/PV/DEF/VIT", gc.getBonusPourcentage()));
+        bonusLabel.getStyleClass().add("item-qte");
+
+        VBox texte = new VBox(6, nomLabel, niveauLabel,
+                GuiVisuels.creerBarreProgression(240, 14, gc.getNiveau(), GestionnaireCompagnons.NIVEAU_MAX),
+                bonusLabel);
+        texte.setAlignment(Pos.CENTER);
+
+        VBox carte = new VBox(texte);
+        carte.setAlignment(Pos.CENTER);
+        carte.getStyleClass().add("carte-item-joueur");
+        carte.setPrefWidth(300);
+        compagnonBox.getChildren().setAll(carte);
+
+        orBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Or disponible", String.format("%.0f", ctx.joueur.getOr())));
+
+        Node carteAction;
         if (!gc.estAuNiveauMax()) {
-            actionButton.setText("Ameliorer -> Niv." + (gc.getNiveau() + 1) + "  (" + gc.getCoutProchainNiveau() + " or)");
-            actionButton.setDisable(false);
+            carteAction = GuiVisuels.creerCarteChoix(
+                    "Améliorer → Niv." + (gc.getNiveau() + 1),
+                    gc.getCoutProchainNiveau() + " or",
+                    e -> onAction());
         } else if (gc.peutEvoluer()) {
-            actionButton.setText("Evoluer -> " + gc.getType().suivant().nom + "  (" + gc.getCoutEvolution() + " or)");
-            actionButton.setDisable(false);
+            carteAction = GuiVisuels.creerCarteChoix(
+                    "Évoluer → " + gc.getType().suivant().nom,
+                    gc.getCoutEvolution() + " or",
+                    e -> onAction());
         } else {
-            actionButton.setText("Compagnon au maximum actuel");
-            actionButton.setDisable(true);
+            carteAction = GuiVisuels.creerCarteChoix("Compagnon au maximum actuel", "", e -> {});
+            carteAction.setOpacity(0.5);
+            carteAction.setCursor(Cursor.DEFAULT);
+            carteAction.setOnMouseClicked(null);
         }
+        actionBox.getChildren().setAll(carteAction);
     }
 
-    @FXML
-    private void onAction(ActionEvent event) {
+    private void onAction() {
         GestionnaireCompagnons gc = ctx.gestionnaireCompagnons;
         ResultatCompagnon res = gc.peutEvoluer()
                 ? gc.evoluer(ctx.joueur.getOr())

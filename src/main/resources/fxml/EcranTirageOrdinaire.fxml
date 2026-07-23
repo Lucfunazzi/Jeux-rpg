@@ -12,14 +12,10 @@
     <Label text="TIRAGE ORDINAIRE" styleClass="titre"/>
     <Label text="Jamais de perso complet B/A - uniquement des fragments.&#10;2% perso complet C | 70% frags C | 23% frags B | 5% frags A"
            styleClass="texte" wrapText="true" maxWidth="420"/>
-    <Label fx:id="resumeLabel" styleClass="texte"/>
+    <VBox fx:id="statsBox" alignment="CENTER"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button fx:id="boutonX1" onAction="#onX1" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonX10" onAction="#onX10" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonCouponX1" onAction="#onCouponX1" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
-        <Button fx:id="boutonCouponX10" onAction="#onCouponX10" styleClass="menu-bouton" wrapText="true" prefWidth="300"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

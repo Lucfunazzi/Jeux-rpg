@@ -8,9 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -34,29 +35,48 @@ public class EcranPersonnagesController {
         tous.add(ctx.joueur);
         tous.addAll(ctx.personnagesRecruites);
 
+        FlowPane grille = new FlowPane(12, 12);
+        grille.setAlignment(Pos.CENTER);
         for (PersonnageBase p : tous) {
-            int piecesC = compterPiecesRangC(p);
-            String set = piecesC > 0 ? "  Set C : " + piecesC + "/6" : "";
-            boolean dansFormation = ctx.formation.getEquipe().contains(p);
-            String tag = dansFormation ? "  [F]" : "";
-
-            Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
-
-            Button bouton = new Button(p.getNom()
-                    + "  Niv." + p.getNiveau()
-                    + "  " + (p.getType() != null ? p.getType() : "")
-                    + "  " + p.getRole()
-                    + tag + set);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(340);
-            bouton.setOnAction(e -> ouvrirFiche(e, p));
-
-            HBox ligne = new HBox(8, badge, bouton);
-            ligne.setAlignment(Pos.CENTER_LEFT);
-
-            persosBox.getChildren().add(ligne);
+            grille.getChildren().add(cartePersonnage(p));
         }
+        persosBox.getChildren().add(grille);
+    }
+
+    private Node cartePersonnage(PersonnageBase p) {
+        boolean dansFormation = ctx.formation.getEquipe().contains(p);
+        int piecesC = compterPiecesRangC(p);
+
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+
+        Label nomLabel = new Label(p.getNom());
+        nomLabel.getStyleClass().add("item-nom");
+
+        Label detailLabel = new Label("Niv. " + p.getNiveau()
+                + (p.getType() != null ? "  ·  " + p.getType() : "")
+                + "  ·  " + p.getRole());
+        detailLabel.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(4, nomLabel, detailLabel, GuiVisuels.creerBarrePV(150, 14, p.getVie(), p.getVieMax()));
+
+        if (piecesC > 0) {
+            Label setLabel = new Label("Set C : " + piecesC + "/6");
+            setLabel.getStyleClass().add("item-qte");
+            texte.getChildren().add(setLabel);
+        }
+        if (dansFormation) {
+            Label formationLabel = new Label("En formation");
+            formationLabel.setStyle("-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #f2c14e;");
+            texte.getChildren().add(formationLabel);
+        }
+
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(dansFormation ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(260);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(e -> ouvrirFiche(carte, p));
+        return carte;
     }
 
     private int compterPiecesRangC(PersonnageBase p) {
@@ -68,8 +88,8 @@ public class EcranPersonnagesController {
         return count;
     }
 
-    private void ouvrirFiche(ActionEvent event, PersonnageBase p) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    private void ouvrirFiche(Node source, PersonnageBase p) {
+        Stage stage = (Stage) source.getScene().getWindow();
         Runnable retour = () -> {
             try {
                 FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranPersonnages.fxml");

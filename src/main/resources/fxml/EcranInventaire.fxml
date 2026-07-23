@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -18,21 +18,16 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER" spacing="10">
-            <padding><Insets left="30" right="30" top="10"/></padding>
-            <TextArea fx:id="inventaireArea" editable="false" wrapText="false"
-                      styleClass="zone-mono" prefHeight="280"/>
-        </VBox>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="340">
+            <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
+            <VBox fx:id="contenuBox" spacing="8"/>
+        </ScrollPane>
     </center>
 
     <bottom>
         <VBox alignment="CENTER" spacing="8">
             <padding><Insets top="10" bottom="20"/></padding>
-            <Button text="Equiper un personnage" onAction="#onEquiperPersonnage" styleClass="menu-bouton"/>
             <Button text="Equiper un set complet" onAction="#onEquiperSet" styleClass="menu-bouton"/>
-            <Button text="Utiliser des Cartes d'Or" onAction="#onCartesOr" styleClass="menu-bouton"/>
-            <Button text="Synthetiser un equipement [A]" onAction="#onSynthese" styleClass="menu-bouton"/>
-            <Button text="Ouvrir des Boites de pierre" onAction="#onOuvrirBoitesPierre" styleClass="menu-bouton"/>
             <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
         </VBox>
     </bottom>

@@ -11,13 +11,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,14 +34,15 @@ import javafx.util.Duration;
  */
 public class EcranCombatController {
 
-    private static final double LARGEUR_BARRE = 200;
+    private static final double LARGEUR_BARRE = 130;
+    private static final double LARGEUR_CARTE = 150;
     private static final Duration DUREE_AUTO  = Duration.millis(900);
     private static final Duration DUREE_FLASH = Duration.millis(500);
 
     @FXML private Label etapeLabel;
     @FXML private Label banniereLabel;
-    @FXML private VBox equipeJoueurBox;
-    @FXML private VBox equipeAdverseBox;
+    @FXML private GridPane equipeJoueurBox;
+    @FXML private GridPane equipeAdverseBox;
     @FXML private TextArea logArea;
     @FXML private Button suivantButton;
     @FXML private Button autoButton;
@@ -158,12 +162,13 @@ public class EcranCombatController {
             (snap.coteJoueur ? indexJoueur : indexAdverse).add(i);
         }
 
-        // Regroupement visuel avant/milieu/arriere : Tank, puis Attaquants, puis Support.
-        ajouterCartesGroupees(equipeJoueurBox, etat, indexJoueur);
-        ajouterCartesGroupees(equipeAdverseBox, etat, indexAdverse);
+        // Formation en colonnes, ordonnee par distance au centre (VS) : Support en
+        // retrait, DPS au milieu, Tank au contact de la ligne de front adverse.
+        ajouterFormation(equipeJoueurBox, etat, indexJoueur, false);
+        ajouterFormation(equipeAdverseBox, etat, indexAdverse, true);
     }
 
-    private void ajouterCartesGroupees(VBox box, List<PersonnageSnapshot> etat, List<Integer> indices) {
+    private void ajouterFormation(GridPane grille, List<PersonnageSnapshot> etat, List<Integer> indices, boolean miroir) {
         List<Integer> tank = new ArrayList<>();
         List<Integer> dps = new ArrayList<>();
         List<Integer> support = new ArrayList<>();
@@ -174,28 +179,68 @@ public class EcranCombatController {
                 default -> dps.add(i);
             }
         }
-        ajouterGroupe(box, "TANK", tank);
-        ajouterGroupe(box, "ATTAQUANTS", dps);
-        ajouterGroupe(box, "SUPPORT", support);
-    }
 
-    private void ajouterGroupe(VBox box, String titre, List<Integer> indices) {
-        if (indices.isEmpty()) return;
-        Label entete = new Label(titre);
-        entete.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-opacity: 0.6;");
-        box.getChildren().add(entete);
-        for (int i : indices) {
-            box.getChildren().add(cartes[i].racine);
+        List<List<Integer>> colonnes = new ArrayList<>();
+        List<String> titres = new ArrayList<>();
+        if (miroir) {
+            // Equipe adverse : le tank est colle au VS (a gauche de sa formation).
+            ajouterColonneSiPresente(colonnes, titres, "TANK", tank);
+            ajouterColonneSiPresente(colonnes, titres, "ATTAQUANTS", dps);
+            ajouterColonneSiPresente(colonnes, titres, "SUPPORT", support);
+        } else {
+            // Equipe joueur : le tank est colle au VS (a droite de sa formation).
+            ajouterColonneSiPresente(colonnes, titres, "SUPPORT", support);
+            ajouterColonneSiPresente(colonnes, titres, "ATTAQUANTS", dps);
+            ajouterColonneSiPresente(colonnes, titres, "TANK", tank);
+        }
+
+        int lignesMax = 1;
+        for (List<Integer> colonne : colonnes) {
+            lignesMax = Math.max(lignesMax, colonne.size());
+        }
+
+        for (int col = 0; col < colonnes.size(); col++) {
+            Label entete = new Label(titres.get(col));
+            entete.getStyleClass().add("groupe-titre");
+            GridPane.setHalignment(entete, HPos.CENTER);
+            grille.add(entete, col, 0);
+
+            List<Integer> membres = colonnes.get(col);
+            if (membres.size() == 1) {
+                // Seul occupant de la colonne (ex. le Tank) : centre sur toute la hauteur
+                // disponible plutot que coince en haut, meme si les colonnes voisines
+                // comptent davantage de membres.
+                Node carte = cartes[membres.get(0)].racine;
+                grille.add(carte, col, 1);
+                GridPane.setRowSpan(carte, lignesMax);
+                GridPane.setValignment(carte, VPos.CENTER);
+            } else {
+                for (int ligne = 0; ligne < membres.size(); ligne++) {
+                    Node carte = cartes[membres.get(ligne)].racine;
+                    grille.add(carte, col, ligne + 1);
+                    GridPane.setValignment(carte, VPos.TOP);
+                }
+            }
         }
     }
 
-    private CarteCombat creerCarte(PersonnageSnapshot snap) {
-        Label nomLabel = new Label(snap.nom + "  (" + snap.role + ")");
-        nomLabel.getStyleClass().add("texte");
-        nomLabel.setStyle("-fx-font-weight: bold;");
+    private void ajouterColonneSiPresente(List<List<Integer>> colonnes, List<String> titres, String titre, List<Integer> indices) {
+        if (indices.isEmpty()) return;
+        colonnes.add(indices);
+        titres.add(titre);
+    }
 
-        Label raretteLabel = new Label("Rang " + snap.rarete);
-        raretteLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: " + versHex(couleurRarete(snap.rarete)) + ";");
+    private CarteCombat creerCarte(PersonnageSnapshot snap) {
+        Label nomLabel = new Label(snap.nom);
+        nomLabel.getStyleClass().add("texte");
+        nomLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+        nomLabel.setWrapText(true);
+        nomLabel.setPrefWidth(LARGEUR_BARRE);
+        nomLabel.setAlignment(Pos.CENTER);
+        nomLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+
+        Label raretteLabel = new Label(snap.role + " · Rang " + snap.rarete);
+        raretteLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: " + versHex(couleurRarete(snap.rarete)) + ";");
 
         Label pvTexte = new Label();
         pvTexte.getStyleClass().add("texte");
@@ -213,8 +258,9 @@ public class EcranCombatController {
         effetsBox.setPrefWrapLength(LARGEUR_BARRE);
 
         VBox racine = new VBox(4, nomLabel, raretteLabel, pvTexte, barrePVPane, rageTexte, barreRagePane, effetsBox);
-        racine.getStyleClass().add("carte-combat");
-        racine.setPrefWidth(240);
+        racine.getStyleClass().addAll("carte-combat", classeRole(snap.role));
+        racine.setAlignment(Pos.CENTER);
+        racine.setPrefWidth(LARGEUR_CARTE);
 
         CarteCombat carte = new CarteCombat(racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox);
         appliquerEtat(carte, snap, false, false);
@@ -249,9 +295,21 @@ public class EcranCombatController {
         return icone;
     }
 
+    private String classeRole(String role) {
+        return switch (role == null ? "" : role) {
+            case "Tank" -> "carte-combat-tank";
+            case "Support" -> "carte-combat-support";
+            default -> "carte-combat-dps";
+        };
+    }
+
     private StackPane creerBarre() {
         Rectangle fond = new Rectangle(LARGEUR_BARRE, 12, Color.web("#12121c"));
+        fond.setArcWidth(8);
+        fond.setArcHeight(8);
         Rectangle remplissage = new Rectangle(LARGEUR_BARRE, 12, Color.web("#56c98a"));
+        remplissage.setArcWidth(8);
+        remplissage.setArcHeight(8);
         StackPane pane = new StackPane(fond, remplissage);
         StackPane.setAlignment(fond, Pos.CENTER_LEFT);
         StackPane.setAlignment(remplissage, Pos.CENTER_LEFT);
@@ -354,7 +412,8 @@ public class EcranCombatController {
     private void terminerAffichage() {
         arreterAuto();
         banniereLabel.setText(victoire ? "VICTOIRE !" : "DEFAITE...");
-        banniereLabel.setStyle("-fx-text-fill: " + (victoire ? "#56c98a" : "#e05656") + ";");
+        banniereLabel.getStyleClass().removeAll("banniere-victoire", "banniere-defaite");
+        banniereLabel.getStyleClass().addAll("banniere", victoire ? "banniere-victoire" : "banniere-defaite");
         banniereLabel.setVisible(true);
         banniereLabel.setManaged(true);
         continuerButton.setVisible(true);

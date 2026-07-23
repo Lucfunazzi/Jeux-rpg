@@ -7,19 +7,20 @@ import Equipement.ParcheminXP;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.Formation;
@@ -38,10 +39,11 @@ public class EcranFichePersonnageController {
     @FXML private HBox badgeBox;
     @FXML private Label titreLabel;
     @FXML private VBox barresBox;
-    @FXML private Label statsLabel;
-    @FXML private Label competencesLabel;
-    @FXML private Label liensLabel;
-    @FXML private Label setLabel;
+    @FXML private FlowPane statsBox;
+    @FXML private Label statsDetailLabel;
+    @FXML private VBox competencesBox;
+    @FXML private FlowPane liensBox;
+    @FXML private VBox setBox;
     @FXML private VBox slotsBox;
     @FXML private Button parcheminButton;
 
@@ -78,73 +80,49 @@ public class EcranFichePersonnageController {
         double totalPctPV  = arbrePV  + perso.getBonusLienPV();
         double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + (piecesC >= 4 ? 0.02 : 0);
 
-        StringBuilder stats = new StringBuilder("[ Stats ]\n");
-        stats.append(String.format("PV bonus : equip +%.0f%s  +%.0f%%%n",
-                perso.getBonusEquipementPV(),
-                bonusPVSet > 0 ? " +set" + (int) bonusPVSet : "", totalPctPV * 100));
-        stats.append(String.format("ATK : %.0f  (equip +%.0f  +%.0f%%)%n",
-                perso.getAttaque(), perso.getBonusEquipementATK(), totalPctATK * 100));
-        stats.append(String.format("DEF : %.0f  (equip +%.0f  +%.0f%%)%n",
-                perso.getDefense(), perso.getBonusEquipementDEF(), totalPctDEF * 100));
-        stats.append(String.format("VIT : %.0f  (equip +%.0f  +%.0f%%)%n",
-                perso.getVitesse(), perso.getBonusEquipementVIT(), totalPctVIT * 100));
-        stats.append(String.format("Crit : %.0f%%  Degat crit : x%.2f%n",
-                perso.getTauxCritique() * 100, perso.getTauxDegatCritique()));
-        stats.append(String.format("Esquive : %.0f%%  Blocage : %.0f%%%n",
-                perso.getTauxEsquives() * 100, perso.getTauxBlocage() * 100));
-        stats.append(String.format("Attaque S : %.0f  Contre : %.0f",
+        statsBox.getChildren().setAll(
+                carteStat("PV", String.format("+%.0f", perso.getBonusEquipementPV()),
+                        (bonusPVSet > 0 ? "équip +set" + (int) bonusPVSet : "équip") + String.format("  +%.0f%%", totalPctPV * 100)),
+                carteStat("ATK", String.format("%.0f", perso.getAttaque()),
+                        String.format("équip +%.0f  +%.0f%%", perso.getBonusEquipementATK(), totalPctATK * 100)),
+                carteStat("DEF", String.format("%.0f", perso.getDefense()),
+                        String.format("équip +%.0f  +%.0f%%", perso.getBonusEquipementDEF(), totalPctDEF * 100)),
+                carteStat("VIT", String.format("%.0f", perso.getVitesse()),
+                        String.format("équip +%.0f  +%.0f%%", perso.getBonusEquipementVIT(), totalPctVIT * 100))
+        );
+        statsDetailLabel.setText(String.format(
+                "Crit : %.0f%%  ·  Dégât crit : x%.2f  ·  Esquive : %.0f%%  ·  Blocage : %.0f%%  ·  Attaque S : %.0f  ·  Contre : %.0f",
+                perso.getTauxCritique() * 100, perso.getTauxDegatCritique(),
+                perso.getTauxEsquives() * 100, perso.getTauxBlocage() * 100,
                 perso.getTauxAttaqueS(), perso.getTauxContre()));
-        statsLabel.setText(stats.toString());
 
         String[] nomsAttaques = perso.getNomsAttaques();
-        StringBuilder comp = new StringBuilder("[ Competences ]\n");
-        comp.append(nomsAttaques[0]).append(" (base)\n   ")
-            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueBase)).append("\n\n");
-        comp.append(nomsAttaques[1]).append(" (speciale)\n   ")
-            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueSpeciale)).append("\n\n");
-        comp.append(nomsAttaques[2]).append(" (ultime)\n   ")
-            .append(GuiVisuels.capturerDescription(perso::descriptionAttaqueUltime));
-        competencesLabel.setText(comp.toString());
+        competencesBox.getChildren().setAll(
+                carteCompetence(nomsAttaques[0], "base", GuiVisuels.capturerDescription(perso::descriptionAttaqueBase)),
+                carteCompetence(nomsAttaques[1], "spéciale", GuiVisuels.capturerDescription(perso::descriptionAttaqueSpeciale)),
+                carteCompetence(nomsAttaques[2], "ultime", GuiVisuels.capturerDescription(perso::descriptionAttaqueUltime))
+        );
 
         List<GestionnaireLiens.Lien> liensActifs = ctx.formation.getLiensActifs();
         if (liensActifs.isEmpty()) {
-            liensLabel.setText("[ Liens ] Aucun lien actif dans la formation.");
+            Label vide = new Label("Aucun lien actif dans la formation.");
+            vide.getStyleClass().add("item-vide");
+            liensBox.getChildren().setAll(vide);
         } else {
-            StringBuilder sb = new StringBuilder("[ Liens actifs ]\n");
+            List<Node> chips = new ArrayList<>();
             for (GestionnaireLiens.Lien l : liensActifs) {
                 boolean membre = false;
                 for (String m : l.membres) if (m.equals(perso.getNom())) { membre = true; break; }
-                sb.append(l.nom).append(membre ? " *" : "").append(" - ").append(l.description).append("\n");
+                chips.add(carteLien(l, membre));
             }
-            liensLabel.setText(sb.toString().trim());
+            liensBox.getChildren().setAll(chips);
         }
 
-        StringBuilder set = new StringBuilder("[ Bonus de Set - Rang C (" + piecesC + "/6) ]\n");
-        if (piecesC < 3) {
-            set.append("Aucun bonus actif. Prochain : 3 pieces - +200 PV");
-        } else {
-            set.append("[OK] 3 pieces : +200 PV\n");
-            if (piecesC < 4) set.append("Prochain : 4 pieces - +2% VIT");
-            else {
-                set.append("[OK] 4 pieces : +2% VIT\n");
-                if (piecesC < 6) set.append("Prochain : 6 pieces - +5% ATK (manque ").append(6 - piecesC).append(")");
-                else set.append("[OK] 6 pieces : +5% ATK");
-            }
-        }
-        setLabel.setText(set.toString());
+        setBox.getChildren().setAll(carteSetBonus(piecesC));
 
         slotsBox.getChildren().clear();
         for (Equipement.Slot slot : Equipement.Slot.values()) {
-            Equipement equipe = perso.getEquipement(slot);
-            String equipeStr = equipe != null
-                    ? equipe.getNomRarete() + " " + equipe.getNomAffiche() + " (" + equipe.getDescriptionBonus() + ")"
-                    : "[vide]";
-            Button bouton = new Button(nomSlot(slot) + " : " + equipeStr);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(420);
-            bouton.setOnAction(e -> gererSlot(slot));
-            slotsBox.getChildren().add(bouton);
+            slotsBox.getChildren().add(carteSlot(slot));
         }
 
         boolean estPrincipal = perso.estPersonnagePrincipal();
@@ -153,6 +131,102 @@ public class EcranFichePersonnageController {
         if (!estPrincipal) {
             parcheminButton.setText("Utiliser un Parchemin XP  (Niv." + perso.getNiveau() + " / max " + ctx.joueur.getNiveau() + ")");
         }
+    }
+
+    private Node carteStat(String label, String valeur, String detail) {
+        Label l = new Label(label);
+        l.getStyleClass().add("item-detail");
+        Label v = new Label(valeur);
+        v.getStyleClass().add("item-nom");
+        Label d = new Label(detail);
+        d.setStyle("-fx-font-size: 10px; -fx-text-fill: #7a7a95;");
+
+        VBox box = new VBox(2, l, v, d);
+        box.setAlignment(Pos.CENTER);
+        box.getStyleClass().add("carte-item");
+        box.setPrefWidth(140);
+        return box;
+    }
+
+    private Node carteCompetence(String nom, String type, String description) {
+        Label nomLabel = new Label(nom + " (" + type + ")");
+        nomLabel.getStyleClass().add("item-nom");
+        Label descLabel = new Label(description);
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(380);
+
+        VBox texte = new VBox(2, nomLabel, descLabel);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(440);
+        return carte;
+    }
+
+    private Node carteLien(GestionnaireLiens.Lien l, boolean membre) {
+        Label nom = new Label(l.nom + (membre ? " ★" : ""));
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(l.description);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(200);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(membre ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(220);
+        return carte;
+    }
+
+    private Node carteSetBonus(int piecesC) {
+        Label titre = new Label("Bonus de Set — Rang C (" + piecesC + "/6)");
+        titre.getStyleClass().add("section-titre");
+
+        String etape;
+        if (piecesC < 3)      etape = "Aucun bonus actif. Prochain palier : 3 pièces (+200 PV).";
+        else if (piecesC < 4) etape = "Actif : 3 pièces (+200 PV). Prochain palier : 4 pièces (+2% VIT).";
+        else if (piecesC < 6) etape = "Actifs : 3 et 4 pièces (+200 PV, +2% VIT). Prochain palier : 6 pièces (+5% ATK).";
+        else                  etape = "Tous les bonus actifs : +200 PV, +2% VIT, +5% ATK.";
+
+        Label detail = new Label(etape);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(380);
+
+        VBox box = new VBox(6, titre, GuiVisuels.creerBarreProgression(240, 12, piecesC, 6), detail);
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
+
+    private Node carteSlot(Equipement.Slot slot) {
+        Equipement equipe = perso.getEquipement(slot);
+
+        Label nom = new Label(nomSlot(slot));
+        nom.getStyleClass().add("item-nom");
+
+        Label detail = new Label(equipe != null
+                ? equipe.getNomAffiche() + " — " + equipe.getDescriptionBonus()
+                : "[vide]");
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(300);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(420);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(e -> gererSlot(slot));
+
+        if (equipe != null) {
+            carte.getChildren().add(0, GuiVisuels.creerBadgeRarete(equipe.getRarete().name()));
+        } else {
+            carte.setOpacity(0.7);
+        }
+        return carte;
     }
 
     private int compterPiecesRangC(PersonnageBase p) {
@@ -191,30 +265,19 @@ public class EcranFichePersonnageController {
             return;
         }
 
-        Map<String, Equipement> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        String optionDesequiper = "(Desequiper)";
-        if (actuel != null) { options.add(optionDesequiper); }
-        for (Equipement e : compatibles) {
-            String libelle = e.toString();
-            options.add(libelle);
-            map.put(libelle, e);
-        }
+        List<ChoixEquipement> options = new ArrayList<>();
+        if (actuel != null) options.add(new ChoixEquipement(null));
+        for (Equipement e : compatibles) options.add(new ChoixEquipement(e));
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle(nomSlot(slot));
-        dialog.setHeaderText(null);
-        dialog.setContentText("Equipe actuellement : " + (actuel != null ? actuel.toString() : "[vide]") + "\nChoix :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
+        ChoixEquipement choix = GuiVisuels.choisirParmiCartes(nomSlot(slot), options, this::carteChoixEquipement);
+        if (choix == null) return;
 
-        if (resultat.get().equals(optionDesequiper)) {
+        if (choix.equipement() == null) {
             perso.desequiper(slot);
             inv.ajouterEquipement(actuel);
             info("Equipement", actuel.getNom() + " remis en inventaire.");
         } else {
-            Equipement choisi = map.get(resultat.get());
+            Equipement choisi = choix.equipement();
             if (actuel != null) {
                 perso.desequiper(slot);
                 inv.ajouterEquipement(actuel);
@@ -224,6 +287,53 @@ public class EcranFichePersonnageController {
             info("Equipement", choisi.getNomAffiche() + " equipe sur " + perso.getNom() + " !");
         }
         rafraichir();
+    }
+
+    /** Enveloppe une option du picker d'equipement ; equipement() == null represente "(Desequiper)". */
+    private record ChoixEquipement(Equipement equipement) {}
+
+    private Node carteParcheminXPChoix(ParcheminXP.Rarete r) {
+        int stock = ctx.inventaire.getQuantiteParcheminXP(r);
+        Label badge = GuiVisuels.creerBadgeRarete(r.name());
+        Label nom = new Label("Parchemin XP");
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Stock : " + stock);
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(220);
+        return carte;
+    }
+
+    private Node carteChoixEquipement(ChoixEquipement choix) {
+        if (choix.equipement() == null) {
+            Label nom = new Label("(Déséquiper)");
+            nom.getStyleClass().add("item-nom");
+            HBox carte = new HBox(nom);
+            carte.setAlignment(Pos.CENTER_LEFT);
+            carte.getStyleClass().add("carte-item");
+            carte.setPrefWidth(260);
+            return carte;
+        }
+
+        Equipement e = choix.equipement();
+        Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
+        Label nom = new Label(e.getNomAffiche());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(e.getNomSlot() + " — " + e.getDescription());
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(240);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(320);
+        return carte;
     }
 
     @FXML
@@ -238,26 +348,14 @@ public class EcranFichePersonnageController {
             return;
         }
 
-        List<String> options = new ArrayList<>();
-        Map<String, ParcheminXP.Rarete> map = new LinkedHashMap<>();
+        List<ParcheminXP.Rarete> options = new ArrayList<>();
         for (ParcheminXP.Rarete r : ParcheminXP.Rarete.values()) {
-            int stock = ctx.inventaire.getQuantiteParcheminXP(r);
-            if (stock <= 0) continue;
-            String libelle = "Parchemin XP [" + r.name() + "]  (stock : " + stock + ")";
-            options.add(libelle);
-            map.put(libelle, r);
+            if (ctx.inventaire.getQuantiteParcheminXP(r) > 0) options.add(r);
         }
         if (options.isEmpty()) { info("Parchemin XP", "Aucun parchemin XP dans l'inventaire."); return; }
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Parchemin XP");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Choisissez une rarete :");
-        styliser(dialog);
-        Optional<String> choix = dialog.showAndWait();
-        if (choix.isEmpty()) return;
-
-        ParcheminXP.Rarete rarete = map.get(choix.get());
+        ParcheminXP.Rarete rarete = GuiVisuels.choisirParmiCartes("Parchemin XP", options, this::carteParcheminXPChoix);
+        if (rarete == null) return;
         int stock = ctx.inventaire.getQuantiteParcheminXP(rarete);
 
         TextInputDialog qteDialog = new TextInputDialog(String.valueOf(stock));

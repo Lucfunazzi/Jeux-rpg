@@ -2,18 +2,15 @@ package lancement.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -116,26 +113,18 @@ public class EcranListeChapitresController {
             "1x Parchemin Tirage Elite"
         };
 
-        Map<String, Integer> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
+        List<Integer> options = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
-            if (!ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), i)) continue;
-            String libelle = "Coffre " + i + " (" + ge.getSeuilCoffre(i) + " etoiles) -> " + labelsRecomp[i - 1];
-            options.add(libelle);
-            map.put(libelle, i);
+            if (ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), i)) options.add(i);
         }
 
         if (options.isEmpty()) { info("Coffres", "Aucun coffre disponible pour l'instant."); return; }
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Coffres - " + ligne.label());
-        dialog.setHeaderText(null);
-        dialog.setContentText("Coffre a reclamer :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
+        Integer choix = GuiVisuels.choisirParmiCartes("Coffres - " + ligne.label(), options,
+                i -> carteCoffre(ge, i, labelsRecomp[i - 1]));
+        if (choix == null) return;
 
-        int numeroCoffre = map.get(resultat.get());
+        int numeroCoffre = choix;
         GestionnaireEtoiles.RecompenseCoffre recomp = ge.reclamerCoffre(ligne.numeroChapitre(), ligne.elite(), numeroCoffre);
         if (recomp == null) { info("Coffres", "Ce coffre n'est pas disponible."); return; }
 
@@ -153,6 +142,22 @@ public class EcranListeChapitresController {
         ctx.sauvegarde.sauvegarder(ctx);
         info("Coffres", message);
         rafraichir();
+    }
+
+    private Node carteCoffre(GestionnaireEtoiles ge, int numero, String recompense) {
+        Label nom = new Label("Coffre " + numero);
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(ge.getSeuilCoffre(numero) + " étoiles → " + recompense);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(260);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(300);
+        return carte;
     }
 
     @FXML

@@ -10,7 +10,8 @@
       fx:controller="lancement.gui.EcranCreaturesSacreesController"
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label text="CREATURES SACREES" styleClass="titre"/>
-    <Label fx:id="infoLabel" styleClass="texte" wrapText="true" maxWidth="420"/>
+
+    <VBox fx:id="infoBox" alignment="CENTER"/>
 
     <VBox fx:id="actionsBox" alignment="CENTER" spacing="8">
         <padding><Insets top="10"/></padding>

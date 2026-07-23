@@ -12,12 +12,15 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.Formation;
 import lancement.GameContext;
@@ -33,22 +36,50 @@ public class EcranChoixClasseController {
     private String pseudo;
 
     @FXML private Label sousTitre;
-    @FXML private Button btnChevalier;
-    @FXML private Button btnChasseur;
-    @FXML private Button btnMage;
-    @FXML private Button btnConstellationniste;
+    @FXML private FlowPane classesBox;
 
     @FXML
     private void initialize() {
-        libeller(btnChevalier, "Chevalier", competChevalier);
-        libeller(btnChasseur, "Chasseur de Dragon", competChasseur);
-        libeller(btnMage, "Mage", competMage);
-        libeller(btnConstellationniste, "Constellationniste", competConstellationniste);
+        classesBox.getChildren().setAll(
+                carteClasse("Chevalier", competChevalier),
+                carteClasse("Chasseur de Dragon", competChasseur),
+                carteClasse("Mage", competMage),
+                carteClasse("Constellationniste", competConstellationniste)
+        );
     }
 
-    private void libeller(Button bouton, String nomClasse, Competences competences) {
+    private Node carteClasse(String nomClasse, Competences competences) {
         String[] noms = competences.getNomsCompetences();
-        bouton.setText(nomClasse + "\nSpeciale : " + noms[0] + "\nUltime : " + noms[1]);
+
+        Label nom = new Label(nomClasse);
+        nom.getStyleClass().add("item-nom");
+        nom.setStyle("-fx-font-size: 16px;");
+
+        Label special = new Label("Spéciale : " + noms[0]);
+        special.getStyleClass().add("item-detail");
+        special.setWrapText(true);
+        special.setMaxWidth(220);
+
+        Label ultime = new Label("Ultime : " + noms[1]);
+        ultime.getStyleClass().add("item-detail");
+        ultime.setWrapText(true);
+        ultime.setMaxWidth(220);
+
+        Label voirDetails = new Label("Voir les compétences");
+        voirDetails.setStyle("-fx-font-size: 11px; -fx-text-fill: #4ea8f2; -fx-underline: true;");
+        voirDetails.setCursor(Cursor.HAND);
+        voirDetails.setOnMouseClicked(e -> { afficherDetails(nomClasse, competences); e.consume(); });
+
+        VBox texte = new VBox(4, nom, special, ultime, voirDetails);
+        texte.setAlignment(Pos.CENTER);
+
+        VBox carte = new VBox(texte);
+        carte.setAlignment(Pos.CENTER);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(e -> creerJoueur(nomClasse, competences));
+        return carte;
     }
 
     public void initData(GameContext ctx, String pseudo) {
@@ -56,16 +87,6 @@ public class EcranChoixClasseController {
         this.pseudo = pseudo;
         sousTitre.setText("Bienvenue, " + pseudo + " ! Choisissez votre classe :");
     }
-
-    @FXML private void onChoixChevalier(ActionEvent e)         { creerJoueur(e, "Chevalier", competChevalier); }
-    @FXML private void onChoixChasseur(ActionEvent e)          { creerJoueur(e, "Chasseur de Dragon", competChasseur); }
-    @FXML private void onChoixMage(ActionEvent e)               { creerJoueur(e, "Mage", competMage); }
-    @FXML private void onChoixConstellationniste(ActionEvent e) { creerJoueur(e, "Constellationniste", competConstellationniste); }
-
-    @FXML private void onDetailsChevalier(ActionEvent e)         { afficherDetails("Chevalier", competChevalier); }
-    @FXML private void onDetailsChasseur(ActionEvent e)          { afficherDetails("Chasseur de Dragon", competChasseur); }
-    @FXML private void onDetailsMage(ActionEvent e)               { afficherDetails("Mage", competMage); }
-    @FXML private void onDetailsConstellationniste(ActionEvent e) { afficherDetails("Constellationniste", competConstellationniste); }
 
     /** Apercu des competences d'une classe, consultable avant de valider le choix. */
     private void afficherDetails(String nomClasse, Competences competences) {
@@ -84,7 +105,7 @@ public class EcranChoixClasseController {
         dialog.showAndWait();
     }
 
-    private void creerJoueur(ActionEvent event, String classe, Competences competences) {
+    private void creerJoueur(String classe, Competences competences) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
                 "Confirmer la classe " + classe + " ?\nCe choix est definitif, vous ne pourrez plus en changer.",
                 ButtonType.YES, ButtonType.NO);
@@ -103,7 +124,7 @@ public class EcranChoixClasseController {
         ctx.personnagesRecruites = new ArrayList<>();
 
         try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) classesBox.getScene().getWindow();
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranMenuPrincipal.fxml");
             EcranMenuPrincipalController controller = loader.getController();
             controller.initData(ctx);

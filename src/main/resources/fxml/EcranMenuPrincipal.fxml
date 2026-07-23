@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -15,9 +16,7 @@
         <VBox alignment="CENTER" spacing="6">
             <padding><Insets top="20" bottom="10"/></padding>
             <Label text="MENU PRINCIPAL" styleClass="titre"/>
-            <Label fx:id="enTeteLabel" styleClass="texte"/>
-            <Label fx:id="ressourcesLabel" styleClass="texte"/>
-            <Label fx:id="energieLabel" styleClass="texte"/>
+            <FlowPane fx:id="statsBox" hgap="8" vgap="8" alignment="CENTER" prefWrapLength="480"/>
             <VBox fx:id="xpBarBox" alignment="CENTER" spacing="2"/>
         </VBox>
     </top>

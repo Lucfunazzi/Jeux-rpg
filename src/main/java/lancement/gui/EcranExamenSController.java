@@ -4,12 +4,15 @@ import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -34,25 +37,43 @@ public class EcranExamenSController {
         infoLabel.setText("1 tentative par stage et par jour (reset a minuit).\n"
                 + "Premiere reussite d'un stage : boite garantie. Ensuite : 30% de chance.");
 
-        stagesBox.getChildren().clear();
+        FlowPane grille = new FlowPane(10, 10);
+        grille.setAlignment(Pos.CENTER);
         for (int i = 1; i <= GestionnaireExamenS.NB_STAGES; i++) {
-            String etat;
-            if (!g.estDebloque(i))            etat = "[VERROUILLE]";
-            else if (g.estFaitAujourdhui(i))  etat = "[FAIT AUJOURD'HUI]";
-            else if (g.estDejaReussi(i))      etat = "[30% de chance]";
-            else                               etat = "[100% - premiere fois]";
-
-            Button bouton = new Button("Stage " + i + "  " + etat);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setPrefWidth(340);
-            if (g.peutTenter(i)) {
-                int numero = i;
-                bouton.setOnAction(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
-            } else {
-                bouton.setDisable(true);
-            }
-            stagesBox.getChildren().add(bouton);
+            grille.getChildren().add(carteStage(g, i));
         }
+        stagesBox.getChildren().setAll(grille);
+    }
+
+    private Node carteStage(GestionnaireExamenS g, int numero) {
+        boolean verrouille = !g.estDebloque(numero);
+        boolean faitAujourdhui = g.estFaitAujourdhui(numero);
+        boolean premiereFois = !verrouille && !faitAujourdhui && !g.estDejaReussi(numero);
+
+        String etat;
+        if (verrouille)          etat = "Verrouillé";
+        else if (faitAujourdhui) etat = "Fait aujourd'hui";
+        else if (premiereFois)   etat = "100% — première fois !";
+        else                     etat = "30% de chance";
+
+        Label nom = new Label("Stage " + numero);
+        nom.getStyleClass().add("item-nom");
+        Label statut = new Label(etat);
+        statut.getStyleClass().add(premiereFois ? "item-qte" : "item-detail");
+
+        VBox texte = new VBox(2, nom, statut);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(premiereFois ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(220);
+
+        if (g.peutTenter(numero)) {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
+        } else {
+            carte.setOpacity(0.5);
+        }
+        return carte;
     }
 
     private void lancerStage(int numero, Stage stage) {

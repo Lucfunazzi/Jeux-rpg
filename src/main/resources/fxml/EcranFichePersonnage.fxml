@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -22,17 +23,32 @@
 
     <center>
         <ScrollPane fitToWidth="true">
-            <VBox alignment="CENTER" spacing="14">
+            <VBox alignment="CENTER" spacing="16">
                 <padding><Insets top="10" bottom="10" left="30" right="30"/></padding>
 
                 <VBox fx:id="barresBox" alignment="CENTER" spacing="4" maxWidth="380"/>
-                <Label fx:id="statsLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
-                <Label fx:id="competencesLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
-                <Label fx:id="liensLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
-                <Label fx:id="setLabel" styleClass="texte" wrapText="true" maxWidth="480"/>
 
-                <VBox fx:id="slotsBox" alignment="CENTER" spacing="6">
-                    <padding><Insets top="10"/></padding>
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="Statistiques" styleClass="section-titre"/>
+                    <FlowPane fx:id="statsBox" hgap="10" vgap="10" alignment="CENTER" prefWrapLength="480"/>
+                    <Label fx:id="statsDetailLabel" styleClass="item-detail" wrapText="true" maxWidth="440"/>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="Compétences" styleClass="section-titre"/>
+                    <VBox fx:id="competencesBox" alignment="CENTER" spacing="6"/>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="Liens actifs" styleClass="section-titre"/>
+                    <FlowPane fx:id="liensBox" hgap="8" vgap="8" alignment="CENTER" prefWrapLength="440"/>
+                </VBox>
+
+                <VBox fx:id="setBox" alignment="CENTER" spacing="6"/>
+
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="Équipement" styleClass="section-titre"/>
+                    <VBox fx:id="slotsBox" alignment="CENTER" spacing="6"/>
                 </VBox>
 
                 <Button fx:id="parcheminButton" onAction="#onParcheminXP" styleClass="menu-bouton" wrapText="true" prefWidth="320"/>

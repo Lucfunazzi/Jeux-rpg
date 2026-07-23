@@ -1,14 +1,18 @@
 package lancement.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -20,24 +24,21 @@ public class EcranMenuPrincipalController {
 
     private GameContext ctx;
 
-    @FXML private Label enTeteLabel;
-    @FXML private Label ressourcesLabel;
-    @FXML private Label energieLabel;
+    @FXML private FlowPane statsBox;
     @FXML private VBox xpBarBox;
     @FXML private VBox boutonsBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
 
-        enTeteLabel.setText("Joueur : " + ctx.joueur.getNom()
-                + "  |  Niv." + ctx.joueur.getNiveau()
-                + "  |  Rang : " + ctx.rangJoueur.getRangNom());
-
-        ressourcesLabel.setText("Or : " + String.format("%.0f", ctx.joueur.getOr())
-                + "  |  Coupons : " + ctx.joueur.getCoupons()
-                + "  |  Combativite : " + ctx.formation.getCombativite());
-
-        energieLabel.setText(ctx.gestionnaireEnergie.afficherEnergie());
+        statsBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat(ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
+                GuiVisuels.creerFicheStat("Rang", ctx.rangJoueur.getRangNom()),
+                GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())),
+                GuiVisuels.creerFicheStat("Coupons", String.valueOf(ctx.joueur.getCoupons())),
+                GuiVisuels.creerFicheStat("Combativité", String.valueOf(ctx.formation.getCombativite())),
+                GuiVisuels.creerFicheStat("Énergie", ctx.gestionnaireEnergie.afficherEnergie())
+        );
 
         xpBarBox.getChildren().setAll(
                 GuiVisuels.creerBarreXP(260, 8, ctx.joueur.getExperience(), ctx.joueur.getExperienceMax()));
@@ -46,34 +47,57 @@ public class EcranMenuPrincipalController {
         boolean chapitre1EliteFini = ctx.chapitre1Elite.getStagesReussis()[10];
         int     niveau             = ctx.joueur.getNiveau();
 
-        ajouterBouton("Histoire", this::onHistoire);
-        ajouterBouton("Formation", this::onFormation);
-        if (niveau >= 6)                                            ajouterBouton("Recrutement", this::onRecrutement);
-        ajouterBouton("Inventaire", this::onInventaire);
-        ajouterBouton("Personnages", this::onPersonnages);
-        ajouterBouton("Quetes", this::onQuetes);
-        if (chapitre2Fini)                                          ajouterBouton("Recrutement Rare", this::onRecrutementRare);
-        if (niveau >= 3)                                            ajouterBouton("Abilites", this::onAbilites);
-        if (chapitre1EliteFini)                                     ajouterBouton("Rang & Titres", this::onRangTitres);
-        if (niveau >= 10)                                           ajouterBouton("Ameliorations", this::onAmeliorations);
-        if (niveau >= 10)                                           ajouterBouton("Donjon de ressources", this::onDonjon);
-        if (niveau >= 20)                                           ajouterBouton("Arene", this::onArene);
-        if (niveau >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)      ajouterBouton("Compagnons", this::onCompagnons);
-        if (niveau >= Gestionnaire_pet.NIVEAU_DEBLOCAGE)            ajouterBouton("Creatures Sacrees", this::onCreaturesSacrees);
-        if (niveau >= 6)                                            ajouterBouton("Etoiles & Fragments", this::onEtoiles);
-        ajouterBouton("Tirages", this::onTirages);
-        if (niveau >= GestionnaireExamenS.NIVEAU_REQUIS)            ajouterBouton("Examen de Rang S", this::onExamenS);
+        List<BoutonDef> progression = new ArrayList<>();
+        progression.add(new BoutonDef("Histoire", this::onHistoire));
+        progression.add(new BoutonDef("Quetes", this::onQuetes));
+        if (niveau >= 3)                                       progression.add(new BoutonDef("Abilites", this::onAbilites));
+        if (chapitre1EliteFini)                                progression.add(new BoutonDef("Rang & Titres", this::onRangTitres));
+
+        List<BoutonDef> personnages = new ArrayList<>();
+        personnages.add(new BoutonDef("Formation", this::onFormation));
+        personnages.add(new BoutonDef("Personnages", this::onPersonnages));
+        personnages.add(new BoutonDef("Inventaire", this::onInventaire));
+        if (niveau >= 10)                                       personnages.add(new BoutonDef("Ameliorations", this::onAmeliorations));
+        if (niveau >= GestionnaireCompagnons.NIVEAU_DEBLOCAGE)  personnages.add(new BoutonDef("Compagnons", this::onCompagnons));
+        if (niveau >= Gestionnaire_pet.NIVEAU_DEBLOCAGE)        personnages.add(new BoutonDef("Creatures Sacrees", this::onCreaturesSacrees));
+
+        List<BoutonDef> recrutementGacha = new ArrayList<>();
+        if (niveau >= 6)                                       recrutementGacha.add(new BoutonDef("Recrutement", this::onRecrutement));
+        if (chapitre2Fini)                                     recrutementGacha.add(new BoutonDef("Recrutement Rare", this::onRecrutementRare));
+        recrutementGacha.add(new BoutonDef("Tirages", this::onTirages));
+        if (niveau >= 6)                                       recrutementGacha.add(new BoutonDef("Etoiles & Fragments", this::onEtoiles));
+
+        List<BoutonDef> modes = new ArrayList<>();
+        if (niveau >= 10)                                       modes.add(new BoutonDef("Donjon de ressources", this::onDonjon));
+        if (niveau >= 20)                                       modes.add(new BoutonDef("Arene", this::onArene));
+        if (niveau >= GestionnaireExamenS.NIVEAU_REQUIS)        modes.add(new BoutonDef("Examen de Rang S", this::onExamenS));
+
+        boutonsBox.getChildren().clear();
+        ajouterSection("Progression", progression);
+        ajouterSection("Personnages & Équipement", personnages);
+        ajouterSection("Recrutement & Gacha", recrutementGacha);
+        ajouterSection("Modes & Défis", modes);
     }
 
-    private void ajouterBouton(String libelle) {
-        ajouterBouton(libelle, e -> System.out.println(libelle + " (ecran a venir)"));
-    }
+    private record BoutonDef(String libelle, EventHandler<ActionEvent> action) {}
 
-    private void ajouterBouton(String libelle, EventHandler<ActionEvent> action) {
-        Button bouton = new Button(libelle);
-        bouton.getStyleClass().add("menu-bouton");
-        bouton.setOnAction(action);
-        boutonsBox.getChildren().add(bouton);
+    private void ajouterSection(String titre, List<BoutonDef> boutons) {
+        if (boutons.isEmpty()) return;
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("section-titre");
+        boutonsBox.getChildren().add(titreLabel);
+
+        FlowPane grille = new FlowPane(10, 10);
+        grille.setAlignment(Pos.CENTER);
+        grille.setPrefWrapLength(460);
+        for (BoutonDef b : boutons) {
+            Button bouton = new Button(b.libelle());
+            bouton.getStyleClass().add("menu-bouton");
+            bouton.setOnAction(b.action());
+            grille.getChildren().add(bouton);
+        }
+        boutonsBox.getChildren().add(grille);
     }
 
     private void onHistoire(ActionEvent event) {

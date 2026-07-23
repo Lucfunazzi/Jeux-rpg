@@ -5,10 +5,7 @@ import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,9 +13,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -34,8 +31,8 @@ public class EcranFormationController {
     @FXML private HBox ligneTankBox;
     @FXML private HBox ligneDpsBox;
     @FXML private HBox ligneSupportBox;
-    @FXML private Label competenceLabel;
-    @FXML private Label liensLabel;
+    @FXML private VBox competenceBox;
+    @FXML private FlowPane liensBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -61,16 +58,33 @@ public class EcranFormationController {
             ligneSupportBox.getChildren().setAll(supports);
         }
 
-        competenceLabel.setText("Competence speciale active : " + nomCompetenceActive());
+        competenceBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Compétence spéciale active", nomCompetenceActive()));
 
         List<GestionnaireLiens.Lien> liens = f.getLiensActifs();
         if (liens.isEmpty()) {
-            liensLabel.setText("");
+            liensBox.getChildren().clear();
         } else {
-            StringBuilder sb = new StringBuilder("Liens actifs :\n");
-            for (GestionnaireLiens.Lien l : liens) sb.append("  * ").append(l.nom).append(" - ").append(l.description).append("\n");
-            liensLabel.setText(sb.toString());
+            List<Node> chips = new ArrayList<>();
+            for (GestionnaireLiens.Lien l : liens) chips.add(carteLien(l));
+            liensBox.getChildren().setAll(chips);
         }
+    }
+
+    private Node carteLien(GestionnaireLiens.Lien l) {
+        Label nom = new Label(l.nom);
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(l.description);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(200);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item-joueur");
+        carte.setPrefWidth(220);
+        return carte;
     }
 
     @FXML
@@ -124,20 +138,12 @@ public class EcranFormationController {
         boolean arbre2Dispo = arbre.isNoeud10Arbre2Debloque();
         String nomArbre2    = MenuAbilite.getNomCompetence(classe, 2);
 
-        List<String> options = new ArrayList<>();
-        options.add(nomOriginal + " (originale)" + (actuelle == 0 ? " [ACTIVE]" : ""));
-        options.add(nomArbre1 + " (Arbre 1)" + (!arbre1Dispo ? " [VERROUILLE]" : actuelle == 1 ? " [ACTIVE]" : ""));
-        options.add(nomArbre2 + " (Arbre 2)" + (!arbre2Dispo ? " [VERROUILLE]" : actuelle == 2 ? " [ACTIVE]" : ""));
+        List<Integer> options = List.of(0, 1, 2);
+        Integer choix = GuiVisuels.choisirParmiCartes("Compétence spéciale", options,
+                i -> carteCompetenceChoix(i, nomOriginal, nomArbre1, nomArbre2, arbre1Dispo, arbre2Dispo, actuelle));
+        if (choix == null) return;
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Competence speciale");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Competence active : " + nomCompetenceActive());
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
-
-        int index = options.indexOf(resultat.get());
+        int index = choix;
         switch (index) {
             case 0 -> {
                 joueur.setCompetenceSpecialeActive(0);
@@ -214,23 +220,49 @@ public class EcranFormationController {
         };
     }
 
-    private PersonnageBase choisirPersonnage(String titre, List<PersonnageBase> options) {
-        Map<String, PersonnageBase> map = new LinkedHashMap<>();
-        List<String> libelles = new ArrayList<>();
-        for (PersonnageBase p : options) {
-            String libelle = p.getNom() + " [" + p.getRole() + "] Niv." + p.getNiveau();
-            libelles.add(libelle);
-            map.put(libelle, p);
+    private Node carteCompetenceChoix(int index, String nomOriginal, String nomArbre1, String nomArbre2,
+            boolean arbre1Dispo, boolean arbre2Dispo, int actuelle) {
+        String nom;
+        String statut;
+        switch (index) {
+            case 0 -> { nom = nomOriginal + " (originale)"; statut = actuelle == 0 ? "ACTIVE" : ""; }
+            case 1 -> { nom = nomArbre1 + " (Arbre 1)"; statut = !arbre1Dispo ? "VERROUILLÉ" : actuelle == 1 ? "ACTIVE" : ""; }
+            default -> { nom = nomArbre2 + " (Arbre 2)"; statut = !arbre2Dispo ? "VERROUILLÉ" : actuelle == 2 ? "ACTIVE" : ""; }
         }
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(libelles.get(0), libelles);
-        dialog.setTitle(titre);
-        dialog.setHeaderText(null);
-        dialog.setContentText("Personnage :");
-        styliser(dialog);
+        Label nomLabel = new Label(nom);
+        nomLabel.getStyleClass().add("item-nom");
 
-        Optional<String> resultat = dialog.showAndWait();
-        return resultat.map(map::get).orElse(null);
+        HBox carte = new HBox(10, nomLabel);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("ACTIVE".equals(statut) ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(280);
+
+        if (!statut.isEmpty()) {
+            Label statutLabel = new Label(statut);
+            statutLabel.getStyleClass().add("item-qte");
+            carte.getChildren().add(statutLabel);
+        }
+        return carte;
+    }
+
+    private PersonnageBase choisirPersonnage(String titre, List<PersonnageBase> options) {
+        return GuiVisuels.choisirParmiCartes(titre, options, this::cartePersonnageChoix);
+    }
+
+    private Node cartePersonnageChoix(PersonnageBase p) {
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nom = new Label(p.getNom());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Niv. " + p.getNiveau() + "  ·  " + p.getRole());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(260);
+        return carte;
     }
 
     private void info(String titre, String message) {

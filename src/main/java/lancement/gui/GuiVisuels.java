@@ -2,11 +2,29 @@ package lancement.gui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import lancement.Menus.MenuTirage_recrutement.LigneResultat;
+import lancement.Menus.MenuTirage_recrutement.ResultatTirage;
 
 /**
  * Petits composants visuels partages entre les ecrans (badge de rarete, barres de PV/XP)
@@ -82,6 +100,154 @@ public final class GuiVisuels {
         texte.setStyle("-fx-font-size: 11px; -fx-text-fill: white;");
         barre.getChildren().add(texte);
         return barre;
+    }
+
+    /** Barre de progression generique (orange) avec le texte "X / Y" superpose (ex : fragments). */
+    public static StackPane creerBarreProgression(double largeur, double hauteur, int valeur, int max) {
+        double ratio = max > 0 ? (double) valeur / max : 0;
+        StackPane barre = creerBarre(largeur, hauteur, ratio, Color.web("#f2c14e"));
+        Label texte = new Label(valeur + " / " + max);
+        texte.setStyle("-fx-font-size: 11px; -fx-text-fill: white;");
+        barre.getChildren().add(texte);
+        return barre;
+    }
+
+    /** Petite fiche compacte "valeur en grand + libelle" (ex : ressources, statistiques de hub). */
+    public static Node creerFicheStat(String label, String valeur) {
+        Label v = new Label(valeur);
+        v.getStyleClass().add("item-nom");
+        Label l = new Label(label);
+        l.getStyleClass().add("item-detail");
+
+        VBox box = new VBox(2, v, l);
+        box.setAlignment(Pos.CENTER);
+        box.getStyleClass().add("carte-item");
+        box.setPrefWidth(130);
+        return box;
+    }
+
+    /** Carte cliquable "titre + description" pour un menu de navigation (ex : hub Arene/Tirages). */
+    public static Node creerCarteChoix(String titre, String description, javafx.event.EventHandler<javafx.scene.input.MouseEvent> action) {
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("item-nom");
+
+        Label descLabel = new Label(description);
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(300);
+
+        VBox texte = new VBox(4, titreLabel, descLabel);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(360);
+        carte.setCursor(javafx.scene.Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
+    }
+
+    /**
+     * Fenetre modale de selection parmi une liste d'options affichees en cartes
+     * (remplace les ChoiceDialog a menu deroulant). Retourne l'option choisie,
+     * ou null si la fenetre est fermee/annulee.
+     */
+    public static <T> T choisirParmiCartes(String titre, List<T> options, Function<T, Node> carteBuilder) {
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle(titre);
+
+        AtomicReference<T> resultat = new AtomicReference<>();
+
+        FlowPane grille = new FlowPane(10, 10);
+        grille.setAlignment(Pos.CENTER);
+        for (T option : options) {
+            Node carte = carteBuilder.apply(option);
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> {
+                resultat.set(option);
+                dialogStage.close();
+            });
+            grille.getChildren().add(carte);
+        }
+
+        ScrollPane scroll = new ScrollPane(grille);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("scroll-pane");
+        scroll.setStyle("-fx-background-color: transparent;");
+        scroll.setPrefViewportWidth(560);
+        scroll.setPrefViewportHeight(Math.min(420, 100.0 * ((options.size() + 1) / 2)));
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("titre");
+        titreLabel.setStyle("-fx-font-size: 22px;");
+
+        Button annuler = new Button("Annuler");
+        annuler.getStyleClass().add("menu-bouton");
+        annuler.setOnAction(e -> dialogStage.close());
+
+        VBox root = new VBox(14, titreLabel, scroll, annuler);
+        root.setAlignment(Pos.CENTER);
+        root.getStyleClass().add("root-menu");
+        root.setPadding(new Insets(20));
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(GuiVisuels.class.getResource("/fxml/style.css").toExternalForm());
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+
+        return resultat.get();
+    }
+
+    /** Affiche les resultats d'un tirage gacha sous forme de cartes (au lieu d'un texte brut). */
+    public static void afficherResultatsTirage(String titre, List<LigneResultat> lignes) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle(titre);
+        dialog.getDialogPane().getStylesheets().add(GuiVisuels.class.getResource("/fxml/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("root-menu");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+
+        FlowPane grille = new FlowPane(10, 10);
+        grille.setPrefWrapLength(520);
+        for (LigneResultat l : lignes) {
+            grille.getChildren().add(carteResultatTirage(l));
+        }
+
+        ScrollPane scroll = new ScrollPane(grille);
+        scroll.setFitToWidth(true);
+        scroll.setPrefViewportWidth(540);
+        scroll.setPrefViewportHeight(Math.min(360, 90.0 * ((lignes.size() + 1) / 2)));
+        scroll.getStyleClass().add("scroll-pane");
+        scroll.setStyle("-fx-background-color: transparent;");
+
+        dialog.getDialogPane().setContent(scroll);
+        dialog.showAndWait();
+    }
+
+    private static Node carteResultatTirage(LigneResultat l) {
+        ResultatTirage r = l.resultat;
+
+        Label badge = creerBadgeRarete(r.rarete);
+        Label nomLabel = new Label(r.nom);
+        nomLabel.getStyleClass().add("item-nom");
+
+        boolean nouveauPerso = !r.estFragments && !l.doublon;
+        String detail;
+        if (r.estFragments) {
+            detail = "+" + r.quantiteFragments + " fragment" + (r.quantiteFragments > 1 ? "s" : "");
+        } else if (l.doublon) {
+            detail = "Doublon → fragments";
+        } else {
+            detail = "Nouveau personnage !";
+        }
+        Label detailLabel = new Label(detail);
+        detailLabel.getStyleClass().add(nouveauPerso ? "item-qte" : "item-detail");
+
+        VBox texte = new VBox(4, nomLabel, detailLabel);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(nouveauPerso ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     /**

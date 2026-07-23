@@ -36,7 +36,8 @@ public class Chapitre2 {
 
             for (int i = 1; i <= NB_STAGES; i++) {
                 String etat = stagesReussis[i] ? "[OK]  " : stagesDebloques[i] ? "[  ]  " : "[###] ";
-                System.out.println(etat + "Stage " + i + " — " + getTitreStage(i));
+                String etoiles = ctx.gestionnaireEtoiles.getEtoiles(2, i, false).afficher();
+                System.out.println(etat + "Stage " + i + " — " + getTitreStage(i) + "  " + etoiles);
             }
 
             System.out.println("\nEntrez le numero du stage (0 pour revenir) :");

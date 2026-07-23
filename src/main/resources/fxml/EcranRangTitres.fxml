@@ -17,16 +17,14 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER" spacing="12">
+        <VBox alignment="CENTER" spacing="14">
             <padding><Insets left="30" right="30"/></padding>
-            <Label fx:id="rangLabel" styleClass="texte" wrapText="true"/>
-            <Label fx:id="arbresLabel" styleClass="texte" wrapText="true"/>
-            <Label fx:id="titreActifLabel" styleClass="texte" wrapText="true"/>
+            <VBox fx:id="rangBox" alignment="CENTER"/>
+            <VBox fx:id="arbresBox" alignment="CENTER" spacing="8"/>
+            <VBox fx:id="titreBox" alignment="CENTER"/>
 
-            <VBox alignment="CENTER" spacing="8">
-                <padding><Insets top="20"/></padding>
-                <Button text="Tenter une montee de rang" onAction="#onMonteeRang" styleClass="menu-bouton"/>
-                <Button text="Gerer mes titres" onAction="#onGererTitres" styleClass="menu-bouton"/>
+            <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
+                <padding><Insets top="10"/></padding>
             </VBox>
         </VBox>
     </center>

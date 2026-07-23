@@ -192,65 +192,65 @@ private void initialiserRecompensesPersonnages() {
         // ── Chapitre 3 normal (niv 30 → 35 | total ~439 500 XP) ─────────────
         // XP requise réelle niv 30→35 : 439 623 XP  |  distribution progressive
         quetesProgression.add(new QueteProgression("C3S1",
-                "Le tournoi commence", "Terminez le stage 1 du Chapitre 3.",
+                "L'assaut de Phantom Lord", "Terminez le stage 1 du Chapitre 3.",
                 3, 1, false, 30750, 2000, 0));
         quetesProgression.add(new QueteProgression("C3S2",
-                "L'equipe de Chiaotzu", "Terminez le stage 2 du Chapitre 3.",
+                "Totomaru — Sept Flammes", "Terminez le stage 2 du Chapitre 3.",
                 3, 2, false, 35150, 2500, 0));
         quetesProgression.add(new QueteProgression("C3S3",
-                "Les Saiyans arrivent", "Terminez le stage 3 du Chapitre 3.",
+                "Sol — L'Impenetrable", "Terminez le stage 3 du Chapitre 3.",
                 3, 3, false, 39550, 3000, 0));
         quetesProgression.add(new QueteProgression("C3S4",
-                "La tyrannie de Freezer", "Terminez le stage 4 du Chapitre 3.",
+                "L'Element 4 se deploie", "Terminez le stage 4 du Chapitre 3.",
                 3, 4, false, 43950, 3500, 0));
         quetesProgression.add(new QueteProgression("C3S5",
-                "Les guerriers de la Terre", "Terminez le stage 5 du Chapitre 3.",
+                "Jubia — L'Eau qui emprisonne", "Terminez le stage 5 du Chapitre 3.",
                 3, 5, false, 43950, 4000, 0));
         quetesProgression.add(new QueteProgression("C3S6",
-                "La menace Android", "Terminez le stage 6 du Chapitre 3.",
+                "L'Element 4 au complet", "Terminez le stage 6 du Chapitre 3.",
                 3, 6, false, 48350, 4500, 0));
         quetesProgression.add(new QueteProgression("C3S7",
-                "L'orgueil Saiyan", "Terminez le stage 7 du Chapitre 3.",
+                "Aria — Magie du Ciel Vide", "Terminez le stage 7 du Chapitre 3.",
                 3, 7, false, 48350, 5000, 0));
         quetesProgression.add(new QueteProgression("C3S8",
-                "Le demon et l'enfant prodige", "Terminez le stage 8 du Chapitre 3.",
+                "L'Element 4 — Derniere resistance", "Terminez le stage 8 du Chapitre 3.",
                 3, 8, false, 52750, 5500, 0));
         quetesProgression.add(new QueteProgression("C3S9",
-                "L'armee inarretable", "Terminez le stage 9 du Chapitre 3.",
+                "Jose — L'Ombre s'eveille", "Terminez le stage 9 du Chapitre 3.",
                 3, 9, false, 52750, 6000, 0));
         quetesProgression.add(new QueteProgression("C3S10",
-                "Cell vaincu", "Terminez le stage 10 du Chapitre 3.",
+                "Jose Porla — Maitre de Phantom Lord", "Terminez le stage 10 du Chapitre 3.",
                 3, 10, false, 43950, 8000, 200));
 
         quetesProgression.add(new QueteProgression("C3E1",
-                "Qualifications d'Elite", "Terminez le stage 1 du Chapitre 3 Elite.",
+                "L'assaut de Phantom Lord Renforce", "Terminez le stage 1 du Chapitre 3 Elite.",
                 3, 1, true, 320000, 4000, 0));
         quetesProgression.add(new QueteProgression("C3E2",
-                "La Garde de Chiaotzu", "Terminez le stage 2 du Chapitre 3 Elite.",
+                "Totomaru — Sept Flammes d'Elite", "Terminez le stage 2 du Chapitre 3 Elite.",
                 3, 2, true, 325000, 4500, 0));
         quetesProgression.add(new QueteProgression("C3E3",
-                "Saiyans d'Elite", "Terminez le stage 3 du Chapitre 3 Elite.",
+                "Sol — L'Impenetrable d'Elite", "Terminez le stage 3 du Chapitre 3 Elite.",
                 3, 3, true, 328000, 5000, 0));
         quetesProgression.add(new QueteProgression("C3E4",
-                "Freezer Transcende", "Terminez le stage 4 du Chapitre 3 Elite.",
+                "L'Element 4 Renforce", "Terminez le stage 4 du Chapitre 3 Elite.",
                 3, 4, true, 330000, 5500, 0));
         quetesProgression.add(new QueteProgression("C3E5",
-                "Les Guerriers de Fairy Tail", "Terminez le stage 5 du Chapitre 3 Elite.",
+                "Jubia — L'Eau qui Brise d'Elite", "Terminez le stage 5 du Chapitre 3 Elite.",
                 3, 5, true, 330000, 6000, 0));
         quetesProgression.add(new QueteProgression("C3E6",
-                "Les Cyborgs Reprogrammes", "Terminez le stage 6 du Chapitre 3 Elite.",
+                "L'Element 4 Complet d'Elite", "Terminez le stage 6 du Chapitre 3 Elite.",
                 3, 6, true, 333000, 6500, 0));
         quetesProgression.add(new QueteProgression("C3E7",
-                "L'Armee Saiyan", "Terminez le stage 7 du Chapitre 3 Elite.",
+                "Aria — Magie du Ciel Vide Transcendee", "Terminez le stage 7 du Chapitre 3 Elite.",
                 3, 7, true, 333000, 7000, 0));
         quetesProgression.add(new QueteProgression("C3E8",
-                "Piccolo et ses Disciples", "Terminez le stage 8 du Chapitre 3 Elite.",
+                "L'Element 4 — Ultime Resistance", "Terminez le stage 8 du Chapitre 3 Elite.",
                 3, 8, true, 335000, 7500, 0));
         quetesProgression.add(new QueteProgression("C3E9",
-                "L'Armee Inarretable", "Terminez le stage 9 du Chapitre 3 Elite.",
+                "Jose — L'Ombre Transcendee", "Terminez le stage 9 du Chapitre 3 Elite.",
                 3, 9, true, 335000, 8000, 0));
         quetesProgression.add(new QueteProgression("C3E10",
-                "Cell Parfait Vaincu", "Terminez le stage 10 du Chapitre 3 Elite.",
+                "Jose Porla — Forme Spectrale Supreme", "Terminez le stage 10 du Chapitre 3 Elite.",
                 3, 10, true, 340000, 12000, 0));
     }
 

@@ -10,12 +10,15 @@
       fx:controller="lancement.gui.EcranCompagnonsController"
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label text="COMPAGNONS" styleClass="titre"/>
-    <Label fx:id="infoLabel" styleClass="texte" wrapText="true"/>
-    <Label fx:id="orLabel" styleClass="texte"/>
 
-    <VBox alignment="CENTER" spacing="8">
-        <padding><Insets top="20"/></padding>
-        <Button fx:id="actionButton" onAction="#onAction" styleClass="menu-bouton" wrapText="true" prefWidth="280"/>
-        <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+    <VBox fx:id="compagnonBox" alignment="CENTER"/>
+    <VBox fx:id="orBox" alignment="CENTER"/>
+
+    <VBox fx:id="actionBox" alignment="CENTER">
+        <padding><Insets top="10"/></padding>
     </VBox>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+    </Button>
 </VBox>

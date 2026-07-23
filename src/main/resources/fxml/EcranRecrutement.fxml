@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -15,7 +16,7 @@
         <VBox alignment="CENTER" spacing="6">
             <padding><Insets top="20" bottom="10"/></padding>
             <Label text="RECRUTEMENT" styleClass="titre"/>
-            <Label fx:id="resumeLabel" styleClass="texte"/>
+            <FlowPane fx:id="statsBox" hgap="8" vgap="8" alignment="CENTER" prefWrapLength="480"/>
         </VBox>
     </top>
 

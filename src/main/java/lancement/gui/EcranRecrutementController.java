@@ -13,11 +13,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,7 +30,7 @@ public class EcranRecrutementController {
 
     private GameContext ctx;
 
-    @FXML private Label resumeLabel;
+    @FXML private FlowPane statsBox;
     @FXML private VBox boutonsBox;
 
     public void initData(GameContext ctx) {
@@ -39,50 +40,57 @@ public class EcranRecrutementController {
 
     private void rafraichir() {
         MenuRecrutement mr = ctx.menuRecrutement;
-        resumeLabel.setText("Or : " + String.format("%.0f", ctx.joueur.getOr())
-                + "  |  Parchemins C : " + mr.getParcheminC()
-                + "  |  Parchemins B : " + mr.getParcheminB()
-                + "  |  Parchemins A : " + mr.getParcheminA());
+        statsBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())),
+                GuiVisuels.creerFicheStat("Parchemins C", String.valueOf(mr.getParcheminC())),
+                GuiVisuels.creerFicheStat("Parchemins B", String.valueOf(mr.getParcheminB())),
+                GuiVisuels.creerFicheStat("Parchemins A", String.valueOf(mr.getParcheminA()))
+        );
 
         boutonsBox.getChildren().clear();
         int niveau = ctx.joueur.getNiveau();
 
+        boolean unePageAjoutee = false;
         for (int page = 1; page <= 3; page++) {
             int niveauRequis = MenuRecrutement.getNiveauRequisPage(page);
             if (niveau < niveauRequis) continue;
+            if (!unePageAjoutee) { boutonsBox.getChildren().add(titreSection("Pages de recrutement")); unePageAjoutee = true; }
             String rang = MenuRecrutement.getRangPage(page);
-            Button bouton = ajouterBouton("Page " + page + " - Rang " + rang);
             int pageFinal = page;
-            bouton.setOnAction(e -> ouvrirPage(e, pageFinal));
+            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Page " + page,
+                    "Rang " + rang + " — recrutez des personnages contre parchemins.", e -> ouvrirPage(e, pageFinal)));
         }
 
-        ajouterBouton("Acheter des Parchemins XP").setOnAction(e -> onAchatParchemins());
+        boutonsBox.getChildren().add(titreSection("Parchemins"));
+        boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Acheter des Parchemins XP",
+                "Échange des parchemins de recrutement contre de l'XP pour un personnage.", e -> onAchatParchemins()));
 
         MiniJeuPFC mj = mr.getMiniJeu();
-        if (niveau >= MenuRecrutement.getNiveauRequisPage(1)) {
-            ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or x10 auto)").setOnAction(e -> jouerAuto("C"));
-            ajouterBouton("Mini-jeu PFC - Rang C  (" + mj.getCoutPartieC() + " or, manuel)").setOnAction(e -> jouerManuel("C"));
-        }
-        if (niveau >= MenuRecrutement.getNiveauRequisPage(2)) {
-            ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or x10 auto)").setOnAction(e -> jouerAuto("B"));
-            ajouterBouton("Mini-jeu PFC - Rang B  (" + mj.getCoutPartieB() + " or, manuel)").setOnAction(e -> jouerManuel("B"));
-        }
-        if (niveau >= MenuRecrutement.getNiveauRequisPage(3)) {
-            ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or x10 auto)").setOnAction(e -> jouerAuto("A"));
-            ajouterBouton("Mini-jeu PFC - Rang A  (" + mj.getCoutPartieA() + " or, manuel)").setOnAction(e -> jouerManuel("A"));
+        boolean uneManche = false;
+        for (String rang : List.of("C", "B", "A")) {
+            int page = rang.equals("C") ? 1 : rang.equals("B") ? 2 : 3;
+            if (niveau < MenuRecrutement.getNiveauRequisPage(page)) continue;
+            if (!uneManche) { boutonsBox.getChildren().add(titreSection("Mini-jeu Pierre-Feuille-Ciseaux")); uneManche = true; }
+
+            int cout = switch (rang) {
+                case "C" -> mj.getCoutPartieC();
+                case "B" -> mj.getCoutPartieB();
+                default  -> mj.getCoutPartieA();
+            };
+            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — x10 auto",
+                    (cout * 10) + " or pour 10 parties jouées automatiquement.", e -> jouerAuto(rang)));
+            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — manuel",
+                    cout + " or, 3 manches jouées à la main.", e -> jouerManuel(rang)));
         }
     }
 
-    private Button ajouterBouton(String libelle) {
-        Button bouton = new Button(libelle);
-        bouton.getStyleClass().add("menu-bouton");
-        bouton.setWrapText(true);
-        bouton.setPrefWidth(340);
-        boutonsBox.getChildren().add(bouton);
-        return bouton;
+    private Label titreSection(String texte) {
+        Label l = new Label(texte);
+        l.getStyleClass().add("section-titre");
+        return l;
     }
 
-    private void ouvrirPage(ActionEvent event, int numero) {
+    private void ouvrirPage(MouseEvent event, int numero) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Runnable retour = () -> {
             try {
@@ -257,20 +265,12 @@ public class EcranRecrutementController {
     private void onAchatParchemins() {
         MenuRecrutement mr = ctx.menuRecrutement;
 
-        List<String> options = List.of(
-                "Parchemin XP [C] (+500 XP) - cout " + mr.getCoutParcheminXpC() + " parchemins C",
-                "Parchemin XP [B] (+1500 XP) - cout " + mr.getCoutParcheminXpB() + " parchemins B"
-        );
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Achat - Parchemins XP");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Parchemins C : " + mr.getParcheminC() + "  |  Parchemins B : " + mr.getParcheminB() + "\nChoix :");
-        styliser(dialog);
-        Optional<String> choix = dialog.showAndWait();
-        if (choix.isEmpty()) return;
+        List<ParcheminXP.Rarete> options = List.of(ParcheminXP.Rarete.C, ParcheminXP.Rarete.B);
+        ParcheminXP.Rarete rarete = GuiVisuels.choisirParmiCartes(
+                "Achat - Parchemins XP", options, r -> carteAchatParchemin(r, mr));
+        if (rarete == null) return;
 
-        boolean estC = choix.get().startsWith("Parchemin XP [C]");
-        ParcheminXP.Rarete rarete = estC ? ParcheminXP.Rarete.C : ParcheminXP.Rarete.B;
+        boolean estC = rarete == ParcheminXP.Rarete.C;
         int cout = estC ? mr.getCoutParcheminXpC() : mr.getCoutParcheminXpB();
         int stockDispo = estC ? mr.getParcheminC() : mr.getParcheminB();
 
@@ -302,6 +302,25 @@ public class EcranRecrutementController {
         ctx.sauvegarde.sauvegarder(ctx);
         info("Achat", qte + " Parchemin(s) XP [" + rarete.name() + "] ajoutes a l'inventaire !");
         rafraichir();
+    }
+
+    private Node carteAchatParchemin(ParcheminXP.Rarete r, MenuRecrutement mr) {
+        boolean estC = r == ParcheminXP.Rarete.C;
+        int xp = estC ? 500 : 1500;
+        int cout = estC ? mr.getCoutParcheminXpC() : mr.getCoutParcheminXpB();
+
+        Label badge = GuiVisuels.creerBadgeRarete(r.name());
+        Label nom = new Label("Parchemin XP (+" + xp + " XP)");
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Coût : " + cout + " parchemins " + r.name());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(300);
+        return carte;
     }
 
     @FXML

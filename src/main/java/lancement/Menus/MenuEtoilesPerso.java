@@ -35,14 +35,14 @@ public class MenuEtoilesPerso {
         new InfoPerso("Nab",     "C", "Guerrier"),
         new InfoPerso("Romeo",   "C", "Mage"),
         // Rang B
-        new InfoPerso("Bickslow",    "B", "Mage"),
-        new InfoPerso("Evergreen",   "B", "Mage"),
         new InfoPerso("Cana",        "B", "Mage"),
         new InfoPerso("Loke",        "B", "Mage"),
         new InfoPerso("Levy",        "B", "Mage"),
         new InfoPerso("Lisanna",     "B", "Mage"),
         new InfoPerso("Elfman Bête", "B", "Guerrier"),
         // Rang A
+        new InfoPerso("Bickslow",  "A", "Mage"),
+        new InfoPerso("Evergreen", "A", "Mage"),
         new InfoPerso("Angel",  "A", "Mage"),
         new InfoPerso("Freed",  "A", "Mage"),
         new InfoPerso("Gajeel", "A", "Guerrier"),

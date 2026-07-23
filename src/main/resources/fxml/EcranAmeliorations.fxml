@@ -11,11 +11,8 @@
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label text="AMELIORATIONS" styleClass="titre"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button text="Fortification" onAction="#onFortification" styleClass="menu-bouton"/>
-        <Button fx:id="boutonAffinage" onAction="#onAffinage" styleClass="menu-bouton"/>
-        <Button text="Pierres" onAction="#onPierres" styleClass="menu-bouton"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

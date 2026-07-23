@@ -5,8 +5,9 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -24,7 +25,7 @@ public class EcranPageRecrutementController {
     private Runnable onRetour;
 
     @FXML private Label titreLabel;
-    @FXML private Label parcheminsLabel;
+    @FXML private VBox statsBox;
     @FXML private VBox persosBox;
 
     public void initData(GameContext ctx, int numero, Runnable onRetour) {
@@ -39,7 +40,8 @@ public class EcranPageRecrutementController {
         int requis = MenuRecrutement.getParcheminsRequisPage(numero);
         String rang = MenuRecrutement.getRangPage(numero);
         int actuels = parcheminsActuels(rang);
-        parcheminsLabel.setText("Parchemins " + rang + " : " + actuels + "/" + requis);
+        statsBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Parchemins " + rang, actuels + " / " + requis));
 
         persosBox.getChildren().clear();
         for (String[] info : MenuRecrutement.getPage(numero)) {
@@ -47,24 +49,35 @@ public class EcranPageRecrutementController {
             boolean dejaRecrute = ctx.personnagesRecruites.stream()
                     .anyMatch(p -> p.getNom().equalsIgnoreCase(nom));
 
-            PersonnageBase apercu = ctx.menuRecrutement.creerPersonnage(nom);
-            Label badge = GuiVisuels.creerBadgeRarete(apercu != null ? apercu.getRarete() : rang);
-
-            Button bouton = new Button(nom + "  [" + role + "]  - " + requis + " parchemins " + rang
-                    + (dejaRecrute ? "  [DEJA RECRUTE]" : ""));
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(320);
-            if (dejaRecrute) {
-                bouton.setDisable(true);
-            } else {
-                bouton.setOnAction(e -> ouvrirFiche(nom));
-            }
-
-            HBox ligne = new HBox(8, badge, bouton);
-            ligne.setAlignment(Pos.CENTER_LEFT);
-            persosBox.getChildren().add(ligne);
+            persosBox.getChildren().add(cartePerso(nom, role, rang, requis, dejaRecrute));
         }
+    }
+
+    private Node cartePerso(String nom, String role, String rang, int requis, boolean dejaRecrute) {
+        PersonnageBase apercu = ctx.menuRecrutement.creerPersonnage(nom);
+        Label badge = GuiVisuels.creerBadgeRarete(apercu != null ? apercu.getRarete() : rang);
+
+        Label nomLabel = new Label(nom);
+        nomLabel.getStyleClass().add("item-nom");
+        Label detail = new Label(role + "  ·  " + requis + " parchemins " + rang);
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nomLabel, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(320);
+
+        if (dejaRecrute) {
+            Label tag = new Label("Déjà recruté");
+            tag.getStyleClass().add("item-vide");
+            carte.getChildren().add(tag);
+            carte.setOpacity(0.5);
+        } else {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> ouvrirFiche(nom));
+        }
+        return carte;
     }
 
     /** Ouvre la fiche du personnage (stats de base + compétences) avant confirmation du recrutement. */

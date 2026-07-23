@@ -6,18 +6,19 @@ import Equipement.Pierre;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 
@@ -34,9 +35,7 @@ public class EcranPierresController {
         List<Inventaire.StackPierre> stock = ctx.inventaire.getPierres();
         if (stock.isEmpty()) { info("Pierres", "Aucune pierre en stock."); return; }
 
-        StringBuilder sb = new StringBuilder();
-        for (Inventaire.StackPierre s : stock) sb.append(s).append("\n");
-        info("Stock de pierres", sb.toString().trim());
+        GuiVisuels.choisirParmiCartes("Stock de pierres", stock, this::cartePierreDispo);
     }
 
     @FXML
@@ -50,24 +49,25 @@ public class EcranPierresController {
             return;
         }
 
-        Map<String, Inventaire.StackPierre> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (Inventaire.StackPierre s : eligibles) {
-            String libelle = s + "  ->  " + new Pierre(s.getType(), s.getNiveau() + 1);
-            options.add(libelle);
-            map.put(libelle, s);
-        }
+        Inventaire.StackPierre choisi = GuiVisuels.choisirParmiCartes(
+                "Synthétiser des pierres", eligibles, this::cartePierreSynthese);
+        if (choisi == null) return;
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Synthetiser des pierres");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Choisissez une synthese :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
-
-        Inventaire.StackPierre choisi = map.get(resultat.get());
         info("Synthese", ctx.inventaire.synthetiserPierre(choisi.getType(), choisi.getNiveau()));
+    }
+
+    private Node cartePierreSynthese(Inventaire.StackPierre s) {
+        Label nom = new Label(s.toString());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("→ " + new Pierre(s.getType(), s.getNiveau() + 1));
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(260);
+        return carte;
     }
 
     @FXML
@@ -94,27 +94,46 @@ public class EcranPierresController {
     }
 
     /** Boucle de gestion des 5 emplacements de pierres d'une piece, via une suite de boites de dialogue. */
+    private static final int EMPLACEMENT_TERMINER = -1;
+
     private void gererPierresEquipement(Equipement equip) {
         boolean continuer = true;
         while (continuer) {
-            List<String> emplacements = new ArrayList<>();
-            for (int i = 0; i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) {
-                Pierre p = equip.getPierre(i);
-                emplacements.add("Emplacement " + (i + 1) + " : " + (p != null ? p.toString() : "[vide]"));
-            }
-            emplacements.add("Terminer");
+            List<Integer> emplacements = new ArrayList<>();
+            for (int i = 0; i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) emplacements.add(i);
+            emplacements.add(EMPLACEMENT_TERMINER);
 
-            ChoiceDialog<String> dialog = new ChoiceDialog<>(emplacements.get(0), emplacements);
-            dialog.setTitle("Pierres - " + equip.getNomAffiche());
-            dialog.setHeaderText(null);
-            dialog.setContentText("Choisissez un emplacement :");
-            styliser(dialog);
-            Optional<String> resultat = dialog.showAndWait();
-            if (resultat.isEmpty() || resultat.get().equals("Terminer")) { continuer = false; continue; }
+            Integer choix = GuiVisuels.choisirParmiCartes("Pierres - " + equip.getNomAffiche(), emplacements,
+                    i -> carteEmplacementPierre(equip, i));
+            if (choix == null || choix == EMPLACEMENT_TERMINER) { continuer = false; continue; }
 
-            int index = emplacements.indexOf(resultat.get());
-            gererEmplacement(equip, index);
+            gererEmplacement(equip, choix);
         }
+    }
+
+    private Node carteEmplacementPierre(Equipement equip, int index) {
+        if (index == EMPLACEMENT_TERMINER) {
+            Label nom = new Label("Terminer");
+            nom.getStyleClass().add("item-nom");
+            HBox carte = new HBox(nom);
+            carte.setAlignment(Pos.CENTER_LEFT);
+            carte.getStyleClass().add("carte-item");
+            carte.setPrefWidth(240);
+            return carte;
+        }
+
+        Pierre p = equip.getPierre(index);
+        Label nom = new Label("Emplacement " + (index + 1));
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(p != null ? p.toString() : "[vide]");
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     private void gererEmplacement(Equipement equip, int index) {
@@ -131,22 +150,9 @@ public class EcranPierresController {
         List<Inventaire.StackPierre> dispo = ctx.inventaire.getPierres();
         if (dispo.isEmpty()) { info("Pierres", "Aucune pierre en stock."); return; }
 
-        Map<String, Inventaire.StackPierre> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (Inventaire.StackPierre s : dispo) {
-            options.add(s.toString());
-            map.put(s.toString(), s);
-        }
+        Inventaire.StackPierre choisi = GuiVisuels.choisirParmiCartes("Insérer une pierre", dispo, this::cartePierreDispo);
+        if (choisi == null) return;
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Inserer une pierre");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Pierre a inserer :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
-
-        Inventaire.StackPierre choisi = map.get(resultat.get());
         Pierre nouvelle = new Pierre(choisi.getType(), choisi.getNiveau());
         String message = equip.insererPierre(index, nouvelle);
         if (message.equals("OK")) {
@@ -157,44 +163,59 @@ public class EcranPierresController {
         }
     }
 
+    private Node cartePierreDispo(Inventaire.StackPierre s) {
+        Label nom = new Label(s.toString());
+        nom.getStyleClass().add("item-nom");
+
+        HBox carte = new HBox(nom);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
+    }
+
     private PersonnageBase choisirPersonnage() {
         List<PersonnageBase> tous = new ArrayList<>();
         tous.add(ctx.joueur);
         tous.addAll(ctx.personnagesRecruites);
+        return GuiVisuels.choisirParmiCartes("Choisir un personnage", tous, this::cartePersonnageChoix);
+    }
 
-        Map<String, PersonnageBase> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (PersonnageBase p : tous) {
-            String libelle = p.getNom() + " [" + p.getRole() + "] Niv." + p.getNiveau();
-            options.add(libelle);
-            map.put(libelle, p);
-        }
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Choisir un personnage");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Personnage :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        return resultat.map(map::get).orElse(null);
+    private Node cartePersonnageChoix(PersonnageBase p) {
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nom = new Label(p.getNom());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Niv. " + p.getNiveau() + "  ·  " + p.getRole());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     private Equipement choisirEquipement(List<Equipement> liste) {
-        Map<String, Equipement> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (Equipement e : liste) {
-            int rempli = 0;
-            for (Pierre p : e.getPierres()) if (p != null) rempli++;
-            String libelle = e.toString() + "  |  Pierres : " + rempli + "/" + Equipement.NB_EMPLACEMENTS_PIERRES;
-            options.add(libelle);
-            map.put(libelle, e);
-        }
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Choisir un equipement");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Equipement :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        return resultat.map(map::get).orElse(null);
+        return GuiVisuels.choisirParmiCartes("Choisir un équipement", liste, this::carteEquipementChoix);
+    }
+
+    private Node carteEquipementChoix(Equipement e) {
+        int rempli = 0;
+        for (Pierre p : e.getPierres()) if (p != null) rempli++;
+
+        Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
+        Label nom = new Label(e.getNomAffiche());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Pierres : " + rempli + "/" + Equipement.NB_EMPLACEMENTS_PIERRES);
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(260);
+        return carte;
     }
 
     private boolean confirmer(String question) {

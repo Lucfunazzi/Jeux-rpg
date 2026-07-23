@@ -15,7 +15,7 @@
         <VBox alignment="CENTER" spacing="6">
             <padding><Insets top="20" bottom="10"/></padding>
             <Label fx:id="titreLabel" styleClass="titre"/>
-            <Label fx:id="orLabel" styleClass="texte"/>
+            <VBox fx:id="statsBox" alignment="CENTER"/>
         </VBox>
     </top>
 

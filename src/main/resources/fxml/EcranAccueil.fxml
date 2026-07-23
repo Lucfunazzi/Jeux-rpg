@@ -11,6 +11,7 @@
       fx:controller="lancement.gui.EcranAccueilController"
       alignment="CENTER" spacing="20" styleClass="root-menu">
     <Label text="FAIRY TAIL RPG" styleClass="titre"/>
+    <Label text="Rejoins la guilde et bâtis ta légende." styleClass="sous-titre"/>
 
     <VBox fx:id="pseudoBox" alignment="CENTER" spacing="12">
         <Label text="Entrez votre pseudo :" styleClass="texte"/>

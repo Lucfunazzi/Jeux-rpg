@@ -8,14 +8,14 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="lancement.gui.EcranTiragesController"
-      alignment="CENTER" spacing="16" styleClass="root-menu">
+      alignment="CENTER" spacing="14" styleClass="root-menu">
+    <padding><Insets top="20" bottom="10"/></padding>
     <Label text="TIRAGES" styleClass="titre"/>
-    <Label fx:id="resumeLabel" styleClass="texte" wrapText="true"/>
 
-    <VBox alignment="CENTER" spacing="8">
-        <padding><Insets top="10"/></padding>
-        <Button text="Tirage Ordinaire" onAction="#onOrdinaire" styleClass="menu-bouton"/>
-        <Button text="Tirage Elite" onAction="#onElite" styleClass="menu-bouton"/>
+    <VBox fx:id="ressourcesBox" alignment="CENTER" spacing="8" maxWidth="420"/>
+
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
+        <padding><Insets top="6"/></padding>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

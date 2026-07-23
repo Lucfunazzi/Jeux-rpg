@@ -4,11 +4,14 @@ import Joueur.ArbreCompetences;
 import Joueur.NoeudArbre;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.GameContext;
 import lancement.Menus.MenuAbilite;
@@ -44,23 +47,39 @@ public class EcranArbreController {
         noeudsBox.getChildren().clear();
         for (int i = 1; i <= 10; i++) {
             NoeudArbre n = MenuAbilite.getNoeud(arbre, numArbre, i);
-            String etat = n.isDebloque() ? "[OK] " : "[  ] ";
-            String cout = n.isDebloque() ? "" : "  (" + n.getCoutPoints() + " pts)";
-
-            Button bouton = new Button(etat + "Noeud " + i + " - " + n.getDescription() + cout);
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(380);
-
             boolean precedentOk = (i == 1) || MenuAbilite.getNoeud(arbre, numArbre, i - 1).isDebloque();
-            if (n.isDebloque() || !precedentOk) {
-                bouton.setDisable(true);
-            } else {
-                int index = i;
-                bouton.setOnAction(e -> debloquer(index, n));
-            }
-            noeudsBox.getChildren().add(bouton);
+            noeudsBox.getChildren().add(carteNoeud(i, n, precedentOk));
         }
+    }
+
+    private Node carteNoeud(int index, NoeudArbre n, boolean precedentOk) {
+        Label numero = new Label(String.valueOf(index));
+        numero.getStyleClass().add("vs-badge");
+
+        Label description = new Label(n.getDescription());
+        description.getStyleClass().add("item-nom");
+        description.setWrapText(true);
+        description.setMaxWidth(280);
+
+        Label statut = new Label(n.isDebloque() ? "Débloqué" : precedentOk ? n.getCoutPoints() + " pts" : "Verrouillé");
+        statut.getStyleClass().add(n.isDebloque() ? "item-qte" : "item-detail");
+
+        VBox texte = new VBox(2, description, statut);
+        HBox carte = new HBox(12, numero, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.setPrefWidth(380);
+
+        if (n.isDebloque()) {
+            carte.getStyleClass().add("carte-item-joueur");
+        } else if (precedentOk) {
+            carte.getStyleClass().add("carte-item");
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> debloquer(index, n));
+        } else {
+            carte.getStyleClass().add("carte-item");
+            carte.setOpacity(0.4);
+        }
+        return carte;
     }
 
     private void debloquer(int index, NoeudArbre n) {

@@ -4,19 +4,18 @@ import Joueur.ArbreCompetences;
 import Joueur.Personnage_principale;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireTitres;
@@ -27,32 +26,63 @@ public class EcranRangTitresController {
 
     private GameContext ctx;
 
-    @FXML private Label rangLabel;
-    @FXML private Label arbresLabel;
-    @FXML private Label titreActifLabel;
+    @FXML private VBox rangBox;
+    @FXML private VBox arbresBox;
+    @FXML private VBox titreBox;
+    @FXML private VBox choixBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+
+        choixBox.getChildren().setAll(
+                GuiVisuels.creerCarteChoix("Tenter une montée de rang",
+                        "Vérifie si vous remplissez les conditions pour le rang supérieur.", e -> onMonteeRang()),
+                GuiVisuels.creerCarteChoix("Gérer mes titres",
+                        "Équiper un titre obtenu pour un bonus de stats à toute l'équipe.", e -> onGererTitres())
+        );
+
         rafraichir();
     }
 
     private void rafraichir() {
         RangJoueur rangJoueur = ctx.rangJoueur;
-        rangLabel.setText(rangJoueur.afficherRang());
 
+        Label nomRang = new Label(rangJoueur.afficherRang());
+        nomRang.getStyleClass().add("item-nom");
+        nomRang.setStyle("-fx-font-size: 18px;");
+        VBox carteRang = new VBox(nomRang);
+        carteRang.setAlignment(Pos.CENTER);
+        carteRang.getStyleClass().add("carte-item-joueur");
+        carteRang.setPrefWidth(320);
+        rangBox.getChildren().setAll(carteRang);
+
+        arbresBox.getChildren().clear();
         if (rangJoueur.getRang() == RangJoueur.Rang.C) {
             ArbreCompetences arbre = ctx.joueur.getArbreCompetences();
-            arbresLabel.setText(
-                    "Arbre 1 : " + (arbre.isNoeud10Debloque() ? "[COMPLETE]" : "[" + progressionArbre(arbre, 1) + "/10 noeuds]") + "\n"
-                  + "Arbre 2 : " + (arbre.isNoeud10Arbre2Debloque() ? "[COMPLETE]" : "[" + progressionArbre(arbre, 2) + "/10 noeuds]") + "\n"
-                  + "Arbre 3 : " + (!arbre.isArbre3Debloque() ? "[VERROUILLE]"
-                          : arbre.isNoeud10Arbre3Debloque() ? "[COMPLETE]" : "[" + progressionArbre(arbre, 3) + "/10 noeuds]"));
-        } else {
-            arbresLabel.setText("");
+            arbresBox.getChildren().add(ligneArbre("Arbre 1", progressionArbre(arbre, 1), true));
+            arbresBox.getChildren().add(ligneArbre("Arbre 2", progressionArbre(arbre, 2), true));
+            arbresBox.getChildren().add(ligneArbre("Arbre 3", progressionArbre(arbre, 3), arbre.isArbre3Debloque()));
         }
 
         Titre actif = ctx.gestionnaireTitres.getTitreActif();
-        titreActifLabel.setText("Titre equipe : " + (actif != null ? actif.toString() : "aucun"));
+        Label titreLabel = new Label(actif != null ? actif.toString() : "Aucun titre équipé");
+        titreLabel.getStyleClass().add(actif != null ? "item-qte" : "item-vide");
+        titreLabel.setWrapText(true);
+        titreLabel.setMaxWidth(380);
+        VBox carteTitre = new VBox(titreLabel);
+        carteTitre.setAlignment(Pos.CENTER);
+        titreBox.getChildren().setAll(carteTitre);
+    }
+
+    private Node ligneArbre(String nom, int progres, boolean debloque) {
+        Label l = new Label(nom);
+        l.getStyleClass().add("item-detail");
+        l.setMinWidth(70);
+
+        HBox ligne = new HBox(10, l, GuiVisuels.creerBarreProgression(200, 14, debloque ? progres : 0, 10));
+        ligne.setAlignment(Pos.CENTER_LEFT);
+        if (!debloque) ligne.setOpacity(0.4);
+        return ligne;
     }
 
     private int progressionArbre(ArbreCompetences arbre, int numArbre) {
@@ -68,8 +98,7 @@ public class EcranRangTitresController {
         return count;
     }
 
-    @FXML
-    private void onMonteeRang(ActionEvent event) {
+    private void onMonteeRang() {
         Personnage_principale joueur = ctx.joueur;
         String resultat = ctx.rangJoueur.tenterMonteeRang(joueur.getNiveau(), joueur.getArbreCompetences());
 
@@ -82,38 +111,55 @@ public class EcranRangTitresController {
         rafraichir();
     }
 
-    @FXML
-    private void onGererTitres(ActionEvent event) {
+    private void onGererTitres() {
         GestionnaireTitres gestionnaireTitres = ctx.gestionnaireTitres;
         List<Titre> titres = gestionnaireTitres.getTitresObtenus();
 
         if (titres.isEmpty()) { info("Titres", "Aucun titre obtenu pour l'instant."); return; }
 
-        String optionDesequiper = "(Aucun - desequiper le titre actif)";
-        Map<String, Titre> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        options.add(optionDesequiper);
-        for (Titre t : titres) {
-            String libelle = t.toString();
-            options.add(libelle);
-            map.put(libelle, t);
-        }
+        List<ChoixTitre> options = new ArrayList<>();
+        options.add(new ChoixTitre(null));
+        for (Titre t : titres) options.add(new ChoixTitre(t));
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Mes titres");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Titre a equiper :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        if (resultat.isEmpty()) return;
+        ChoixTitre choix = GuiVisuels.choisirParmiCartes("Mes titres", options, this::carteChoixTitre);
+        if (choix == null) return;
 
-        if (resultat.get().equals(optionDesequiper)) {
+        if (choix.titre() == null) {
             gestionnaireTitres.desequiperTitre();
         } else {
-            Titre choisi = map.get(resultat.get());
-            gestionnaireTitres.equiperTitre(choisi.getNom());
+            gestionnaireTitres.equiperTitre(choix.titre().getNom());
         }
         rafraichir();
+    }
+
+    /** Enveloppe une option du picker de titre ; titre() == null represente "(Desequiper)". */
+    private record ChoixTitre(Titre titre) {}
+
+    private Node carteChoixTitre(ChoixTitre choix) {
+        if (choix.titre() == null) {
+            Label nom = new Label("(Aucun — déséquiper le titre actif)");
+            nom.getStyleClass().add("item-nom");
+            HBox carte = new HBox(nom);
+            carte.setAlignment(Pos.CENTER_LEFT);
+            carte.getStyleClass().add("carte-item");
+            carte.setPrefWidth(320);
+            return carte;
+        }
+
+        Titre t = choix.titre();
+        Label nom = new Label(t.getNom());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(t.getDescription() + "  (+" + (int) (t.getBonusStatsPourcentage() * 100) + "% stats équipe)");
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(280);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(t.isEquipe() ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(320);
+        return carte;
     }
 
     @FXML

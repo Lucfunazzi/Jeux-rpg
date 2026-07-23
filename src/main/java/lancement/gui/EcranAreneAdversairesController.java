@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -39,22 +43,47 @@ public class EcranAreneAdversairesController {
         List<AreneData> adversaires = gestionnaireArene.getAdversairesVisibles(joueurArene.getRang());
 
         for (AreneData a : adversaires) {
-            List<String> nomsEquipe = new ArrayList<>(a.getEquipeDefensiveNoms());
-            String nomPrincipal = a.getPersonnagePrincipalNom();
-            if (nomPrincipal != null && nomPrincipal.startsWith("PP_")) {
-                nomsEquipe.add("Combattant (" + nomPrincipal.replace("PP_", "") + ")");
-            } else if (nomPrincipal != null) {
-                nomsEquipe.add(nomPrincipal);
-            }
-
-            Button bouton = new Button("Rang #" + a.getRang() + "  " + a.getPseudo()
-                    + "\n" + String.join(", ", nomsEquipe));
-            bouton.getStyleClass().add("menu-bouton");
-            bouton.setWrapText(true);
-            bouton.setPrefWidth(420);
-            bouton.setOnAction(e -> lancerCombat(a, (Stage) ((Node) e.getSource()).getScene().getWindow()));
-            adversairesBox.getChildren().add(bouton);
+            adversairesBox.getChildren().add(carteAdversaire(a));
         }
+    }
+
+    private Node carteAdversaire(AreneData a) {
+        List<String> nomsEquipe = new ArrayList<>(a.getEquipeDefensiveNoms());
+        String nomPrincipal = a.getPersonnagePrincipalNom();
+        if (nomPrincipal != null && nomPrincipal.startsWith("PP_")) {
+            nomsEquipe.add("Combattant (" + nomPrincipal.replace("PP_", "") + ")");
+        } else if (nomPrincipal != null) {
+            nomsEquipe.add(nomPrincipal);
+        }
+
+        Label rang = new Label("#" + a.getRang());
+        rang.getStyleClass().add("item-nom");
+        rang.setMinWidth(50);
+
+        Label pseudo = new Label(a.getPseudo());
+        pseudo.getStyleClass().add("item-nom");
+
+        Label niveau = new Label("Niv. moy. " + a.getNiveauMoyenEquipe());
+        niveau.getStyleClass().add("item-qte");
+
+        HBox entete = new HBox(10, rang, pseudo);
+        entete.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(pseudo, Priority.ALWAYS);
+
+        Label equipe = new Label(String.join(", ", nomsEquipe));
+        equipe.getStyleClass().add("item-detail");
+        equipe.setWrapText(true);
+        equipe.setMaxWidth(340);
+
+        VBox texte = new VBox(4, entete, equipe);
+        HBox carte = new HBox(14, texte, niveau);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(420);
+        HBox.setHgrow(texte, Priority.ALWAYS);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(e -> lancerCombat(a, (Stage) ((Node) e.getSource()).getScene().getWindow()));
+        return carte;
     }
 
     private void lancerCombat(AreneData adversaire, Stage stage) {

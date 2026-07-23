@@ -8,16 +8,16 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="lancement.gui.EcranAreneController"
-      alignment="CENTER" spacing="16" styleClass="root-menu">
+      alignment="CENTER" spacing="14" styleClass="root-menu">
+    <padding><Insets top="20" bottom="10"/></padding>
     <Label text="ARENE" styleClass="titre"/>
-    <Label fx:id="infoLabel" styleClass="texte" wrapText="true"/>
 
-    <VBox alignment="CENTER" spacing="8">
-        <padding><Insets top="10"/></padding>
-        <Button text="Voir le classement" onAction="#onClassement" styleClass="menu-bouton"/>
-        <Button text="Choisir un adversaire" onAction="#onAdversaires" styleClass="menu-bouton"/>
-        <Button text="Boutique" onAction="#onBoutique" styleClass="menu-bouton"/>
-        <Button fx:id="boutonCoffre" onAction="#onCoffre" styleClass="menu-bouton" wrapText="true"/>
+    <VBox fx:id="statsBox" alignment="CENTER" spacing="8"/>
+
+    <VBox fx:id="coffreBox" alignment="CENTER"/>
+
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
+        <padding><Insets top="6"/></padding>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

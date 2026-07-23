@@ -7,9 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -23,7 +24,7 @@ public class EcranCreaturesSacreesController {
 
     private GameContext ctx;
 
-    @FXML private Label infoLabel;
+    @FXML private VBox infoBox;
     @FXML private VBox actionsBox;
 
     public void initData(GameContext ctx) {
@@ -36,21 +37,43 @@ public class EcranCreaturesSacreesController {
         actionsBox.getChildren().clear();
 
         if (!gcs.isOeufDebloque()) {
-            infoLabel.setText("Aucun oeuf obtenu pour l'instant.\n"
+            Label vide = new Label("Aucun oeuf obtenu pour l'instant.\n"
                     + "Terminez le Chapitre 2 Elite pour recevoir un Oeuf Mysterieux !");
+            vide.getStyleClass().add("item-vide");
+            vide.setWrapText(true);
+            vide.setMaxWidth(380);
+            infoBox.getChildren().setAll(vide);
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Creature : ").append(gcs.getType().nom).append("\n");
-        sb.append("Niveau   : ").append(gcs.getNiveau()).append(" / ").append(Gestionnaire_pet.NIVEAU_MAX).append("\n");
-        sb.append("XP       : ").append(gcs.getExperience()).append(" / ").append(gcs.getExperienceMax()).append("\n");
-        sb.append(String.format("Bonus equipe : ATK +%.0f | PV +%.0f | DEF +%.0f | VIT +%.0f",
+        Label nomLabel = new Label(gcs.getType().nom);
+        nomLabel.getStyleClass().add("item-nom");
+        nomLabel.setStyle("-fx-font-size: 20px;");
+
+        Label niveauLabel = new Label("Niveau " + gcs.getNiveau() + " / " + Gestionnaire_pet.NIVEAU_MAX);
+        niveauLabel.getStyleClass().add("item-detail");
+
+        Label bonusLabel = new Label(String.format("ATK +%.0f | PV +%.0f | DEF +%.0f | VIT +%.0f",
                 gcs.getType().getATK(gcs.getNiveau()), gcs.getType().getPV(gcs.getNiveau()),
                 gcs.getType().getDEF(gcs.getNiveau()), gcs.getType().getVIT(gcs.getNiveau())));
-        sb.append("\n");
-        if (gcs.getType().peutEvoluer()) sb.append("Prochaine evolution : ").append(gcs.getType().suivant().nom);
-        else sb.append("Forme finale : Igneel veille sur vous !");
+        bonusLabel.getStyleClass().add("item-qte");
+
+        Label evoLabel = new Label(gcs.getType().peutEvoluer()
+                ? "Prochaine évolution : " + gcs.getType().suivant().nom
+                : "Forme finale : Igneel veille sur vous !");
+        evoLabel.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(6, nomLabel, niveauLabel,
+                GuiVisuels.creerBarreProgression(240, 14, gcs.getNiveau(), Gestionnaire_pet.NIVEAU_MAX),
+                GuiVisuels.creerBarreXP(240, 14, gcs.getExperience(), gcs.getExperienceMax()),
+                bonusLabel, evoLabel);
+        texte.setAlignment(Pos.CENTER);
+
+        VBox carte = new VBox(texte);
+        carte.setAlignment(Pos.CENTER);
+        carte.getStyleClass().add("carte-item-joueur");
+        carte.setPrefWidth(320);
+        infoBox.getChildren().setAll(carte);
 
         if (gcs.entrainementEnCours()) {
             LocalDateTime debut = gcs.getDebutEntrainement();
@@ -60,12 +83,11 @@ public class EcranCreaturesSacreesController {
             long heuresRestantes  = actif.dureeHeures - heuresEcoulees;
             long minutesRestantes = 60 - minutesEcoulees;
             if (minutesRestantes == 60) { heuresRestantes++; minutesRestantes = 0; }
-            sb.append("\n\nEntrainement (").append(actif.libelle).append(") en cours...");
-            sb.append(String.format("%nTemps restant : ~%dh%02dm", heuresRestantes, minutesRestantes));
+            String tempsRestant = String.format("Temps restant : ~%dh%02dm", heuresRestantes, minutesRestantes);
+            ajouterCarteInerte("Entraînement (" + actif.libelle + ") en cours...", tempsRestant);
 
         } else if (gcs.entrainementTermine()) {
-            sb.append("\n\nEntrainement termine ! Reclamez votre XP.");
-            ajouterBouton("Reclamer l'XP", e -> {
+            ajouterCarteAction("Réclamer l'XP", "Entraînement terminé !", e -> {
                 String msg = gcs.reclamerEntrainement();
                 ctx.formation.appliquerBonusLiens();
                 ctx.sauvegarde.sauvegarder(ctx);
@@ -74,8 +96,7 @@ public class EcranCreaturesSacreesController {
             });
 
         } else if (gcs.estAuNiveauMax() && gcs.getType().peutEvoluer()) {
-            sb.append("\n\nNiveau max atteint !");
-            ajouterBouton("Evoluer -> " + gcs.getType().suivant().nom, e -> {
+            ajouterCarteAction("Évoluer → " + gcs.getType().suivant().nom, "Niveau max atteint", e -> {
                 String msg = gcs.evoluer();
                 ctx.formation.appliquerBonusLiens();
                 ctx.sauvegarde.sauvegarder(ctx);
@@ -84,16 +105,15 @@ public class EcranCreaturesSacreesController {
             });
 
         } else if (gcs.estAuNiveauMax()) {
-            sb.append("\n\nIgneel est a son niveau maximum !");
+            ajouterCarteInerte("Igneel est à son niveau maximum !", "");
 
         } else {
             for (Entrainement entr : Entrainement.values()) {
-                ajouterBouton("Entrainement " + entr.libelle + " -> +" + entr.xpRecompense + " XP",
+                ajouterCarteAction("Entraînement " + entr.libelle,
+                        "+" + entr.xpRecompense + " XP  (" + entr.dureeHeures + "h)",
                         e -> lancerEntrainement(entr));
             }
         }
-
-        infoLabel.setText(sb.toString());
     }
 
     private void lancerEntrainement(Entrainement e) {
@@ -108,13 +128,15 @@ public class EcranCreaturesSacreesController {
         rafraichir();
     }
 
-    private void ajouterBouton(String libelle, EventHandler<ActionEvent> action) {
-        Button bouton = new Button(libelle);
-        bouton.getStyleClass().add("menu-bouton");
-        bouton.setWrapText(true);
-        bouton.setPrefWidth(280);
-        bouton.setOnAction(action);
-        actionsBox.getChildren().add(bouton);
+    private void ajouterCarteAction(String titre, String description, EventHandler<javafx.scene.input.MouseEvent> action) {
+        actionsBox.getChildren().add(GuiVisuels.creerCarteChoix(titre, description, action));
+    }
+
+    private void ajouterCarteInerte(String titre, String description) {
+        Node carte = GuiVisuels.creerCarteChoix(titre, description, e -> {});
+        carte.setCursor(Cursor.DEFAULT);
+        carte.setOnMouseClicked(null);
+        actionsBox.getChildren().add(carte);
     }
 
     @FXML

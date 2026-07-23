@@ -70,8 +70,9 @@ public class Chapitre3Elite {
             for (int i = 1; i <= NB_STAGES; i++) {
                 String etat     = !stagesDebloques[i] ? "[###] " : stagesReussis[i] ? "[OK]  " : "[  ]  ";
                 int    restants = ctx.gestionnaireEnergie.getRunsEliteRestants(i);
+                String etoiles  = ctx.gestionnaireEtoiles.getEtoiles(3, i, true).afficher();
                 System.out.println(etat + "Stage " + i + " — " + getTitreStage(i)
-                        + "  (" + restants + "/10 runs restants)");
+                        + "  " + etoiles + "  (" + restants + "/10 runs restants)");
             }
 
             System.out.println("\nEntrez le numero du stage (0 pour revenir) :");

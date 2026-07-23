@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 
@@ -14,12 +16,20 @@ public class EcranHistoireController {
 
     private GameContext ctx;
 
+    @FXML private VBox choixBox;
+
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+
+        choixBox.getChildren().setAll(
+                GuiVisuels.creerCarteChoix("Chapitres",
+                        "L'histoire principale, du réveil à Phantom Lord.", this::onChapitres),
+                GuiVisuels.creerCarteChoix("Chapitres Elite",
+                        "Versions renforcées débloquées après chaque chapitre.", this::onChapitresElite)
+        );
     }
 
-    @FXML
-    private void onChapitres(ActionEvent event) {
+    private void onChapitres(MouseEvent event) {
         boolean c1Fini = ctx.chapitre1.getStagesReussis()[10];
         boolean c2Fini = ctx.chapitre2.getStagesReussis()[10];
 
@@ -34,8 +44,7 @@ public class EcranHistoireController {
         naviguerVersListe(event, "CHAPITRES", lignes);
     }
 
-    @FXML
-    private void onChapitresElite(ActionEvent event) {
+    private void onChapitresElite(MouseEvent event) {
         boolean c1Fini = ctx.chapitre1.getStagesReussis()[10];
 
         List<LigneChapitre> lignes = new ArrayList<>();
@@ -49,7 +58,7 @@ public class EcranHistoireController {
         naviguerVersListe(event, "CHAPITRES ELITE", lignes);
     }
 
-    private void naviguerVersListe(ActionEvent event, String titre, List<LigneChapitre> lignes) {
+    private void naviguerVersListe(MouseEvent event, String titre, List<LigneChapitre> lignes) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Runnable retour = () -> {
             try {

@@ -10,13 +10,11 @@
       fx:controller="lancement.gui.EcranAbilitesController"
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label text="ARBRE DE COMPETENCES" styleClass="titre"/>
-    <Label fx:id="infoLabel" styleClass="texte" wrapText="true"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="statsBox" alignment="CENTER" spacing="8"/>
+
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button fx:id="boutonArbre1" onAction="#onArbre1" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
-        <Button fx:id="boutonArbre2" onAction="#onArbre2" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
-        <Button fx:id="boutonArbre3" onAction="#onArbre3" styleClass="menu-bouton" wrapText="true" prefWidth="340"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

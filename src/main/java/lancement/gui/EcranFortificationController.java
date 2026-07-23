@@ -4,20 +4,20 @@ import Equipement.Equipement;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Menus.MenuAmeliorations;
@@ -28,7 +28,8 @@ public class EcranFortificationController {
 
     private GameContext ctx;
 
-    @FXML private Label infoLabel;
+    @FXML private VBox infoBox;
+    @FXML private VBox choixBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -36,11 +37,17 @@ public class EcranFortificationController {
     }
 
     private void rafraichir() {
-        infoLabel.setText("Or disponible : " + String.format("%.0f", ctx.joueur.getOr()));
+        infoBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Or disponible", String.format("%.0f", ctx.joueur.getOr())));
+        choixBox.getChildren().setAll(
+                GuiVisuels.creerCarteChoix("Fortifier un équipement équipé",
+                        "Choisir parmi les pièces portées par vos personnages.", e -> onFortifierEquipe()),
+                GuiVisuels.creerCarteChoix("Fortifier un équipement de l'inventaire",
+                        "Choisir parmi les pièces non équipées.", e -> onFortifierInventaire())
+        );
     }
 
-    @FXML
-    private void onFortifierEquipe(ActionEvent event) {
+    private void onFortifierEquipe() {
         PersonnageBase cible = choisirPersonnage();
         if (cible == null) return;
 
@@ -52,8 +59,7 @@ public class EcranFortificationController {
         fortifier(choisi);
     }
 
-    @FXML
-    private void onFortifierInventaire(ActionEvent event) {
+    private void onFortifierInventaire() {
         List<Equipement> equips = ctx.inventaire.getEquipements();
         if (equips.isEmpty()) { info("Fortification", "Aucun equipement dans l'inventaire."); return; }
 
@@ -97,38 +103,41 @@ public class EcranFortificationController {
         List<PersonnageBase> tous = new ArrayList<>();
         tous.add(ctx.joueur);
         tous.addAll(ctx.personnagesRecruites);
+        return GuiVisuels.choisirParmiCartes("Choisir un personnage", tous, this::cartePersonnageChoix);
+    }
 
-        Map<String, PersonnageBase> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (PersonnageBase p : tous) {
-            String libelle = p.getNom() + " [" + p.getRole() + "] Niv." + p.getNiveau();
-            options.add(libelle);
-            map.put(libelle, p);
-        }
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Choisir un personnage");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Personnage :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        return resultat.map(map::get).orElse(null);
+    private Node cartePersonnageChoix(PersonnageBase p) {
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nom = new Label(p.getNom());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Niv. " + p.getNiveau() + "  ·  " + p.getRole());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     private Equipement choisirEquipement(List<Equipement> liste) {
-        Map<String, Equipement> map = new LinkedHashMap<>();
-        List<String> options = new ArrayList<>();
-        for (Equipement e : liste) {
-            String libelle = e.toString() + "  Fort." + e.getNiveauFortification();
-            options.add(libelle);
-            map.put(libelle, e);
-        }
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Choisir un equipement");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Equipement :");
-        styliser(dialog);
-        Optional<String> resultat = dialog.showAndWait();
-        return resultat.map(map::get).orElse(null);
+        return GuiVisuels.choisirParmiCartes("Choisir un équipement", liste, this::carteEquipementChoix);
+    }
+
+    private Node carteEquipementChoix(Equipement e) {
+        Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
+        Label nom = new Label(e.getNomAffiche());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("Fort." + e.getNiveauFortification());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     private boolean confirmer(String question) {

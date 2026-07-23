@@ -38,7 +38,7 @@ import java.util.Scanner;
  *   -  1% rang SS (1 frag, très rare)
  *
  * Doublon → fragments : si le personnage est déjà recruté, il se convertit
- * automatiquement en fragments de ce personnage (1 doublon = coût_recrutement / 4).
+ * automatiquement en fragments de ce personnage (1 doublon = coût_recrutement plein).
  */
 public class MenuTirage_recrutement {
 
@@ -86,7 +86,7 @@ public class MenuTirage_recrutement {
     private static final List<String> POOL_A_ELITE = List.of(
         "Angel", "Freed", "Gajeel",
         "Gray", "Jubia (phantom lord)", "Lucy",
-        "Wendy","Bixrow","Evergreen","Aria"
+        "Wendy","Bickslow","Evergreen","Aria"
     );
 
     private static final List<String> POOL_S = List.of(
@@ -155,10 +155,10 @@ public class MenuTirage_recrutement {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> System.out.println(tirageOrdinaireX1(ctx));
-                case "2" -> System.out.println(tirageOrdinaireX10(ctx));
-                case "3" -> System.out.println(tirageOrdinaireCouponX1(ctx));
-                case "4" -> System.out.println(tirageOrdinaireCouponX10(ctx));
+                case "1" -> imprimerResultat(() -> tirageOrdinaireX1(ctx));
+                case "2" -> imprimerResultat(() -> tirageOrdinaireX10(ctx));
+                case "3" -> imprimerResultat(() -> tirageOrdinaireCouponX1(ctx));
+                case "4" -> imprimerResultat(() -> tirageOrdinaireCouponX10(ctx));
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -228,13 +228,22 @@ public class MenuTirage_recrutement {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> System.out.println(tirageEliteX1(ctx));
-                case "2" -> System.out.println(tirageEliteX10(ctx));
-                case "3" -> System.out.println(tirageEliteCouponX1(ctx));
-                case "4" -> System.out.println(tirageEliteCouponX10(ctx));
+                case "1" -> imprimerResultat(() -> tirageEliteX1(ctx));
+                case "2" -> imprimerResultat(() -> tirageEliteX10(ctx));
+                case "3" -> imprimerResultat(() -> tirageEliteCouponX1(ctx));
+                case "4" -> imprimerResultat(() -> tirageEliteCouponX10(ctx));
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
+        }
+    }
+
+    /** Execute un tirage et imprime son resultat (ou le message d'erreur si ressources insuffisantes). */
+    private void imprimerResultat(java.util.function.Supplier<List<LigneResultat>> action) {
+        try {
+            System.out.println(formaterResultats(action.get()));
+        } catch (TirageInsuffisantException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -302,60 +311,60 @@ public class MenuTirage_recrutement {
     // ACCES PUBLIC (console + interface graphique)
     // ════════════════════════════════════════════════════════════════════════
 
-    public String tirageOrdinaireX1(GameContext ctx) {
-        if (parcheminOrdinaire < 1) return "Parchemins insuffisants.";
+    public List<LigneResultat> tirageOrdinaireX1(GameContext ctx) {
+        if (parcheminOrdinaire < 1) throw new TirageInsuffisantException("Parchemins insuffisants.");
         parcheminOrdinaire--;
         return executerTirage(List.of(tirageOrdinaireUnitaire()), ctx);
     }
 
-    public String tirageOrdinaireX10(GameContext ctx) {
+    public List<LigneResultat> tirageOrdinaireX10(GameContext ctx) {
         if (parcheminOrdinaire < 10)
-            return "Parchemins insuffisants (besoin : 10, vous avez : " + parcheminOrdinaire + ").";
+            throw new TirageInsuffisantException("Parchemins insuffisants (besoin : 10, vous avez : " + parcheminOrdinaire + ").");
         parcheminOrdinaire -= 10;
         return executerTirage(tirageOrdinaireDix(), ctx);
     }
 
-    public String tirageOrdinaireCouponX1(GameContext ctx) {
+    public List<LigneResultat> tirageOrdinaireCouponX1(GameContext ctx) {
         int coupons = ctx.joueur.getCoupons();
         if (coupons < COUT_COUPON_ORD_1)
-            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_1, coupons);
+            throw new TirageInsuffisantException(String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_1, coupons));
         ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_1);
         return executerTirage(List.of(tirageOrdinaireUnitaire()), ctx);
     }
 
-    public String tirageOrdinaireCouponX10(GameContext ctx) {
+    public List<LigneResultat> tirageOrdinaireCouponX10(GameContext ctx) {
         int coupons = ctx.joueur.getCoupons();
         if (coupons < COUT_COUPON_ORD_10)
-            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_10, coupons);
+            throw new TirageInsuffisantException(String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ORD_10, coupons));
         ctx.joueur.setCoupons(coupons - COUT_COUPON_ORD_10);
         return executerTirage(tirageOrdinaireDix(), ctx);
     }
 
-    public String tirageEliteX1(GameContext ctx) {
-        if (parcheminElite < 1) return "Parchemins insuffisants.";
+    public List<LigneResultat> tirageEliteX1(GameContext ctx) {
+        if (parcheminElite < 1) throw new TirageInsuffisantException("Parchemins insuffisants.");
         parcheminElite--;
         return executerTirage(tirageEliteUnitaire(), ctx);
     }
 
-    public String tirageEliteX10(GameContext ctx) {
+    public List<LigneResultat> tirageEliteX10(GameContext ctx) {
         if (parcheminElite < 10)
-            return "Parchemins insuffisants (besoin : 10, vous avez : " + parcheminElite + ").";
+            throw new TirageInsuffisantException("Parchemins insuffisants (besoin : 10, vous avez : " + parcheminElite + ").");
         parcheminElite -= 10;
         return executerTirage(tirageEliteDix(), ctx);
     }
 
-    public String tirageEliteCouponX1(GameContext ctx) {
+    public List<LigneResultat> tirageEliteCouponX1(GameContext ctx) {
         int coupons = ctx.joueur.getCoupons();
         if (coupons < COUT_COUPON_ELI_1)
-            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_1, coupons);
+            throw new TirageInsuffisantException(String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_1, coupons));
         ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_1);
         return executerTirage(tirageEliteUnitaire(), ctx);
     }
 
-    public String tirageEliteCouponX10(GameContext ctx) {
+    public List<LigneResultat> tirageEliteCouponX10(GameContext ctx) {
         int coupons = ctx.joueur.getCoupons();
         if (coupons < COUT_COUPON_ELI_10)
-            return String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_10, coupons);
+            throw new TirageInsuffisantException(String.format("Coupons insuffisants (besoin : %d, vous avez : %d).", COUT_COUPON_ELI_10, coupons));
         ctx.joueur.setCoupons(coupons - COUT_COUPON_ELI_10);
         return executerTirage(tirageEliteDix(), ctx);
     }
@@ -368,24 +377,32 @@ public class MenuTirage_recrutement {
     public int getPityS()  { return PITY_S; }
     public int getPitySS() { return PITY_SS; }
 
-    private String executerTirage(List<ResultatTirage> resultats, GameContext ctx) {
-        String message = formaterResultats(resultats, ctx);
+    /**
+     * Determine le statut doublon de chaque resultat (avant application), applique les
+     * gains (fragments/recrutement), sauvegarde, puis retourne les lignes pretes a afficher.
+     */
+    private List<LigneResultat> executerTirage(List<ResultatTirage> resultats, GameContext ctx) {
+        List<LigneResultat> lignes = new ArrayList<>();
+        for (ResultatTirage r : resultats) {
+            boolean doublon = !r.estFragments
+                    && GestionnaireEtoilesPerso.dejaRecruteParNom(ctx.personnagesRecruites, r.nom);
+            lignes.add(new LigneResultat(r, doublon));
+        }
         appliquerResultats(resultats, ctx);
         ctx.sauvegarde.sauvegarder(ctx);
-        return message;
+        return lignes;
     }
 
     // ════════════════════════════════════════════════════════════════════════
     // APPLICATION & AFFICHAGE
     // ════════════════════════════════════════════════════════════════════════
 
-    private String formaterResultats(List<ResultatTirage> resultats, GameContext ctx) {
+    private String formaterResultats(List<LigneResultat> lignes) {
         StringBuilder sb = new StringBuilder("RESULTATS DU TIRAGE\n\n");
 
-        for (ResultatTirage r : resultats) {
-            boolean dejaRecru = !r.estFragments &&
-                    GestionnaireEtoilesPerso.dejaRecruteParNom(ctx.personnagesRecruites, r.nom);
-            String suffixe = dejaRecru ? "  -> DOUBLON (fragments)" : "";
+        for (LigneResultat l : lignes) {
+            ResultatTirage r = l.resultat;
+            String suffixe = l.doublon ? "  -> DOUBLON (fragments)" : "";
 
             if (r.estFragments) {
                 sb.append(String.format("[%2s] %-22s  x%d frags%n", r.rarete, r.nom, r.quantiteFragments));
@@ -413,9 +430,8 @@ public class MenuTirage_recrutement {
                         ctx.personnagesRecruites, r.nom);
 
                 if (dejaRecru) {
-                    // Doublon → fragments
-                    int fragsDoublon = Math.max(1,
-                            GestionnaireEtoilesPerso.coutFragmentsRecrutement(r.rarete) / 4);
+                    // Doublon → fragments (montant plein = cout de recrutement)
+                    int fragsDoublon = GestionnaireEtoilesPerso.coutFragmentsRecrutement(r.rarete);
                     GestionnaireEtoilesPerso.ajouterFragments(ctx.inventaire, r.nom, fragsDoublon);
                     System.out.printf("  [Doublon] %s converti en %d fragment(s).%n",
                             r.nom, fragsDoublon);
@@ -431,12 +447,12 @@ public class MenuTirage_recrutement {
         }
     }
 
-    // ── Record interne : résultat d'un tirage ─────────────────────────────
-    private static class ResultatTirage {
-        final String  nom;
-        final String  rarete;
-        final boolean estFragments;
-        final int     quantiteFragments;
+    // ── Résultat d'un tirage (public : consommé par la console et l'UI graphique) ──
+    public static final class ResultatTirage {
+        public final String  nom;
+        public final String  rarete;
+        public final boolean estFragments;
+        public final int     quantiteFragments;
 
         private ResultatTirage(String nom, String rarete, boolean estFragments, int qte) {
             this.nom               = nom;
@@ -452,5 +468,21 @@ public class MenuTirage_recrutement {
         static ResultatTirage fragments(String nom, String rarete, int qte) {
             return new ResultatTirage(nom, rarete, true, qte);
         }
+    }
+
+    /** Un résultat de tirage accompagné de son statut doublon, calculé avant application des gains. */
+    public static final class LigneResultat {
+        public final ResultatTirage resultat;
+        public final boolean doublon;
+
+        LigneResultat(ResultatTirage resultat, boolean doublon) {
+            this.resultat = resultat;
+            this.doublon  = doublon;
+        }
+    }
+
+    /** Levée quand le joueur n'a pas assez de parchemins/coupons pour lancer un tirage. */
+    public static final class TirageInsuffisantException extends RuntimeException {
+        public TirageInsuffisantException(String message) { super(message); }
     }
 }

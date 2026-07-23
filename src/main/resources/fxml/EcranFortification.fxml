@@ -12,12 +12,11 @@
     <Label text="FORTIFICATION" styleClass="titre"/>
     <Label text="Renforcez vos equipements en depensant de l'or.&#10;Chaque niveau double les stats de la piece."
            styleClass="texte" wrapText="true" maxWidth="420"/>
-    <Label fx:id="infoLabel" styleClass="texte"/>
 
-    <VBox alignment="CENTER" spacing="8">
+    <VBox fx:id="infoBox" alignment="CENTER"/>
+
+    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
-        <Button text="Fortifier un equipement equipe" onAction="#onFortifierEquipe" styleClass="menu-bouton"/>
-        <Button text="Fortifier un equipement dans l'inventaire" onAction="#onFortifierInventaire" styleClass="menu-bouton"/>
     </VBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">

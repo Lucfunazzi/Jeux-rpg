@@ -25,6 +25,9 @@ import java.util.Map;
  */
 public class GestionnaireEtoilesPerso {
 
+    /** Prefixe des noms de materiaux representant des fragments de personnage dans l'inventaire. */
+    public static final String PREFIXE_FRAGMENT = "Frag-Perso: ";
+
     // ── Coût en fragments pour recruter ou monter d'une étoile ───────────
     public static int coutFragmentsRecrutement(String rarete) {
         return switch (rarete) {
@@ -46,7 +49,7 @@ public class GestionnaireEtoilesPerso {
 
     // ── Clé de fragment ──────────────────────────────────────────────────
     public static String cleFragment(String nomPersonnage) {
-        return "Frag-Perso: " + nomPersonnage;
+        return PREFIXE_FRAGMENT + nomPersonnage;
     }
 
     // ── Getters inventaire ───────────────────────────────────────────────
