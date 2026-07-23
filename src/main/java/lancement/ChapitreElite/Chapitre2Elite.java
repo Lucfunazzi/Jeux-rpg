@@ -2,13 +2,6 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre2Elite.*;
-import Personnage.pnj.Chapitre2.EnnemiTobi;
-import Personnage.pnj.Chapitre2.EnnemiYuka;
-import Personnage.pnj.Chapitre2.EnnemiCherry;
-import Personnage.pnj.Chapitre2.EnnemiLeon;
-import Personnage.pnj.Chapitre2.EnnemiMage1DPS;
-import Personnage.pnj.Chapitre2.EnnemiMage2DPS;
-import Personnage.pnj.Chapitre2.EnnemiMage3Soigneur;
 import lancement.GameContext;
 import lancement.Stage;
 import lancement.Chapitres.Chapitre1;
@@ -116,8 +109,6 @@ public class Chapitre2Elite {
                 System.out.println(">> Stage " + (numero + 1) + " debloque !");
             } else {
                 System.out.println(">> Félicitations ! Vous avez terminé le Chapitre 2 Elite !");
-                ctx.joueur.getArbreCompetences().setArbre2Debloque(true);
-                System.out.println(">> L'Arbre 2 des Abilités est maintenant accessible !");
                 if (estNouveau && !ctx.gestionnaireCreaturesSacrees.isOeufDebloque()) {
                     ctx.gestionnaireCreaturesSacrees.debloquerOeuf();
                     System.out.println(">> Vous avez obtenu un Œuf Mystérieux !");
@@ -139,45 +130,66 @@ public class Chapitre2Elite {
         return resultatStage;
     }
 
+    // Palier de niveau du chapitre 2 Elite : les ennemis vont de niveau 21 (stage 1) a 30 (stage 10).
+    private static final int PALIER_NIVEAU = 20;
+
+    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
+
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
+        int niveau = niveauPourStage(numero);
+        // Pas de combat scripte (pas d'invite Natsu/Lucy/Gray, pas de flashback Ul vs Deliora) :
+        // uniquement l'equipe du joueur contre les ennemis du Chapitre 2, en version elite.
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiMage1DPS(20));
-                         return new Stage(1, "[ELITE] Débarquement — La garde de l'île", 3000, 0, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiYuka(20)); ennemis.add(new EnnemiTobi(20)); ennemis.add(new EnnemiMage2DPS(20)); ennemis.add(new EnnemiSoigneur1Elite(20));
-                         return new Stage(2, "[ELITE] Yuka et Tobi renforcés", 3750, 0, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiMage3Soigneur(21)); ennemis.add(new EnnemiTank1Elite(21));
-                         return new Stage(3, "[ELITE] Chery et l'annuleur d'élite", 4500, 0, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiTobi(21)); ennemis.add(new EnnemiYuka(21)); ennemis.add(new EnnemiCherry(21)); ennemis.add(new EnnemiMage2DPS(21)); ennemis.add(new EnnemiSoigneur1Elite(21));
-                         return new Stage(4, "[ELITE] Le trio de l'île — Forme renforcée", 5500, 0, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiMage3Soigneur(22)); ennemis.add(new EnnemiTank1Elite(22)); ennemis.add(new EnnemiSoigneur2Elite(22));
-                         return new Stage(5, "[ELITE] Leon Bastia d'élite", 6500, 0, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiLeon(22)); ennemis.add(new EnnemiTobi(22)); ennemis.add(new EnnemiYuka(22)); ennemis.add(new EnnemiCherry(22)); ennemis.add(new EnnemiMage2DPS(22));
-                         return new Stage(6, "[ELITE] L'île en guerre totale", 8000, 0, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiTank1Elite(23)); ennemis.add(new EnnemiSoigneur2Elite(23));
-                         return new Stage(7, "[ELITE] Leon — Maître des glaces d'élite", 9750, 0, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon(23)); ennemis.add(new EnnemiTobi(23)); ennemis.add(new EnnemiYuka(23)); ennemis.add(new EnnemiCherry(23)); ennemis.add(new EnnemiMage3Soigneur(23));
-                         return new Stage(8, "[ELITE] Dernier bastion de l'île", 11500, 0, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiLeon(24)); ennemis.add(new EnnemiYuka(24)); ennemis.add(new EnnemiTank1Elite(24)); ennemis.add(new EnnemiSoigneur1Elite(24)); ennemis.add(new EnnemiSoigneur2Elite(24));
-                         return new Stage(9, "[ELITE] Leon — Résistance ultime", 13500, 0, ennemis); }
-            case 10 -> { ennemis.add(new EnnemiLeon(25)); ennemis.add(new EnnemiYuka(25)); ennemis.add(new EnnemiCherry(25)); ennemis.add(new EnnemiTobi(25)); ennemis.add(new EnnemiSoigneur2Elite(25));
-                         return new Stage(10, "[ELITE] Leon — Le Pacte Brisé Ultime", 16000, 0, ennemis); }
+            case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau));
+                         return new Stage(1, "Prologue Chapitre 2 Elite", 3000, 30, ennemis); }
+            case 2  -> { ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                        ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau));
+                         return new Stage(2, "Arrivée a l'ile de galuna Elite", 3750, 50, ennemis); }
+            case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+                         return new Stage(3, "Cherry, gardienne d'elite", 4500, 100, ennemis); }
+            case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau));
+                         return new Stage(4, "Yuka, l'annuleur renforce", 5500, 150, ennemis); }
+            case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         return new Stage(5, "Tobi, mage de glace d'elite", 6500, 160, ennemis); }
+            case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage9Tank(niveau));
+                         return new Stage(6, "Leon Bastia d'elite", 8000, 170, ennemis); }
+            case 7  -> { ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage5Tank(niveau));
+                         return new Stage(7, "L'homme mysterieux d'elite", 9750, 180, ennemis); }
+            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+                        ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         return new Stage(8, "Leon Bastia — Resistance d'elite", 11500, 190, ennemis); }
+            case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiCherry(niveau));
+                         ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiTobi(niveau));
+                         return new Stage(9, "L'ile de Galuna unie — Elite", 13500, 200, ennemis); }
+            case 10 -> { ennemis.add(new EnnemiDeliora(niveau));
+                         return new Stage(10, "Deliora le demon Elite", 16000, 210, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
         }
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "[ELITE] Débarquement — La garde de l'île";
-            case 2  -> "[ELITE] Yuka et Tobi renforcés";
-            case 3  -> "[ELITE] Chery et l'annuleur d'élite";
-            case 4  -> "[ELITE] Le trio de l'île — Forme renforcée";
-            case 5  -> "[ELITE] Leon Bastia d'élite";
-            case 6  -> "[ELITE] L'île en guerre totale";
-            case 7  -> "[ELITE] Leon — Maître des glaces d'élite";
-            case 8  -> "[ELITE] Dernier bastion de l'île";
-            case 9  -> "[ELITE] Leon — Résistance ultime";
-            case 10 -> "[ELITE] Leon — Le Pacte Brisé Ultime";
+            case 1  -> "[ELITE] Prologue Chapitre 2";
+            case 2  -> "[ELITE] Arrivée à l'île de Galuna";
+            case 3  -> "[ELITE] Cherry, gardienne d'élite";
+            case 4  -> "[ELITE] Yuka, l'annuleur renforcé";
+            case 5  -> "[ELITE] Tobi, mage de glace d'élite";
+            case 6  -> "[ELITE] Leon Bastia d'élite";
+            case 7  -> "[ELITE] L'homme mystérieux d'élite";
+            case 8  -> "[ELITE] Leon Bastia — Résistance d'élite";
+            case 9  -> "[ELITE] L'île de Galuna unie";
+            case 10 -> "[ELITE] Deliora, le démon";
             default -> "???";
         };
     }

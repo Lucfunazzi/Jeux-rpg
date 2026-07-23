@@ -18,7 +18,6 @@ public class SauvegardeData {
     public boolean[] arbreNoeudDebloques2    = new boolean[10];
     public boolean[] arbreNoeudDebloques3    = new boolean[10];
     public int       arbrePointsDisponibles  = 0;
-    public boolean   arbre2Debloque          = false;
     public int       competenceSpecialeActive = 0;
 
     public String rangJoueur = "C";

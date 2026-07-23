@@ -39,7 +39,7 @@ public class EcranAbilitesController {
                 + (arbre.isNoeud10Debloque() ? "  [DEBLOQUE : " + MenuAbilite.getNomCompetence(classe, 1) + "]" : ""));
 
         if (!arbre.isArbre2Debloque()) {
-            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale  [VERROUILLE - terminez le Chapitre 2 Elite]");
+            boutonArbre2.setText("Arbre 2 - Nouvelle Speciale  [VERROUILLE - terminez l'Arbre 1]");
             boutonArbre2.setDisable(true);
         } else {
             boutonArbre2.setText("Arbre 2 - Nouvelle Speciale"

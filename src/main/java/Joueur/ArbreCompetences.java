@@ -8,9 +8,6 @@ public class ArbreCompetences {
     private final NoeudArbre[] noeuds3 = new NoeudArbre[10];
     private int pointsDisponibles = 0;
 
-    // ── Quel arbre 2 est débloqué ──────────────────────────────────────────
-    private boolean arbre2Debloque = false;
-
     public ArbreCompetences() {
         // ── Arbre 1 — budget 100 pts (Chapitre 1 + Chapitre 2) ───────────
         // Coûts : 3/5/7/8/10/12/14/16/10/15 = 100 pts
@@ -67,7 +64,7 @@ public class ArbreCompetences {
         int i = index - 1;
 
         if (arbre == 2 && !isArbre2Debloque())
-            return "L'arbre 2 est verrouille. Terminez le Chapitre 2 Elite pour le debloquer.";
+            return "L'arbre 2 est verrouille. Terminez l'arbre 1 pour le debloquer.";
         if (arbre == 3 && !isArbre3Debloque())
             return "L'arbre 3 est verrouille. Terminez l'arbre 2 pour le debloquer.";
         if (i < 0 || i >= 10) return "Noeud invalide.";
@@ -109,7 +106,7 @@ public class ArbreCompetences {
     public boolean isNoeud10Debloque()  { return noeuds1[9].isDebloque(); }
     public boolean isNoeud10Arbre2Debloque() { return noeuds2[9].isDebloque(); }
     public boolean isNoeud10Arbre3Debloque() { return noeuds3[9].isDebloque(); }
-    public boolean isArbre2Debloque()   { return arbre2Debloque; }
+    public boolean isArbre2Debloque()   { return isNoeud10Debloque(); }
     public boolean isArbre3Debloque()   { return isNoeud10Arbre2Debloque(); }
 
     // ── Points ────────────────────────────────────────────────────────────
@@ -134,8 +131,6 @@ public class ArbreCompetences {
         for (int i = 0; i < Math.min(etat.length, 10); i++) {
             if (etat[i]) noeuds1[i].debloquer();
         }
-        // Resynchroniser l'état de l'arbre 2
-        if (noeuds1[9].isDebloque()) arbre2Debloque = true;
     }
 
     public boolean[] getEtatNoeuds2() {
@@ -161,6 +156,4 @@ public class ArbreCompetences {
         for (int i = 0; i < Math.min(etat.length, 10); i++)
             if (etat[i]) noeuds3[i].debloquer();
     }
-
-    public void setArbre2Debloque(boolean v) { this.arbre2Debloque = v; }
 }

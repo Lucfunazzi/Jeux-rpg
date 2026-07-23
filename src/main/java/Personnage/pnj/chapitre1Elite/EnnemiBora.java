@@ -26,7 +26,7 @@ public class EnnemiBora extends PersonnageBase {
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
         this.vie     = 150.0 * niv;
-        this.attaque =  85.0 * niv;
+        this.attaque =  75.0 * niv;
         this.defense =  25.0 * niv;
         this.vitesse =  75.0 * vit;
 

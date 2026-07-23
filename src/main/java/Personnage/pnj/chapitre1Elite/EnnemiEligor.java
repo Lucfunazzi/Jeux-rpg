@@ -27,7 +27,7 @@ public class EnnemiEligor extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 270.0 * mult * niv;
-        this.attaque = 100.0 * mult * niv;
+        this.attaque = 80.0 * mult * niv;
         this.defense =  65.0 * mult * niv;
         this.vitesse =  90.0 * mult * vit;
 

@@ -29,9 +29,9 @@ public class EnnemiGrayStage4 extends PersonnageBase {
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 450.0 * mult * niv;
-        this.attaque = 90.0 * mult * niv;
+        this.attaque = 75.0 * mult * niv;
         this.defense = 25.0 * mult * niv;
-        this.vitesse =  170.0 * mult * vit;
+        this.vitesse =  120.0 * mult * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.30;

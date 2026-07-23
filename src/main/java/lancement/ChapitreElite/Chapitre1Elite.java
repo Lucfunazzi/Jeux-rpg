@@ -113,8 +113,8 @@ public class Chapitre1Elite {
         return resultatStage;
     }
 
-    // Palier de niveau du chapitre 1 Elite : les ennemis vont de niveau 31 (stage 1) a 40 (stage 10).
-    private static final int PALIER_NIVEAU = 30;
+    // Palier de niveau du chapitre 1 Elite : les ennemis vont de niveau 11 (stage 1) a 20 (stage 10).
+    private static final int PALIER_NIVEAU = 10;
 
     private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
 

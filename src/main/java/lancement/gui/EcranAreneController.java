@@ -61,20 +61,23 @@ public class EcranAreneController {
 
     @FXML
     private void onClassement(ActionEvent event) {
-        naviguer(event, "/fxml/EcranAreneClassement.fxml",
-                c -> ((EcranAreneClassementController) c).initData(ctx, gestionnaireArene, joueurArene, retourVers(event)));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        naviguer(stage, "/fxml/EcranAreneClassement.fxml",
+                c -> ((EcranAreneClassementController) c).initData(ctx, gestionnaireArene, joueurArene, retourVers(stage)));
     }
 
     @FXML
     private void onAdversaires(ActionEvent event) {
-        naviguer(event, "/fxml/EcranAreneAdversaires.fxml",
-                c -> ((EcranAreneAdversairesController) c).initData(ctx, gestionnaireArene, joueurArene, retourVers(event)));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        naviguer(stage, "/fxml/EcranAreneAdversaires.fxml",
+                c -> ((EcranAreneAdversairesController) c).initData(ctx, gestionnaireArene, joueurArene, retourVers(stage)));
     }
 
     @FXML
     private void onBoutique(ActionEvent event) {
-        naviguer(event, "/fxml/EcranAreneBoutique.fxml",
-                c -> ((EcranAreneBoutiqueController) c).initData(ctx, joueurArene, retourVers(event)));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        naviguer(stage, "/fxml/EcranAreneBoutique.fxml",
+                c -> ((EcranAreneBoutiqueController) c).initData(ctx, joueurArene, retourVers(stage)));
     }
 
     @FXML
@@ -144,8 +147,7 @@ public class EcranAreneController {
         return ctx.dernierCoffreArene != null ? ctx.dernierCoffreArene : "";
     }
 
-    private Runnable retourVers(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    private Runnable retourVers(Stage stage) {
         return () -> {
             try {
                 FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranArene.fxml");
@@ -157,9 +159,8 @@ public class EcranAreneController {
         };
     }
 
-    private void naviguer(ActionEvent event, String fxml, java.util.function.Consumer<Object> initialiser) {
+    private void naviguer(Stage stage, String fxml, java.util.function.Consumer<Object> initialiser) {
         try {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             FXMLLoader loader = Navigation.changerEcran(stage, fxml);
             initialiser.accept(loader.getController());
         } catch (IOException e) {

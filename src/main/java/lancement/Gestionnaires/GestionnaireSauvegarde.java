@@ -118,7 +118,6 @@ public class GestionnaireSauvegarde {
         data.arbreNoeudDebloques2     = joueur.getArbreCompetences().getEtatNoeuds2();
         data.arbreNoeudDebloques3     = joueur.getArbreCompetences().getEtatNoeuds3();
         data.arbrePointsDisponibles   = joueur.getArbreCompetences().getPointsDisponibles();
-        data.arbre2Debloque           = joueur.getArbreCompetences().isArbre2Debloque();
         data.competenceSpecialeActive = joueur.getCompetenceSpecialeActive();
 
         // Équipements portés par le joueur principal
@@ -335,7 +334,6 @@ public class GestionnaireSauvegarde {
         joueur.getArbreCompetences().setPointsDisponibles(data.arbrePointsDisponibles);
         joueur.getArbreCompetences().setEtatNoeuds2(data.arbreNoeudDebloques2);
         joueur.getArbreCompetences().setEtatNoeuds3(data.arbreNoeudDebloques3);
-        joueur.getArbreCompetences().setArbre2Debloque(data.arbre2Debloque);
         joueur.setCompetenceSpecialeActive(data.competenceSpecialeActive);
         while (joueur.getNiveau() < data.joueurNiveau) joueur.monterDeNiveau();
         joueur.setExperience(data.joueurExperience);

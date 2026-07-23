@@ -71,6 +71,9 @@ public class EcranStagesController {
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(resultat.etatInitial, resultat.evenements, resultat.victoire, v -> {
+                if (resultat.recompenses != null) {
+                    annoncerRecompenses(resultat.recompenses);
+                }
                 for (PersonnageBase recrue : nouveauxRecrues) {
                     annoncerRecrue(recrue);
                 }
@@ -79,6 +82,34 @@ public class EcranStagesController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Popup recapitulant les recompenses obtenues a la fin d'un stage reussi. */
+    private void annoncerRecompenses(lancement.Stage.Recompenses r) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("+ ").append(r.xp).append(" XP par personnage\n");
+        sb.append("+ ").append(r.or).append(" or\n");
+        if (r.equipement != null) {
+            sb.append("+ Equipement obtenu : ").append(r.equipement).append("\n");
+        }
+        if (r.carteOrQuantite > 0) {
+            sb.append("+ ").append(r.carteOrQuantite).append("x ").append(r.carteOrNom).append("\n");
+        }
+        if (r.pointsAbilite > 0) {
+            sb.append("+ ").append(r.pointsAbilite).append(" point(s) d'habilete\n");
+        }
+
+        Label texte = new Label(sb.toString().trim());
+        texte.setWrapText(true);
+        texte.setStyle("-fx-font-size: 16px; -fx-text-fill: #f2c14e;");
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Recompenses");
+        alert.setHeaderText("Victoire !");
+        alert.getDialogPane().setContent(texte);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("root-menu");
+        alert.showAndWait();
     }
 
     /** Message bien visible quand un personnage rejoint l'equipe automatiquement (recompense de quete). */
