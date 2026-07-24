@@ -15,6 +15,7 @@ import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireEtoilesPerso;
 import lancement.Gestionnaires.GestionnaireExamenS;
 import lancement.Gestionnaires.GestionnaireQuetes;
+import lancement.Gestionnaires.GestionnaireRecompenses;
 import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireCompagnons;
@@ -58,6 +59,7 @@ public class GameContext {
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
     public GestionnaireCompagnons        gestionnaireCompagnons;
     public Gestionnaire_pet  gestionnaireCreaturesSacrees;
+    public GestionnaireRecompenses       gestionnaireRecompenses;
     public RangJoueur                    rangJoueur;
 
     // ── Menus ─────────────────────────────────────────────────────────────
@@ -97,6 +99,7 @@ public class GameContext {
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
         ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
+        ctx.gestionnaireRecompenses      = new GestionnaireRecompenses();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
         ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
@@ -109,6 +112,7 @@ public class GameContext {
         this.personnagesRecruites = sauvegarde.restaurerPersonnagesRecruites(data);
         sauvegarde.restaurerCompagnons(gestionnaireCompagnons, data);
         sauvegarde.restaurerCreaturesSacrees(gestionnaireCreaturesSacrees, data);
+        sauvegarde.restaurerRecompenses(gestionnaireRecompenses, data);
         this.formation             = new Formation(this.joueur, gestionnaireCompagnons);
         sauvegarde.restaurerFormation(this.formation, data, this.personnagesRecruites);
         sauvegarde.restaurerChapitre1(chapitre1, data);

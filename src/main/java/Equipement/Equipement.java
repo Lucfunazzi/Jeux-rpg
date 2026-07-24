@@ -5,7 +5,7 @@ public class Equipement {
         ARME, COUVRE_CHEF, TORSE, MAINS, JAMBIERES, BOTTES
     }
     public enum Rarete {
-        C, B, A, S
+        C, B, A, S, SS, SSS, UR
     }
     public enum TypeArme {
         EPEE, LANCE, BATON, GANTS, FOUET, AUCUN
@@ -195,10 +195,13 @@ public class Equipement {
 
     public String getNomRarete() {
         return switch (rarete) {
-            case C -> "[C]";
-            case B -> "[B]";
-            case A -> "[A]";
-            case S -> "[S]";
+            case C   -> "[C]";
+            case B   -> "[B]";
+            case A   -> "[A]";
+            case S   -> "[S]";
+            case SS  -> "[SS]";
+            case SSS -> "[SSS]";
+            case UR  -> "[UR]";
         };
     }
 

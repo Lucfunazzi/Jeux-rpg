@@ -104,7 +104,7 @@ public class Formation {
 
         // Bonus compagnons (appliqué séparément sur chaque membre)
         if (gestionnaireCompagnons != null) {
-            gestionnaireCompagnons.appliquerBonus(equipe);
+            gestionnaireCompagnons.appliquerBonus(equipe, joueur.getNiveau());
         }
         // Bonus créatures sacrées (flat)
         if (gestionnaireCreaturesSacrees != null) {
@@ -186,4 +186,47 @@ public class Formation {
     public PersonnageBase getTank()                        { return tank; }
     public ArrayList<PersonnageBase> getAttaquants()       { return attaquants; }
     public ArrayList<PersonnageBase> getSupports()         { return supports; }
+
+    // ── Invites temporaires (Chapitres 1/2/3) ─────────────────────────────
+
+    /** Capacite totale d'un role dans une formation de 5 (joueur compris pour DPS). */
+    private static int capaciteRole(String role) {
+        return switch (role) {
+            case "Tank" -> 1;
+            case "DPS", "Support" -> 3;
+            default -> 3;
+        };
+    }
+
+    /**
+     * Ajoute un invite (Erza, Natsu, Gray, Elfman, ...) a une copie d'equipe pour la duree
+     * d'un seul combat, en respectant les regles de formation (1 Tank max, 3 DPS max joueur
+     * compris, 3 Support max, 5 membres max au total) :
+     *   - si le role de l'invite est deja au complet, remplace son membre le plus faible
+     *     (le personnage principal n'est jamais retire) ;
+     *   - sinon, si l'equipe est deja a 5, retire le membre le plus faible de toute l'equipe
+     *     pour lui faire de la place ;
+     *   - sinon, l'invite s'ajoute simplement.
+     */
+    public static void ajouterInviteTemporaire(ArrayList<PersonnageBase> equipe, PersonnageBase invite) {
+        String role = invite.getRole();
+        long nbDuRole = equipe.stream().filter(p -> p.getRole().equals(role)).count();
+
+        if (nbDuRole >= capaciteRole(role)) {
+            retirerPlusFaible(equipe, p -> p.getRole().equals(role));
+        } else if (equipe.size() >= 5) {
+            retirerPlusFaible(equipe, p -> true);
+        }
+        equipe.add(invite);
+    }
+
+    private static void retirerPlusFaible(ArrayList<PersonnageBase> equipe,
+                                           java.util.function.Predicate<PersonnageBase> filtre) {
+        PersonnageBase plusFaible = null;
+        for (PersonnageBase p : equipe) {
+            if (!filtre.test(p) || p.estPersonnagePrincipal()) continue;
+            if (plusFaible == null || p.getNiveau() < plusFaible.getNiveau()) plusFaible = p;
+        }
+        if (plusFaible != null) equipe.remove(plusFaible);
+    }
 }

@@ -5,8 +5,10 @@ import Equipement.EquipementFactory;
 import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
+import Equipement.Materiau;
 import Equipement.ParcheminXP;
 import Equipement.Pierre;
+import Equipement.PotionEnergie;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,10 +41,13 @@ public class EcranInventaireController {
     // ── Prix de vente ────────────────────────────────────────────────────
     private static int prixVenteEquipement(Equipement.Rarete r) {
         return switch (r) {
-            case C -> 50;
-            case B -> 150;
-            case A -> 400;
-            case S -> 1000;
+            case C   -> 50;
+            case B   -> 150;
+            case A   -> 400;
+            case S   -> 1000;
+            case SS  -> 2500;
+            case SSS -> 6000;
+            case UR  -> 15000;
         };
     }
 
@@ -74,18 +79,43 @@ public class EcranInventaireController {
             contenuBox.getChildren().add(grille);
         }
 
-        contenuBox.getChildren().add(titreSection("Matériaux (" + inv.getMateriaux().size() + ")"));
-        if (inv.getMateriaux().isEmpty()) {
+        // Fragments (personnages + équipements) regroupés dans leur propre section
+        List<Materiau> fragments = new ArrayList<>();
+        List<Materiau> autresMateriaux = new ArrayList<>();
+        for (var m : inv.getMateriaux()) {
+            if (m.getNom().startsWith(GestionnaireEtoilesPerso.PREFIXE_FRAGMENT)
+                    || m.getNom().startsWith(FragmentEquipement.PREFIXE_FRAGMENT)) {
+                fragments.add(m);
+            } else if (estPotionEnergie(m.getNom())) {
+                // Les potions n'apparaissent que dans Consommables, pas ici.
+            } else {
+                autresMateriaux.add(m);
+            }
+        }
+
+        contenuBox.getChildren().add(titreSection("Fragments (" + fragments.size() + ")"));
+        if (fragments.isEmpty()) {
+            contenuBox.getChildren().add(texteVide("Aucun fragment."));
+        } else {
+            FlowPane grille = new FlowPane(10, 10);
+            for (var m : fragments) {
+                if (m.getNom().startsWith(GestionnaireEtoilesPerso.PREFIXE_FRAGMENT)) {
+                    grille.getChildren().add(carteFragmentPerso(m.getNom(), m.getQuantite()));
+                } else {
+                    grille.getChildren().add(carteFragmentEquipement(m.getNom()));
+                }
+            }
+            contenuBox.getChildren().add(grille);
+        }
+
+        contenuBox.getChildren().add(titreSection("Matériaux (" + autresMateriaux.size() + ")"));
+        if (autresMateriaux.isEmpty()) {
             contenuBox.getChildren().add(texteVide("Aucun matériau."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
-            for (var m : inv.getMateriaux()) {
-                if (m.getNom().startsWith(GestionnaireEtoilesPerso.PREFIXE_FRAGMENT)) {
-                    grille.getChildren().add(carteFragmentPerso(m.getNom(), m.getQuantite()));
-                } else if (m.getNom().startsWith(FragmentEquipement.PREFIXE_FRAGMENT)) {
-                    grille.getChildren().add(carteFragmentEquipement(m.getNom()));
-                } else if (m.getNom().equals(MenuExamenS.MATERIAU_BOITE_PIERRE_LV1)) {
-                    grille.getChildren().add(carteBoitePierre(m.getQuantite()));
+            for (var m : autresMateriaux) {
+                if (MenuExamenS.estBoite(m.getNom())) {
+                    grille.getChildren().add(carteBoitePierre(MenuExamenS.niveauDeLaBoite(m.getNom()), m.getQuantite()));
                 } else {
                     grille.getChildren().add(carteSimple(m.getNom(), "x" + m.getQuantite()));
                 }
@@ -94,7 +124,11 @@ public class EcranInventaireController {
         }
 
         contenuBox.getChildren().add(titreSection("Consommables"));
-        boolean aucunConso = inv.getParchemins().isEmpty() && inv.getCartesOr().isEmpty();
+        boolean aucunePotion = true;
+        for (PotionEnergie p : PotionEnergie.values()) {
+            if (inv.getQuantiteMateriau(p.nom) > 0) { aucunePotion = false; break; }
+        }
+        boolean aucunConso = inv.getParchemins().isEmpty() && inv.getCartesOr().isEmpty() && aucunePotion;
         if (aucunConso) {
             contenuBox.getChildren().add(texteVide("Aucun consommable."));
         } else {
@@ -104,6 +138,10 @@ public class EcranInventaireController {
             }
             for (var s : inv.getCartesOr()) {
                 grille.getChildren().add(carteCarteOr(s));
+            }
+            for (PotionEnergie p : PotionEnergie.values()) {
+                int qte = inv.getQuantiteMateriau(p.nom);
+                if (qte > 0) grille.getChildren().add(cartePotionEnergie(p, qte));
             }
             contenuBox.getChildren().add(grille);
         }
@@ -203,14 +241,16 @@ public class EcranInventaireController {
         return ligne;
     }
 
-    /** Carte pour un fragment d'equipement rang A. Clic -> Synthetiser (ou affiche la progression). */
+    /** Carte pour un fragment d'equipement (A/S/SS/SSS/UR). Clic -> Synthetiser (ou affiche la progression). */
     private Node carteFragmentEquipement(String nomMateriau) {
         FragmentEquipement fragment = trouverFragmentEquipement(nomMateriau);
         int qte = ctx.inventaire.getQuantiteMateriau(nomMateriau);
         String libelle = fragment != null
-                ? fragment.getNomEquipement() + " [A]"
+                ? fragment.getNomEquipement() + " [" + fragment.getRarete() + "]"
                 : nomMateriau;
-        String suffixe = "x" + qte + " / " + FragmentEquipement.QUANTITE_REQUISE;
+        String suffixe = fragment != null
+                ? "x" + qte + " / " + fragment.getQuantiteRequise()
+                : "x" + qte;
         Node ligne = carteSimple(libelle, suffixe);
         if (fragment != null) {
             ligne.setCursor(Cursor.HAND);
@@ -219,12 +259,26 @@ public class EcranInventaireController {
         return ligne;
     }
 
-    /** Carte pour une boite de pierre. Clic -> Ouvrir directement. */
-    private Node carteBoitePierre(int quantite) {
-        Node ligne = carteSimple(MenuExamenS.MATERIAU_BOITE_PIERRE_LV1, "x" + quantite);
+    /** Carte pour une potion d'energie. Clic -> Utiliser directement. */
+    private Node cartePotionEnergie(PotionEnergie p, int quantite) {
+        Node ligne = carteSimple(p.nom, "x" + quantite + "  (+" + p.energie + " énergie)");
         ligne.setCursor(Cursor.HAND);
-        ligne.setOnMouseClicked(ev -> ouvrirBoitesPierre());
+        ligne.setOnMouseClicked(ev -> utiliserPotionEnergie(p));
         return ligne;
+    }
+
+    /** Carte pour une boite de pierre. Clic -> Ouvrir directement. */
+    private Node carteBoitePierre(int niveauBoite, int quantite) {
+        Node ligne = carteSimple(MenuExamenS.nomBoite(niveauBoite), "x" + quantite);
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> ouvrirBoitesPierre(niveauBoite));
+        return ligne;
+    }
+
+    /** Vrai si {@code nom} est le nom d'une potion d'energie. */
+    private boolean estPotionEnergie(String nom) {
+        for (PotionEnergie p : PotionEnergie.values()) if (p.nom.equals(nom)) return true;
+        return false;
     }
 
     /** Carte pour une pierre (jade). Clic -> Equiper/Vendre. */
@@ -257,15 +311,24 @@ public class EcranInventaireController {
     // ── Actions equipement (Equiper / Vendre) ───────────────────────────────
 
     private void actionsEquipement(Equipement e) {
-        ButtonType equiperBtn = new ButtonType("Équiper");
-        ButtonType vendreBtn  = new ButtonType("Vendre (" + prixVenteEquipement(e.getRarete()) + " or)");
-        Optional<ButtonType> choix = choisirAction(e.getNomAffiche(), e.toString(), equiperBtn, vendreBtn);
+        ButtonType equiperBtn  = new ButtonType("Équiper");
+        ButtonType vendreBtn   = new ButtonType("Vendre (" + prixVenteEquipement(e.getRarete()) + " or)");
+        ButtonType recyclerBtn = new ButtonType("Recycler (" + EquipementFactory.valeurRecyclage(e.getRarete()) + " pièces)");
+        Optional<ButtonType> choix = choisirAction(e.getNomAffiche(), e.toString(), equiperBtn, vendreBtn, recyclerBtn);
         if (choix.isEmpty()) return;
         if (choix.get() == equiperBtn) equiperEquipement(e);
         else if (choix.get() == vendreBtn) vendreEquipement(e);
+        else if (choix.get() == recyclerBtn) recyclerEquipement(e);
     }
 
     private void equiperEquipement(Equipement e) {
+        int rangRequis = EquipementFactory.rangJoueurRequisPourEquiper(e.getRarete());
+        if (ctx.rangJoueur.getRang().ordinal() < rangRequis) {
+            info("Équiper", e.getNomAffiche() + " nécessite le rang joueur "
+                    + lancement.RangJoueur.Rang.values()[rangRequis] + " (actuel : " + ctx.rangJoueur.getRangNom() + ").");
+            return;
+        }
+
         PersonnageBase cible = choisirPersonnage("Équiper " + e.getNomAffiche());
         if (cible == null) return;
 
@@ -295,6 +358,17 @@ public class EcranInventaireController {
         ctx.joueur.ajouterOr(prix);
         ctx.sauvegarde.sauvegarder(ctx);
         info("Vendre", e.getNomAffiche() + " vendu pour " + prix + " or.");
+        rafraichir();
+    }
+
+    private void recyclerEquipement(Equipement e) {
+        int valeur = EquipementFactory.valeurRecyclage(e.getRarete());
+        if (!confirmer("Recycler " + e.getNomAffiche() + " contre " + valeur + " Pièces d'équipement ?")) return;
+
+        ctx.inventaire.retirerEquipement(e);
+        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, valeur);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Recycler", e.getNomAffiche() + " recyclé pour " + valeur + " Pièces d'équipement.");
         rafraichir();
     }
 
@@ -417,6 +491,15 @@ public class EcranInventaireController {
         rafraichir();
     }
 
+    // ── Action potion d'energie (Utiliser) ──────────────────────────────────
+
+    private void utiliserPotionEnergie(PotionEnergie p) {
+        String message = ctx.gestionnaireEnergie.utiliserPotion(ctx.inventaire, p);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Potion d'Énergie", message);
+        rafraichir();
+    }
+
     // ── Action fragment de personnage (Recruter) ────────────────────────────
 
     private String rareteFragmentPerso(String nomPerso) {
@@ -468,13 +551,15 @@ public class EcranInventaireController {
 
     private void actionsFragmentEquipement(FragmentEquipement fragment) {
         int qte = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
-        if (qte < FragmentEquipement.QUANTITE_REQUISE) {
-            info("Synthèse", fragment.getNomEquipement() + " [A] : " + qte + " / " + FragmentEquipement.QUANTITE_REQUISE
-                    + " fragments.\nContinuez à en collecter (Chapitre 3 Elite).");
+        int requis = fragment.getQuantiteRequise();
+        String libelle = fragment.getNomEquipement() + " [" + fragment.getRarete() + "]";
+        if (qte < requis) {
+            info("Synthèse", libelle + " : " + qte + " / " + requis
+                    + " fragments.\nContinuez à en collecter (drops, ou Boutique d'équipement).");
             return;
         }
 
-        if (!confirmer("Synthétiser " + fragment.getNomEquipement() + " [A] ? (" + FragmentEquipement.QUANTITE_REQUISE + " fragments consommés)")) return;
+        if (!confirmer("Synthétiser " + libelle + " ? (" + requis + " fragments consommés)")) return;
 
         Equipement nouvel = gestionnaireFragments.synthetiser(fragment, ctx.inventaire);
         if (nouvel == null) { info("Synthèse", "Fragments insuffisants."); return; }
@@ -487,17 +572,18 @@ public class EcranInventaireController {
 
     // ── Action boite de pierre (Ouvrir) ─────────────────────────────────────
 
-    private void ouvrirBoitesPierre() {
-        int stock = ctx.inventaire.getQuantiteMateriau(MenuExamenS.MATERIAU_BOITE_PIERRE_LV1);
+    private void ouvrirBoitesPierre(int niveauBoite) {
+        String nomMateriau = MenuExamenS.nomBoite(niveauBoite);
+        int stock = ctx.inventaire.getQuantiteMateriau(nomMateriau);
         if (stock <= 0) {
-            info("Boites de pierre", "Aucune " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + " en stock.");
+            info("Boites de pierre", "Aucune " + nomMateriau + " en stock.");
             return;
         }
 
         TextInputDialog dialog = new TextInputDialog(String.valueOf(stock));
-        dialog.setTitle("Ouvrir des Boites de pierre");
+        dialog.setTitle("Ouvrir des " + nomMateriau);
         dialog.setHeaderText(null);
-        dialog.setContentText("Vous avez " + stock + " x " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1
+        dialog.setContentText("Vous avez " + stock + " x " + nomMateriau
                 + ".\nCombien en ouvrir ?");
         styliser(dialog);
         Optional<String> reponse = dialog.showAndWait();
@@ -518,7 +604,7 @@ public class EcranInventaireController {
 
         StringBuilder resultats = new StringBuilder();
         for (int i = 0; i < quantite; i++) {
-            resultats.append(MenuExamenS.ouvrirBoite(ctx.inventaire)).append("\n");
+            resultats.append(MenuExamenS.ouvrirBoite(ctx.inventaire, niveauBoite)).append("\n");
         }
         ctx.sauvegarde.sauvegarder(ctx);
         info("Boites de pierre", resultats.toString().trim());
@@ -607,6 +693,47 @@ public class EcranInventaireController {
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(200);
+        return carte;
+    }
+
+    // ── Boutique d'équipement (fragments contre Pièces d'équipement) ────────
+
+    @FXML
+    private void onBoutiqueEquipement(ActionEvent event) {
+        int solde = ctx.inventaire.getQuantiteMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT);
+        FragmentEquipement choisi = GuiVisuels.choisirParmiCartes(
+                "Boutique d'équipement — " + solde + " Pièce(s) d'équipement",
+                gestionnaireFragments.getCatalogue(), this::carteFragmentBoutique);
+        if (choisi == null) return;
+
+        int prix = EquipementFactory.prixFragmentBoutiqueEquipement(choisi.getRarete());
+        if (solde < prix) {
+            info("Boutique d'équipement", "Pièces insuffisantes : " + solde + " / " + prix + ".");
+            return;
+        }
+        if (!confirmer("Acheter 1 " + choisi.getNomFragment() + " pour " + prix + " Pièces d'équipement ?")) return;
+
+        ctx.inventaire.retirerMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, prix);
+        ctx.inventaire.ajouterMateriau(choisi.getNomFragment(), 1);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Boutique d'équipement", "1x " + choisi.getNomFragment() + " acheté !");
+        rafraichir();
+    }
+
+    private Node carteFragmentBoutique(FragmentEquipement f) {
+        Label badge = GuiVisuels.creerBadgeRarete(f.getRarete().name());
+        Label nom = new Label(f.getNomEquipement());
+        nom.getStyleClass().add("item-nom");
+        int prix = EquipementFactory.prixFragmentBoutiqueEquipement(f.getRarete());
+        int possede = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
+        Label detail = new Label(prix + " pièces / fragment  ·  possédé : " + possede + "/" + f.getQuantiteRequise());
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(320);
         return carte;
     }
 

@@ -10,7 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -50,6 +53,7 @@ public class EcranMenuPrincipalController {
         List<BoutonDef> progression = new ArrayList<>();
         progression.add(new BoutonDef("Histoire", this::onHistoire));
         progression.add(new BoutonDef("Quetes", this::onQuetes));
+        progression.add(new BoutonDef("Recompenses", this::onRecompenses));
         if (niveau >= 3)                                       progression.add(new BoutonDef("Abilites", this::onAbilites));
         if (chapitre1EliteFini)                                progression.add(new BoutonDef("Rang & Titres", this::onRangTitres));
 
@@ -124,6 +128,10 @@ public class EcranMenuPrincipalController {
         naviguerVers(event, "/fxml/EcranQuetes.fxml", c -> ((EcranQuetesController) c).initData(ctx));
     }
 
+    private void onRecompenses(ActionEvent event) {
+        naviguerVers(event, "/fxml/EcranRecompenses.fxml", c -> ((EcranRecompensesController) c).initData(ctx));
+    }
+
     private void onRangTitres(ActionEvent event) {
         naviguerVers(event, "/fxml/EcranRangTitres.fxml", c -> ((EcranRangTitresController) c).initData(ctx));
     }
@@ -186,7 +194,27 @@ public class EcranMenuPrincipalController {
 
     @FXML
     private void onQuitter(ActionEvent event) {
+        ButtonType sauvegarderEtQuitter = new ButtonType("Sauvegarder et quitter");
+        ButtonType quitterSansSauver    = new ButtonType("Quitter sans sauvegarder");
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Voulez-vous sauvegarder votre partie avant de quitter ?",
+                sauvegarderEtQuitter, quitterSansSauver, ButtonType.CANCEL);
+        confirm.setTitle("Quitter");
+        confirm.setHeaderText(null);
+        styliser(confirm);
+
+        ButtonType choix = confirm.showAndWait().orElse(ButtonType.CANCEL);
+        if (choix == ButtonType.CANCEL) return;
+        if (choix == sauvegarderEtQuitter) {
+            ctx.sauvegarde.sauvegarder(ctx);
+        }
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    private void styliser(Dialog<?> dialog) {
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("root-menu");
     }
 }

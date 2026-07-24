@@ -86,13 +86,12 @@ public class Stage {
         this.ennemis              = ennemis;
         this.recompenseEquipement = recompenseEquipement;
 
-        // Equipement fantome : toujours pour les chapitres Elite (titre contenant "Elite").
-        // Pour les chapitres normaux, seulement a partir du niveau 5 — ce qui ne correspond
-        // qu'aux stages 1 a 4 du tout debut du Chapitre 1 (Chapitre 2 et 3 demarrent deja a
-        // un niveau plus eleve et sont donc toujours equipes).
-        boolean estElite = titre != null && titre.toLowerCase().contains("elite");
+        // Equipement fantome seulement a partir du niveau 25 (Chapitre 1, Chapitre 1 Elite et
+        // le debut du Chapitre 2 restent sans equipement, elite ou pas) : c'est le niveau de
+        // deblocage des Compagnons, donc avant ca le joueur n'a aucun moyen de compenser un
+        // ennemi suréquipé.
         for (PersonnageBase e : ennemis) {
-            if (estElite || e.getNiveau() > 4) {
+            if (e.getNiveau() >= 25) {
                 EquipementFactory.equiperSetStandard(e, EquipementFactory.rareteEnnemiPourNiveau(e.getNiveau()));
             }
         }
@@ -177,7 +176,7 @@ public class Stage {
             if (estNouveauStage) {
                 pts = titre.contains("[ELITE]") ? 4 : 5;
                 ctx.joueur.getArbreCompetences().ajouterPoints(pts);
-                System.out.println("   + " + pts + " point(s) d'habileté !"
+                System.out.println("   + " + pts + " point(s) d'abilités !"
                         + " (Total : " + ctx.joueur.getArbreCompetences().getPointsDisponibles() + ")");
             }
 

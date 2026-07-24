@@ -1,5 +1,6 @@
 package lancement.gui;
 
+import Equipement.PotionEnergie;
 import java.io.IOException;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -133,6 +134,10 @@ public class EcranQuetesController {
         if (q.getRecompenseParcheminC() > 0) {
             ctx.menuRecrutement.ajouterParcheminC(q.getRecompenseParcheminC());
             message.append("+ ").append(q.getRecompenseParcheminC()).append(" parchemins C\n");
+        }
+        if (q instanceof QueteJournaliere) {
+            ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+            message.append("+ 1x ").append(PotionEnergie.MOYENNE.nom).append("\n");
         }
 
         ctx.sauvegarde.sauvegarder(ctx);

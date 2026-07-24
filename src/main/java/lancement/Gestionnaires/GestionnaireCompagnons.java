@@ -117,8 +117,14 @@ public class GestionnaireCompagnons {
     /**
      * Applique le bonus compagnon à tous les membres de la formation.
      * À appeler après chaque changement de formation ET après chaque amélioration/évolution.
+     * @param niveauJoueur niveau actuel du joueur — le bonus ne s'applique qu'à partir de
+     *                     {@link #NIVEAU_DEBLOCAGE}, sinon il est retiré de tout le monde.
      */
-    public void appliquerBonus(List<PersonnageBase> equipe) {
+    public void appliquerBonus(List<PersonnageBase> equipe, int niveauJoueur) {
+        if (niveauJoueur < NIVEAU_DEBLOCAGE) {
+            for (PersonnageBase p : equipe) retirerBonus(p);
+            return;
+        }
         double atk = getBonusATK();
         double pv  = getBonusPV();
         double def = getBonusDEF();

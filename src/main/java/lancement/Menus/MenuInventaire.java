@@ -7,6 +7,7 @@ import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
 import Equipement.Pierre;
+import Equipement.PotionEnergie;
 import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class MenuInventaire {
             System.out.println("5. Utiliser des Cartes d'Or");
             System.out.println("6. Synthetiser un equipement [A] (fragments)");
             System.out.println("7. Ouvrir des Boites de pierre");
+            System.out.println("8. Utiliser une Potion d'Energie");
+            System.out.println("9. Recycler un equipement (Pieces d'equipement)");
+            System.out.println("10. Boutique d'equipement (fragments)");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -42,6 +46,9 @@ public class MenuInventaire {
                 case "5" -> menuCartesOr(ctx, scanner);
                 case "6" -> menuSynthese(ctx, scanner);
                 case "7" -> menuOuvrirBoitesPierre(ctx, scanner);
+                case "8" -> menuUtiliserPotionEnergie(ctx, scanner);
+                case "9" -> menuRecyclerEquipement(ctx, scanner);
+                case "10" -> menuBoutiqueEquipement(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -189,6 +196,13 @@ public class MenuInventaire {
             }
 
             Equipement choisi = filtres.get(choix - 1);
+            int rangRequis = EquipementFactory.rangJoueurRequisPourEquiper(choisi.getRarete());
+            if (ctx.rangJoueur.getRang().ordinal() < rangRequis) {
+                System.out.println(choisi.getNom() + " necessite le rang joueur "
+                        + lancement.RangJoueur.Rang.values()[rangRequis] + " (actuel : " + ctx.rangJoueur.getRangNom() + ").");
+                return;
+            }
+
             Equipement ancien = cible.getEquipement(choisi.getSlot());
             if (ancien != null) ctx.inventaire.ajouterEquipement(ancien);
 
@@ -268,14 +282,13 @@ public class MenuInventaire {
      * Les pièces non-armes sont toujours compatibles.
      * Les armes dépendent du type de classe du personnage.
      */
-    // ── Synthèse d'équipements rang A par fragments ───────────────────────
+    // ── Synthèse d'équipements (A/S/SS/SSS/UR) par fragments ───────────────
     private void menuSynthese(GameContext ctx, Scanner scanner) {
         System.out.println("\n========================================");
-        System.out.println("    SYNTHESE — EQUIPEMENTS [A]");
+        System.out.println("    SYNTHESE — EQUIPEMENTS");
         System.out.println("========================================");
-        System.out.println("Collectez " + FragmentEquipement.QUANTITE_REQUISE
-                + " fragments identiques pour creer un equipement rang A.");
-        System.out.println("Les fragments se droppent dans le Chapitre 3 Elite.\n");
+        System.out.println("Collectez assez de fragments identiques pour creer un equipement.");
+        System.out.println("Rang A : drops en Chapitre 3 Elite. Rangs S/SS/SSS/UR : Boutique d'equipement.\n");
 
         // Afficher tous les fragments (progression même à 0)
         List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
@@ -286,7 +299,7 @@ public class MenuInventaire {
 
         for (FragmentEquipement f : catalogue) {
             int qte = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
-            if (qte >= FragmentEquipement.QUANTITE_REQUISE) prets.add(f);
+            if (qte >= f.getQuantiteRequise()) prets.add(f);
             else if (qte > 0) enCours.add(f);
         }
 
@@ -345,7 +358,7 @@ public class MenuInventaire {
         ctx.inventaire.ajouterEquipement(nouvel);
         System.out.println("\n>> Synthèse réussie !");
         System.out.println("   " + nouvel + " ajouté à l'inventaire !");
-        System.out.println("   " + FragmentEquipement.QUANTITE_REQUISE
+        System.out.println("   " + fragment.getQuantiteRequise()
                 + " fragments consommés.");
 
         ctx.sauvegarde.sauvegarder(ctx);
@@ -430,13 +443,39 @@ public class MenuInventaire {
 
     // ── Boites de pierre (recompenses de l'Examen de Rang S) ───────────────
     private void menuOuvrirBoitesPierre(GameContext ctx, Scanner scanner) {
-        int stock = ctx.inventaire.getQuantiteMateriau(MenuExamenS.MATERIAU_BOITE_PIERRE_LV1);
-        if (stock <= 0) {
-            System.out.println("Aucune " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + " en stock.");
+        List<Integer> niveauxDisponibles = new ArrayList<>();
+        for (int n = 1; n <= MenuExamenS.NIVEAU_BOITE_MAX; n++) {
+            if (ctx.inventaire.getQuantiteMateriau(MenuExamenS.nomBoite(n)) > 0) niveauxDisponibles.add(n);
+        }
+        if (niveauxDisponibles.isEmpty()) {
+            System.out.println("Aucune boite de pierre en stock.");
             return;
         }
 
-        System.out.println("\nVous avez " + stock + " x " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + ".");
+        System.out.println("\nBoites disponibles :");
+        for (int i = 0; i < niveauxDisponibles.size(); i++) {
+            int n = niveauxDisponibles.get(i);
+            System.out.println("  " + (i + 1) + ". " + MenuExamenS.nomBoite(n)
+                    + " x" + ctx.inventaire.getQuantiteMateriau(MenuExamenS.nomBoite(n)));
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Laquelle ouvrir ? ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > niveauxDisponibles.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+        int niveauBoite = niveauxDisponibles.get(choix - 1);
+        int stock = ctx.inventaire.getQuantiteMateriau(MenuExamenS.nomBoite(niveauBoite));
+
         System.out.print("Combien en ouvrir ? (1-" + stock + ", 0 pour annuler) : ");
 
         int quantite;
@@ -453,9 +492,121 @@ public class MenuInventaire {
         }
 
         for (int i = 0; i < quantite; i++) {
-            System.out.println(MenuExamenS.ouvrirBoite(ctx.inventaire));
+            System.out.println(MenuExamenS.ouvrirBoite(ctx.inventaire, niveauBoite));
         }
         ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    // ── Potions d'energie ────────────────────────────────────────────────
+    private void menuUtiliserPotionEnergie(GameContext ctx, Scanner scanner) {
+        List<PotionEnergie> dispo = new ArrayList<>();
+        for (PotionEnergie p : PotionEnergie.values()) {
+            if (ctx.inventaire.getQuantiteMateriau(p.nom) > 0) dispo.add(p);
+        }
+        if (dispo.isEmpty()) {
+            System.out.println("Aucune potion d'energie en stock.");
+            return;
+        }
+
+        System.out.println("\nPotions disponibles :");
+        for (int i = 0; i < dispo.size(); i++) {
+            PotionEnergie p = dispo.get(i);
+            System.out.println("  " + (i + 1) + ". " + p + " x" + ctx.inventaire.getQuantiteMateriau(p.nom));
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        try {
+            int choix = Integer.parseInt(scanner.nextLine().trim());
+            if (choix == 0) return;
+            if (choix < 1 || choix > dispo.size()) {
+                System.out.println("Choix invalide.");
+                return;
+            }
+            System.out.println(ctx.gestionnaireEnergie.utiliserPotion(ctx.inventaire, dispo.get(choix - 1)));
+            ctx.sauvegarde.sauvegarder(ctx);
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+        }
+    }
+
+    // ── Recyclage d'equipement (contre des Pieces d'equipement) ────────────
+    private void menuRecyclerEquipement(GameContext ctx, Scanner scanner) {
+        List<Equipement> equipements = ctx.inventaire.getEquipements();
+        if (equipements.isEmpty()) {
+            System.out.println("L'inventaire ne contient aucun equipement.");
+            return;
+        }
+
+        System.out.println("\n--- Recycler un equipement ---");
+        for (int i = 0; i < equipements.size(); i++) {
+            Equipement e = equipements.get(i);
+            System.out.println("  " + (i + 1) + ". " + e
+                    + "  -> " + EquipementFactory.valeurRecyclage(e.getRarete()) + " Pieces d'equipement");
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > equipements.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        Equipement choisi = equipements.get(choix - 1);
+        int valeur = EquipementFactory.valeurRecyclage(choisi.getRarete());
+        ctx.inventaire.retirerEquipement(choisi);
+        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, valeur);
+        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.println(choisi.getNomAffiche() + " recycle pour " + valeur + " Pieces d'equipement.");
+    }
+
+    // ── Boutique d'equipement (fragments contre Pieces d'equipement) ───────
+    private void menuBoutiqueEquipement(GameContext ctx, Scanner scanner) {
+        List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
+        int solde = ctx.inventaire.getQuantiteMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT);
+
+        System.out.println("\n--- Boutique d'equipement — " + solde + " Piece(s) d'equipement ---");
+        for (int i = 0; i < catalogue.size(); i++) {
+            FragmentEquipement f = catalogue.get(i);
+            int prix = EquipementFactory.prixFragmentBoutiqueEquipement(f.getRarete());
+            int possede = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
+            System.out.println("  " + (i + 1) + ". " + f.getNomEquipement() + " [" + f.getRarete() + "] — "
+                    + prix + " pieces/fragment  (possede : " + possede + "/" + f.getQuantiteRequise() + ")");
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Acheter 1 fragment de quoi ? ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > catalogue.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        FragmentEquipement fragment = catalogue.get(choix - 1);
+        int prix = EquipementFactory.prixFragmentBoutiqueEquipement(fragment.getRarete());
+        if (solde < prix) {
+            System.out.println("Pieces insuffisantes : " + solde + " / " + prix + ".");
+            return;
+        }
+        ctx.inventaire.retirerMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, prix);
+        ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
+        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.println("1x " + fragment.getNomFragment() + " achete !");
     }
 
     private boolean estCompatible(PersonnageBase cible, Equipement e) {

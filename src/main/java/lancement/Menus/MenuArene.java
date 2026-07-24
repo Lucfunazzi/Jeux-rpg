@@ -84,7 +84,7 @@ public class MenuArene {
         return switch (scanner.nextLine().trim()) {
             case "1" -> { afficherClassement();                                        yield true; }
             case "2" -> { choisirAdversaire();                                         yield true; }
-            case "3" -> { new MenuBoutiqueArene(ctx, scanner, joueurArene).afficher(); yield true; }
+            case "3" -> { new MenuBoutiqueArene(ctx, scanner, joueurArene, gestionnaireArene).afficher(); yield true; }
             case "4" -> { ouvrirCoffre();                                              yield true; }
             case "0" -> false;
             default  -> { System.out.println("Choix invalide."); yield true; }

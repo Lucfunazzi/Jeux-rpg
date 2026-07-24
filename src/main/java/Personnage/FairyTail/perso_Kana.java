@@ -36,13 +36,13 @@ public class perso_Kana extends PersonnageBase {
     
     @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Cana utilise Lancer de cartes !");
+    log.add("Kana utilise Lancer de cartes !");
     Combat.attaquer(this, cible, log);
 }
 
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Cana utilise Carte de soin !");
+    log.add("Kana utilise Carte de soin !");
     PersonnageBase cibleSoin = null;
     for (PersonnageBase allie : equipeAlliee) {
         if (allie.estVivant()) {
@@ -57,7 +57,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Cana utilise Carte de Foudre !");
+    log.add("Kana utilise Carte de Foudre !");
     double multiplicateurRage = 1.0;
     if (this.getRage() > 100) {
         multiplicateurRage += (this.getRage() - 100) / 100.0;

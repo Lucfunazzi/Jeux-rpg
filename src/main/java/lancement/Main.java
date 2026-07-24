@@ -9,6 +9,7 @@ import lancement.Menus.MenuHistoire;
 import lancement.Menus.MenuInventaire;
 import lancement.Menus.MenuPersonnage;
 import lancement.Menus.MenuQuetes;
+import lancement.Menus.MenuRecompenses;
 import lancement.Menus.MenuRang;
 import lancement.Menus.MenuRecrutementRare;
 import lancement.Menus.MenuCompagnons;
@@ -41,6 +42,7 @@ public class Main {
         MenuDonjon          menuDonjon          = new MenuDonjon();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();
         Menu_Pet menuCreaturesSacrees = new Menu_Pet();
+        MenuRecompenses     menuRecompenses     = new MenuRecompenses();
 
         // ── Pseudo & chargement ───────────────────────────────────────────
         System.out.println("========================================");
@@ -115,6 +117,7 @@ public class Main {
             if (ctx.joueur.getNiveau() >= 6)                                                   System.out.println("16. Etoiles & Fragments");
             System.out.println("17. Tirages");
             if (ctx.joueur.getNiveau() >= lancement.Gestionnaires.GestionnaireExamenS.NIVEAU_REQUIS) System.out.println("18. Examen de Rang S");
+            System.out.println("19. Recompenses");
             System.out.println("12. Sauvegarder");
             System.out.println("0.  Quitter");
             System.out.print("Votre choix : ");
@@ -168,6 +171,7 @@ public class Main {
                     if (ctx.joueur.getNiveau() >= lancement.Gestionnaires.GestionnaireExamenS.NIVEAU_REQUIS) { ctx.menuExamenS.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
                     else System.out.println("Choix invalide.");
                 }
+                case "19" -> { menuRecompenses.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
                 case "0"  -> {
                     if (modifieDepuisSauvegarde) {
                         System.out.println("Vous avez des modifications non sauvegardees.");

@@ -3,6 +3,7 @@ package lancement.Chapitres;
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre1.*;
 import lancement.GameContext;
+import lancement.Formation;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -178,11 +179,9 @@ public class Chapitre1 {
         erzaTemporaire.setVitesse(4000);
         erzaTemporaire.ajouterRage(100);
 
-    ArrayList<PersonnageBase> equipeOriginale = ctx.formation.getEquipe();
-    ArrayList<PersonnageBase> equipeAvecErza = new ArrayList<>();
-    equipeAvecErza.add(erzaTemporaire);
-    equipeAvecErza.addAll(equipeOriginale);
-    
+    ArrayList<PersonnageBase> equipeAvecErza = ctx.formation.getEquipe();
+    Formation.ajouterInviteTemporaire(equipeAvecErza, erzaTemporaire);
+
      System.out.println(">> Erza Scarlet rejoint votre équipe pour ce combat !");
     System.out.println("   « Je m'en occupe. Regardez bien. »\n");
 

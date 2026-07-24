@@ -150,16 +150,40 @@ public class MenuExamenS {
         return message;
     }
 
+    /** Niveau max des boites de pierre disponibles (Lv.1 a Lv.10). */
+    public static final int NIVEAU_BOITE_MAX = 10;
+
+    /** Nom du materiau pour une boite de pierre du niveau donne (1-10). */
+    public static String nomBoite(int niveauBoite) { return "Boite de pierre Lv." + niveauBoite; }
+
+    /** Vrai si {@code nom} est le nom d'une boite de pierre (Lv.1 a Lv.10). */
+    public static boolean estBoite(String nom) {
+        for (int n = 1; n <= NIVEAU_BOITE_MAX; n++) if (nomBoite(n).equals(nom)) return true;
+        return false;
+    }
+
+    /** Extrait le niveau d'une boite a partir de son nom de materiau, ou -1 si ce n'en est pas une. */
+    public static int niveauDeLaBoite(String nom) {
+        for (int n = 1; n <= NIVEAU_BOITE_MAX; n++) if (nomBoite(n).equals(nom)) return n;
+        return -1;
+    }
+
     /** Ouvre 1 Boite de pierre Lv.1 : retire 1 boite, donne 1 pierre de niveau 1 d'un type aleatoire. */
     public static String ouvrirBoite(Inventaire inventaire) {
-        int stock = inventaire.getQuantiteMateriau(MATERIAU_BOITE_PIERRE_LV1);
-        if (stock <= 0) return "Aucune " + MATERIAU_BOITE_PIERRE_LV1 + " en stock.";
+        return ouvrirBoite(inventaire, 1);
+    }
 
-        inventaire.retirerMateriau(MATERIAU_BOITE_PIERRE_LV1, 1);
+    /** Ouvre 1 Boite de pierre du niveau donne : retire 1 boite, donne 1 pierre de ce niveau, type aleatoire. */
+    public static String ouvrirBoite(Inventaire inventaire, int niveauBoite) {
+        String nomMateriau = nomBoite(niveauBoite);
+        int stock = inventaire.getQuantiteMateriau(nomMateriau);
+        if (stock <= 0) return "Aucune " + nomMateriau + " en stock.";
+
+        inventaire.retirerMateriau(nomMateriau, 1);
         Pierre.Type[] types = Pierre.Type.values();
         Pierre.Type type = types[(int) (Math.random() * types.length)];
-        inventaire.ajouterPierre(type, 1, 1);
-        return "Boite ouverte : vous obtenez " + new Pierre(type, 1) + " !";
+        inventaire.ajouterPierre(type, niveauBoite, 1);
+        return "Boite ouverte : vous obtenez " + new Pierre(type, niveauBoite) + " !";
     }
 
     // ── Construction des equipes ennemies (niveau = numero du stage) ───────

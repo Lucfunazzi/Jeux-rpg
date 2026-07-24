@@ -70,10 +70,11 @@ public class MenuTirage_recrutement {
     private static final Random RNG = new Random();
 
     // ── Pool Tirage Ordinaire ─────────────────────────────────────────────
-    private static final List<String> POOL_A_ORDINAIRE = List.of("Gray", "Natsu");
+    // Natsu est exclu (recrutable uniquement via le Recrutement Rare).
+    private static final List<String> POOL_A_ORDINAIRE = List.of("Gray");
 
     private static final List<String> POOL_B = List.of(
-        "Cana", 
+        "Kana",
         "Levy", "Lisanna","Elfman","Leon","Totomaru","Sol"
     );
 

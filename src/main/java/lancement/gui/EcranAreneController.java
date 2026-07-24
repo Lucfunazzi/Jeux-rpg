@@ -94,7 +94,7 @@ public class EcranAreneController {
     private void onBoutique(MouseEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         naviguer(stage, "/fxml/EcranAreneBoutique.fxml",
-                c -> ((EcranAreneBoutiqueController) c).initData(ctx, joueurArene, retourVers(stage)));
+                c -> ((EcranAreneBoutiqueController) c).initData(ctx, gestionnaireArene, joueurArene, retourVers(stage)));
     }
 
     private void onCoffre() {

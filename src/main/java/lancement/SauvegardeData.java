@@ -222,6 +222,19 @@ public class SauvegardeData {
     public String  creatureEntrainement       = null;
     public String  creatureDebutEntrainement  = null;
 
+    // ── Récompenses ───────────────────────────────────────────────────────
+    public boolean[] recompensesNiveauReclame       = null;
+    public int       recompensesJoursCumulesMois     = 0;
+    public String    recompensesDernierJourMois      = null;
+    public int       recompensesMoisCompte           = -1;
+    public boolean[] recompensesMoisReclame          = null;
+    public int       recompensesJourConnexion        = 0;
+    public String    recompensesDernierJourConnexion = null;
+    public boolean[] recompensesJourReclame          = null;
+    public boolean   recompensesTerminee              = false;
+    public String    recompensesDerniereReclamation30min = null;
+    public int       recompensesPointsMois             = 0;
+
     // ── Coupons ───────────────────────────────────────────────────────────
     public int coupons = 0;
 

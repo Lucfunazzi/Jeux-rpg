@@ -256,6 +256,25 @@ public class GestionnaireSauvegarde {
             data.compagnonsNiveau = ctx.gestionnaireCompagnons.getNiveau();
         }
 
+        // Récompenses
+        if (ctx.gestionnaireRecompenses != null) {
+            GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+            data.recompensesNiveauReclame           = gr.getNiveauReclame();
+            data.recompensesJoursCumulesMois         = gr.getJoursCumulesMois();
+            data.recompensesDernierJourMois          = gr.getDernierJourComptePointage() != null
+                    ? gr.getDernierJourComptePointage().toString() : null;
+            data.recompensesMoisCompte               = gr.getMoisComptePointage();
+            data.recompensesMoisReclame              = gr.getMoisReclame();
+            data.recompensesJourConnexion            = gr.getJourConnexion();
+            data.recompensesDernierJourConnexion     = gr.getDernierJourConnexion() != null
+                    ? gr.getDernierJourConnexion().toString() : null;
+            data.recompensesJourReclame              = gr.getJourReclame();
+            data.recompensesTerminee                 = gr.estTerminee();
+            data.recompensesDerniereReclamation30min = gr.getDerniereReclamation30min() != null
+                    ? gr.getDerniereReclamation30min().toString() : null;
+            data.recompensesPointsMois               = gr.getPointsMois();
+        }
+
         // Créature sacrée
         if (ctx.gestionnaireCreaturesSacrees != null) {
             Gestionnaire_pet gcs = ctx.gestionnaireCreaturesSacrees;
@@ -522,6 +541,23 @@ public class GestionnaireSauvegarde {
             gcs.restaurer(data.creatureType, data.creatureNiveau, data.creatureExperience,
                     data.creatureOeufDebloque, data.creatureEntrainement, data.creatureDebutEntrainement);
         }
+    }
+
+    public void restaurerRecompenses(GestionnaireRecompenses gr, SauvegardeData data) {
+        gr.setNiveauReclame(data.recompensesNiveauReclame);
+        gr.setJoursCumulesMois(data.recompensesJoursCumulesMois);
+        if (data.recompensesDernierJourMois != null)
+            gr.setDernierJourComptePointage(java.time.LocalDate.parse(data.recompensesDernierJourMois));
+        gr.setMoisComptePointage(data.recompensesMoisCompte);
+        gr.setMoisReclame(data.recompensesMoisReclame);
+        gr.setJourConnexion(data.recompensesJourConnexion);
+        if (data.recompensesDernierJourConnexion != null)
+            gr.setDernierJourConnexion(java.time.LocalDate.parse(data.recompensesDernierJourConnexion));
+        gr.setJourReclame(data.recompensesJourReclame);
+        gr.setTerminee(data.recompensesTerminee);
+        if (data.recompensesDerniereReclamation30min != null)
+            gr.setDerniereReclamation30min(java.time.LocalDateTime.parse(data.recompensesDerniereReclamation30min));
+        gr.setPointsMois(data.recompensesPointsMois);
     }
 
     public void restaurerChapitre3(Chapitre3 c, SauvegardeData data) {

@@ -311,17 +311,44 @@ public class Inventaire {
             }
         }
 
-        System.out.println("\n[ Materiaux (" + materiaux.size() + " types) ]");
-        if (materiaux.isEmpty()) {
+        // Fragments (personnages + équipements) regroupés à part ; potions exclues (Consommables uniquement)
+        ArrayList<Materiau> fragments = new ArrayList<>();
+        ArrayList<Materiau> autresMateriaux = new ArrayList<>();
+        for (Materiau m : materiaux) {
+            boolean estPotion = false;
+            for (PotionEnergie p : PotionEnergie.values()) if (p.nom.equals(m.getNom())) { estPotion = true; break; }
+
+            if (m.getNom().startsWith("Frag-Perso: ") || m.getNom().startsWith(FragmentEquipement.PREFIXE_FRAGMENT)) {
+                fragments.add(m);
+            } else if (!estPotion) {
+                autresMateriaux.add(m);
+            }
+        }
+
+        System.out.println("\n[ Fragments (" + fragments.size() + " types) ]");
+        if (fragments.isEmpty()) {
+            System.out.println("  Aucun fragment.");
+        } else {
+            for (int i = 0; i < fragments.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + fragments.get(i));
+            }
+        }
+
+        System.out.println("\n[ Materiaux (" + autresMateriaux.size() + " types) ]");
+        if (autresMateriaux.isEmpty()) {
             System.out.println("  Aucun materiau.");
         } else {
-            for (int i = 0; i < materiaux.size(); i++) {
-                System.out.println("  " + (i + 1) + ". " + materiaux.get(i));
+            for (int i = 0; i < autresMateriaux.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + autresMateriaux.get(i));
             }
         }
 
         System.out.println("\n[ Consommables ]");
-        boolean aucunConso = parchemins.isEmpty() && cartesOr.isEmpty();
+        boolean aucunePotion = true;
+        for (PotionEnergie p : PotionEnergie.values()) {
+            if (getQuantiteMateriau(p.nom) > 0) { aucunePotion = false; break; }
+        }
+        boolean aucunConso = parchemins.isEmpty() && cartesOr.isEmpty() && aucunePotion;
         if (aucunConso) {
             System.out.println("  Aucun consommable.");
         } else {
@@ -333,6 +360,10 @@ public class Inventaire {
             }
             for (StackCarteOr s : cartesOr) {
                 System.out.println("  " + s);
+            }
+            for (PotionEnergie p : PotionEnergie.values()) {
+                int qte = getQuantiteMateriau(p.nom);
+                if (qte > 0) System.out.println("  " + p + " x" + qte);
             }
         }
 

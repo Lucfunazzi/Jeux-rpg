@@ -4,6 +4,7 @@ import lancement.GameContext;
 import Personnage.PersonnageBase;
 import Personnage.FairyTail.*;
 import lancement.Gestionnaires.AreneData;
+import lancement.Gestionnaires.GestionnaireArene;
 import java.util.Scanner;
 
 public class MenuBoutiqueArene {
@@ -32,14 +33,17 @@ public class MenuBoutiqueArene {
         );
     }
 
-    private final GameContext ctx;
-    private final Scanner     scanner;
-    private final AreneData   joueurArene;
+    private final GameContext       ctx;
+    private final Scanner           scanner;
+    private final AreneData         joueurArene;
+    private final GestionnaireArene gestionnaireArene;
 
-    public MenuBoutiqueArene(GameContext ctx, Scanner scanner, AreneData joueurArene) {
-        this.ctx         = ctx;
-        this.scanner     = scanner;
-        this.joueurArene = joueurArene;
+    public MenuBoutiqueArene(GameContext ctx, Scanner scanner, AreneData joueurArene,
+                              GestionnaireArene gestionnaireArene) {
+        this.ctx               = ctx;
+        this.scanner           = scanner;
+        this.joueurArene       = joueurArene;
+        this.gestionnaireArene = gestionnaireArene;
     }
 
     // ── Point d'entrée ────────────────────────────────────────────────────
@@ -146,6 +150,7 @@ public class MenuBoutiqueArene {
         if (perso == null) return "Erreur : personnage introuvable.";
 
         ctx.personnagesRecruites.add(perso);
+        gestionnaireArene.uploaderRangJoueur(joueurArene);
         ctx.sauvegarde.sauvegarder(ctx);
         return nom + " a rejoint ton equipe !\nPoints boutique restants : " + joueurArene.getPointsBoutique() + " pts";
     }

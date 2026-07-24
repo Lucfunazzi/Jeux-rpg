@@ -6,6 +6,7 @@ import Personnage.pnj.Chapitre3.EnnemiTotomaru;
 import Personnage.pnj.Chapitre3.EnnemiSol;
 import Personnage.pnj.Chapitre3.EnnemiAria;
 import Personnage.pnj.Chapitre3.EnnemiJose;
+import Personnage.pnj.Chapitre3.EnnemiGadjeel;
 import Personnage.pnj.Chapitre3.EnnemiMage1DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage2DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage3Soigneur;
@@ -13,6 +14,7 @@ import Personnage.pnj.Chapitre3.EnnemiMage5Tank;
 import Personnage.pnj.Chapitre3.EnnemiMage8DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage9Tank;
 import Equipement.CarteOr;
+import Equipement.Equipement;
 import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import lancement.GameContext;
@@ -143,12 +145,16 @@ public class Chapitre3Elite {
 
             double chanceFragment = (numero == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
             if (Math.random() < chanceFragment) {
-                List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue();
+                // Uniquement des fragments rang A ici : les rangs S/SS/SSS/UR s'obtiennent
+                // via la Boutique d'equipement (recyclage), pas en Chapitre 3 Elite.
+                List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue().stream()
+                        .filter(f -> f.getRarete() == Equipement.Rarete.A)
+                        .toList();
                 FragmentEquipement fragment = catalogue.get((int) (Math.random() * catalogue.size()));
                 ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
                 int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
                 System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
-                        fragment.getNomFragment(), total, FragmentEquipement.QUANTITE_REQUISE);
+                        fragment.getNomFragment(), total, fragment.getQuantiteRequise());
             }
 
             ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
@@ -162,6 +168,14 @@ public class Chapitre3Elite {
         return resultatStage;
     }
 
+    /**
+     * Reprend exactement les combats du Chapitre 3 normal (Totomaru, Sol, Jubia, Gadjeel,
+     * Aria, José), mais sans aucun invité temporaire (Natsu/Elfman/Gray/Erza/Makarov) ni
+     * combat scripté : c'est toujours notre propre formation qui affronte les boss, avec
+     * des niveaux plus eleves. L'equipement fantome (auto-equipe par Stage a partir du
+     * niveau) est deja au rang A pour tous ces niveaux (>= 35), au-dessus du rang B —
+     * voir EquipementFactory.rareteEnnemiPourNiveau.
+     */
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
         switch (numero) {
@@ -188,7 +202,7 @@ public class Chapitre3Elite {
 
             // Stage 3 — Sol élite + troupe lourde
             case 3 -> {
-                e.add(new EnnemiSol(38));
+                e.add(new EnnemiSol(39));
                 e.add(new EnnemiMage8DPS(36));
                 e.add(new EnnemiMage5Tank(36));
                 e.add(new EnnemiMage2DPS(35));
@@ -196,74 +210,62 @@ public class Chapitre3Elite {
                 return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 6750, 0, e);
             }
 
-            // Stage 4 — Totomaru + Sol élite ensemble
+            // Stage 4 — Jubia élite + garde rapprochée
             case 4 -> {
-                e.add(new EnnemiTotomaru(40));
-                e.add(new EnnemiSol(40));
-                e.add(new EnnemiMage3Soigneur(37));
-                e.add(new EnnemiMage9Tank(36));
-                e.add(new EnnemiMage3Soigneur(36));
-                return new Stage(4, "[ELITE] L'Élément 4 Renforcé", 8000, 0, e);
-            }
-
-            // Stage 5 — Jubia élite + garde rapprochée
-            case 5 -> {
                 e.add(new EnnemiJubia_4elements(41));
-                e.add(new EnnemiMage3Soigneur(39));
-                e.add(new EnnemiMage9Tank(38));
-                e.add(new EnnemiMage5Tank(38));
-                e.add(new EnnemiMage3Soigneur(37));
-                return new Stage(5, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 9500, 0, e);
+                e.add(new EnnemiMage3Soigneur(38));
+                e.add(new EnnemiMage9Tank(37));
+                e.add(new EnnemiMage5Tank(37));
+                e.add(new EnnemiMage2DPS(36));
+                return new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
             }
 
-            // Stage 6 — Élément 4 complet élite
+            // Stage 5 — Gadjeel élite + escorte
+            case 5 -> {
+                e.add(new EnnemiGadjeel(43));
+                e.add(new EnnemiMage3Soigneur(40));
+                e.add(new EnnemiMage9Tank(39));
+                e.add(new EnnemiMage5Tank(39));
+                e.add(new EnnemiMage2DPS(38));
+                return new Stage(5, "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
+            }
+
+            // Stage 6 — Aria élite + escorte d'élite
             case 6 -> {
-                e.add(new EnnemiJubia_4elements(42));
-                e.add(new EnnemiTotomaru(41));
-                e.add(new EnnemiSol(41));
-                e.add(new EnnemiMage3Soigneur(39));
-                e.add(new EnnemiMage9Tank(38));
-                return new Stage(6, "[ELITE] L'Élément 4 Complet d'Élite", 11000, 0, e);
-            }
-
-            // Stage 7 — Aria élite + escorte d'élite
-            case 7 -> {
-                e.add(new EnnemiAria(43));
-                e.add(new EnnemiMage3Soigneur(41));
-                e.add(new EnnemiMage9Tank(40));
-                e.add(new EnnemiMage5Tank(40));
-                e.add(new EnnemiMage3Soigneur(39));
-                return new Stage(7, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 13000, 0, e);
-            }
-
-            // Stage 8 — Aria + Élément 4 au complet élite
-            case 8 -> {
-                e.add(new EnnemiAria(44));
-                e.add(new EnnemiJubia_4elements(43));
-                e.add(new EnnemiTotomaru(42));
-                e.add(new EnnemiSol(42));
-                e.add(new EnnemiMage3Soigneur(40));
-                return new Stage(8, "[ELITE] L'Élément 4 — Ultime Résistance", 15000, 0, e);
-            }
-
-            // Stage 9 — José élite + Aria + renforts maximum
-            case 9 -> {
-                e.add(new EnnemiJose(46));
-                e.add(new EnnemiAria(44));
-                e.add(new EnnemiMage3Soigneur(41));
-                e.add(new EnnemiMage9Tank(40));
-                e.add(new EnnemiMage3Soigneur(40));
-                return new Stage(9, "[ELITE] José — L'Ombre Transcendée", 17500, 0, e);
-            }
-
-            // Stage 10 — José boss + tout l'Élément 4 élite
-            case 10 -> {
-                e.add(new EnnemiJose(48));
                 e.add(new EnnemiAria(45));
-                e.add(new EnnemiJubia_4elements(44));
-                e.add(new EnnemiTotomaru(43));
-                e.add(new EnnemiSol(43));
-                return new Stage(10, "[ELITE] José Porla — Forme Spectrali Suprême", 21000, 0, e);
+                e.add(new EnnemiMage3Soigneur(41));
+                e.add(new EnnemiMage9Tank(41));
+                e.add(new EnnemiMage5Tank(40));
+                e.add(new EnnemiMage2DPS(40));
+                return new Stage(6, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 11000, 0, e);
+            }
+
+            // Stage 7 — José élite + escorte d'élite
+            case 7 -> {
+                e.add(new EnnemiJose(47));
+                e.add(new EnnemiMage3Soigneur(43));
+                e.add(new EnnemiMage9Tank(42));
+                e.add(new EnnemiMage5Tank(42));
+                e.add(new EnnemiMage2DPS(41));
+                return new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
+            }
+
+            // Stage 8 — José seul, sans invite, plus fort
+            case 8 -> {
+                e.add(new EnnemiJose(50));
+                return new Stage(8, "[ELITE] José Pora — Seul face à Phantom Lord", 15000, 0, e);
+            }
+
+            // Stage 9 — José seul, encore plus fort (pas de combat scripte en Elite)
+            case 9 -> {
+                e.add(new EnnemiJose(54));
+                return new Stage(9, "[ELITE] José Pora — Puissance Maximale", 17500, 0, e);
+            }
+
+            // Stage 10 — Aria seule, dernier rempart d'élite
+            case 10 -> {
+                e.add(new EnnemiAria(58));
+                return new Stage(10, "[ELITE] Aria — Le Dernier Rempart d'Élite", 21000, 0, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }
@@ -275,13 +277,13 @@ public class Chapitre3Elite {
             case 1  -> "[ELITE] L'assaut de Phantom Lord Renforcé";
             case 2  -> "[ELITE] Totomaru — Sept Flammes d'Élite";
             case 3  -> "[ELITE] Sol — L'Impénétrable d'Élite";
-            case 4  -> "[ELITE] L'Élément 4 Renforcé";
-            case 5  -> "[ELITE] Jubia — L'Eau qui Brise d'Élite";
-            case 6  -> "[ELITE] L'Élément 4 Complet d'Élite";
-            case 7  -> "[ELITE] Aria — Magie du Ciel Vide Transcendée";
-            case 8  -> "[ELITE] L'Élément 4 — Ultime Résistance";
-            case 9  -> "[ELITE] José — L'Ombre Transcendée";
-            case 10 -> "[ELITE] José Porla — Forme Spectrali Suprême";
+            case 4  -> "[ELITE] Jubia — L'Eau qui Brise d'Élite";
+            case 5  -> "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite";
+            case 6  -> "[ELITE] Aria — Magie du Ciel Vide Transcendée";
+            case 7  -> "[ELITE] José — L'Ombre Transcendée";
+            case 8  -> "[ELITE] José Pora — Seul face à Phantom Lord";
+            case 9  -> "[ELITE] José Pora — Puissance Maximale";
+            case 10 -> "[ELITE] Aria — Le Dernier Rempart d'Élite";
             default -> "???";
         };
     }

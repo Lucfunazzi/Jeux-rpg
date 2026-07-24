@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.GameContext;
 import lancement.Gestionnaires.AreneData;
+import lancement.Gestionnaires.GestionnaireArene;
 import lancement.Menus.MenuBoutiqueArene;
 
 public class EcranAreneBoutiqueController {
@@ -25,10 +26,10 @@ public class EcranAreneBoutiqueController {
     @FXML private VBox pointsBox;
     @FXML private VBox catalogueBox;
 
-    public void initData(GameContext ctx, AreneData joueurArene, Runnable onRetour) {
+    public void initData(GameContext ctx, GestionnaireArene gestionnaireArene, AreneData joueurArene, Runnable onRetour) {
         this.joueurArene = joueurArene;
         this.onRetour = onRetour;
-        this.menuBoutiqueArene = new MenuBoutiqueArene(ctx, Navigation.scannerSilencieux(), joueurArene);
+        this.menuBoutiqueArene = new MenuBoutiqueArene(ctx, Navigation.scannerSilencieux(), joueurArene, gestionnaireArene);
         rafraichir();
     }
 

@@ -9,26 +9,25 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="lancement.gui.EcranInventaireController"
+            fx:controller="lancement.gui.EcranRecompensesController"
             styleClass="root-menu">
     <top>
-        <Label text="INVENTAIRE" styleClass="titre" BorderPane.alignment="CENTER">
+        <Label text="RECOMPENSES" styleClass="titre" BorderPane.alignment="CENTER">
             <BorderPane.margin><Insets top="20" bottom="10"/></BorderPane.margin>
         </Label>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="340">
-            <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
-            <VBox fx:id="contenuBox" spacing="8"/>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox fx:id="recompensesBox" alignment="TOP_LEFT" spacing="8">
+                <padding><Insets top="10" bottom="10" left="30" right="30"/></padding>
+            </VBox>
         </ScrollPane>
     </center>
 
     <bottom>
-        <VBox alignment="CENTER" spacing="8">
+        <VBox alignment="CENTER" spacing="10">
             <padding><Insets top="10" bottom="20"/></padding>
-            <Button text="Equiper un set complet" onAction="#onEquiperSet" styleClass="menu-bouton"/>
-            <Button text="Boutique d'équipement" onAction="#onBoutiqueEquipement" styleClass="menu-bouton"/>
             <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
         </VBox>
     </bottom>

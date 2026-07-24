@@ -36,13 +36,14 @@ public final class GuiVisuels {
 
     public static Color couleurRarete(String rarete) {
         return switch (rarete == null ? "" : rarete.toUpperCase()) {
-            case "UR" -> Color.web("#e056c9");
-            case "SS" -> Color.web("#e08a3c");
-            case "S"  -> Color.web("#f2c14e");
-            case "A"  -> Color.web("#b565d8");
-            case "B"  -> Color.web("#4ea8f2");
-            case "C"  -> Color.web("#7ed9a3");
-            default   -> Color.web("#9a9ac0");
+            case "UR"  -> Color.web("#e056c9");
+            case "SSS" -> Color.web("#e0393c");
+            case "SS"  -> Color.web("#e08a3c");
+            case "S"   -> Color.web("#f2c14e");
+            case "A"   -> Color.web("#b565d8");
+            case "B"   -> Color.web("#4ea8f2");
+            case "C"   -> Color.web("#7ed9a3");
+            default    -> Color.web("#9a9ac0");
         };
     }
 

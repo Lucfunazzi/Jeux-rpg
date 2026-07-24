@@ -152,27 +152,27 @@ public class Chapitre2Elite {
                          return new Stage(2, "Arrivée a l'ile de galuna Elite", 3750, 50, ennemis); }
             case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
-                         return new Stage(3, "Cherry, gardienne d'elite", 4500, 100, ennemis); }
+                         return new Stage(3, "Cherry, l'amour d'elite", 4500, 100, ennemis); }
             case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau));
                          return new Stage(4, "Yuka, l'annuleur renforce", 5500, 150, ennemis); }
             case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         return new Stage(5, "Tobi, mage de glace d'elite", 6500, 160, ennemis); }
+                         ennemis.add(new EnnemiMage7DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+                         return new Stage(5, "Tobi,les griffes paralysantes d'elite", 6500, 160, ennemis); }
             case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage9Tank(niveau));
                          return new Stage(6, "Leon Bastia d'elite", 8000, 170, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(niveau));
-                         return new Stage(7, "L'homme mysterieux d'elite", 9750, 180, ennemis); }
+            case 7  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiYuka(niveau));
+                         ennemis.add(new EnnemiCherry(niveau));
+                         return new Stage(7, "Leon et son equipes", 9750, 180, ennemis); }
             case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
                         ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          return new Stage(8, "Leon Bastia — Resistance d'elite", 11500, 190, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiCherry(niveau));
-                         ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiTobi(niveau));
-                         return new Stage(9, "L'ile de Galuna unie — Elite", 13500, 200, ennemis); }
+            case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
+                         ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+                         return new Stage(9, "Leon et L'homme mysterieux — Elite", 13500, 200, ennemis); }
             case 10 -> { ennemis.add(new EnnemiDeliora(niveau));
                          return new Stage(10, "Deliora le demon Elite", 16000, 210, ennemis); }
             default -> { return new Stage(numero, "???", 0, 0, ennemis); }
@@ -183,14 +183,14 @@ public class Chapitre2Elite {
         return switch (numero) {
             case 1  -> "[ELITE] Prologue Chapitre 2";
             case 2  -> "[ELITE] Arrivée à l'île de Galuna";
-            case 3  -> "[ELITE] Cherry, gardienne d'élite";
+            case 3  -> "[ELITE] Cherry, l'amour d'elite";
             case 4  -> "[ELITE] Yuka, l'annuleur renforcé";
-            case 5  -> "[ELITE] Tobi, mage de glace d'élite";
+            case 5  -> "[ELITE] Tobi,les griffes paralysantes d'elite";
             case 6  -> "[ELITE] Leon Bastia d'élite";
-            case 7  -> "[ELITE] L'homme mystérieux d'élite";
+            case 7  -> "[ELITE] Leon et son equipes";
             case 8  -> "[ELITE] Leon Bastia — Résistance d'élite";
-            case 9  -> "[ELITE] L'île de Galuna unie";
-            case 10 -> "[ELITE] Deliora, le démon";
+            case 9  -> "[ELITE] Leon et L'homme mysterieux — Elite";
+            case 10 -> "[ELITE] Deliora, le démon Elite";
             default -> "???";
         };
     }

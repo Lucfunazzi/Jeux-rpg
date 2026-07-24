@@ -2,7 +2,12 @@ package lancement.Chapitres;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre3.*;
+import Personnage.FairyTail.perso_Natsu;
+import Personnage.FairyTail.perso_Elfman;
+import Personnage.FairyTail.perso_Gray;
+import Personnage.FairyTail.perso_Erza;
 import lancement.GameContext;
+import lancement.Formation;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -58,8 +63,9 @@ public class Chapitre3 {
     }
 
     /**
-     * Lance le stage donne et applique les recompenses en cas de victoire.
-     * Suppose que le stage est deja debloque. Reutilisable par la console et l'interface graphique.
+     * Lance le stage donne (avec les invites temporaires stages 2/3/4/5/6/7, et le combat
+     * scripte du stage 9) et applique les recompenses en cas de victoire. Suppose que le
+     * stage est deja debloque. Reutilisable par la console et l'interface graphique.
      */
     public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
         if (!ctx.gestionnaireEnergie.consommerEnergie(1)) {
@@ -71,7 +77,60 @@ public class Chapitre3 {
 
         Stage stage        = construireStage(numero);
         boolean estNouveau = !stagesReussis[numero];
-        Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        Stage.ResultatStage resultatStage = switch (numero) {
+            case 2 -> {
+                perso_Natsu invite = new perso_Natsu();
+                invite.setNiveau(24);
+                invite.setVie(1300);
+                invite.setVieMax(1300);
+                invite.setAttaque(260);
+                invite.setDefense(150);
+                invite.setVitesse(150);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 3 -> {
+                perso_Elfman invite = new perso_Elfman();
+                invite.setNiveau(26);
+                invite.setVie(1900);
+                invite.setVieMax(1900);
+                invite.setAttaque(180);
+                invite.setDefense(260);
+                invite.setVitesse(110);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 4 -> {
+                perso_Gray invite = new perso_Gray();
+                invite.setNiveau(28);
+                invite.setVie(1450);
+                invite.setVieMax(1450);
+                invite.setAttaque(270);
+                invite.setDefense(170);
+                invite.setVitesse(140);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 5 -> {
+                perso_Natsu invite = new perso_Natsu();
+                invite.setNiveau(30);
+                invite.setVie(1600);
+                invite.setVieMax(1600);
+                invite.setAttaque(300);
+                invite.setDefense(180);
+                invite.setVitesse(160);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 6, 7 -> {
+                perso_Erza invite = new perso_Erza();
+                invite.setNiveau(32);
+                invite.setVie(2100);
+                invite.setVieMax(2100);
+                invite.setAttaque(320);
+                invite.setDefense(280);
+                invite.setVitesse(150);
+                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
+            }
+            case 9 -> lancerStage9AvecMakarov(ctx, stage, estNouveau);
+            default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        };
 
         if (resultatStage.victoire) {
             stagesReussis[numero] = true;
@@ -97,7 +156,7 @@ public class Chapitre3 {
         // mais un peu plus d'XP qu'au Chapitre 2 pour suivre la progression des chapitres.
         switch (numero) {
 
-            // Stage 1 — Avant-garde Phantom Lord (soldats bas rang)
+            // Stage 1 — Avant-garde Phantom Lord (combat generique)
             case 1 -> {
                 e.add(new EnnemiMage1DPS(22));
                 e.add(new EnnemiMage8DPS(22));
@@ -107,94 +166,82 @@ public class Chapitre3 {
                 return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
 
-            // Stage 2 — Totomaru + renforts
+            // Stage 2 — Natsu contre Totomaru + ennemis generiques
             case 2 -> {
-                e.add(new EnnemiTotomaru());        // niv 26 par défaut
+                e.add(new EnnemiTotomaru(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage9Tank(24));
                 e.add(new EnnemiMage1DPS(23));
                 e.add(new EnnemiMage8DPS(23));
-                return new Stage(2, "Totomaru — Sept Flammes", 375, 25, e);
+                return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
             }
 
-            // Stage 3 — Sol + troupe solide
+            // Stage 3 — Elfman contre Sol + ennemis generiques
             case 3 -> {
-                e.add(new EnnemiSol());             // niv 26 par défaut
+                e.add(new EnnemiSol(27));
                 e.add(new EnnemiMage8DPS(25));
                 e.add(new EnnemiMage5Tank(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage3Soigneur(24));
-                return new Stage(3, "Sol — L'Impénétrable", 475, 28, e);
+                return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 28, e);
             }
 
-            // Stage 4 — Totomaru + Sol ensemble
+            // Stage 4 — Gray contre Jubia + ennemis generiques
             case 4 -> {
-                e.add(new EnnemiTotomaru(27));
-                e.add(new EnnemiSol(27));
+                e.add(new EnnemiJubia_4elements(29));
+                e.add(new EnnemiMage2DPS(27));
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage9Tank(25));
                 e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(4, "L'Élément 4 se déploie", 575, 31, e);
+                return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
             }
 
-            // Stage 5 — Jubia + troupe
+            // Stage 5 — Natsu contre Gadjeel + ennemis generiques
             case 5 -> {
-                e.add(new EnnemiJubia_4elements()); // niv 28 par défaut
+                e.add(new EnnemiGadjeel(30));
                 e.add(new EnnemiMage3Soigneur(27));
                 e.add(new EnnemiMage9Tank(26));
-                e.add(new EnnemiMage5Tank(26));
-                e.add(new EnnemiMage3Soigneur(25));
-                return new Stage(5, "Jubia — L'Eau qui emprisonne", 675, 35, e);
-            }
-
-            // Stage 6 — Élément 4 au complet (Jubia + Totomaru + Sol)
-            case 6 -> {
-                e.add(new EnnemiJubia_4elements(28));
-                e.add(new EnnemiTotomaru(28));
-                e.add(new EnnemiSol(28));
                 e.add(new EnnemiMage2DPS(26));
-                e.add(new EnnemiMage8DPS(26));
-                return new Stage(6, "L'Élément 4 au complet", 800, 39, e);
+                e.add(new EnnemiMage3Soigneur(25));
+                return new Stage(5, "Natsu contre Gadjeel — Le Dragon d'Acier", 675, 35, e);
             }
 
-            // Stage 7 — Aria + escorte lourde
-            case 7 -> {
-                e.add(new EnnemiAria());            // niv 30 par défaut
-                e.add(new EnnemiMage3Soigneur(28));
-                e.add(new EnnemiMage9Tank(28));
-                e.add(new EnnemiMage5Tank(27));
-                e.add(new EnnemiMage3Soigneur(27));
-                return new Stage(7, "Aria — Magie du Ciel Vide", 950, 43, e);
-            }
-
-            // Stage 8 — Aria + tout l'Élément 4
-            case 8 -> {
-                e.add(new EnnemiAria(30));
-                e.add(new EnnemiJubia_4elements(29));
-                e.add(new EnnemiTotomaru(29));
-                e.add(new EnnemiSol(29));
-                e.add(new EnnemiMage2DPS(27));
-                return new Stage(8, "L'Élément 4 — Dernière résistance", 1125, 48, e);
-            }
-
-            // Stage 9 — José + Aria + renforts d'élite
-            case 9 -> {
-                e.add(new EnnemiJose());            // niv 35 par défaut
-                e.add(new EnnemiAria(31));
-                e.add(new EnnemiMage3Soigneur(29));
-                e.add(new EnnemiMage9Tank(28));
-                e.add(new EnnemiMage3Soigneur(28));
-                return new Stage(9, "José — L'Ombre s'éveille", 1350, 54, e);
-            }
-
-            // Stage 10 — José seul, boss ultime
-            case 10 -> {
-                e.add(new EnnemiJose(35));
+            // Stage 6 — Erza contre Aria + ennemis generiques
+            case 6 -> {
                 e.add(new EnnemiAria(32));
-                e.add(new EnnemiJubia_4elements(30));
-                e.add(new EnnemiTotomaru(30));
-                e.add(new EnnemiSol(30));
-                return new Stage(10, "José Porla — Maître de Phantom Lord", 1700, 60, e);
+                e.add(new EnnemiMage9Tank(30));
+                e.add(new EnnemiMage3Soigneur(29));
+                e.add(new EnnemiMage2DPS(29));
+                e.add(new EnnemiMage6Debuff(28));
+                return new Stage(6, "Erza contre Aria — Magie du Ciel Vide", 800, 39, e);
+            }
+
+            // Stage 7 — Erza contre José + ennemis generiques
+            case 7 -> {
+                e.add(new EnnemiJose(34));
+                e.add(new EnnemiMage9Tank(31));
+                e.add(new EnnemiMage3Soigneur(31));
+                e.add(new EnnemiMage2DPS(30));
+                e.add(new EnnemiMage8DPS(30));
+                return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 43, e);
+            }
+
+            // Stage 8 — Notre equipe seule contre José (sans invite, plus fort)
+            case 8 -> {
+                e.add(new EnnemiJose(38));
+                return new Stage(8, "José Pora — Seul face à Phantom Lord", 1125, 48, e);
+            }
+
+            // Stage 9 — Combat scripte : Makarov contre José, notre formation n'intervient pas
+            case 9 -> {
+                e.add(new EnnemiJose(55));
+                return new Stage(9, "Makarov contre José — La Loi des Fées", 1350, 54, e);
+            }
+
+            // Stage 10 — Notre equipe seule contre Aria (sans invite, dernier rempart)
+            case 10 -> {
+                e.add(new EnnemiAria(40));
+                return new Stage(10, "Aria — Le Dernier Rempart", 1700, 60, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }
@@ -204,15 +251,15 @@ public class Chapitre3 {
     public String getTitreStage(int numero) {
         return switch (numero) {
             case 1  -> "L'assaut de Phantom Lord";
-            case 2  -> "Totomaru — Sept Flammes";
-            case 3  -> "Sol — L'Impénétrable";
-            case 4  -> "L'Élément 4 se déploie";
-            case 5  -> "Jubia — L'Eau qui emprisonne";
-            case 6  -> "L'Élément 4 au complet";
-            case 7  -> "Aria — Magie du Ciel Vide";
-            case 8  -> "L'Élément 4 — Dernière résistance";
-            case 9  -> "José — L'Ombre s'éveille";
-            case 10 -> "José Porla — Maître de Phantom Lord";
+            case 2  -> "Natsu contre Totomaru — Sept Flammes";
+            case 3  -> "Elfman contre Sol — L'Impénétrable";
+            case 4  -> "Gray contre Jubia — L'Eau qui emprisonne";
+            case 5  -> "Natsu contre Gadjeel — Le Dragon d'Acier";
+            case 6  -> "Erza contre Aria — Magie du Ciel Vide";
+            case 7  -> "Erza contre José — L'Ombre s'éveille";
+            case 8  -> "José Pora — Seul face à Phantom Lord";
+            case 9  -> "Makarov contre José — La Loi des Fées";
+            case 10 -> "Aria — Le Dernier Rempart";
             default -> "???";
         };
     }
@@ -221,4 +268,38 @@ public class Chapitre3 {
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= NB_STAGES; i++) stagesDebloques[i] = d[i]; }
     public void setStagesReussis(boolean[] r)   { for (int i = 0; i <= NB_STAGES; i++) stagesReussis[i]   = r[i]; }
+
+    // ── Invites temporaires (stages 2 a 7) ─────────────────────────────────
+
+    /**
+     * Injecte un invite deja configure (niveau/stats) dans l'equipe pour la duree
+     * d'un seul combat, en respectant les regles de formation (1 Tank max, 3 DPS
+     * max joueur compris, 3 Support max, 5 membres max), puis lance le stage.
+     */
+    private Stage.ResultatStage lancerStageAvecInvite(GameContext ctx, Stage stage, boolean estNouveau, PersonnageBase invite) {
+        ArrayList<PersonnageBase> equipe = ctx.formation.getEquipe();
+        Formation.ajouterInviteTemporaire(equipe, invite);
+
+        System.out.println(">> " + invite.getNom() + " rejoint votre equipe pour ce combat !");
+        Stage.ResultatStage resultat = stage.lancer(ctx, equipe, estNouveau);
+        System.out.println(">> " + invite.getNom() + " quitte l'equipe apres le combat.");
+        return resultat;
+    }
+
+    private Stage.ResultatStage lancerStage9AvecMakarov(GameContext ctx, Stage stage, boolean estNouveau) {
+        // Combat scripte : notre formation n'intervient pas, seul Makarov affronte José.
+        EnnemiMakarov makarov = new EnnemiMakarov();
+
+        ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();
+        equipeFixe.add(makarov);
+
+        System.out.println(">> Makarov arrive seul face a José !");
+        System.out.println("   « Tu as touche a mes enfants... Tu vas le regretter. » — Makarov\n");
+
+        Stage.ResultatStage resultat = stage.lancer(ctx, equipeFixe, estNouveau);
+
+        System.out.println("\n>> La Loi des Fées s'abat sur José Pora, mettant fin au regne de Phantom Lord.");
+
+        return resultat;
+    }
 }

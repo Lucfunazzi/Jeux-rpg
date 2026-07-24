@@ -1,5 +1,6 @@
 package lancement.Menus;
 
+import Equipement.PotionEnergie;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import lancement.GameContext;
@@ -101,6 +102,10 @@ public class MenuQuetes {
         if (q.getRecompenseParcheminC() > 0) {
             ctx.menuRecrutement.ajouterParcheminC(q.getRecompenseParcheminC());
             System.out.println("  + " + q.getRecompenseParcheminC() + " parchemins C !");
+        }
+        if (q instanceof QueteJournaliere) {
+            ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+            System.out.println("  + 1x " + PotionEnergie.MOYENNE.nom + " !");
         }
 
         ctx.sauvegarde.sauvegarder(ctx);

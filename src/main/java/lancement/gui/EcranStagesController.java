@@ -132,7 +132,7 @@ public class EcranStagesController {
             sb.append("+ ").append(r.carteOrQuantite).append("x ").append(r.carteOrNom).append("\n");
         }
         if (r.pointsAbilite > 0) {
-            sb.append("+ ").append(r.pointsAbilite).append(" point(s) d'habileté\n");
+            sb.append("+ ").append(r.pointsAbilite).append(" point(s) d'abilités\n");
         }
 
         Label texte = new Label(sb.toString().trim());

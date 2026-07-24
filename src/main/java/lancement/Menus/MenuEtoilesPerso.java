@@ -23,23 +23,18 @@ public class MenuEtoilesPerso {
     // Catalogue statique : nom → rarete (tous les persos recrutables)
     private record InfoPerso(String nom, String rarete, String classe) {}
 
+    // Natsu, Natsu Etherion, Mirajane et Mirajane Halphas ne sont recrutables/achetables
+    // QUE via le Recrutement Rare (materiaux dedies) — volontairement absents d'ici.
     private static final List<InfoPerso> CATALOGUE = List.of(
         // Rang C
         new InfoPerso("Alzack",  "C", "Mage"),
         new InfoPerso("Bisca",   "C", "Mage"),
         new InfoPerso("Elfman",  "C", "Guerrier"),
-        new InfoPerso("Max",     "C", "Mage"),
-        new InfoPerso("Droy",    "C", "Mage"),
-        new InfoPerso("Jet",     "C", "Guerrier"),
-        new InfoPerso("Warren",  "C", "Mage"),
         new InfoPerso("Nab",     "C", "Guerrier"),
-        new InfoPerso("Romeo",   "C", "Mage"),
         // Rang B
-        new InfoPerso("Cana",        "B", "Mage"),
-        new InfoPerso("Loke",        "B", "Mage"),
+        new InfoPerso("Kana",        "B", "Mage"),
         new InfoPerso("Levy",        "B", "Mage"),
         new InfoPerso("Lisanna",     "B", "Mage"),
-        new InfoPerso("Elfman Bête", "B", "Guerrier"),
         // Rang A
         new InfoPerso("Bickslow",  "A", "Mage"),
         new InfoPerso("Evergreen", "A", "Mage"),
@@ -49,18 +44,14 @@ public class MenuEtoilesPerso {
         new InfoPerso("Gray",   "A", "Mage"),
         new InfoPerso("Jubia",  "A", "Mage"),
         new InfoPerso("Lucy",   "A", "Mage"),
-        new InfoPerso("Natsu",  "A", "Guerrier"),
         new InfoPerso("Wendy",  "A", "Mage"),
         // Rang S
         new InfoPerso("Erza",           "S", "Guerrier"),
-        new InfoPerso("Mirajane",       "S", "Mage"),
-        new InfoPerso("Natsu Etherion", "S", "Guerrier"),
         new InfoPerso("Rogue",          "S", "Guerrier"),
         new InfoPerso("Sting",          "S", "Guerrier"),
         new InfoPerso("Yukino",         "S", "Mage"),
         // Rang SS
-        new InfoPerso("Lucas",            "SS", "Mage"),
-        new InfoPerso("Mirajane Halphas", "SS", "Mage")
+        new InfoPerso("Lucas",            "SS", "Mage")
     );
 
     /** Catalogue accessible depuis l'exterieur (ex: interface graphique) sous forme {nom, rarete, classe}. */

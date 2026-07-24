@@ -7,6 +7,7 @@ import Personnage.FairyTail.perso_Lucy;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Gray;
 import lancement.GameContext;
+import lancement.Formation;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -118,12 +119,6 @@ public class Chapitre2 {
                 System.out.println(">> Stage " + (numero + 1) + " debloque !");
             } else {
                 System.out.println(">> Félicitations ! Vous avez sauvé l'île de Galuna !");
-                if (estNouveau) {
-                    ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 50);
-                    System.out.println(">> Cadeau : +50 Echarpe(s) blanche d'Ignir !");
-                    System.out.println("   Vous pouvez maintenant recruter Natsu"
-                            + " dans le Recrutement Rare !");
-                }
             }
 
             ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
@@ -223,7 +218,7 @@ public class Chapitre2 {
      */
     private Stage.ResultatStage lancerStageAvecInvite(GameContext ctx, Stage stage, boolean estNouveau, PersonnageBase invite) {
         ArrayList<PersonnageBase> equipe = ctx.formation.getEquipe();
-        ajouterInviteEnRemplacantPlusFaible(equipe, invite, invite.getRole());
+        Formation.ajouterInviteTemporaire(equipe, invite);
 
         System.out.println(">> " + invite.getNom() + " rejoint votre equipe pour ce combat !");
         Stage.ResultatStage resultat = stage.lancer(ctx, equipe, estNouveau);
@@ -247,32 +242,5 @@ public class Chapitre2 {
         System.out.println("\n>> Ul scelle Deliora dans la glace eternelle... au prix de son propre corps.");
 
         return resultat;
-    }
-
-    /**
-     * Ajoute un invite a l'equipe. Si le role vise compte deja 3 membres,
-     * remplace le plus faible (niveau le plus bas) de ce role — en ignorant
-     * toujours le personnage principal. Sinon, l'invite s'ajoute en plus.
-     */
-    private void ajouterInviteEnRemplacantPlusFaible(ArrayList<PersonnageBase> equipe, PersonnageBase invite, String role) {
-        long nbDuRole = equipe.stream().filter(p -> p.getRole().equals(role)).count();
-        if (nbDuRole < 3) {
-            equipe.add(invite);
-            return;
-        }
-
-        PersonnageBase plusFaible = null;
-        for (PersonnageBase p : equipe) {
-            if (p.getRole().equals(role) && !p.estPersonnagePrincipal()) {
-                if (plusFaible == null || p.getNiveau() < plusFaible.getNiveau()) {
-                    plusFaible = p;
-                }
-            }
-        }
-
-        if (plusFaible != null) {
-            equipe.remove(plusFaible);
-        }
-        equipe.add(invite);
     }
 }

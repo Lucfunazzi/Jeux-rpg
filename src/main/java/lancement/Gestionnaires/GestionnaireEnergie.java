@@ -1,5 +1,7 @@
 package lancement.Gestionnaires;
 
+import Equipement.Inventaire;
+import Equipement.PotionEnergie;
 import Joueur.Personnage_principale;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -94,6 +96,24 @@ public class GestionnaireEnergie {
         return MAX_RUNS_ELITE - runsEliteParStage[numeroStage];
     }
 
+    // ── Potions d'energie (consommables) ────────────────────────────────────
+
+    /**
+     * Consomme 1 potion de l'inventaire et restaure l'energie correspondante.
+     * Contrairement a la recharge automatique, une potion peut faire depasser ENERGIE_MAX :
+     * la recharge automatique se contente alors de rester en pause tant que l'energie est
+     * superieure ou egale a ENERGIE_MAX (voir mettreAJourRecharge()).
+     */
+    public String utiliserPotion(Inventaire inventaire, PotionEnergie potion) {
+        if (!inventaire.retirerMateriau(potion.nom, 1)) {
+            return "Aucune " + potion.nom + " en stock.";
+        }
+        mettreAJourRecharge();
+        energie += potion.energie;
+        return potion.nom + " utilisee ! +" + potion.energie
+                + " energie (" + energie + "/" + ENERGIE_MAX + ")";
+    }
+
     // ── Recharge coupons ──────────────────────────────────────────────────
     public boolean peutRechargerAvecCoupon() {
         return rechargesUtilisees < MAX_RECHARGES_PAR_JOUR;
@@ -143,7 +163,9 @@ public class GestionnaireEnergie {
 
     // ── Getters/Setters pour sauvegarde ───────────────────────────────────
     public int getEnergie()                          { return energie; }
-    public void setEnergie(int energie)              { this.energie = Math.min(ENERGIE_MAX, energie); }
+    // Pas de plafond ici : sert aussi a restaurer une sauvegarde ou l'energie
+    // peut depasser ENERGIE_MAX suite a l'usage d'une potion.
+    public void setEnergie(int energie)              { this.energie = energie; }
     public LocalDateTime getDerniereRecharge()       { return derniereRecharge; }
     public void setDerniereRecharge(LocalDateTime d) { this.derniereRecharge = d; }
     public int getRechargesUtilisees()               { return rechargesUtilisees; }
