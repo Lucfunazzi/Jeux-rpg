@@ -46,16 +46,13 @@ public class perso_Cherry extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cherry utilise marionnette de l'amour  ");
-          PersonnageBase cibleSoin = null;
-    for (PersonnageBase allie : equipeAlliee) {
-        if (allie.estVivant()) {
-            if (cibleSoin == null || allie.getVie() < cibleSoin.getVie())
-                cibleSoin = allie;
-        }
-    }
-    if (cibleSoin == null) return;
-    double soin = this.getAttaque() * 0.80;
-    cibleSoin.recevoirSoin(soin, log);
+        PersonnageBase cibleSoin = Combat.cibleParRole(equipeAlliee, "Tank");
+        if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "DPS");
+        if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "Support");
+        if (cibleSoin == null) return;
+        double soin = this.getAttaque() * 1.20;
+        cibleSoin.recevoirSoin(soin, log);
+        Purification.purifier(cibleSoin, 1, log);
     }
 
     @Override
@@ -64,7 +61,7 @@ public class perso_Cherry extends PersonnageBase {
         log.add("Cherry libère la Forêt de l'amour — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.50;
+                double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
 
                 if (Math.random() < 0.30) {
@@ -78,9 +75,9 @@ public class perso_Cherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Marionnette de l'amour — Soigne l'allié le plus bas en vie de 80% ATK.");
+        System.out.println("Marionnette de l'amour — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Forêt de l'Amour — Inflige 50% ATK à tous, 30% de chance de silence 2 tours sur chaque cible touchée.");
+        System.out.println("Forêt de l'Amour — Inflige 70% ATK à tous, 30% de chance de silence 2 tours sur chaque cible touchée.");
     }
 }

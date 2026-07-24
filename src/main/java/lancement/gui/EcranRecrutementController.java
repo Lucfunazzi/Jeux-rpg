@@ -133,6 +133,7 @@ public class EcranRecrutementController {
         Optional<ButtonType> resultat = confirm.showAndWait();
         if (resultat.isEmpty() || resultat.get() != ButtonType.YES) return;
 
+        double orAvant = ctx.joueur.getOr();
         int totalGagnes = 0;
         for (int i = 0; i < 10; i++) {
             totalGagnes += switch (rang) {
@@ -147,7 +148,10 @@ public class EcranRecrutementController {
             default  -> mr.ajouterParcheminA(totalGagnes);
         }
         ctx.sauvegarde.sauvegarder(ctx);
-        info("Mini-jeu PFC", "10 parties terminees ! Depense : " + coutTotal + " or.\n"
+        // Depense reellement consommee (apres remboursements eventuels sur les manches perdues),
+        // et non le cout brut affiche avant de jouer.
+        int orReellementDepense = (int) Math.round(orAvant - ctx.joueur.getOr());
+        info("Mini-jeu PFC", "10 parties terminees ! Depense : " + orReellementDepense + " or.\n"
                 + "Total parchemins " + rang + " gagnes : " + totalGagnes);
         rafraichir();
     }

@@ -35,14 +35,14 @@ import lancement.GameContext;
 
 public class MenuRecrutement {
 
-    private static final int PARCHEMINS_REQUIS_C  = 350;
-    private static final int PARCHEMINS_REQUIS_B  = 500;
+    private static final int PARCHEMINS_REQUIS_C  = 150;
+    private static final int PARCHEMINS_REQUIS_B  = 350;
     private static final int PARCHEMINS_REQUIS_A = 1250;
     private static final int COUT_PARCHEMIN_XP_C  = 3;
     private static final int COUT_PARCHEMIN_XP_B  = 8;
     private static final int NIVEAU_REQUIS_PAGE1  = 6;
-    private static final int NIVEAU_REQUIS_PAGE2  = 20;
-    private static final int NIVEAU_REQUIS_PAGE3 = 40;
+    private static final int NIVEAU_REQUIS_PAGE2  = 30;
+    private static final int NIVEAU_REQUIS_PAGE3 = 50;
 
     // ── Données statiques des personnages recrutables ─────────────────────
     // Évite d'instancier des objets complets juste pour afficher nom + rôle

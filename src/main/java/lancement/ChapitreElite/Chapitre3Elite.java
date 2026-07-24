@@ -10,7 +10,7 @@ import Personnage.pnj.Chapitre3.EnnemiGadjeel;
 import Personnage.pnj.Chapitre3.EnnemiMage1DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage2DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage3Soigneur;
-import Personnage.pnj.Chapitre3.EnnemiMage5Tank;
+import Personnage.pnj.Chapitre3.EnnemiMage6Debuff;
 import Personnage.pnj.Chapitre3.EnnemiMage8DPS;
 import Personnage.pnj.Chapitre3.EnnemiMage9Tank;
 import Equipement.CarteOr;
@@ -204,7 +204,7 @@ public class Chapitre3Elite {
             case 3 -> {
                 e.add(new EnnemiSol(39));
                 e.add(new EnnemiMage8DPS(36));
-                e.add(new EnnemiMage5Tank(36));
+                e.add(new EnnemiMage6Debuff(36));
                 e.add(new EnnemiMage2DPS(35));
                 e.add(new EnnemiMage3Soigneur(35));
                 return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 6750, 0, e);
@@ -215,7 +215,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiJubia_4elements(41));
                 e.add(new EnnemiMage3Soigneur(38));
                 e.add(new EnnemiMage9Tank(37));
-                e.add(new EnnemiMage5Tank(37));
+                e.add(new EnnemiMage6Debuff(37));
                 e.add(new EnnemiMage2DPS(36));
                 return new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
             }
@@ -225,7 +225,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiGadjeel(43));
                 e.add(new EnnemiMage3Soigneur(40));
                 e.add(new EnnemiMage9Tank(39));
-                e.add(new EnnemiMage5Tank(39));
+                e.add(new EnnemiMage6Debuff(39));
                 e.add(new EnnemiMage2DPS(38));
                 return new Stage(5, "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
             }
@@ -235,7 +235,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiAria(45));
                 e.add(new EnnemiMage3Soigneur(41));
                 e.add(new EnnemiMage9Tank(41));
-                e.add(new EnnemiMage5Tank(40));
+                e.add(new EnnemiMage6Debuff(40));
                 e.add(new EnnemiMage2DPS(40));
                 return new Stage(6, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 11000, 0, e);
             }
@@ -245,7 +245,7 @@ public class Chapitre3Elite {
                 e.add(new EnnemiJose(47));
                 e.add(new EnnemiMage3Soigneur(43));
                 e.add(new EnnemiMage9Tank(42));
-                e.add(new EnnemiMage5Tank(42));
+                e.add(new EnnemiMage6Debuff(42));
                 e.add(new EnnemiMage2DPS(41));
                 return new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
             }

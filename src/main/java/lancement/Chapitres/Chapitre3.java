@@ -158,11 +158,11 @@ public class Chapitre3 {
 
             // Stage 1 — Avant-garde Phantom Lord (combat generique)
             case 1 -> {
+                e.add(new EnnemiMage9Tank(22));
                 e.add(new EnnemiMage1DPS(22));
-                e.add(new EnnemiMage8DPS(22));
                 e.add(new EnnemiMage2DPS(22));
                 e.add(new EnnemiMage8DPS(21));
-                e.add(new EnnemiMage1DPS(21));
+                e.add(new EnnemiMage3Soigneur(21));
                 return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
 
@@ -172,7 +172,7 @@ public class Chapitre3 {
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage9Tank(24));
                 e.add(new EnnemiMage1DPS(23));
-                e.add(new EnnemiMage8DPS(23));
+                e.add(new EnnemiMage3Soigneur(23));
                 return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
             }
 
@@ -180,7 +180,7 @@ public class Chapitre3 {
             case 3 -> {
                 e.add(new EnnemiSol(27));
                 e.add(new EnnemiMage8DPS(25));
-                e.add(new EnnemiMage5Tank(25));
+                e.add(new EnnemiMage6Debuff(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage3Soigneur(24));
                 return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 28, e);

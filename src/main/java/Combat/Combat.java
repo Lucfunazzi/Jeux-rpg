@@ -136,7 +136,8 @@ public class Combat {
         return cibleMoinsPv(equipeEnnemie);
     }
 
-    private static PersonnageBase cibleParRole(List<PersonnageBase> equipe, String role) {
+    /** Membre vivant du role donne avec le moins de PV, ou null si aucun n'est vivant dans ce role. */
+    public static PersonnageBase cibleParRole(List<PersonnageBase> equipe, String role) {
         PersonnageBase meilleure = null;
         for (PersonnageBase perso : equipe) {
             if (perso.estVivant() && perso.getRole().equals(role)) {
