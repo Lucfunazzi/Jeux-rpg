@@ -12,6 +12,7 @@ import Personnage.pnj.Chapitre1.EnnemiMage4Buff;
 import Personnage.pnj.Chapitre1.EnnemiMage5Tank;
 import Personnage.pnj.Chapitre1.EnnemiMage6Debuff;
 import Personnage.pnj.Chapitre1.EnnemiMage7DPS;
+import Personnage.pnj.Chapitre1.EnnemiMage8DPS;
 import Personnage.pnj.Chapitre1.EnnemiMage9Tank;
 import lancement.ExamenS.StageExamenS;
 import lancement.GameContext;
@@ -184,9 +185,84 @@ public class MenuExamenS {
             case 8 -> { ennemis.add(new EnnemiMage7DPS(stage)); ennemis.add(new EnnemiMage9Tank(stage)); ennemis.add(new EnnemiMage2DPS(stage)); ennemis.add(new EnnemiMage3Soigneur(stage)); }
             case 9 -> { ennemis.add(new EnnemiMage6Debuff(stage)); ennemis.add(new EnnemiMage3Soigneur(stage));ennemis.add(new EnnemiMage2DPS(stage));
             ennemis.add(new EnnemiMage2DPS(stage));ennemis.add(new EnnemiMage5Tank(stage));}
+
+            // ── Stages 11-40 : blocs de 5, le 5e stage de chaque bloc est un "boss squad" nomme,
+            //    les 4 autres sont des equipes generiques PNJ (le niveau s'ajuste deja au numero du stage).
+            case 11, 16, 21, 26, 31, 36 -> ajouterEquipeGeneriqueA(ennemis, stage);
+            case 12, 17, 22, 27, 32, 37 -> ajouterEquipeGeneriqueB(ennemis, stage);
+            case 13, 18, 23, 28, 33, 38 -> ajouterEquipeGeneriqueC(ennemis, stage);
+            case 14, 19, 24, 29, 34, 39 -> ajouterEquipeGeneriqueD(ennemis, stage);
+
+            case 15 -> {
+                for (String nom : List.of("Bisca", "Alzack", "Cherry", "Bora"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(new EnnemiMage5Tank(stage));
+            }
+            case 20 -> {
+                for (String nom : List.of("Leon", "Yuka", "Cherry", "Tobi"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(new EnnemiMage4Buff(stage));
+            }
+            case 25 -> {
+                for (String nom : List.of("Totomaru", "Jubia (phantom Lord)", "Sol", "Aria"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(new EnnemiMage2DPS(stage));
+            }
+            case 30 -> {
+                for (String nom : List.of("Totomaru", "Jubia (phantom Lord)", "Aria", "Sol"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(monterAuNiveau(new perso_Gajeel(), stage));
+            }
+            case 35 -> {
+                for (String nom : List.of("Sol", "José Pora", "Jubia (phantom Lord)"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(monterAuNiveau(new perso_Gajeel(), stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 40 -> {
+                for (String nom : List.of("Evergreen", "Bickslow"))
+                    ennemis.add(monterAuNiveau(ctx.menuRecrutement.creerPersonnage(nom), stage));
+                ennemis.add(monterAuNiveau(new perso_Freed(), stage));
+                ennemis.add(new EnnemiMage5Tank(stage));
+                ennemis.add(new EnnemiMage7DPS(stage));
+            }
+
             default -> { }
         }
         return ennemis;
+    }
+
+    // ── Equipes generiques reutilisees pour chaque 1er/2e/3e/4e stage d'un bloc de 5 ──
+    private void ajouterEquipeGeneriqueA(ArrayList<PersonnageBase> ennemis, int stage) {
+        ennemis.add(new EnnemiMage5Tank(stage));
+        ennemis.add(new EnnemiMage2DPS(stage));
+        ennemis.add(new EnnemiMage7DPS(stage));
+        ennemis.add(new EnnemiMage3Soigneur(stage));
+        ennemis.add(new EnnemiMage4Buff(stage));
+    }
+
+    private void ajouterEquipeGeneriqueB(ArrayList<PersonnageBase> ennemis, int stage) {
+        ennemis.add(new EnnemiMage9Tank(stage));
+        ennemis.add(new EnnemiMage1DPS(stage));
+        ennemis.add(new EnnemiMage8DPS(stage));
+        ennemis.add(new EnnemiMage6Debuff(stage));
+        ennemis.add(new EnnemiMage4Buff(stage));
+    }
+
+    private void ajouterEquipeGeneriqueC(ArrayList<PersonnageBase> ennemis, int stage) {
+        ennemis.add(new EnnemiMage5Tank(stage));
+        ennemis.add(new EnnemiMage2DPS(stage));
+        ennemis.add(new EnnemiMage7DPS(stage));
+        ennemis.add(new EnnemiMage8DPS(stage));
+        ennemis.add(new EnnemiMage3Soigneur(stage));
+    }
+
+    private void ajouterEquipeGeneriqueD(ArrayList<PersonnageBase> ennemis, int stage) {
+        ennemis.add(new EnnemiMage9Tank(stage));
+        ennemis.add(new EnnemiMage1DPS(stage));
+        ennemis.add(new EnnemiMage6Debuff(stage));
+        ennemis.add(new EnnemiMage3Soigneur(stage));
+        ennemis.add(new EnnemiMage2DPS(stage));
     }
 
     private PersonnageBase monterAuNiveau(PersonnageBase p, int n) {

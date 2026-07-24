@@ -2,6 +2,7 @@ package lancement.ExamenS;
 
 import Combat.Combat;
 import Effets.BuffTitre;
+import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,13 @@ public class StageExamenS {
     public StageExamenS(int numero, ArrayList<PersonnageBase> ennemis) {
         this.numero  = numero;
         this.ennemis = ennemis;
+
+        // Meme equipement fantome que les ennemis de chapitre (lancement.Stage), sinon ces
+        // ennemis n'ont ni equipement, ni pierres, ni compagnons/creatures/rang comme le joueur
+        // et paraissent beaucoup trop faibles malgre leur mise a niveau.
+        for (PersonnageBase e : ennemis) {
+            EquipementFactory.equiperSetStandard(e, EquipementFactory.rareteEnnemiPourNiveau(e.getNiveau()));
+        }
     }
 
     public boolean lancer(ArrayList<PersonnageBase> equipeAlliee, double bonusTitre) {

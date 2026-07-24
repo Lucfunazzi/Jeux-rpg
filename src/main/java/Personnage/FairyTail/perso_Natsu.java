@@ -41,54 +41,68 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
     if (!touche) {
         this.ajouterRage(50);
     }
-    
 }
 
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Poings d'acier du dragon de feu !");
-    double degats = this.getAttaque() * 1.30;
-    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-    if (Math.random() < 0.30) {
-        Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+    List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
+    if (attaquants.isEmpty()) {
+        log.add("Aucun attaquant ennemi a cibler !");
+    } else {
+        double degats = this.getAttaque() * 0.80;
+        for (PersonnageBase ennemi : attaquants) {
+            Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.10), log);
+        }
     }
-    Combat.appliquerEffet(this, cible, new Brulure(2, 0.10), log);
-    Combat.appliquerEffet(this, new BuffAttaque(0.15, 2), log);
+    // Rage bonus : avec les +50 (ou +100 critique) de l'attaque de base precedente,
+    // Natsu est directement pret pour son ultime au tour suivant.
+    this.ajouterRage(50);
+    log.add("[RAGE] Natsu : " + String.format("%.0f", this.getRage()) + "/100");
 }
 
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Lotus pourpre du dragon de feu !");
-    double multiplicateurRage = 1.0;
-    if (this.getRage() > 100) {
-        multiplicateurRage += (this.getRage() - 100) / 100.0;
-    }
-    for (PersonnageBase ennemi : equipeEnnemie) {
-        if (ennemi.estVivant()) {
-            double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+    List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
+    if (attaquants.isEmpty()) {
+        log.add("Aucun attaquant ennemi a cibler !");
+    } else {
+        double degats = this.getAttaque() * 1.05;
+        for (PersonnageBase ennemi : attaquants) {
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            Combat.appliquerEffet(this, ennemi, new Brulure(3, 0.12), log);
         }
     }
 }
 
+/** Rage conservee juste apres l'ultime : Natsu repart directement a 50 au lieu de 0. */
+@Override
+protected double rageApresUltime() { return 50; }
+
+/** Les "attaquants" ennemis vivants (role DPS) — cible des competences de Natsu. */
+private List<PersonnageBase> ciblerAttaquants(List<PersonnageBase> equipeEnnemie) {
+    List<PersonnageBase> attaquants = new ArrayList<>();
+    for (PersonnageBase p : equipeEnnemie) {
+        if (p.estVivant() && p.getRole().equals("DPS")) attaquants.add(p);
+    }
+    return attaquants;
+}
+
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Coup de poings — inflige 100% ATK a une cible, "
-                + "applique Brulure legere (5% PV) pendant 1 tour si elle touche.");
+        System.out.println("Coup de poings — inflige 100% ATK a une cible.");
     }
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Poings d'acier du dragon de feu — inflige 130% ATK a une cible, "
-                + "30% de chance d'etourdir pendant 1 tour, "
-                + "applique Brulure (10% PV/tour) pendant 2 tours, "
-                + "gagne 15% d'attaque pendant 2 tours.");
+        System.out.println("Poings d'acier du dragon de feu — inflige 80% ATK a tous les attaquants ennemis "
+                + "et applique Brulure (10% PV/tour) pendant 2 tours. Natsu gagne 50 rage.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Lotus pourpre du dragon de feu — inflige 160% ATK a tous les ennemis "
-                + "et applique Brulure intense (12% PV/tour) pendant 3 tours.");
+        System.out.println("Lotus pourpre du dragon de feu — inflige 105% ATK a tous les attaquants ennemis. "
+                + "Natsu conserve 50 rage apres avoir declenche son ultime.");
     }
 }

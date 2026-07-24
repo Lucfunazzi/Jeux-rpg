@@ -108,6 +108,7 @@ public class GameContext {
         this.joueur               = sauvegarde.restaurerJoueur(data, this);
         this.personnagesRecruites = sauvegarde.restaurerPersonnagesRecruites(data);
         sauvegarde.restaurerCompagnons(gestionnaireCompagnons, data);
+        sauvegarde.restaurerCreaturesSacrees(gestionnaireCreaturesSacrees, data);
         this.formation             = new Formation(this.joueur, gestionnaireCompagnons);
         sauvegarde.restaurerFormation(this.formation, data, this.personnagesRecruites);
         sauvegarde.restaurerChapitre1(chapitre1, data);

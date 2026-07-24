@@ -1,5 +1,7 @@
 package lancement.Gestionnaires;
 
+import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import java.util.*;
 import java.util.function.Function;
@@ -73,7 +75,7 @@ public class AreneData {
 
     public List<PersonnageBase> construireEquipe(Function<String, PersonnageBase> factory) {
         int niv = Math.max(1, niveauMoyenEquipe);
-        return equipeDefensiveNoms.stream()
+        List<PersonnageBase> equipe = equipeDefensiveNoms.stream()
                 .map(factory)
                 .filter(p -> p != null)
                 .peek(p -> {
@@ -81,6 +83,17 @@ public class AreneData {
                     while (p.getNiveau() < niv) p.monterDeNiveauSilencieux();
                 })
                 .collect(java.util.stream.Collectors.toList());
+
+        // Equipement fantome uniquement pour les faux joueurs (IA), selon leur position
+        // au classement — un vrai joueur adverse n'en reçoit pas.
+        if (estFauxJoueur) {
+            Equipement.Rarete rarete = EquipementFactory.rareteEnnemiPourRangArene(rang);
+            for (PersonnageBase p : equipe) {
+                EquipementFactory.equiperSetStandard(p, rarete);
+            }
+        }
+
+        return equipe;
     }
 
     // ── Getters ───────────────────────────────────────────────────────────

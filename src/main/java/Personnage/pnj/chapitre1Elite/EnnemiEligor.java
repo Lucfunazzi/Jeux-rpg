@@ -7,10 +7,7 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Eligoal — Leader de la Guilde Eisenwald, surnommé "Shinigami", rang C.
- * Magie du Vent : attaques de vent tranchantes invisibles.
- * Sort signature : Mur de Vent (barrière de tornades qui emprisonne une zone entière).
- * Mur Tempête : bouclier de vent capable de bloquer les attaques ennemies.
+
  */
 public class EnnemiEligor extends PersonnageBase {
 

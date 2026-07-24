@@ -256,6 +256,19 @@ public class GestionnaireSauvegarde {
             data.compagnonsNiveau = ctx.gestionnaireCompagnons.getNiveau();
         }
 
+        // Créature sacrée
+        if (ctx.gestionnaireCreaturesSacrees != null) {
+            Gestionnaire_pet gcs = ctx.gestionnaireCreaturesSacrees;
+            data.creatureType             = gcs.getType().name();
+            data.creatureNiveau           = gcs.getNiveau();
+            data.creatureExperience       = gcs.getExperience();
+            data.creatureOeufDebloque     = gcs.isOeufDebloque();
+            data.creatureEntrainement     = gcs.getEntrainementActif() != null
+                    ? gcs.getEntrainementActif().name() : null;
+            data.creatureDebutEntrainement = gcs.getDebutEntrainement() != null
+                    ? gcs.getDebutEntrainement().toString() : null;
+        }
+
         // Coupons
         data.coupons = ctx.coupons;
 
@@ -501,6 +514,13 @@ public class GestionnaireSauvegarde {
     public void restaurerCompagnons(GestionnaireCompagnons gc, SauvegardeData data) {
         if (data.compagnonsType != null) {
             gc.restaurer(data.compagnonsType, data.compagnonsNiveau);
+        }
+    }
+
+    public void restaurerCreaturesSacrees(Gestionnaire_pet gcs, SauvegardeData data) {
+        if (data.creatureType != null) {
+            gcs.restaurer(data.creatureType, data.creatureNiveau, data.creatureExperience,
+                    data.creatureOeufDebloque, data.creatureEntrainement, data.creatureDebutEntrainement);
         }
     }
 

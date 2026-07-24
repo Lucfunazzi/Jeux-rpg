@@ -214,6 +214,14 @@ public class SauvegardeData {
     public String compagnonsType   = "HAPPY";
     public int    compagnonsNiveau = 1;
 
+    // ── Créature Sacrée ──────────────────────────────────────────────────
+    public String  creatureType              = "OEUF";
+    public int     creatureNiveau             = 1;
+    public int     creatureExperience         = 0;
+    public boolean creatureOeufDebloque       = false;
+    public String  creatureEntrainement       = null;
+    public String  creatureDebutEntrainement  = null;
+
     // ── Coupons ───────────────────────────────────────────────────────────
     public int coupons = 0;
 

@@ -6,6 +6,7 @@ import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import Equipement.CarteOr;
 import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +85,17 @@ public class Stage {
         this.recompenseXP         = recompenseXP;
         this.ennemis              = ennemis;
         this.recompenseEquipement = recompenseEquipement;
+
+        // Equipement fantome : toujours pour les chapitres Elite (titre contenant "Elite").
+        // Pour les chapitres normaux, seulement a partir du niveau 5 — ce qui ne correspond
+        // qu'aux stages 1 a 4 du tout debut du Chapitre 1 (Chapitre 2 et 3 demarrent deja a
+        // un niveau plus eleve et sont donc toujours equipes).
+        boolean estElite = titre != null && titre.toLowerCase().contains("elite");
+        for (PersonnageBase e : ennemis) {
+            if (estElite || e.getNiveau() > 4) {
+                EquipementFactory.equiperSetStandard(e, EquipementFactory.rareteEnnemiPourNiveau(e.getNiveau()));
+            }
+        }
     }
 
     /**

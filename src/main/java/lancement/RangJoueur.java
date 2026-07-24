@@ -6,7 +6,7 @@ public class RangJoueur {
 
     public enum Rang { C, B, A, S, SS, UR }
 
-    private static final double[] MULTIPLICATEURS = { 1.00, 1.20, 1.40, 1.60, 1.80, 2.00 };
+    private static final double[] MULTIPLICATEURS = { 1.00, 1.35, 1.80, 2.50, 3.50, 5.00 };
 
     private Rang rang = Rang.C;
 

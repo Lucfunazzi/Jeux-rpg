@@ -40,7 +40,8 @@ public class EcranCompagnonsController {
         Label niveauLabel = new Label("Niveau " + gc.getNiveau() + " / " + GestionnaireCompagnons.NIVEAU_MAX);
         niveauLabel.getStyleClass().add("item-detail");
 
-        Label bonusLabel = new Label(String.format("Bonus équipe : +%.1f%% ATK/PV/DEF/VIT", gc.getBonusPourcentage()));
+        Label bonusLabel = new Label(String.format("Bonus équipe : ATK +%.0f | PV +%.0f | DEF +%.0f | VIT +%.0f",
+                gc.getBonusATK(), gc.getBonusPV(), gc.getBonusDEF(), gc.getBonusVIT()));
         bonusLabel.getStyleClass().add("item-qte");
 
         VBox texte = new VBox(6, nomLabel, niveauLabel,

@@ -10,7 +10,7 @@ import java.util.List;
  *   - Niveaux 1 à 10 pour chaque phase (Happy → Carla → Panthère Lily → …)
  *   - Chaque niveau coûte de l'or (coutParNiveau défini dans CompagnonsType)
  *   - Au niveau 10, le joueur peut évoluer vers le compagnon suivant (coût d'évolution)
- *   - Le bonus % s'applique à ATK, PV, DEF et VIT de chaque membre de la formation
+ *   - Le bonus FLAT s'applique à ATK, PV, DEF et VIT de chaque membre de la formation
  *
  * Le menu Compagnons est débloqué au niveau 25 du joueur.
  */
@@ -32,18 +32,17 @@ public class GestionnaireCompagnons {
     public CompagnonsType getType()   { return type; }
     public int            getNiveau() { return niveau; }
 
-    /**
-     * Multiplicateur total à appliquer aux stats de base.
-     * Ex : Happy niv 5 → 5 × 0.3% = 1.5% → multiplicateur = 0.015
-     */
-    public double getMultiplicateur() {
-        return (type.bonusParNiveau * niveau) / 100.0;
-    }
+    /** Bonus ATK flat au niveau actuel. */
+    public double getBonusATK() { return type.getATK(niveau); }
 
-    /** Bonus en % affiché dans le menu (ex : 1.5%). */
-    public double getBonusPourcentage() {
-        return type.bonusParNiveau * niveau;
-    }
+    /** Bonus PV flat au niveau actuel. */
+    public double getBonusPV()  { return type.getPV(niveau); }
+
+    /** Bonus DEF flat au niveau actuel. */
+    public double getBonusDEF() { return type.getDEF(niveau); }
+
+    /** Bonus VIT flat au niveau actuel. */
+    public double getBonusVIT() { return type.getVIT(niveau); }
 
     /** Coût en or pour monter au niveau suivant (niveau < 10). */
     public int getCoutProchainNiveau() {
@@ -82,7 +81,8 @@ public class GestionnaireCompagnons {
         }
         niveau++;
         return new ResultatCompagnon(true, cout,
-            type.nom + " est maintenant niveau " + niveau + " ! Bonus équipe : +" + getBonusPourcentage() + "%");
+            type.nom + " est maintenant niveau " + niveau + " ! Bonus équipe : ATK +" + (int) getBonusATK()
+                + " | PV +" + (int) getBonusPV() + " | DEF +" + (int) getBonusDEF() + " | VIT +" + (int) getBonusVIT());
     }
 
     /**
@@ -108,7 +108,8 @@ public class GestionnaireCompagnons {
         type   = type.suivant();
         niveau = 1;
         return new ResultatCompagnon(true, cout,
-            ancienType.nom + " a évolué en " + type.nom + " ! Niveau remis à 1. Bonus équipe : +" + getBonusPourcentage() + "%");
+            ancienType.nom + " a évolué en " + type.nom + " ! Niveau remis à 1. Bonus équipe : ATK +" + (int) getBonusATK()
+                + " | PV +" + (int) getBonusPV() + " | DEF +" + (int) getBonusDEF() + " | VIT +" + (int) getBonusVIT());
     }
 
     // ── Application du bonus sur la formation ────────────────────────────
@@ -118,12 +119,15 @@ public class GestionnaireCompagnons {
      * À appeler après chaque changement de formation ET après chaque amélioration/évolution.
      */
     public void appliquerBonus(List<PersonnageBase> equipe) {
-        double mult = getMultiplicateur();
+        double atk = getBonusATK();
+        double pv  = getBonusPV();
+        double def = getBonusDEF();
+        double vit = getBonusVIT();
         for (PersonnageBase p : equipe) {
-            p.setBonusCompagnonsATK(mult);
-            p.setBonusCompagnonsDEF(mult);
-            p.setBonusCompagnonsPV(mult);
-            p.setBonusCompagnonsVIT(mult);
+            p.setBonusCompagnonsATK(atk);
+            p.setBonusCompagnonsDEF(def);
+            p.setBonusCompagnonsPV(pv);
+            p.setBonusCompagnonsVIT(vit);
         }
     }
 
@@ -165,7 +169,8 @@ public class GestionnaireCompagnons {
 
         System.out.println("║  Compagnon actif : " + type.nom);
         System.out.println("║  Niveau          : " + niveau + " / " + NIVEAU_MAX);
-        System.out.printf ("║  Bonus équipe    : +%.1f%% ATK/PV/DEF/VIT%n", getBonusPourcentage());
+        System.out.printf ("║  Bonus équipe    : ATK +%.0f | PV +%.0f | DEF +%.0f | VIT +%.0f%n",
+                getBonusATK(), getBonusPV(), getBonusDEF(), getBonusVIT());
         System.out.println("╠══════════════════════════════════════╣");
 
         if (!estAuNiveauMax()) {

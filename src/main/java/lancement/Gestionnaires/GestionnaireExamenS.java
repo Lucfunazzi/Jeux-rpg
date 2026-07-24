@@ -9,7 +9,7 @@ import java.time.LocalDate;
  */
 public class GestionnaireExamenS {
 
-    public static final int NB_STAGES = 10;
+    public static final int NB_STAGES = 40;
     public static final int NIVEAU_REQUIS = 15;
 
     private boolean[] dejaReussi     = new boolean[NB_STAGES + 1]; // index 1..10, permanent
@@ -51,9 +51,17 @@ public class GestionnaireExamenS {
 
     // ── Getters/Setters pour sauvegarde ───────────────────────────────────
     public boolean[] getDejaReussi()               { return dejaReussi; }
-    public void      setDejaReussi(boolean[] v)    { if (v != null) this.dejaReussi = v; }
+    public void      setDejaReussi(boolean[] v)    { this.dejaReussi = redimensionner(v); }
     public boolean[] getFaitAujourdhui()            { return faitAujourdhui; }
-    public void      setFaitAujourdhui(boolean[] v) { if (v != null) this.faitAujourdhui = v; }
+    public void      setFaitAujourdhui(boolean[] v) { this.faitAujourdhui = redimensionner(v); }
+
+    /** Recopie dans un tableau a la taille actuelle de NB_STAGES+1, pour rester compatible
+     *  avec une sauvegarde plus ancienne (moins de stages) sans deborder. */
+    private boolean[] redimensionner(boolean[] v) {
+        boolean[] resultat = new boolean[NB_STAGES + 1];
+        if (v != null) System.arraycopy(v, 0, resultat, 0, Math.min(v.length, resultat.length));
+        return resultat;
+    }
     public LocalDate getDernierReset()              { return dernierReset; }
     public void      setDernierReset(LocalDate d)   { if (d != null) this.dernierReset = d; }
 }

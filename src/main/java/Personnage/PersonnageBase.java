@@ -258,16 +258,23 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getRage() { return this.rage; }
 
+    /** Chance fixe (identique pour tous, alliés comme ennemis) que tout gain de rage soit doublé. */
+    private static final double CHANCE_RAGE_CRITIQUE = 0.15;
+
     public void ajouterRage(double montant) {
         Ralentissement ralen = getEffet(Ralentissement.class);
         if (ralen != null) montant = ralen.appliquerSurGainRage(montant);
+        if (Math.random() < CHANCE_RAGE_CRITIQUE) montant *= 2;
         this.rage += montant;
     }
 
     public void reinitialiserRage() {
-        this.rage = 0;
+        this.rage = rageApresUltime();
         this.specialeUtilisee = false;
     }
+
+    /** Rage conservee juste apres le declenchement de l'ultime (0 par defaut). Redefinissable par personnage. */
+    protected double rageApresUltime() { return 0; }
     
     public void reinitialiserPourCombat() {
     this.vie = getVieMax();      // PV à fond (tient compte des équipements)
@@ -286,7 +293,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         base += getBonusEquipementPV();
         if (titre != null) base *= (1 + titre.getBonus());
         if (bonusLienPV      > 0) base *= (1 + bonusLienPV);
-        if (bonusCompagnonsPV > 0) base *= (1 + bonusCompagnonsPV);
+        if (bonusCompagnonsPV > 0) base += bonusCompagnonsPV;
         if (bonusCreaturePV  > 0) base += bonusCreaturePV;
         double bonusPierreVie = getBonusPierreFraction(Pierre.Type.VIE);
         if (bonusPierreVie > 0) base *= (1 + bonusPierreVie);
@@ -312,7 +319,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         base += getBonusEquipementATK();
         if (compterPiecesRangC() >= 6) base *= 1.05;
         if (bonusLienATK      > 0) base *= (1 + bonusLienATK);
-        if (bonusCompagnonsATK > 0) base *= (1 + bonusCompagnonsATK);
+        if (bonusCompagnonsATK > 0) base += bonusCompagnonsATK;
         if (bonusCreatureATK  > 0) base += bonusCreatureATK;
         double bonusPierreForce = getBonusPierreFraction(Pierre.Type.FORCE);
         if (bonusPierreForce > 0) base *= (1 + bonusPierreForce);
@@ -335,7 +342,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (titre  != null) base *= (1 + titre.getBonus());
         base += getBonusEquipementDEF();
         if (bonusLienDEF      > 0) base *= (1 + bonusLienDEF);
-        if (bonusCompagnonsDEF > 0) base *= (1 + bonusCompagnonsDEF);
+        if (bonusCompagnonsDEF > 0) base += bonusCompagnonsDEF;
         if (bonusCreatureDEF  > 0) base += bonusCreatureDEF;
         return base;
     }
@@ -357,7 +364,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         base += getBonusEquipementVIT();
         if (compterPiecesRangC() >= 4) base *= 1.02;
         if (bonusLienVIT      > 0) base *= (1 + bonusLienVIT);
-        if (bonusCompagnonsVIT > 0) base *= (1 + bonusCompagnonsVIT);
+        if (bonusCompagnonsVIT > 0) base += bonusCompagnonsVIT;
         if (bonusCreatureVIT  > 0) base += bonusCreatureVIT;
         double bonusPierreAgilite = getBonusPierreFraction(Pierre.Type.AGILITE);
         if (bonusPierreAgilite > 0) base *= (1 + bonusPierreAgilite);

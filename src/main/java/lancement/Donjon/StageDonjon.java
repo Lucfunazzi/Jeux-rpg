@@ -2,6 +2,8 @@ package lancement.Donjon;
 
 import Combat.Combat;
 import Effets.BuffTitre;
+import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Equipement.Inventaire;
 import Equipement.ParcheminXP;
 import Joueur.Personnage_principale;
@@ -43,6 +45,16 @@ public class StageDonjon {
         this.recompenseOr       = recompenseOr;
         this.recompensePierres  = recompensePierres;
         this.recompenseParchemin = recompenseParchemin;
+
+        // Equipement fantome selon la difficulte : Normal = C, Difficile = B, Extreme = A.
+        Equipement.Rarete rarete = switch (difficulte) {
+            case NORMAL    -> Equipement.Rarete.C;
+            case DIFFICILE -> Equipement.Rarete.B;
+            case EXTREME   -> Equipement.Rarete.A;
+        };
+        for (PersonnageBase e : ennemis) {
+            EquipementFactory.equiperSetStandard(e, rarete);
+        }
     }
 
     /**
@@ -59,8 +71,7 @@ public class StageDonjon {
 
         // Reset equipe alliee avant combat
         for (PersonnageBase perso : equipeAlliee) {
-            perso.setVie(perso.getVieMax());
-            perso.reinitialiserRage();
+            perso.reinitialiserPourCombat();
             perso.getEffetsActifs().clear();
         }
 
@@ -76,8 +87,7 @@ public class StageDonjon {
 
         // Reset ennemis
         for (PersonnageBase e : ennemis) {
-            e.setVie(e.getVieMax());
-            e.reinitialiserRage();
+            e.reinitialiserPourCombat();
             e.getEffetsActifs().clear();
         }
 
@@ -96,8 +106,7 @@ public class StageDonjon {
         if (victoire) {
             // Reset equipe apres victoire
             for (PersonnageBase perso : equipeAlliee) {
-                perso.setVie(perso.getVieMax());
-                perso.reinitialiserRage();
+                perso.reinitialiserPourCombat();
                 perso.getEffetsActifs().clear();
             }
 

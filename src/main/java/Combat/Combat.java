@@ -465,6 +465,13 @@ public class Combat {
             return false;
         }
 
+        // Bonus de furie : +2,5% degats par tranche de 10 points de rage actuellement en reserve
+        // (attaques speciales/ultimes uniquement, cette methode n'est pas utilisee par l'attaque de base).
+        if (source != null) {
+            double bonusFurie = Math.floor(source.getRage() / 10.0) * 0.025;
+            if (bonusFurie > 0) degats *= (1 + bonusFurie);
+        }
+
         double pvAvant = cible.getVie();
         PersonnageBase.ResultatDegats resultat = cible.subirDegats(degats, source != null ? source.getTauxAttaqueS() : 100.0);
         String nomSource = (source != null) ? source.getNom() : "Esprit Celeste";
