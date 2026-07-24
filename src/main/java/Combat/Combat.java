@@ -136,6 +136,17 @@ public class Combat {
         return cibleMoinsPv(equipeEnnemie);
     }
 
+    /**
+     * Role prioritaire encore vivant dans l'equipe, pour les attaques de zone qui ciblent
+     * un role precis (ex: ultimes "tous les DPS"). Ordre de repli : DPS > Tank > Support,
+     * pour ne jamais gaspiller un tour si le role prefere n'a plus de survivant.
+     */
+    public static String rolePrioritaireVivant(List<PersonnageBase> equipe) {
+        if (cibleParRole(equipe, "DPS")     != null) return "DPS";
+        if (cibleParRole(equipe, "Tank")    != null) return "Tank";
+        return "Support";
+    }
+
     /** Membre vivant du role donne avec le moins de PV, ou null si aucun n'est vivant dans ce role. */
     public static PersonnageBase cibleParRole(List<PersonnageBase> equipe, String role) {
         PersonnageBase meilleure = null;

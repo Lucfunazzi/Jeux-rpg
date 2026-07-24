@@ -1,7 +1,12 @@
 package lancement.Gestionnaires;
 
+import Equipement.CristalTranscendance;
+import Equipement.Inventaire;
+import Equipement.JetonIncursion;
+import Equipement.ParcheminAscension;
 import lancement.EtoilesStage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,12 +33,18 @@ public class GestionnaireEtoiles {
         PARCHEMIN_ELITE
     }
 
-    public record RecompenseCoffre(TypeRecompenseCoffre type, int quantite) {}
+    /** Recompense supplementaire generique, ajoutee a l'inventaire comme un Materiau. */
+    public record ItemBonus(String nom, int quantite) {}
+
+    public record RecompenseCoffre(TypeRecompenseCoffre type, int quantite, List<ItemBonus> itemsBonus) {}
 
     private static final RecompenseCoffre[] RECOMPENSES = {
-        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 2),   // coffre 1
-        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 5),   // coffre 2
-        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ELITE,     1)    // coffre 3
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 2, List.of()),   // coffre 1
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 5,               // coffre 2
+                List.of(new ItemBonus(CristalTranscendance.NOM, 1))),
+        new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ELITE, 1,                    // coffre 3 (le plus dur)
+                List.of(new ItemBonus(JetonIncursion.NOM, 2),
+                        new ItemBonus(ParcheminAscension.NOM, 1)))
     };
 
     // étoiles par stage : clé = "C1S3", "C1E5", "C2S7"...
@@ -96,11 +107,14 @@ public class GestionnaireEtoiles {
         return Boolean.TRUE.equals(coffresClaimes.get(cleCoffre(chapitre, elite, numeroCoffre)));
     }
 
-    /** Réclame le coffre et retourne la récompense (null si non disponible). */
-    public RecompenseCoffre reclamerCoffre(int chapitre, boolean elite, int numeroCoffre) {
+    /** Réclame le coffre, crédite les items bonus dans l'inventaire, et retourne la récompense (null si non disponible). */
+    public RecompenseCoffre reclamerCoffre(int chapitre, boolean elite, int numeroCoffre, Inventaire inventaire) {
         if (!coffreDisponible(chapitre, elite, numeroCoffre)) return null;
         coffresClaimes.put(cleCoffre(chapitre, elite, numeroCoffre), true);
-        return RECOMPENSES[numeroCoffre - 1];
+
+        RecompenseCoffre r = RECOMPENSES[numeroCoffre - 1];
+        for (ItemBonus b : r.itemsBonus()) inventaire.ajouterMateriau(b.nom(), b.quantite());
+        return r;
     }
 
     public RecompenseCoffre getRecompenseCoffre(int numeroCoffre) {

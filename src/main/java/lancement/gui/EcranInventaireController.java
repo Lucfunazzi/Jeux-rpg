@@ -7,8 +7,11 @@ import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
 import Equipement.Materiau;
 import Equipement.ParcheminXP;
+import Equipement.BoiteGuilde;
+import Equipement.CleCoffreGuilde;
 import Equipement.Pierre;
 import Equipement.PotionEnergie;
+import Equipement.SceauDeRang;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,8 +117,15 @@ public class EcranInventaireController {
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (var m : autresMateriaux) {
+                SceauDeRang sceau = trouverSceau(m.getNom());
                 if (MenuExamenS.estBoite(m.getNom())) {
                     grille.getChildren().add(carteBoitePierre(MenuExamenS.niveauDeLaBoite(m.getNom()), m.getQuantite()));
+                } else if (sceau != null) {
+                    grille.getChildren().add(carteSceau(sceau, m.getQuantite()));
+                } else if (m.getNom().equals(BoiteGuilde.NOM)) {
+                    grille.getChildren().add(carteBoiteGuilde(m.getQuantite()));
+                } else if (m.getNom().equals(CleCoffreGuilde.NOM)) {
+                    grille.getChildren().add(carteCoffreGuilde(m.getQuantite()));
                 } else {
                     grille.getChildren().add(carteSimple(m.getNom(), "x" + m.getQuantite()));
                 }
@@ -272,6 +282,61 @@ public class EcranInventaireController {
         Node ligne = carteSimple(MenuExamenS.nomBoite(niveauBoite), "x" + quantite);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> ouvrirBoitesPierre(niveauBoite));
+        return ligne;
+    }
+
+    /** Carte pour un Sceau de Rang. Clic -> choisir un personnage recrute a qui le donner. */
+    private Node carteSceau(SceauDeRang sceau, int quantite) {
+        Node ligne = carteSimple(sceau.nom, "x" + quantite + "  (+" + sceau.fragments + " fragments au choix)");
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> actionsSceau(sceau));
+        return ligne;
+    }
+
+    private SceauDeRang trouverSceau(String nomMateriau) {
+        for (SceauDeRang s : SceauDeRang.values()) if (s.nom.equals(nomMateriau)) return s;
+        return null;
+    }
+
+    private void actionsSceau(SceauDeRang sceau) {
+        if (ctx.personnagesRecruites.isEmpty()) {
+            info(sceau.nom, "Aucun personnage recrute a qui donner ce sceau.");
+            return;
+        }
+        PersonnageBase cible = GuiVisuels.choisirParmiCartes(
+                "Donner " + sceau.nom + " a...", ctx.personnagesRecruites, this::cartePersonnageChoix);
+        if (cible == null) return;
+
+        String resultat = lancement.Gestionnaires.GestionnaireEtoilesPerso.utiliserSceau(ctx.inventaire, sceau, cible);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info(sceau.nom, resultat);
+        rafraichir();
+    }
+
+    /** Carte pour une Boite Mysterieuse de la Guilde. Clic -> ouvrir directement (lot aleatoire). */
+    private Node carteBoiteGuilde(int quantite) {
+        Node ligne = carteSimple(BoiteGuilde.NOM, "x" + quantite);
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> {
+            String resultat = lancement.Gestionnaires.GestionnaireGuilde.ouvrirBoiteMysterieuse(ctx.inventaire, ctx.joueur);
+            ctx.sauvegarde.sauvegarder(ctx);
+            info(BoiteGuilde.NOM, resultat);
+            rafraichir();
+        });
+        return ligne;
+    }
+
+    /** Carte pour les Cles de Coffre de Guilde. Clic -> ouvrir le grand coffre (selon le Rang Joueur) si assez de cles. */
+    private Node carteCoffreGuilde(int quantite) {
+        Node ligne = carteSimple(CleCoffreGuilde.NOM, "x" + quantite + " / " + CleCoffreGuilde.SEUIL_OUVERTURE);
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> {
+            String resultat = lancement.Gestionnaires.GestionnaireGuilde.ouvrirCoffreGuilde(
+                    ctx.inventaire, ctx.joueur, ctx.menuTirage, ctx.rangJoueur.getRang());
+            ctx.sauvegarde.sauvegarder(ctx);
+            info("Coffre de Guilde", resultat);
+            rafraichir();
+        });
         return ligne;
     }
 

@@ -62,13 +62,14 @@ public class perso_Jubia_4elements extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jubia utilise Prison d'eau sur les DPS !");
-        for (PersonnageBase cibleDPS : equipeEnnemie) {
-            if (cibleDPS.estVivant() && cibleDPS.getRole().equals("DPS")) {
+        log.add("Jubia utilise Prison d'eau !");
+        String roleCible = Combat.rolePrioritaireVivant(equipeEnnemie);
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
                 double degats = this.getAttaque() * 0.80;
-                Combat.appliquerDegatsAvecLog(this, cibleDPS, degats, log);
-                Combat.appliquerEffet(this, cibleDPS, new ReductionVitesse(0.20, 2), log);
-                Combat.appliquerEffet(this, cibleDPS, new Etourdissement(2), log);
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.20, 2), log);
+                Combat.appliquerEffet(this, ennemi, new Etourdissement(2), log);
             }
         }
     }
@@ -82,7 +83,8 @@ public class perso_Jubia_4elements extends PersonnageBase {
                 + "30% de chance de Trempe pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Prison d'eau — inflige 80% ATK a tous les DPS ennemis, "
+        System.out.println("Prison d'eau — inflige 80% ATK a tous les DPS ennemis "
+                + "(ou tous les Tanks si aucun DPS, ou tous les Supports en dernier recours), "
                 + "applique Reduction Vitesse -20% pendant 2 tours "
                 + "et Etourdissement pendant 2 tours sur chacun.");
     }

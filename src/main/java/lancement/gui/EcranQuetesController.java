@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import Personnage.PersonnageBase;
 import lancement.GameContext;
+import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Quetes.Quete;
 import lancement.Quetes.QueteJournaliere;
 import lancement.Quetes.QueteProgression;
@@ -38,8 +39,16 @@ public class EcranQuetesController {
     private void rafraichir() {
         quetesBox.getChildren().clear();
 
-        quetesBox.getChildren().add(titreSection("Quête journalière"));
-        quetesBox.getChildren().add(carteQuete(ctx.gestionnaireQuetes.getQueteJournaliere()));
+        int pts = ctx.gestionnaireQuetes.getPointsJournaliers();
+        quetesBox.getChildren().add(titreSection("Barre de points journalière : " + pts + " / 100"));
+        for (int i = 0; i < GestionnaireQuetes.PALIERS_BARRE_JOURNALIERE.length; i++) {
+            quetesBox.getChildren().add(carteBarre(i));
+        }
+
+        quetesBox.getChildren().add(titreSection("Quêtes journalières"));
+        for (QueteJournaliere qj : ctx.gestionnaireQuetes.getQuetesJournalieres()) {
+            quetesBox.getChildren().add(carteQuete(qj));
+        }
 
         quetesBox.getChildren().add(titreSection("Quêtes de progression"));
         List<QueteProgression> visibles = ctx.gestionnaireQuetes.getQuetesVisibles(ctx);
@@ -48,6 +57,28 @@ public class EcranQuetesController {
         } else {
             for (QueteProgression q : visibles) quetesBox.getChildren().add(carteQuete(q));
         }
+    }
+
+    /** Carte pour un palier de la barre de points journalière. Clic -> Réclamer si disponible. */
+    private Node carteBarre(int index) {
+        int palier = GestionnaireQuetes.PALIERS_BARRE_JOURNALIERE[index];
+        boolean reclamee   = ctx.gestionnaireQuetes.isBarreReclamee(index);
+        boolean disponible = ctx.gestionnaireQuetes.estBarreDisponible(index);
+
+        String titre = palier + " points" + (reclamee ? " — Réclamée" : disponible ? " — Disponible !" : "");
+        Node carte = GuiVisuels.creerCarteChoix(titre,
+                ctx.gestionnaireQuetes.afficherRecompenseBarre(index),
+                e -> onReclamerBarre(index));
+        if (disponible) carte.getStyleClass().add("carte-item-joueur");
+        if (!disponible) { carte.setCursor(Cursor.DEFAULT); carte.setOnMouseClicked(null); }
+        return carte;
+    }
+
+    private void onReclamerBarre(int index) {
+        String resultat = ctx.gestionnaireQuetes.reclamerBarre(index, ctx.inventaire);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Barre journalière", resultat);
+        rafraichir();
     }
 
     private Label titreSection(String texte) {
@@ -138,6 +169,10 @@ public class EcranQuetesController {
         if (q instanceof QueteJournaliere) {
             ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
             message.append("+ 1x ").append(PotionEnergie.MOYENNE.nom).append("\n");
+        }
+        for (Quete.RecompenseItem item : q.getRecompensesItems()) {
+            ctx.inventaire.ajouterMateriau(item.nom(), item.quantite());
+            message.append("+ ").append(item.quantite()).append("x ").append(item.nom()).append("\n");
         }
 
         ctx.sauvegarde.sauvegarder(ctx);

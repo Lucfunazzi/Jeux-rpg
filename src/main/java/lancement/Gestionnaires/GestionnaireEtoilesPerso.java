@@ -111,6 +111,41 @@ public class GestionnaireEtoilesPerso {
         return true;
     }
 
+    // ── Sceau de Rang ─────────────────────────────────────────────────────
+    /**
+     * Utilise un Sceau de Rang sur un personnage deja recrute de la meme rarete :
+     * consomme le sceau et donne ses fragments directement au personnage cible.
+     */
+    public static String utiliserSceau(Inventaire inv, Equipement.SceauDeRang sceau, PersonnageBase perso) {
+        if (!perso.getRarete().equals(sceau.name())) {
+            return sceau.nom + " ne correspond pas a la rarete de " + perso.getNom()
+                    + " [" + perso.getRarete() + "].";
+        }
+        if (!inv.retirerMateriau(sceau.nom, 1)) return "Aucun " + sceau.nom + " en stock.";
+
+        ajouterFragments(inv, perso.getNom(), sceau.fragments);
+        return sceau.nom + " utilise sur " + perso.getNom() + " ! +" + sceau.fragments + " fragments.";
+    }
+
+    // ── Parchemin d'Ascension ─────────────────────────────────────────────
+    /**
+     * Utilise un Parchemin d'Ascension sur un personnage a 5 etoiles : lui accorde
+     * un palier bonus isole (+10% ATK/DEF/PV/VIT supplementaire, voir PersonnageBase).
+     */
+    public static String utiliserParcheminAscension(Inventaire inv, PersonnageBase perso) {
+        if (!perso.peutAscensionner()) {
+            return perso.getNbreEtoiles() < 5
+                    ? perso.getNom() + " doit etre a 5 etoiles pour ascensionner."
+                    : perso.getNom() + " est deja ascensionne.";
+        }
+        if (!inv.retirerMateriau(Equipement.ParcheminAscension.NOM, 1)) {
+            return "Aucun " + Equipement.ParcheminAscension.NOM + " en stock.";
+        }
+
+        perso.ascensionner();
+        return perso.getNom() + " est Ascensionne ! (+10% ATK/DEF/PV/VIT supplementaire)";
+    }
+
     // ── Utilitaire ───────────────────────────────────────────────────────
     public static boolean dejaRecruteParNom(List<PersonnageBase> recrutes, String nom) {
         for (PersonnageBase p : recrutes)

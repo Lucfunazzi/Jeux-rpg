@@ -1,8 +1,11 @@
 package lancement.gui;
 
+import Equipement.FriandiseFamilier;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -75,6 +78,11 @@ public class EcranCreaturesSacreesController {
         carte.setPrefWidth(320);
         infoBox.getChildren().setAll(carte);
 
+        if (!gcs.estAuNiveauMax()) {
+            ajouterCarteAction("Utiliser une Friandise de Familier",
+                    "Donne de l'XP instantanee, sans attendre l'entrainement", e -> onUtiliserFriandise());
+        }
+
         if (gcs.entrainementEnCours()) {
             LocalDateTime debut = gcs.getDebutEntrainement();
             Entrainement  actif = gcs.getEntrainementActif();
@@ -126,6 +134,40 @@ public class EcranCreaturesSacreesController {
             info("Creatures Sacrees", "Impossible de lancer l'entrainement.");
         }
         rafraichir();
+    }
+
+    private void onUtiliserFriandise() {
+        Gestionnaire_pet gcs = ctx.gestionnaireCreaturesSacrees;
+        List<FriandiseFamilier> dispo = new ArrayList<>();
+        for (FriandiseFamilier f : FriandiseFamilier.values()) {
+            if (ctx.inventaire.getQuantiteMateriau(f.nom) > 0) dispo.add(f);
+        }
+        if (dispo.isEmpty()) {
+            info("Friandise de Familier", "Aucune Friandise en stock.");
+            return;
+        }
+
+        FriandiseFamilier choisi = GuiVisuels.choisirParmiCartes("Choisir une Friandise", dispo, this::carteFriandiseChoix);
+        if (choisi == null) return;
+
+        String resultat = gcs.utiliserFriandise(ctx.inventaire, choisi);
+        ctx.formation.appliquerBonusLiens();
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Friandise de Familier", resultat);
+        rafraichir();
+    }
+
+    private Node carteFriandiseChoix(FriandiseFamilier f) {
+        int qte = ctx.inventaire.getQuantiteMateriau(f.nom);
+        Label nom = new Label(f.nom);
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label("+" + f.xp + " XP  ·  x" + qte);
+        detail.getStyleClass().add("item-detail");
+        VBox carte = new VBox(2, nom, detail);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(240);
+        return carte;
     }
 
     private void ajouterCarteAction(String titre, String description, EventHandler<javafx.scene.input.MouseEvent> action) {

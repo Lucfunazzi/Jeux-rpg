@@ -1,23 +1,37 @@
 package lancement.Gestionnaires;
 
+import Equipement.BoiteGuilde;
+import Equipement.CarteOr;
+import Equipement.CleCoffreGuilde;
+import Equipement.Inventaire;
+import Equipement.PotionEnergie;
+import lancement.Menus.MenuExamenS;
 import lancement.Menus.MenuRecrutement;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import lancement.Quetes.Quete;
 import lancement.Quetes.QueteJournaliere;
 import lancement.Quetes.QueteProgression;
 import Personnage.FairyTail.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GestionnaireQuetes {
-    
+
 
     private final ArrayList<QueteProgression> quetesProgression = new ArrayList<>();
-    private QueteJournaliere queteJournaliere;
+    private List<QueteJournaliere> quetesJournalieres = new ArrayList<>();
     private LocalDate dernierRenouvellement;
-    private int indexQueteJournaliere = 0;
+    private int indexQueteJournaliere = 0; // conserve pour compatibilite de sauvegarde uniquement
+
+    // ── Barre de points quotidienne (5 quetes journalieres actives = 100 pts max) ──
+    public static final int[] PALIERS_BARRE_JOURNALIERE = {20, 40, 60, 80, 100};
+    private int       pointsJournaliers      = 0;
+    private boolean[] barreJournaliereReclame = new boolean[PALIERS_BARRE_JOURNALIERE.length];
+
     // Map : id de quête → personnage à offrir (null = pas de perso)
 private final Map<String, PersonnageBase> recompensesPersonnages = new HashMap<>();
 
@@ -32,19 +46,25 @@ private void initialiserRecompensesPersonnages() {
     private static final QueteJournaliere[] POOL_JOURNALIER = {
         new QueteJournaliere("J1", "Forgeron du jour",
                 "Fortifiez votre equipement 3 fois.",
-                QueteJournaliere.TypeObjectif.FORTIFIER, 3, 500, 2000),
+                QueteJournaliere.TypeObjectif.FORTIFIER, 3, 500, 2000,
+                List.of(new Quete.RecompenseItem(CleCoffreGuilde.NOM, 1))),
         new QueteJournaliere("J2", "Accumulateur",
                 "Gagnez 500 or en combat.",
-                QueteJournaliere.TypeObjectif.GAGNER_OR, 500, 500, 1000),
+                QueteJournaliere.TypeObjectif.GAGNER_OR, 500, 500, 1000,
+                List.of(new Quete.RecompenseItem(BoiteGuilde.NOM, 1))),
         new QueteJournaliere("J3", "Mage assidu",
                 "Terminez 3 stages.",
-                QueteJournaliere.TypeObjectif.TERMINER_STAGE, 3, 800, 1500),
+                QueteJournaliere.TypeObjectif.TERMINER_STAGE, 3, 800, 1500,
+                List.of(new Quete.RecompenseItem(CleCoffreGuilde.NOM, 1))),
         new QueteJournaliere("J4", "Grande forge",
                 "Fortifiez votre equipement 5 fois.",
-                QueteJournaliere.TypeObjectif.FORTIFIER, 5, 800, 2500),
+                QueteJournaliere.TypeObjectif.FORTIFIER, 5, 800, 2500,
+                List.of(new Quete.RecompenseItem(BoiteGuilde.NOM, 1))),
         new QueteJournaliere("J5", "Chasseur de richesses",
                 "Gagnez 1000 or en combat.",
-                QueteJournaliere.TypeObjectif.GAGNER_OR, 1000, 1000, 2000),
+                QueteJournaliere.TypeObjectif.GAGNER_OR, 1000, 1000, 2000,
+                List.of(new Quete.RecompenseItem(CleCoffreGuilde.NOM, 1),
+                        new Quete.RecompenseItem(BoiteGuilde.NOM, 1))),
     };
 
   public GestionnaireQuetes() {
@@ -255,18 +275,33 @@ private void initialiserRecompensesPersonnages() {
     }
 
     // ── Renouvellement automatique à minuit ───────────────────────────────
+    // Les 5 quetes du pool sont toutes actives simultanement chaque jour
+    // (plutot qu'une seule qui tourne), pour permettre d'atteindre les 100
+    // points de la barre journaliere en une seule journee.
     public void verifierRenouvellement() {
         LocalDate aujourdhui = LocalDate.now();
-        if (queteJournaliere == null || !aujourdhui.equals(dernierRenouvellement)) {
-            QueteJournaliere modele = POOL_JOURNALIER[indexQueteJournaliere % POOL_JOURNALIER.length];
-            queteJournaliere = new QueteJournaliere(
-                modele.getId(), modele.getTitre(), modele.getDescription(),
-                modele.getTypeObjectif(), modele.getObjectifCible(),
-                modele.getRecompenseXP(), modele.getRecompenseOr()
-            );
-            dernierRenouvellement = aujourdhui;
-            indexQueteJournaliere++;
+        if (quetesJournalieres.isEmpty() || !aujourdhui.equals(dernierRenouvellement)) {
+            quetesJournalieres = new ArrayList<>();
+            for (QueteJournaliere modele : POOL_JOURNALIER) {
+                quetesJournalieres.add(new QueteJournaliere(
+                    modele.getId(), modele.getTitre(), modele.getDescription(),
+                    modele.getTypeObjectif(), modele.getObjectifCible(),
+                    modele.getRecompenseXP(), modele.getRecompenseOr(),
+                    modele.getRecompensesItems()
+                ));
+            }
+            pointsJournaliers       = 0;
+            barreJournaliereReclame = new boolean[PALIERS_BARRE_JOURNALIERE.length];
+            dernierRenouvellement   = aujourdhui;
         }
+    }
+
+    /** Retrouve les recompenses d'items associees au modele de quete portant cet id (pour la restauration de sauvegarde). */
+    public static List<Quete.RecompenseItem> recompensesItemsPourId(String id) {
+        for (QueteJournaliere modele : POOL_JOURNALIER) {
+            if (modele.getId().equals(id)) return modele.getRecompensesItems();
+        }
+        return List.of();
     }
 
     // ── Déclencheurs appelés depuis l'extérieur ───────────────────────────
@@ -302,39 +337,29 @@ private void initialiserRecompensesPersonnages() {
     }
 }
 
-        if (!queteJournaliere.isReclamee()
-                && queteJournaliere.getTypeObjectif()
-                   == QueteJournaliere.TypeObjectif.TERMINER_STAGE) {
-            queteJournaliere.ajouterProgression(1);
-            if (queteJournaliere.isCompletee()) {
-                System.out.println("\n>> Quete journaliere accomplie : "
-                        + queteJournaliere.getTitre() + " !");
-            }
-        }
+        avancerQuetesJournalieres(QueteJournaliere.TypeObjectif.TERMINER_STAGE, 1);
     }
 
     public void notifierFortification() {
         verifierRenouvellement();
-        if (!queteJournaliere.isReclamee()
-                && queteJournaliere.getTypeObjectif()
-                   == QueteJournaliere.TypeObjectif.FORTIFIER) {
-            queteJournaliere.ajouterProgression(1);
-            if (queteJournaliere.isCompletee()) {
-                System.out.println("\n>> Quete journaliere accomplie : "
-                        + queteJournaliere.getTitre() + " !");
-            }
-        }
+        avancerQuetesJournalieres(QueteJournaliere.TypeObjectif.FORTIFIER, 1);
     }
 
     public void notifierOrGagne(int montant) {
         verifierRenouvellement();
-        if (!queteJournaliere.isReclamee()
-                && queteJournaliere.getTypeObjectif()
-                   == QueteJournaliere.TypeObjectif.GAGNER_OR) {
-            queteJournaliere.ajouterProgression(montant);
-            if (queteJournaliere.isCompletee()) {
-                System.out.println("\n>> Quete journaliere accomplie : "
-                        + queteJournaliere.getTitre() + " !");
+        avancerQuetesJournalieres(QueteJournaliere.TypeObjectif.GAGNER_OR, montant);
+    }
+
+    /** Fait avancer toutes les quetes journalieres actives du type donne ; +20 pts de barre par quete qui se termine. */
+    private void avancerQuetesJournalieres(QueteJournaliere.TypeObjectif type, int montant) {
+        for (QueteJournaliere qj : quetesJournalieres) {
+            if (qj.isReclamee() || qj.getTypeObjectif() != type) continue;
+
+            boolean etaitCompletee = qj.isCompletee();
+            qj.ajouterProgression(montant);
+            if (!etaitCompletee && qj.isCompletee()) {
+                pointsJournaliers = Math.min(100, pointsJournaliers + 20);
+                System.out.println("\n>> Quete journaliere accomplie : " + qj.getTitre() + " !");
             }
         }
     }
@@ -402,15 +427,59 @@ private void initialiserRecompensesPersonnages() {
                 && stage < stagesDebloques.length && stagesDebloques[stage];
     }
 
-    public QueteJournaliere getQueteJournaliere() { return queteJournaliere; }
+    public List<QueteJournaliere> getQuetesJournalieres() { return quetesJournalieres; }
+    public void setQuetesJournalieres(List<QueteJournaliere> liste) { this.quetesJournalieres = liste; }
     public ArrayList<QueteProgression> getToutesQuetesProgression() { return quetesProgression; }
+
+    // ── Barre de points quotidienne ────────────────────────────────────────
+    public int getPointsJournaliers() { return pointsJournaliers; }
+
+    public boolean estBarreDisponible(int index) {
+        return pointsJournaliers >= PALIERS_BARRE_JOURNALIERE[index] && !barreJournaliereReclame[index];
+    }
+
+    public boolean isBarreReclamee(int index) { return barreJournaliereReclame[index]; }
+
+    public String afficherRecompenseBarre(int index) {
+        return switch (index) {
+            case 0  -> "10x " + CarteOr.NIVEAU_1.nom;
+            case 1  -> "10x " + CarteOr.NIVEAU_2.nom;
+            case 2  -> "2x " + PotionEnergie.GRANDE.nom;
+            case 3  -> "2x " + MenuExamenS.nomBoite(1);
+            default -> "10x " + CarteOr.NIVEAU_3.nom + ", 2x " + PotionEnergie.MOYENNE.nom
+                    + ", 5x " + BoiteGuilde.NOM + ", 1x " + CleCoffreGuilde.NOM;
+        };
+    }
+
+    public String reclamerBarre(int index, Inventaire inventaire) {
+        if (!estBarreDisponible(index)) return "Palier non disponible.";
+
+        switch (index) {
+            case 0  -> inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 10);
+            case 1  -> inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 10);
+            case 2  -> inventaire.ajouterMateriau(PotionEnergie.GRANDE.nom, 2);
+            case 3  -> inventaire.ajouterMateriau(MenuExamenS.nomBoite(1), 2);
+            default -> {
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_3, 10);
+                inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
+                inventaire.ajouterMateriau(BoiteGuilde.NOM, 5);
+                inventaire.ajouterMateriau(CleCoffreGuilde.NOM, 1);
+            }
+        }
+        barreJournaliereReclame[index] = true;
+        return "Palier " + PALIERS_BARRE_JOURNALIERE[index] + " points reclame ! " + afficherRecompenseBarre(index);
+    }
 
     // ── Getters/setters pour la sauvegarde ────────────────────────────────
     public LocalDate getDernierRenouvellement() { return dernierRenouvellement; }
     public void setDernierRenouvellement(LocalDate date) { this.dernierRenouvellement = date; }
     public int getIndexQueteJournaliere() { return indexQueteJournaliere; }
     public void setIndexQueteJournaliere(int index) { this.indexQueteJournaliere = index; }
-    public void setQueteJournaliere(QueteJournaliere q) { this.queteJournaliere = q; }
-    
-    
+    public void setPointsJournaliers(int p) { this.pointsJournaliers = p; }
+    public boolean[] getBarreJournaliereReclame() { return barreJournaliereReclame; }
+    public void setBarreJournaliereReclame(boolean[] v) {
+        boolean[] resultat = new boolean[PALIERS_BARRE_JOURNALIERE.length];
+        if (v != null) System.arraycopy(v, 0, resultat, 0, Math.min(v.length, resultat.length));
+        this.barreJournaliereReclame = resultat;
+    }
 }

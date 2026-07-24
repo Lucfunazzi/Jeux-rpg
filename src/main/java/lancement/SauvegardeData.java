@@ -21,6 +21,7 @@ public class SauvegardeData {
     public int       competenceSpecialeActive = 0;
 
     public String rangJoueur = "C";
+    public boolean[] rangJoueurCoffresReclames = null;
     // prestige supprimé
 
     public List<String> titresObtenus = new ArrayList<>();
@@ -160,11 +161,13 @@ public class SauvegardeData {
     }
 
     // ── Quetes ────────────────────────────────────────────────────────────
-    public String               dernierRenouvellementQuete;
-    public int                  indexQueteJournaliere       = 0;
-    public QueteJournaliereData queteJournaliereActive;
-    public List<String>         quetesProgressionReclamees  = new ArrayList<>();
-    public List<String>         quetesProgressionCompletees = new ArrayList<>();
+    public String                     dernierRenouvellementQuete;
+    public int                        indexQueteJournaliere       = 0;
+    public List<QueteJournaliereData> quetesJournalieresActives  = new ArrayList<>();
+    public List<String>               quetesProgressionReclamees  = new ArrayList<>();
+    public List<String>               quetesProgressionCompletees = new ArrayList<>();
+    public int                        pointsJournaliers           = 0;
+    public boolean[]                  barreJournaliereReclame     = null;
 
     public static class QueteJournaliereData {
         public String  id;

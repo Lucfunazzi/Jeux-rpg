@@ -14,7 +14,7 @@ public class perso_Elfman extends PersonnageBase {
         this.rarete = "B";
         double multiplicateurRarete = 1.20;
         this.vie = 480 * multiplicateurRarete;
-        this.attaque = 135 * multiplicateurRarete;
+        this.attaque = 128 * multiplicateurRarete;
         this.defense = 120 * multiplicateurRarete;
         this.vitesse = 90 * multiplicateurRarete;
         this.taux_critiques = 0.08;

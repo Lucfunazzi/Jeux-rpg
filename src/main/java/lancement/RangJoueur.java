@@ -1,5 +1,7 @@
 package lancement;
 
+import Equipement.Inventaire;
+import Equipement.SceauDeRang;
 import Joueur.ArbreCompetences;
 
 public class RangJoueur {
@@ -7,8 +9,33 @@ public class RangJoueur {
     public enum Rang { C, B, A, S, SS, SSS, UR }
 
     private static final double[] MULTIPLICATEURS = { 1.00, 1.35, 1.80, 2.50, 3.50, 4.20, 5.00 };
+    private static final int      SCEAUX_PAR_COFFRE = 5;
 
     private Rang rang = Rang.C;
+
+    // ── Coffre d'Arene (une fois par palier de rang atteint) ──────────────
+    private boolean[] coffreRangReclame = new boolean[Rang.values().length];
+
+    /** Vrai si le coffre d'Arene du rang actuel n'a pas encore ete reclame. */
+    public boolean estCoffreRangDisponible() { return !coffreRangReclame[rang.ordinal()]; }
+
+    /** Reclame le coffre d'Arene du rang actuel : +5x Sceau de Rang correspondant. */
+    public String reclamerCoffreRang(Inventaire inventaire) {
+        if (coffreRangReclame[rang.ordinal()]) return "Coffre d'Arene deja reclame pour ce rang.";
+
+        coffreRangReclame[rang.ordinal()] = true;
+        SceauDeRang sceau = SceauDeRang.valueOf(rang.name());
+        inventaire.ajouterMateriau(sceau.nom, SCEAUX_PAR_COFFRE);
+        return "Coffre d'Arene reclame ! +" + SCEAUX_PAR_COFFRE + "x " + sceau.nom;
+    }
+
+    public boolean[] getCoffreRangReclame() { return coffreRangReclame; }
+
+    public void setCoffreRangReclame(boolean[] v) {
+        boolean[] resultat = new boolean[Rang.values().length];
+        if (v != null) System.arraycopy(v, 0, resultat, 0, Math.min(v.length, resultat.length));
+        this.coffreRangReclame = resultat;
+    }
 
     // Niveau joueur requis pour monter depuis B, A, S, SS, SSS (C a sa propre condition, voir ci-dessous).
     // D'autres conditions pourront s'ajouter plus tard en plus du niveau.

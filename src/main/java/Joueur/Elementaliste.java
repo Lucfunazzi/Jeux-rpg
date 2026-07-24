@@ -78,7 +78,7 @@ public class Elementaliste implements Competences {
     }
 
     @Override public void descriptionCompetenceArbre3() {
-        // TODO
+        System.out.println("Epines fleuries — Inflige 130% ATK au Tank ennemi. Immunise les attaquants aux effets de contrôle (Etourdissement,Paralysie,Sommeil,Petrification");
     }
 
     @Override public void descriptionAttaqueSpeciale() {

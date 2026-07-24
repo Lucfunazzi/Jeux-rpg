@@ -76,7 +76,23 @@ public class EcranAreneController {
                 disponible ? "Recompenses selon ton rang actuel. Clique pour recuperer !" : "Revient chaque jour a 20h.",
                 e -> onCoffre());
         if (disponible) carteCoffre.getStyleClass().add("carte-item-joueur");
-        coffreBox.getChildren().setAll(carteCoffre);
+
+        boolean coffreRangDisponible = ctx.rangJoueur.estCoffreRangDisponible();
+        Node carteCoffreRang = GuiVisuels.creerCarteChoix(
+                "Coffre d'Arène — Rang " + ctx.rangJoueur.getRangNom()
+                        + (coffreRangDisponible ? " — DISPONIBLE !" : " — deja reclame"),
+                "5x Sceau de Rang " + ctx.rangJoueur.getRangNom() + ". Une fois par palier de rang atteint.",
+                e -> onCoffreRang());
+        if (coffreRangDisponible) carteCoffreRang.getStyleClass().add("carte-item-joueur");
+
+        coffreBox.getChildren().setAll(carteCoffre, carteCoffreRang);
+    }
+
+    private void onCoffreRang() {
+        String resultat = ctx.rangJoueur.reclamerCoffreRang(ctx.inventaire);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Coffre d'Arène", resultat);
+        rafraichir();
     }
 
     private void onClassement(MouseEvent event) {

@@ -51,6 +51,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
@@ -211,8 +212,8 @@ public class GestionnaireSauvegarde {
         GestionnaireQuetes gq = ctx.gestionnaireQuetes;
         data.dernierRenouvellementQuete = gq.getDernierRenouvellement().toString();
         data.indexQueteJournaliere      = gq.getIndexQueteJournaliere();
-        QueteJournaliere qj = gq.getQueteJournaliere();
-        if (qj != null) {
+        data.quetesJournalieresActives  = new ArrayList<>();
+        for (QueteJournaliere qj : gq.getQuetesJournalieres()) {
             SauvegardeData.QueteJournaliereData qjd = new SauvegardeData.QueteJournaliereData();
             qjd.id            = qj.getId();
             qjd.titre         = qj.getTitre();
@@ -224,8 +225,10 @@ public class GestionnaireSauvegarde {
             qjd.progression   = qj.getProgressionValeur();
             qjd.completee     = qj.isCompletee();
             qjd.reclamee      = qj.isReclamee();
-            data.queteJournaliereActive = qjd;
+            data.quetesJournalieresActives.add(qjd);
         }
+        data.pointsJournaliers       = gq.getPointsJournaliers();
+        data.barreJournaliereReclame = gq.getBarreJournaliereReclame();
         for (QueteProgression q : gq.getToutesQuetesProgression()) {
             if (q.isReclamee())  data.quetesProgressionReclamees.add(q.getId());
             if (q.isCompletee()) data.quetesProgressionCompletees.add(q.getId());
@@ -293,6 +296,7 @@ public class GestionnaireSauvegarde {
 
         // Rang & titres (sans prestige)
         data.rangJoueur = ctx.rangJoueur.getRangNom();
+        data.rangJoueurCoffresReclames = ctx.rangJoueur.getCoffreRangReclame();
         for (Titre t : ctx.gestionnaireTitres.getTitresObtenus())
             data.titresObtenus.add(t.getNom());
         if (ctx.gestionnaireTitres.getTitreActif() != null)
@@ -476,18 +480,26 @@ public class GestionnaireSauvegarde {
         if (data.dernierRenouvellementQuete != null)
             gq.setDernierRenouvellement(LocalDate.parse(data.dernierRenouvellementQuete));
         gq.setIndexQueteJournaliere(data.indexQueteJournaliere);
-        if (data.queteJournaliereActive != null) {
-            SauvegardeData.QueteJournaliereData qjd = data.queteJournaliereActive;
-            QueteJournaliere qj = new QueteJournaliere(
-                qjd.id, qjd.titre, qjd.description,
-                QueteJournaliere.TypeObjectif.valueOf(qjd.typeObjectif),
-                qjd.objectifCible, qjd.recompenseXP, qjd.recompenseOr
-            );
-            qj.ajouterProgression(qjd.progression);
-            qj.setCompletee(qjd.completee);
-            qj.setReclamee(qjd.reclamee);
-            gq.setQueteJournaliere(qj);
+
+        if (data.quetesJournalieresActives != null && !data.quetesJournalieresActives.isEmpty()) {
+            List<QueteJournaliere> restaurees = new ArrayList<>();
+            for (SauvegardeData.QueteJournaliereData qjd : data.quetesJournalieresActives) {
+                QueteJournaliere qj = new QueteJournaliere(
+                    qjd.id, qjd.titre, qjd.description,
+                    QueteJournaliere.TypeObjectif.valueOf(qjd.typeObjectif),
+                    qjd.objectifCible, qjd.recompenseXP, qjd.recompenseOr,
+                    GestionnaireQuetes.recompensesItemsPourId(qjd.id)
+                );
+                qj.ajouterProgression(qjd.progression);
+                qj.setCompletee(qjd.completee);
+                qj.setReclamee(qjd.reclamee);
+                restaurees.add(qj);
+            }
+            gq.setQuetesJournalieres(restaurees);
         }
+        gq.setPointsJournaliers(data.pointsJournaliers);
+        gq.setBarreJournaliereReclame(data.barreJournaliereReclame);
+
         for (QueteProgression q : gq.getToutesQuetesProgression()) {
             if (data.quetesProgressionReclamees.contains(q.getId())) {
                 q.setCompletee(true); q.setReclamee(true);
@@ -514,6 +526,7 @@ public class GestionnaireSauvegarde {
                                        GestionnaireTitres gestionnaireTitres,
                                        SauvegardeData data) {
         if (data.rangJoueur != null) rangJoueur.setRangDepuisNom(data.rangJoueur);
+        if (data.rangJoueurCoffresReclames != null) rangJoueur.setCoffreRangReclame(data.rangJoueurCoffresReclames);
         if (data.titresObtenus != null)
             for (String nom : data.titresObtenus)
                 gestionnaireTitres.debloquerTitre(nom);

@@ -186,8 +186,8 @@ public class MenuHistoire {
 
         String[] labelsRecomp = {
             "2x Parchemin Tirage Ordinaire",
-            "5x Parchemin Tirage Ordinaire",
-            "1x Parchemin Tirage Elite"
+            "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
+            "1x Parchemin Tirage Elite, 2x " + Equipement.JetonIncursion.NOM + ", 1x " + Equipement.ParcheminAscension.NOM
         };
 
         boolean unDisponible = false;
@@ -220,7 +220,7 @@ public class MenuHistoire {
         if (choixCoffre < 1 || choixCoffre > 3) { System.out.println("Choix invalide."); return; }
 
         GestionnaireEtoiles.RecompenseCoffre recomp =
-                ge.reclamerCoffre(chapitre, elite, choixCoffre);
+                ge.reclamerCoffre(chapitre, elite, choixCoffre, ctx.inventaire);
         if (recomp == null) {
             System.out.println("Ce coffre n'est pas disponible.");
             return;
@@ -242,6 +242,9 @@ public class MenuHistoire {
                 System.out.printf("   Total : %d parchemins elite.%n",
                         ctx.menuTirage.getParcheminElite());
             }
+        }
+        for (GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {
+            System.out.printf(">> +%d %s !%n", b.quantite(), b.nom());
         }
         ctx.sauvegarde.sauvegarder(ctx);
     }

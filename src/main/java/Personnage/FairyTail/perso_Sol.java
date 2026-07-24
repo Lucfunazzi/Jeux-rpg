@@ -21,7 +21,7 @@ public class perso_Sol extends PersonnageBase {
         this.niveau = 1;
         double mult = 1.30;
         this.vie     = 500 * mult;
-        this.attaque = 115 * mult;
+        this.attaque = 108 * mult;
         this.defense = 120 * mult;
         this.vitesse =  110 * mult;
         this.taux_critiques    = 0.08;

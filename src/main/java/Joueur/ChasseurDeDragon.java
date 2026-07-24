@@ -78,7 +78,7 @@ public class ChasseurDeDragon implements Competences {
     }
 
     @Override public void descriptionCompetenceArbre3() {
-        // TODO
+        System.out.println("Triples Tir du Dragon de l'eau — Inflige 130% ATK au Tank ennemi.Immunise les attaquants aux effets de contrôle (Etourdissement,Paralysie,Sommeil,Petrification");
     }
 
     @Override public void descriptionAttaqueSpeciale() {

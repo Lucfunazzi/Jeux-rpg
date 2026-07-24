@@ -1,8 +1,13 @@
 package lancement.Gestionnaires;
 
 import Equipement.CarteOr;
+import Equipement.CristalTranscendance;
+import Equipement.FriandiseFamilier;
 import Equipement.Inventaire;
+import Equipement.JetonIncursion;
+import Equipement.ParcheminAptitude;
 import Equipement.PotionEnergie;
+import Equipement.SceauDeRang;
 import Joueur.Personnage_principale;
 import Personnage.FairyTail.perso_Rogue;
 import Personnage.FairyTail.perso_Sting;
@@ -34,26 +39,42 @@ public class GestionnaireRecompenses {
 
     public boolean isNiveauReclame(int index) { return niveauReclame[index]; }
 
-    /** Or / Cartes d'Or Lv.1 / Boites de pierre Lv.1 offerts par ce palier. */
-    public int[] recompenseNiveau(int index) {
-        int or     = PALIERS_NIVEAU[index] * 500;
-        int cartes = index + 1;
-        int boites = Math.max(0, index - 3);
-        return new int[]{or, cartes, boites};
+    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau (facultatifs). */
+    private record RecompenseNiveau(int or, int cartesOrLv1, int boitesPierreLv1,
+                                     int parcheminsAptitude, SceauDeRang sceau) {}
+
+    private RecompenseNiveau calculerRecompenseNiveau(int index) {
+        int or       = PALIERS_NIVEAU[index] * 500;
+        int cartes   = index + 1;
+        int boites   = Math.max(0, index - 3);
+        int aptitude = index >= 6 ? 2 : (index >= 2 ? 1 : 0);   // niveau 70+ : 2, niveau 30+ : 1
+
+        SceauDeRang sceau = switch (index) {
+            case 4  -> SceauDeRang.C;  // niveau 50
+            case 6  -> SceauDeRang.B;  // niveau 70
+            case 8  -> SceauDeRang.A;  // niveau 90
+            case 9  -> SceauDeRang.S;  // niveau 100
+            default -> null;
+        };
+        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau);
     }
 
     public String afficherRecompenseNiveau(int index) {
-        int[] r = recompenseNiveau(index);
-        StringBuilder sb = new StringBuilder(r[0] + " or, " + r[1] + " Carte(s) d'Or Lv.1");
-        if (r[2] > 0) sb.append(", ").append(r[2]).append(" Boite(s) de pierre Lv.1");
+        RecompenseNiveau r = calculerRecompenseNiveau(index);
+        StringBuilder sb = new StringBuilder(r.or() + " or, " + r.cartesOrLv1() + " Carte(s) d'Or Lv.1");
+        if (r.boitesPierreLv1() > 0)     sb.append(", ").append(r.boitesPierreLv1()).append(" Boite(s) de pierre Lv.1");
+        if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.NOM);
+        if (r.sceau() != null)           sb.append(", 1x ").append(r.sceau().nom);
         return sb.toString();
     }
 
     public String reclamerNiveau(int index, Personnage_principale joueur, Inventaire inventaire) {
-        int[] r = recompenseNiveau(index);
-        joueur.ajouterOr(r[0]);
-        inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, r[1]);
-        if (r[2] > 0) inventaire.ajouterMateriau(BOITE_PIERRE_LV1, r[2]);
+        RecompenseNiveau r = calculerRecompenseNiveau(index);
+        joueur.ajouterOr(r.or());
+        inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, r.cartesOrLv1());
+        if (r.boitesPierreLv1() > 0)    inventaire.ajouterMateriau(BOITE_PIERRE_LV1, r.boitesPierreLv1());
+        if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.NOM, r.parcheminsAptitude());
+        if (r.sceau() != null)          inventaire.ajouterMateriau(r.sceau().nom, 1);
         niveauReclame[index] = true;
         return "Niveau " + PALIERS_NIVEAU[index] + " reclame ! " + afficherRecompenseNiveau(index);
     }
@@ -107,17 +128,24 @@ public class GestionnaireRecompenses {
      */
     private static final int[] POINTS_PAR_PALIER = {1000, 3000, 8000, 12000, 16000};
 
+    /** Cristaux de Transcendance offerts par palier (2/5/14/21 jours + dernier jour du mois). */
+    private static final int[] CRISTAUX_PAR_PALIER = {1, 2, 4, 10, 0};
+
     public int recompenseMois(int index) { return POINTS_PAR_PALIER[index]; }
 
     public String afficherRecompenseMois(int index) {
-        return POINTS_PAR_PALIER[index] + " points du mois";
+        String base = POINTS_PAR_PALIER[index] + " points du mois";
+        int cristaux = CRISTAUX_PAR_PALIER[index];
+        return cristaux > 0 ? base + ", " + cristaux + "x " + CristalTranscendance.NOM : base;
     }
 
     public String reclamerMois(int index, Personnage_principale joueur, Inventaire inventaire) {
         pointsMois += POINTS_PAR_PALIER[index];
+        int cristaux = CRISTAUX_PAR_PALIER[index];
+        if (cristaux > 0) inventaire.ajouterMateriau(CristalTranscendance.NOM, cristaux);
         moisReclame[index] = true;
-        return "Palier " + getPaliersMois()[index] + " jours reclame ! +" + POINTS_PAR_PALIER[index]
-                + " points du mois ! (Total : " + pointsMois + ")";
+        return "Palier " + getPaliersMois()[index] + " jours reclame ! " + afficherRecompenseMois(index)
+                + " ! (Total points du mois : " + pointsMois + ")";
     }
 
     // ── Points du mois : monnaie persistante (ne reset pas), pour la boutique du mois ──
@@ -189,12 +217,12 @@ public class GestionnaireRecompenses {
 
     public String afficherRecompenseJour(int jour) {
         return switch (jour) {
-            case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie";
-            case 2 -> QUANTITE_IGNIR_JOUR2 + "x " + MATERIAU_IGNIR + " (recrute Natsu [A] instantanement)";
-            case 3 -> "2 Petite(s) Potion(s) d'Energie";
+            case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie, 2x " + JetonIncursion.NOM;
+            case 2 -> QUANTITE_IGNIR_JOUR2 + "x " + MATERIAU_IGNIR + " (recrute Natsu [A] instantanement), 5x " + JetonIncursion.NOM;
+            case 3 -> "2 Petite(s) Potion(s) d'Energie, 8x " + JetonIncursion.NOM;
             case 4 -> "3 000 or";
             case 5 -> "1 Boite de pierre Lv.1";
-            case 6 -> "5 Carte(s) d'Or Lv.1";
+            case 6 -> "5 Carte(s) d'Or Lv.1, 2x " + FriandiseFamilier.MOYENNE.nom;
             default -> "Coffre de personnage [S] au choix : " + String.join(" / ", CHOIX_COFFRE_RANG_S);
         };
     }
@@ -205,12 +233,22 @@ public class GestionnaireRecompenses {
             case 1 -> {
                 inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
                 inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
+                inventaire.ajouterMateriau(JetonIncursion.NOM, 2);
             }
-            case 2 -> inventaire.ajouterMateriau(MATERIAU_IGNIR, QUANTITE_IGNIR_JOUR2);
-            case 3 -> inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
+            case 2 -> {
+                inventaire.ajouterMateriau(MATERIAU_IGNIR, QUANTITE_IGNIR_JOUR2);
+                inventaire.ajouterMateriau(JetonIncursion.NOM, 5);
+            }
+            case 3 -> {
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
+                inventaire.ajouterMateriau(JetonIncursion.NOM, 8);
+            }
             case 4 -> joueur.ajouterOr(3000);
             case 5 -> inventaire.ajouterMateriau(BOITE_PIERRE_LV1, 1);
-            case 6 -> inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 5);
+            case 6 -> {
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 5);
+                inventaire.ajouterMateriau(FriandiseFamilier.MOYENNE.nom, 2);
+            }
             default -> throw new IllegalArgumentException("Le jour 7 necessite un choix, voir reclamerJour7().");
         }
         jourReclame[jour - 1] = true;

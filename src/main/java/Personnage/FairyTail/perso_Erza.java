@@ -16,7 +16,7 @@ public class perso_Erza extends PersonnageBase {
         this.niveau = 1;
         double multiplicateurRarete = 1.50;
         this.vie = 1200 * multiplicateurRarete;
-        this.attaque = 140 * multiplicateurRarete;
+        this.attaque = 145 * multiplicateurRarete;
         this.defense = 250 * multiplicateurRarete;
         this.vitesse = 100 * multiplicateurRarete;
         this.taux_critiques = 0.05;

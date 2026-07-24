@@ -1,5 +1,7 @@
 package lancement.Quetes;
 
+import java.util.List;
+
 public class QueteJournaliere extends Quete {
 
     public enum TypeObjectif {
@@ -15,7 +17,14 @@ public class QueteJournaliere extends Quete {
     public QueteJournaliere(String id, String titre, String description,
                             TypeObjectif typeObjectif, int objectifCible,
                             int recompenseXP, int recompenseOr) {
-        super(id, titre, description, recompenseXP, recompenseOr, 0);
+        this(id, titre, description, typeObjectif, objectifCible, recompenseXP, recompenseOr, List.of());
+    }
+
+    public QueteJournaliere(String id, String titre, String description,
+                            TypeObjectif typeObjectif, int objectifCible,
+                            int recompenseXP, int recompenseOr,
+                            List<RecompenseItem> recompensesItems) {
+        super(id, titre, description, recompenseXP, recompenseOr, 0, recompensesItems);
         this.typeObjectif  = typeObjectif;
         this.objectifCible = objectifCible;
     }

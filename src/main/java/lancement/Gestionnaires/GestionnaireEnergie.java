@@ -1,6 +1,7 @@
 package lancement.Gestionnaires;
 
 import Equipement.Inventaire;
+import Equipement.JetonIncursion;
 import Equipement.PotionEnergie;
 import Joueur.Personnage_principale;
 import java.time.LocalDate;
@@ -112,6 +113,18 @@ public class GestionnaireEnergie {
         energie += potion.energie;
         return potion.nom + " utilisee ! +" + potion.energie
                 + " energie (" + energie + "/" + ENERGIE_MAX + ")";
+    }
+
+    // ── Jeton d'Incursion ──────────────────────────────────────────────────
+    /** Utilise 1 Jeton d'Incursion : rend 1 run Elite au stage donne, au-dela de la limite journaliere. */
+    public String utiliserJetonIncursion(Inventaire inventaire, int numeroStage) {
+        if (!stageValide(numeroStage)) return "Stage elite invalide.";
+        resetJournalierSiNecessaire();
+        if (!inventaire.retirerMateriau(JetonIncursion.NOM, 1)) return "Aucun " + JetonIncursion.NOM + " en stock.";
+
+        if (runsEliteParStage[numeroStage] > 0) runsEliteParStage[numeroStage]--;
+        return JetonIncursion.NOM + " utilise ! Runs Elite restants (stage " + numeroStage + ") : "
+                + getRunsEliteRestants(numeroStage) + "/" + MAX_RUNS_ELITE;
     }
 
     // ── Recharge coupons ──────────────────────────────────────────────────

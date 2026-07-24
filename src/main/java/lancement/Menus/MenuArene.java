@@ -78,6 +78,10 @@ public class MenuArene {
             System.out.println("  [4] Coffre journalier  🎁 DISPONIBLE !");
         else
             System.out.println("  [4] Coffre journalier  (disponible à 20h)");
+        if (ctx.rangJoueur.estCoffreRangDisponible())
+            System.out.println("  [5] Coffre d'Arène — Rang " + ctx.rangJoueur.getRangNom() + "  🎁 DISPONIBLE !");
+        else
+            System.out.println("  [5] Coffre d'Arène — Rang " + ctx.rangJoueur.getRangNom() + "  (deja reclame)");
         System.out.println("  [0] Retour");
         System.out.print("  Choix : ");
 
@@ -86,9 +90,20 @@ public class MenuArene {
             case "2" -> { choisirAdversaire();                                         yield true; }
             case "3" -> { new MenuBoutiqueArene(ctx, scanner, joueurArene, gestionnaireArene).afficher(); yield true; }
             case "4" -> { ouvrirCoffre();                                              yield true; }
+            case "5" -> { ouvrirCoffreDeRang();                                        yield true; }
             case "0" -> false;
             default  -> { System.out.println("Choix invalide."); yield true; }
         };
+    }
+
+    // ── Coffre d'Arene selon le Rang Joueur (C -> UR) ──────────────────────
+
+    private void ouvrirCoffreDeRang() {
+        String resultat = ctx.rangJoueur.reclamerCoffreRang(ctx.inventaire);
+        System.out.println("\n  " + resultat);
+        ctx.sauvegarde.sauvegarder(ctx);
+        System.out.print("\n  Appuie sur Entrée pour continuer...");
+        scanner.nextLine();
     }
 
     // ── Classement ────────────────────────────────────────────────────────

@@ -1,5 +1,7 @@
 package lancement.Gestionnaires;
 
+import Equipement.FriandiseFamilier;
+import Equipement.Inventaire;
 import Personnage.PersonnageBase;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -134,6 +136,16 @@ public class Gestionnaire_pet {
         }
 
         return sb.toString().trim();
+    }
+
+    // ── Friandise de Familier ─────────────────────────────────────────────
+    /** Utilise 1 Friandise : ajoute son XP directement, sans attendre l'entrainement. */
+    public String utiliserFriandise(Inventaire inventaire, FriandiseFamilier friandise) {
+        if (!oeufDebloque) return "Aucune creature a nourrir pour l'instant.";
+        if (estAuNiveauMax()) return type.nom + " est deja au niveau maximum ! Faites-le evoluer.";
+        if (!inventaire.retirerMateriau(friandise.nom, 1)) return "Aucune " + friandise.nom + " en stock.";
+
+        return ajouterXP(friandise.xp, friandise.nom);
     }
 
     // ── Évolution ─────────────────────────────────────────────────────────

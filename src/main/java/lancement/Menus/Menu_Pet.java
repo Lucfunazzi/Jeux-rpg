@@ -1,8 +1,11 @@
 package lancement.Menus;
 
+import Equipement.FriandiseFamilier;
 import lancement.GameContext;
 import lancement.Gestionnaires.Gestionnaire_pet;
 import lancement.Gestionnaires.Gestionnaire_pet.Entrainement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu_Pet {
@@ -21,10 +24,16 @@ public class Menu_Pet {
                 continue;
             }
 
+            if (!gcs.estAuNiveauMax()) {
+                System.out.println("  [F] Utiliser une Friandise de Familier");
+            }
             System.out.print("Votre choix : ");
             String choix = scanner.nextLine().trim();
 
-            if (gcs.entrainementEnCours()) {
+            if (choix.equalsIgnoreCase("F") && !gcs.estAuNiveauMax()) {
+                menuUtiliserFriandise(gcs, ctx, scanner);
+
+            } else if (gcs.entrainementEnCours()) {
                 // Seul retour est possible
                 if (choix.equals("0")) retour = true;
                 else System.out.println("Un entraînement est en cours, revenez plus tard !");
@@ -68,6 +77,39 @@ public class Menu_Pet {
                 if (choix.equals("0")) retour = true;
                 else System.out.println("Choix invalide.");
             }
+        }
+    }
+
+    private void menuUtiliserFriandise(Gestionnaire_pet gcs, GameContext ctx, Scanner scanner) {
+        List<FriandiseFamilier> dispo = new ArrayList<>();
+        for (FriandiseFamilier f : FriandiseFamilier.values()) {
+            if (ctx.inventaire.getQuantiteMateriau(f.nom) > 0) dispo.add(f);
+        }
+        if (dispo.isEmpty()) {
+            System.out.println("Aucune Friandise de Familier en stock.");
+            return;
+        }
+
+        System.out.println("\nFriandises disponibles :");
+        for (int i = 0; i < dispo.size(); i++) {
+            FriandiseFamilier f = dispo.get(i);
+            System.out.println("  " + (i + 1) + ". " + f + " x" + ctx.inventaire.getQuantiteMateriau(f.nom));
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        try {
+            int choix = Integer.parseInt(scanner.nextLine().trim());
+            if (choix == 0) return;
+            if (choix < 1 || choix > dispo.size()) {
+                System.out.println("Choix invalide.");
+                return;
+            }
+            System.out.println(gcs.utiliserFriandise(ctx.inventaire, dispo.get(choix - 1)));
+            ctx.formation.appliquerBonusLiens();
+            ctx.sauvegarde.sauvegarder(ctx);
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
         }
     }
 

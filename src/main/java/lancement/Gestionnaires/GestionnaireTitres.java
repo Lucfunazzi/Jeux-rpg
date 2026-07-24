@@ -1,5 +1,6 @@
 package lancement.Gestionnaires;
 
+import Equipement.Inventaire;
 import java.util.ArrayList;
 import java.util.List;
 import lancement.Titre;
@@ -17,6 +18,20 @@ public class GestionnaireTitres {
             titresObtenus.add(t);
             System.out.println(">> Nouveau titre obtenu : [" + nomTitre + "] !");
         }
+    }
+
+    // ── Parchemin de Titre (consommable) ──────────────────────────────────
+    /** Nom du materiau representant le parchemin d'un titre donne dans l'inventaire. */
+    public static String nomParchemin(String nomTitre) { return "Parchemin de Titre: " + nomTitre; }
+
+    /** Utilise un Parchemin de Titre : consomme le parchemin et debloque le titre correspondant. */
+    public String utiliserParchemin(Inventaire inventaire, String nomTitre) {
+        String nomMateriau = nomParchemin(nomTitre);
+        if (!inventaire.retirerMateriau(nomMateriau, 1)) return "Aucun " + nomMateriau + " en stock.";
+        if (possedeTitre(nomTitre)) return "Titre [" + nomTitre + "] deja debloque (parchemin consomme).";
+
+        debloquerTitre(nomTitre);
+        return "Titre debloque : [" + nomTitre + "] !";
     }
 
     // ── Équiper / déséquiper ──────────────────────────────────────────────

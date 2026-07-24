@@ -8,12 +8,17 @@ import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
 import Equipement.Pierre;
 import Equipement.PotionEnergie;
+import Equipement.BoiteGuilde;
+import Equipement.CleCoffreGuilde;
+import Equipement.SceauDeRang;
 import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import lancement.GameContext;
+import lancement.Gestionnaires.GestionnaireEtoilesPerso;
+import lancement.Gestionnaires.GestionnaireGuilde;
 
 public class MenuInventaire {
 
@@ -35,6 +40,9 @@ public class MenuInventaire {
             System.out.println("8. Utiliser une Potion d'Energie");
             System.out.println("9. Recycler un equipement (Pieces d'equipement)");
             System.out.println("10. Boutique d'equipement (fragments)");
+            System.out.println("11. Utiliser un Sceau de Rang");
+            System.out.println("12. Ouvrir une Boite Mysterieuse de la Guilde");
+            System.out.println("13. Ouvrir le Coffre de Guilde (7 cles)");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -49,6 +57,9 @@ public class MenuInventaire {
                 case "8" -> menuUtiliserPotionEnergie(ctx, scanner);
                 case "9" -> menuRecyclerEquipement(ctx, scanner);
                 case "10" -> menuBoutiqueEquipement(ctx, scanner);
+                case "11" -> menuUtiliserSceau(ctx, scanner);
+                case "12" -> menuOuvrirBoiteGuilde(ctx, scanner);
+                case "13" -> menuOuvrirCoffreGuilde(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -528,6 +539,107 @@ public class MenuInventaire {
         } catch (NumberFormatException e) {
             System.out.println("Entree invalide.");
         }
+    }
+
+    // ── Sceau de Rang (conversion en fragments d'un personnage recrute) ────
+    private void menuUtiliserSceau(GameContext ctx, Scanner scanner) {
+        List<SceauDeRang> dispo = new ArrayList<>();
+        for (SceauDeRang s : SceauDeRang.values()) {
+            if (ctx.inventaire.getQuantiteMateriau(s.nom) > 0) dispo.add(s);
+        }
+        if (dispo.isEmpty()) {
+            System.out.println("Aucun Sceau de Rang en stock.");
+            return;
+        }
+
+        System.out.println("\nSceaux disponibles :");
+        for (int i = 0; i < dispo.size(); i++) {
+            SceauDeRang s = dispo.get(i);
+            System.out.println("  " + (i + 1) + ". " + s + " x" + ctx.inventaire.getQuantiteMateriau(s.nom));
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choixSceau;
+        try {
+            choixSceau = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choixSceau == 0) return;
+        if (choixSceau < 1 || choixSceau > dispo.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+        SceauDeRang sceau = dispo.get(choixSceau - 1);
+
+        if (ctx.personnagesRecruites.isEmpty()) {
+            System.out.println("Aucun personnage recrute a qui donner ce sceau.");
+            return;
+        }
+
+        System.out.println("\nPersonnages recrutes (cible du " + sceau.nom + ") :");
+        for (int i = 0; i < ctx.personnagesRecruites.size(); i++) {
+            PersonnageBase p = ctx.personnagesRecruites.get(i);
+            System.out.println("  " + (i + 1) + ". " + p.getNom() + " [" + p.getRarete() + "]");
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choixPerso;
+        try {
+            choixPerso = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choixPerso == 0) return;
+        if (choixPerso < 1 || choixPerso > ctx.personnagesRecruites.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        PersonnageBase cible = ctx.personnagesRecruites.get(choixPerso - 1);
+        System.out.println(GestionnaireEtoilesPerso.utiliserSceau(ctx.inventaire, sceau, cible));
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    // ── Boite Mysterieuse et Coffre de Guilde ───────────────────────────────
+    private void menuOuvrirBoiteGuilde(GameContext ctx, Scanner scanner) {
+        int stock = ctx.inventaire.getQuantiteMateriau(BoiteGuilde.NOM);
+        if (stock <= 0) {
+            System.out.println("Aucune " + BoiteGuilde.NOM + " en stock.");
+            return;
+        }
+        System.out.print("Vous avez " + stock + " x " + BoiteGuilde.NOM + ". Combien en ouvrir ? (0 pour annuler) : ");
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (quantite <= 0) return;
+        if (quantite > stock) {
+            System.out.println("Quantite invalide. Vous en avez " + stock + ".");
+            return;
+        }
+
+        for (int i = 0; i < quantite; i++) {
+            System.out.println(GestionnaireGuilde.ouvrirBoiteMysterieuse(ctx.inventaire, ctx.joueur));
+        }
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    private void menuOuvrirCoffreGuilde(GameContext ctx, Scanner scanner) {
+        int stock = ctx.inventaire.getQuantiteMateriau(CleCoffreGuilde.NOM);
+        System.out.println("\nCles de Coffre de Guilde : " + stock + " / " + CleCoffreGuilde.SEUIL_OUVERTURE);
+        String resultat = GestionnaireGuilde.ouvrirCoffreGuilde(
+                ctx.inventaire, ctx.joueur, ctx.menuTirage, ctx.rangJoueur.getRang());
+        System.out.println(resultat);
+        ctx.sauvegarde.sauvegarder(ctx);
     }
 
     // ── Recyclage d'equipement (contre des Pieces d'equipement) ────────────

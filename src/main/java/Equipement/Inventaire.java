@@ -287,6 +287,32 @@ public class Inventaire {
         return "OK";
     }
 
+    // ── Cristal de Transcendance ──────────────────────────────────────────
+    /** Reroll le type d'une pierre du stock (meme niveau). Consomme 1 Cristal de Transcendance. */
+    public String utiliserCristalTranscendanceStock(Pierre.Type typeActuel, int niveau, Pierre.Type nouveauType) {
+        if (typeActuel == nouveauType) return "Choisissez un type different.";
+        if (getQuantitePierre(typeActuel, niveau) < 1) return "Pierre introuvable dans le stock.";
+        if (!retirerMateriau(CristalTranscendance.NOM, 1)) return "Aucun " + CristalTranscendance.NOM + " en stock.";
+
+        retirerPierre(typeActuel, niveau, 1);
+        ajouterPierre(nouveauType, niveau, 1);
+        return CristalTranscendance.NOM + " utilise ! Pierre de " + typeActuel + " Niv." + niveau
+                + " -> " + new Pierre(nouveauType, niveau);
+    }
+
+    /** Reroll le type d'une pierre inseree sur un equipement (meme niveau). Consomme 1 Cristal de Transcendance. */
+    public String utiliserCristalTranscendanceEquipement(Equipement equip, int emplacement, Pierre.Type nouveauType) {
+        Pierre actuelle = equip.getPierre(emplacement);
+        if (actuelle == null) return "Cet emplacement est vide.";
+        if (actuelle.getType() == nouveauType) return "Choisissez un type different.";
+        if (!retirerMateriau(CristalTranscendance.NOM, 1)) return "Aucun " + CristalTranscendance.NOM + " en stock.";
+
+        equip.retirerPierre(emplacement);
+        Pierre nouvelle = new Pierre(nouveauType, actuelle.getNiveau());
+        equip.insererPierre(emplacement, nouvelle);
+        return CristalTranscendance.NOM + " utilise ! " + actuelle + " -> " + nouvelle;
+    }
+
     // ── Utilitaire global ─────────────────────────────────────────────────
     public boolean estVide() {
         return stacks.isEmpty() && materiaux.isEmpty()

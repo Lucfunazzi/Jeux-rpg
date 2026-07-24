@@ -131,8 +131,8 @@ public class EcranListeChapitresController {
         GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
         String[] labelsRecomp = {
             "2x Parchemin Tirage Ordinaire",
-            "5x Parchemin Tirage Ordinaire",
-            "1x Parchemin Tirage Elite"
+            "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
+            "1x Parchemin Tirage Elite, 2x " + Equipement.JetonIncursion.NOM + ", 1x " + Equipement.ParcheminAscension.NOM
         };
 
         List<Integer> options = new ArrayList<>();
@@ -147,10 +147,11 @@ public class EcranListeChapitresController {
         if (choix == null) return;
 
         int numeroCoffre = choix;
-        GestionnaireEtoiles.RecompenseCoffre recomp = ge.reclamerCoffre(ligne.numeroChapitre(), ligne.elite(), numeroCoffre);
+        GestionnaireEtoiles.RecompenseCoffre recomp =
+                ge.reclamerCoffre(ligne.numeroChapitre(), ligne.elite(), numeroCoffre, ctx.inventaire);
         if (recomp == null) { info("Coffres", "Ce coffre n'est pas disponible."); return; }
 
-        String message = switch (recomp.type()) {
+        StringBuilder message = new StringBuilder(switch (recomp.type()) {
             case PARCHEMIN_ORDINAIRE -> {
                 ctx.menuTirage.setParcheminOrdinaire(ctx.menuTirage.getParcheminOrdinaire() + recomp.quantite());
                 yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Ordinaire !\nTotal : " + ctx.menuTirage.getParcheminOrdinaire();
@@ -159,10 +160,13 @@ public class EcranListeChapitresController {
                 ctx.menuTirage.setParcheminElite(ctx.menuTirage.getParcheminElite() + recomp.quantite());
                 yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Elite !\nTotal : " + ctx.menuTirage.getParcheminElite();
             }
-        };
+        });
+        for (GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {
+            message.append("\n+ ").append(b.quantite()).append("x ").append(b.nom());
+        }
 
         ctx.sauvegarde.sauvegarder(ctx);
-        info("Coffres", message);
+        info("Coffres", message.toString());
         rafraichir();
     }
 

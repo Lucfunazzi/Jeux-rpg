@@ -123,9 +123,25 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (nbreEtoiles < 5) nbreEtoiles++;
     }
 
-    /** Multiplicateur étoile : 1.00 à 1.25 */
+    // ── Ascension (palier bonus au-dela de 5 etoiles, via Parchemin d'Ascension) ──
+    private boolean ascensionne = false;
+
+    public boolean isAscensionne()      { return ascensionne; }
+    public void    setAscensionne(boolean v) { this.ascensionne = v; }
+
+    /** Vrai si ce personnage est eligible a l'ascension (5 etoiles, pas deja ascensionne). */
+    public boolean peutAscensionner() { return nbreEtoiles >= 5 && !ascensionne; }
+
+    /** Applique l'ascension si eligible. */
+    public void ascensionner() {
+        if (peutAscensionner()) ascensionne = true;
+    }
+
+    /** Multiplicateur étoile : 1.00 à 1.25, +0.10 supplementaire si ascensionne. */
     public double getMultiplicateurEtoile() {
-        return 1.0 + (nbreEtoiles * 0.05);
+        double mult = 1.0 + (nbreEtoiles * 0.05);
+        if (ascensionne) mult += 0.10;
+        return mult;
     }
 
     protected void initialiserVieMax() {
