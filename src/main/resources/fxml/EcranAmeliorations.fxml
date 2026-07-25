@@ -3,19 +3,29 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="lancement.gui.EcranAmeliorationsController"
-      alignment="CENTER" spacing="16" styleClass="root-menu">
-    <Label text="AMELIORATIONS" styleClass="titre"/>
+      alignment="TOP_CENTER" spacing="14" styleClass="root-menu">
+    <padding><Insets top="18" bottom="14" left="18" right="18"/></padding>
 
-    <VBox fx:id="choixBox" alignment="CENTER" spacing="10">
-        <padding><Insets top="10"/></padding>
-    </VBox>
+    <Label text="AMELIORATION" styleClass="titre"/>
 
-    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton">
-        <VBox.margin><Insets top="10"/></VBox.margin>
-    </Button>
+    <HBox spacing="18" alignment="TOP_CENTER">
+        <ScrollPane fitToWidth="true" prefWidth="230" prefHeight="460" styleClass="scroll-pane">
+            <VBox fx:id="personnagesBox" spacing="8">
+                <padding><Insets top="4" right="8" bottom="4" left="4"/></padding>
+            </VBox>
+        </ScrollPane>
+
+        <VBox fx:id="equipementBox" spacing="10" alignment="TOP_CENTER" prefWidth="300"/>
+
+        <VBox fx:id="panneauDroit" spacing="12" alignment="TOP_CENTER" prefWidth="300"/>
+    </HBox>
+
+    <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
 </VBox>

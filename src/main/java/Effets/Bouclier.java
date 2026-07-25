@@ -15,7 +15,7 @@ public class Bouclier implements Effet {
     @Override
     public void appliquer(PersonnageBase cible) {
         System.out.println(cible.getNom() + " reçoit un bouclier de "
-                + String.format("%.1f", pointsBouclier) + " PV !");
+                + String.format("%.0f", pointsBouclier) + " PV !");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Bouclier implements Effet {
     @Override
     public void appliquer(PersonnageBase cible, List<String> log) {
         log.add(cible.getNom() + " recoit un bouclier de "
-                + String.format("%.1f", pointsBouclier) + " PV !");
+                + String.format("%.0f", pointsBouclier) + " PV !");
     }
 
 }

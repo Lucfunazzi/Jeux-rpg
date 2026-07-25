@@ -43,9 +43,9 @@ public class EcranTiragesController {
         FlowPane stats = new FlowPane(10, 10);
         stats.setAlignment(Pos.CENTER);
         stats.getChildren().addAll(
-                GuiVisuels.creerFicheStat("Parchemins Ordinaires", String.valueOf(mt.getParcheminOrdinaire())),
-                GuiVisuels.creerFicheStat("Parchemins Elite", String.valueOf(mt.getParcheminElite())),
-                GuiVisuels.creerFicheStat("Coupons", String.valueOf(ctx.joueur.getCoupons()))
+                GuiVisuels.creerFicheStat("Parchemins Ordinaires", GuiVisuels.formaterMontant(mt.getParcheminOrdinaire())),
+                GuiVisuels.creerFicheStat("Parchemins Elite", GuiVisuels.formaterMontant(mt.getParcheminElite())),
+                GuiVisuels.creerFicheStat("Coupons", GuiVisuels.formaterMontant(ctx.joueur.getCoupons()))
         );
 
         Label titrePity = new Label("Pity Elite");

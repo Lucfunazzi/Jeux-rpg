@@ -54,7 +54,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
         if (allie.estVivant()) {
             double soin = allie.getVie() * 0.20;
             allie.recevoirSoin(soin, log);
-            log.add(allie.getNom() + " récupère " + String.format("%.1f", soin) + " PV !");
+            log.add(allie.getNom() + " récupère " + String.format("%.0f", soin) + " PV !");
         }
     }
 

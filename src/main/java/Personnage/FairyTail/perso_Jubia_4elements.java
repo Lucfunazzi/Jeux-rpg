@@ -18,10 +18,10 @@ public class perso_Jubia_4elements extends PersonnageBase {
         this.attaque = 160 * multiplicateurRarete;
         this.defense = 110 * multiplicateurRarete;
         this.vitesse = 130 * multiplicateurRarete;
-        this.taux_critiques = 0.20;
+        this.taux_critiques = 0.10;
         this.degat_critiques = 1.20;
         this.taux_precisions = 100.00;
-        this.taux_esquives = 0.10;
+        this.taux_esquives = 0.05;
         this.taux_blocage      = 0.05;
         this.reduction_blocage = 0.10;
         this.degats_renvoi     = 0.80;

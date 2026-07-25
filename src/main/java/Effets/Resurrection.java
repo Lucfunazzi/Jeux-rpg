@@ -35,7 +35,7 @@ public class Resurrection implements Effet {
             cible.restaurerPv(pvRestaures);
             disponible = false;
             System.out.println("✦ " + cible.getNom() + " se releve avec "
-                    + String.format("%.1f", pvRestaures) + " PV !");
+                    + String.format("%.0f", pvRestaures) + " PV !");
         }
     }
 
@@ -46,7 +46,7 @@ public class Resurrection implements Effet {
             cible.restaurerPv(pvRestaures);
             disponible = false;
             log.add("✦ " + cible.getNom() + " se releve avec "
-                    + String.format("%.1f", pvRestaures) + " PV !");
+                    + String.format("%.0f", pvRestaures) + " PV !");
         }
     }
 

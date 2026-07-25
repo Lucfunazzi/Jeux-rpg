@@ -37,8 +37,8 @@ public class EcranMenuPrincipalController {
         statsBox.getChildren().setAll(
                 GuiVisuels.creerFicheStat(ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
                 GuiVisuels.creerFicheStat("Rang", ctx.rangJoueur.getRangNom()),
-                GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())),
-                GuiVisuels.creerFicheStat("Coupons", String.valueOf(ctx.joueur.getCoupons())),
+                GuiVisuels.creerFicheStat("Or", GuiVisuels.formaterMontant(ctx.joueur.getOr())),
+                GuiVisuels.creerFicheStat("Coupons", GuiVisuels.formaterMontant(ctx.joueur.getCoupons())),
                 GuiVisuels.creerFicheStat("Combativité", String.valueOf(ctx.formation.getCombativite())),
                 GuiVisuels.creerFicheStat("Énergie", ctx.gestionnaireEnergie.afficherEnergie())
         );

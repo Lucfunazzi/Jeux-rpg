@@ -28,7 +28,7 @@ public void tick(PersonnageBase cible) {
         double degats = cible.getVieMax() * pourcentageDegats * stacks;
         toursRestant--;
         cible.retirerVie(degats); // ✅
-        System.out.println(cible.getNom() + " perd " + String.format("%.1f", degats)
+        System.out.println(cible.getNom() + " perd " + String.format("%.0f", degats)
                 + " PV (poison x" + stacks + ", " + toursRestant + " tours restants)");
     }
 }
@@ -54,7 +54,7 @@ public void tick(PersonnageBase cible) {
             double degats = cible.getVieMax() * pourcentageDegats * stacks;
             toursRestant--;
             cible.retirerVie(degats, log);
-            log.add(cible.getNom() + " perd " + String.format("%.1f", degats)
+            log.add(cible.getNom() + " perd " + String.format("%.0f", degats)
                     + " PV (poison x" + stacks + ", " + toursRestant + " tours restants)");
         }
     }

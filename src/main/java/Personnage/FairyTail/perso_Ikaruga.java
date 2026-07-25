@@ -84,15 +84,14 @@ public class perso_Ikaruga extends PersonnageBase {
         System.out.println("Coup de sabre — inflige 100% ATK a une cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Flammes du garuda — cible le DPS ennemi prioritairement  "
+        System.out.println("Flammes du garuda — cible les DPS ennemi prioritairement  "
                 + "inflige 115% ATK, applique brûlure (6% pv) pendant 2 tours, "
                 + "Se donne contre attaque de 20% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Eclats des Esprits — se donne 10% de défense pendant 2 tours, "
-                + "puis inflige 80% ATK a tous les DPS ennemis (ou tous les Tanks si aucun DPS, "
-                + "ou tous les Supports en dernier recours), "
-                + "avec Reduction de défense -10% sur ses cibles pendant 2 tours.");
+                + "puis inflige 80% ATK a tous les DPS ennemis  "
+                  + "avec Reduction de défense -10% sur ses cibles pendant 2 tours.");
     }
     
 }

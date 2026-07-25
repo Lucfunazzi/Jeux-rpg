@@ -265,8 +265,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         restaurerPv(montant);
         double soinEffectif = this.vie - pvAvant;
         if (soinEffectif > 0) {
-            log.add("💚 " + this.nom + " recupere " + String.format("%.1f", soinEffectif)
-                    + " PV (" + String.format("%.1f", pvAvant) + " → " + String.format("%.1f", this.vie) + " PV)");
+            log.add("💚 " + this.nom + " recupere " + String.format("%.0f", soinEffectif)
+                    + " PV (" + String.format("%.0f", pvAvant) + " → " + String.format("%.0f", this.vie) + " PV)");
         } else {
             log.add(this.nom + " est deja au maximum de PV.");
         }
@@ -488,10 +488,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         this.tauxEsquivesBase   = this.taux_esquives;
         this.tauxBlocageBase    = this.taux_blocage;
         System.out.println(this.nom + " passe au niveau " + this.niveau + " !");
-        System.out.println("Nouvelles stats : " + String.format("%.1f", this.vie) + " PV, "
-                + String.format("%.1f", this.attaque) + " ATK, "
-                + String.format("%.1f", this.defense) + " DEF, "
-                + String.format("%.1f", this.vitesse) + " VIT");
+        System.out.println("Nouvelles stats : " + String.format("%.0f", this.vie) + " PV, "
+                + String.format("%.0f", this.attaque) + " ATK, "
+                + String.format("%.0f", this.defense) + " DEF, "
+                + String.format("%.0f", this.vitesse) + " VIT");
     }
 
     /** Même chose sans log console — utilisé pour les adversaires arène. */

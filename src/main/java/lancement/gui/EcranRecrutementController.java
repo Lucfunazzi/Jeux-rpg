@@ -41,10 +41,10 @@ public class EcranRecrutementController {
     private void rafraichir() {
         MenuRecrutement mr = ctx.menuRecrutement;
         statsBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())),
-                GuiVisuels.creerFicheStat("Parchemins C", String.valueOf(mr.getParcheminC())),
-                GuiVisuels.creerFicheStat("Parchemins B", String.valueOf(mr.getParcheminB())),
-                GuiVisuels.creerFicheStat("Parchemins A", String.valueOf(mr.getParcheminA()))
+                GuiVisuels.creerFicheStat("Or", GuiVisuels.formaterMontant(ctx.joueur.getOr())),
+                GuiVisuels.creerFicheStat("Parchemins C", GuiVisuels.formaterMontant(mr.getParcheminC())),
+                GuiVisuels.creerFicheStat("Parchemins B", GuiVisuels.formaterMontant(mr.getParcheminB())),
+                GuiVisuels.creerFicheStat("Parchemins A", GuiVisuels.formaterMontant(mr.getParcheminA()))
         );
 
         boutonsBox.getChildren().clear();

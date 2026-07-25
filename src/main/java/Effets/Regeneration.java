@@ -27,7 +27,7 @@ public class Regeneration implements Effet {
             toursRestants--;
             // La régénération bypasse la Brûlure (soin naturel du corps)
             cible.restaurerPv(soin);
-            System.out.println(cible.getNom() + " recupere " + String.format("%.1f", soin)
+            System.out.println(cible.getNom() + " recupere " + String.format("%.0f", soin)
                     + " PV grace a la regeneration (" + toursRestants + " tours restants)");
         }
     }
@@ -51,7 +51,7 @@ public class Regeneration implements Effet {
             double soin = cible.getVieMax() * pourcentageSoin;
             toursRestants--;
             cible.restaurerPv(soin);
-            log.add(cible.getNom() + " recupere " + String.format("%.1f", soin)
+            log.add(cible.getNom() + " recupere " + String.format("%.0f", soin)
                     + " PV grace a la regeneration (" + toursRestants + " tours restants)");
         }
     }

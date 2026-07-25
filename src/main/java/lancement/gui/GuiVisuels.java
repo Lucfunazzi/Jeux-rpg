@@ -52,6 +52,31 @@ public final class GuiVisuels {
                 (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255));
     }
 
+    /**
+     * Formate un montant (or, coupons, parchemins...) arrondi à l'entier, ex :
+     * 1500 -> "1k500", 234 -> "234", 1500000 -> "1M500k", 1500000000 -> "1B500M".
+     */
+    public static String formaterMontant(double valeur) {
+        long v = Math.round(valeur);
+        String signe = v < 0 ? "-" : "";
+        long abs = Math.abs(v);
+
+        if (abs < 1000) return signe + abs;
+        if (abs < 1_000_000) {
+            long milliers = abs / 1000;
+            long reste = abs % 1000;
+            return signe + milliers + "k" + (reste > 0 ? String.format("%03d", reste) : "");
+        }
+        if (abs < 1_000_000_000) {
+            long millions = abs / 1_000_000;
+            long resteMilliers = (abs % 1_000_000) / 1000;
+            return signe + millions + "M" + (resteMilliers > 0 ? String.format("%03d", resteMilliers) + "k" : "");
+        }
+        long milliards = abs / 1_000_000_000;
+        long resteMillions = (abs % 1_000_000_000) / 1_000_000;
+        return signe + milliards + "B" + (resteMillions > 0 ? String.format("%03d", resteMillions) + "M" : "");
+    }
+
     /** Badge colore compact affichant la rarete ("S", "A", "SS", ...). */
     public static Label creerBadgeRarete(String rarete) {
         Label badge = new Label(rarete == null ? "?" : rarete.toUpperCase());

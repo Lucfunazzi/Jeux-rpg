@@ -76,7 +76,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
         // Soin global par drain
         if (totalAbsorbe > 0) {
             this.recevoirSoin(totalAbsorbe, log);
-            log.add("Mirajane Halphas absorbe " + String.format("%.1f", totalAbsorbe)
+            log.add("Mirajane Halphas absorbe " + String.format("%.0f", totalAbsorbe)
                     + " PV via le drain !");
         }
         Combat.appliquerEffet(this, new BuffTauxCritique(0.20, 2), log);

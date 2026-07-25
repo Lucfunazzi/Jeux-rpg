@@ -123,7 +123,7 @@ public class MoteurAttaque {
             double cout = soi.getVieMax() * data.coutPvSoi;
             soi.retirerVie(cout);
             log.add(soi.getNom() + " paie le prix et perd "
-                    + String.format("%.1f", cout) + " PV !");
+                    + String.format("%.0f", cout) + " PV !");
         }
 
         // Gain de rage

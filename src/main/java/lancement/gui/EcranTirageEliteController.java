@@ -47,7 +47,7 @@ public class EcranTirageEliteController {
         FlowPane stats = new FlowPane(10, 10);
         stats.setAlignment(Pos.CENTER);
         stats.getChildren().addAll(
-                GuiVisuels.creerFicheStat("Parchemins Elite", String.valueOf(mt.getParcheminElite())),
+                GuiVisuels.creerFicheStat("Parchemins Elite", GuiVisuels.formaterMontant(mt.getParcheminElite())),
                 GuiVisuels.creerFicheStat("Coupons", String.valueOf(ctx.joueur.getCoupons()))
         );
         statsBox.getChildren().setAll(stats);

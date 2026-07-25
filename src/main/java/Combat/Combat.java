@@ -417,21 +417,21 @@ public class Combat {
         } else {
             if (resultat.bouclierAbsorbe) {
                 log.add("[BOUCLIER] " + cible.getNom() + " absorbe "
-                        + String.format("%.1f", resultat.degatsAbsorbesBouclier)
-                        + " degats (" + String.format("%.1f", resultat.pvRestantsBouclier) + " PV restants)");
+                        + String.format("%.0f", resultat.degatsAbsorbesBouclier)
+                        + " degats (" + String.format("%.0f", resultat.pvRestantsBouclier) + " PV restants)");
             }
             if (resultat.bloque) {
-                log.add("→ " + String.format("%.1f", resultat.degatsAppliques)
+                log.add("→ " + String.format("%.0f", resultat.degatsAppliques)
                         + " degats sur " + cible.getNom()
-                        + " (" + String.format("%.1f", pvAvant) + " → "
+                        + " (" + String.format("%.0f", pvAvant) + " → "
                         + cible.getNom() + " bloque ! Degats reduits a "
-                        + String.format("%.1f", resultat.degatsAppliques) + " → "
-                        + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
+                        + String.format("%.0f", resultat.degatsAppliques) + " → "
+                        + (cible.estVivant() ? String.format("%.0f", cible.getVie()) + " PV)" : "KO !)"));
             } else {
-                log.add("→ " + String.format("%.1f", resultat.degatsAppliques)
+                log.add("→ " + String.format("%.0f", resultat.degatsAppliques)
                         + " degats sur " + cible.getNom()
-                        + " (" + String.format("%.1f", pvAvant) + " → "
-                        + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
+                        + " (" + String.format("%.0f", pvAvant) + " → "
+                        + (cible.estVivant() ? String.format("%.0f", cible.getVie()) + " PV)" : "KO !)"));
             }
         }
 
@@ -444,9 +444,9 @@ public class Combat {
             double pvAvantRenvoi = attaquant.getVie();
             PersonnageBase.ResultatDegats resultatRenvoi = attaquant.subirDegats(degatsRenvoi);
             log.add("[RENVOI] " + cible.getNom() + " renvoie "
-                    + String.format("%.1f", degatsRenvoi) + " degats a " + attaquant.getNom()
-                    + " (" + String.format("%.1f", pvAvantRenvoi) + " → "
-                    + (attaquant.estVivant() ? String.format("%.1f", attaquant.getVie()) + " PV)" : "KO !)"));
+                    + String.format("%.0f", degatsRenvoi) + " degats a " + attaquant.getNom()
+                    + " (" + String.format("%.0f", pvAvantRenvoi) + " → "
+                    + (attaquant.estVivant() ? String.format("%.0f", attaquant.getVie()) + " PV)" : "KO !)"));
             if (resultatRenvoi.ko) {
                 log.add(attaquant.getNom() + " est KO !");
             }
@@ -495,22 +495,22 @@ public class Combat {
 
         if (resultat.bouclierAbsorbe) {
             log.add("[BOUCLIER] " + cible.getNom() + " absorbe "
-                    + String.format("%.1f", resultat.degatsAbsorbesBouclier)
-                    + " degats (" + String.format("%.1f", resultat.pvRestantsBouclier) + " PV restants)");
+                    + String.format("%.0f", resultat.degatsAbsorbesBouclier)
+                    + " degats (" + String.format("%.0f", resultat.pvRestantsBouclier) + " PV restants)");
         }
 
         if (resultat.bloque) {
-            log.add(nomSource + " inflige " + String.format("%.1f", resultat.degatsAppliques)
+            log.add(nomSource + " inflige " + String.format("%.0f", resultat.degatsAppliques)
                     + " degats a " + cible.getNom()
-                    + " (" + String.format("%.1f", pvAvant) + " → "
+                    + " (" + String.format("%.0f", pvAvant) + " → "
                     + cible.getNom() + " bloque ! Degats reduits a "
-                    + String.format("%.1f", resultat.degatsAppliques) + " → "
-                    + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
+                    + String.format("%.0f", resultat.degatsAppliques) + " → "
+                    + (cible.estVivant() ? String.format("%.0f", cible.getVie()) + " PV)" : "KO !)"));
         } else {
-            log.add(nomSource + " inflige " + String.format("%.1f", resultat.degatsAppliques)
+            log.add(nomSource + " inflige " + String.format("%.0f", resultat.degatsAppliques)
                     + " degats a " + cible.getNom()
-                    + " (" + String.format("%.1f", pvAvant) + " → "
-                    + (cible.estVivant() ? String.format("%.1f", cible.getVie()) + " PV)" : "KO !)"));
+                    + " (" + String.format("%.0f", pvAvant) + " → "
+                    + (cible.estVivant() ? String.format("%.0f", cible.getVie()) + " PV)" : "KO !)"));
         }
 
         if (resultat.ko) {
@@ -522,9 +522,9 @@ public class Combat {
             double pvAvantRenvoi = source.getVie();
             PersonnageBase.ResultatDegats resultatRenvoi = source.subirDegats(degatsRenvoi);
             log.add("[RENVOI] " + cible.getNom() + " renvoie "
-                    + String.format("%.1f", degatsRenvoi) + " degats a " + source.getNom()
-                    + " (" + String.format("%.1f", pvAvantRenvoi) + " → "
-                    + (source.estVivant() ? String.format("%.1f", source.getVie()) + " PV)" : "KO !)"));
+                    + String.format("%.0f", degatsRenvoi) + " degats a " + source.getNom()
+                    + " (" + String.format("%.0f", pvAvantRenvoi) + " → "
+                    + (source.estVivant() ? String.format("%.0f", source.getVie()) + " PV)" : "KO !)"));
             if (resultatRenvoi.ko) {
                 log.add(source.getNom() + " est KO !");
             }
@@ -599,7 +599,7 @@ public class Combat {
     @Deprecated
     public static void appliquerDegatsAvecLog(PersonnageBase source, PersonnageBase cible, double degats) {
         System.out.println(source.getNom() + " inflige "
-                + String.format("%.1f", degats) + " degats a " + cible.getNom());
+                + String.format("%.0f", degats) + " degats a " + cible.getNom());
         cible.subirDegats(degats);
         if (!cible.estVivant()) {
             System.out.println(cible.getNom() + " est KO !");

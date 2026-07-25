@@ -16,9 +16,9 @@ public class perso_Natsu extends PersonnageBase {
         this.vie = 550 * multiplicateurRarete;
         this.attaque = 200 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;
-        this.vitesse = 100 * multiplicateurRarete;
+        this.vitesse = 115 * multiplicateurRarete;
         this.taux_critiques = 0.25;
-        this.degat_critiques = 1.20;
+        this.degat_critiques = 1.135;
         this.taux_precisions = 105.00;
         this.taux_esquives = 0.08;
         this.taux_blocage = 0.02;

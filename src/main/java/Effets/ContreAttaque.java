@@ -35,7 +35,7 @@ public class ContreAttaque implements Effet {
             double degatsRiposte = soi.getAttaque() * multiplicateurDegats;
             PersonnageBase.ResultatDegats resultat = attaquant.subirDegats(degatsRiposte);
             log.add(soi.getNom() + " riposte pour "
-                    + String.format("%.1f", resultat.degatsAppliques) + " degats sur "
+                    + String.format("%.0f", resultat.degatsAppliques) + " degats sur "
                     + attaquant.getNom() + " !");
             if (resultat.ko) log.add(attaquant.getNom() + " est KO !");
         }

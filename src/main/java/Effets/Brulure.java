@@ -27,7 +27,7 @@ public void tick(PersonnageBase cible) {
         double degats = cible.getVie() * pourcentageDegats;
         toursRestant--;
         cible.retirerVie(degats); // ✅ bypass défense — c'est un DoT
-        System.out.println(cible.getNom() + " perd " + String.format("%.1f", degats)
+        System.out.println(cible.getNom() + " perd " + String.format("%.0f", degats)
                 + " PV (brûlure, " + toursRestant + " tours restants)");
     }
 }
@@ -57,7 +57,7 @@ public void tick(PersonnageBase cible) {
             double degats = cible.getVie() * pourcentageDegats;
             toursRestant--;
             cible.retirerVie(degats, log);
-            log.add(cible.getNom() + " perd " + String.format("%.1f", degats)
+            log.add(cible.getNom() + " perd " + String.format("%.0f", degats)
                     + " PV (brulure, " + toursRestant + " tours restants)");
         }
     }

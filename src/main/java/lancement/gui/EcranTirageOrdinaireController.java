@@ -43,7 +43,7 @@ public class EcranTirageOrdinaireController {
         FlowPane stats = new FlowPane(10, 10);
         stats.setAlignment(Pos.CENTER);
         stats.getChildren().addAll(
-                GuiVisuels.creerFicheStat("Parchemins Ordinaires", String.valueOf(mt.getParcheminOrdinaire())),
+                GuiVisuels.creerFicheStat("Parchemins Ordinaires", GuiVisuels.formaterMontant(mt.getParcheminOrdinaire())),
                 GuiVisuels.creerFicheStat("Coupons", String.valueOf(ctx.joueur.getCoupons()))
         );
         statsBox.getChildren().setAll(stats);
