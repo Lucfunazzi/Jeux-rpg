@@ -1,5 +1,7 @@
 package lancement.gui;
 
+import Joueur.Personnage_principale;
+import Personnage.PersonnageBase;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
@@ -50,6 +52,12 @@ public final class GuiVisuels {
     public static String hex(Color c) {
         return String.format("#%02x%02x%02x",
                 (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255));
+    }
+
+    /** Nom de classe/type affiche, accorde selon le genre pour le personnage principal. */
+    public static String nomClasseAffiche(PersonnageBase p) {
+        if (p instanceof Personnage_principale pp) return pp.getNomClasseAffiche();
+        return p.getType() != null ? p.getType() : "";
     }
 
     /**

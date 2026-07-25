@@ -3,14 +3,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="lancement.gui.EcranChoixClasseController"
-      alignment="CENTER" spacing="25" styleClass="root-menu">
+      alignment="CENTER" spacing="20" styleClass="root-menu">
     <Label text="CHOIX DE LA CLASSE" styleClass="titre"/>
     <Label fx:id="sousTitre" styleClass="texte"/>
+
+    <HBox fx:id="genreBox" spacing="14" alignment="CENTER"/>
 
     <FlowPane fx:id="classesBox" hgap="14" vgap="14" alignment="CENTER" prefWrapLength="560"/>
 

@@ -206,6 +206,12 @@ public class Main {
         Personnage_principale joueur = new Personnage_principale(pseudo, 1);
         joueur.setGameContext(ctx);
 
+        System.out.println("\nChoisissez votre genre :");
+        System.out.println("1. Homme");
+        System.out.println("2. Femme");
+        System.out.print("Votre choix : ");
+        joueur.setGenre(scanner.nextLine().trim().equals("2") ? "Femme" : "Homme");
+
         Competences competences = null;
         String classeChoisie = null;
 
@@ -225,7 +231,7 @@ public class Main {
             Competences apercu = competencesPour(classeApercu);
 
             String[] nomCompetences = apercu.getNomsCompetences();
-            System.out.println("\n[ " + classeApercu + " ]");
+            System.out.println("\n[ " + Personnage_principale.nomClasseAffiche(classeApercu, joueur.getGenre()) + " ]");
             System.out.println("  Speciale : " + nomCompetences[0]);
             apercu.descriptionAttaqueSpeciale();
             System.out.println("  Ultime   : " + nomCompetences[1]);
@@ -239,6 +245,7 @@ public class Main {
         }
 
         joueur.setChoixClasses(classeChoisie);
+        joueur.appliquerStatsClasse(classeChoisie);
         System.out.println("\nD'autres compétences seront débloquées via l'Arbre de Compétences !");
         joueur.setCompetencesChoisie(competences);
         return joueur;

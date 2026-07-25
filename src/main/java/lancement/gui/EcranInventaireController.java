@@ -738,7 +738,7 @@ public class EcranInventaireController {
         Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
         Label nom = new Label(p.getNom());
         nom.getStyleClass().add("item-nom");
-        Label detail = new Label(p.getRole() + "  ·  Niv." + p.getNiveau() + "  ·  " + p.getType());
+        Label detail = new Label(p.getRole() + "  ·  Niv." + p.getNiveau() + "  ·  " + GuiVisuels.nomClasseAffiche(p));
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);

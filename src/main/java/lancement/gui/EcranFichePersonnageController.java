@@ -58,7 +58,7 @@ public class EcranFichePersonnageController {
         badgeBox.getChildren().setAll(GuiVisuels.creerBadgeRarete(perso.getRarete()));
         titreLabel.setText(perso.getNom()
                 + "  Niv." + perso.getNiveau()
-                + "  " + (perso.getType() != null ? perso.getType() : "")
+                + "  " + GuiVisuels.nomClasseAffiche(perso)
                 + "  " + perso.getRole());
 
         barresBox.getChildren().setAll(

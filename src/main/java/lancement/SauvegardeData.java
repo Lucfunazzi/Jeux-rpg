@@ -13,6 +13,7 @@ public class SauvegardeData {
     public double  joueurOr;
     public String  joueurClasse;
     public int     joueurChoixComp;
+    public String  joueurGenre;
 
     public boolean[] arbreNoeudDebloques     = new boolean[10];
     public boolean[] arbreNoeudDebloques2    = new boolean[10];

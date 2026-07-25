@@ -52,8 +52,9 @@ public class EcranPersonnagesController {
         Label nomLabel = new Label(p.getNom());
         nomLabel.getStyleClass().add("item-nom");
 
+        String nomClasse = GuiVisuels.nomClasseAffiche(p);
         Label detailLabel = new Label("Niv. " + p.getNiveau()
-                + (p.getType() != null ? "  ·  " + p.getType() : "")
+                + (!nomClasse.isEmpty() ? "  ·  " + nomClasse : "")
                 + "  ·  " + p.getRole());
         detailLabel.getStyleClass().add("item-detail");
 

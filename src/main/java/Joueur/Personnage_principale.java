@@ -15,6 +15,7 @@ public class Personnage_principale extends PersonnageBase {
     private Competences  competenceChoisie;
     private double       or      = 1000.00;
     private int          coupons = 50;
+    private String       genre   = "Homme";
 
     // Arbre de compétences
     private ArbreCompetences arbreCompetences = new ArbreCompetences();
@@ -50,10 +51,42 @@ public class Personnage_principale extends PersonnageBase {
 
     public void setGameContext(GameContext ctx) { this.ctx = ctx; }
 
+    /** Profil de stats de base d'une classe (PV, ATK, DEF, VIT), consultable avant meme la creation du personnage. */
+    public record StatsClasse(double vie, double attaque, double defense, double vitesse) {}
+
+    /**
+     * Chaque classe reste un DPS mais avec une repartition differente :
+     * Chevalier = DEF/PV, Chasseur de Dragon = ATK, Invocateur = VIT, Mage = equilibre.
+     */
+    public static StatsClasse statsPourClasse(String classeInterne) {
+        return switch (classeInterne) {
+            case "Chasseur de Dragon" -> new StatsClasse(280, 130, 55, 95);
+            case "Chevalier"          -> new StatsClasse(345, 100, 70, 90);
+            case "Constellationniste", "Invocateur" -> new StatsClasse(280, 100, 55, 120);
+            default                  -> new StatsClasse(300, 110, 60, 100); // Mage
+        };
+    }
+
+    /** Applique le profil de stats de base propre a la classe choisie (a appeler juste apres setChoixClasses). */
+    public void appliquerStatsClasse(String classeInterne) {
+        StatsClasse s = statsPourClasse(classeInterne);
+        this.vie = s.vie();
+        this.attaque = s.attaque();
+        this.defense = s.defense();
+        this.vitesse = s.vitesse();
+        initialiserVieMax();
+    }
+
     private double getMultiplicateurRang() {
         if (ctx != null && ctx.rangJoueur != null)
             return ctx.rangJoueur.getMultiplicateur();
         return 1.00;
+    }
+
+    /** La rarete affichee (badge, couleur) suit toujours le rang actuel du joueur. */
+    @Override public String getRarete() {
+        if (ctx != null && ctx.rangJoueur != null) return ctx.rangJoueur.getRangNom();
+        return super.getRarete();
     }
 
     @Override public double getAttaque() {
@@ -155,6 +188,24 @@ public class Personnage_principale extends PersonnageBase {
     public void        setOr(double or)                     { this.or = or; }
     public int         getCoupons()                         { return coupons; }
     public void        setCoupons(int coupons)              { this.coupons = coupons; }
+    public String      getGenre()                           { return genre; }
+    public void         setGenre(String genre)              { this.genre = genre; }
+
+    /** Nom de classe affiche au joueur, accorde selon le genre (ex: Invocateur/Invocatrice). */
+    public String getNomClasseAffiche() { return nomClasseAffiche(choixClasse, genre); }
+
+    /** Version statique reutilisable avant meme la creation du personnage (ecran de choix de classe). */
+    public static String nomClasseAffiche(String classeInterne, String genre) {
+        boolean femme = "Femme".equals(genre);
+        if (classeInterne == null) return "";
+        return switch (classeInterne) {
+            case "Chevalier"                    -> femme ? "Chevalière" : "Chevalier";
+            case "Chasseur de Dragon"           -> femme ? "Chasseuse de Dragon" : "Chasseur de Dragon";
+            case "Mage"                         -> "Mage";
+            case "Constellationniste", "Invocateur" -> femme ? "Invocatrice" : "Invocateur";
+            default -> classeInterne;
+        };
+    }
 
     public ArbreCompetences getArbreCompetences() { return arbreCompetences; }
 

@@ -7,22 +7,17 @@ import Joueur.Elementaliste;
 import Joueur.Invocateur;
 import Joueur.Personnage_principale;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import lancement.Formation;
 import lancement.GameContext;
 
 public class EcranChoixClasseController {
@@ -34,12 +29,48 @@ public class EcranChoixClasseController {
 
     private GameContext ctx;
     private String pseudo;
+    private String genreChoisi = "Homme";
 
     @FXML private Label sousTitre;
+    @FXML private HBox genreBox;
     @FXML private FlowPane classesBox;
 
     @FXML
     private void initialize() {
+        rafraichirGenre();
+        rafraichirClasses();
+    }
+
+    public void initData(GameContext ctx, String pseudo) {
+        this.ctx = ctx;
+        this.pseudo = pseudo;
+        sousTitre.setText("Bienvenue, " + pseudo + " ! Choisissez votre genre et votre classe :");
+    }
+
+    // ── Genre ─────────────────────────────────────────────────────────────
+    private void rafraichirGenre() {
+        genreBox.getChildren().setAll(carteGenre("Homme"), carteGenre("Femme"));
+    }
+
+    private Node carteGenre(String genre) {
+        Label nom = new Label(genre);
+        nom.getStyleClass().add("item-nom");
+
+        VBox carte = new VBox(nom);
+        carte.setAlignment(Pos.CENTER);
+        carte.getStyleClass().add(genre.equals(genreChoisi) ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(110);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(e -> {
+            genreChoisi = genre;
+            rafraichirGenre();
+            rafraichirClasses();
+        });
+        return carte;
+    }
+
+    // ── Classes ───────────────────────────────────────────────────────────
+    private void rafraichirClasses() {
         classesBox.getChildren().setAll(
                 carteClasse("Chevalier", competChevalier),
                 carteClasse("Chasseur de Dragon", competChasseur),
@@ -48,10 +79,11 @@ public class EcranChoixClasseController {
         );
     }
 
-    private Node carteClasse(String nomClasse, Competences competences) {
+    private Node carteClasse(String classeInterne, Competences competences) {
         String[] noms = competences.getNomsCompetences();
+        String nomAffiche = Personnage_principale.nomClasseAffiche(classeInterne, genreChoisi);
 
-        Label nom = new Label(nomClasse);
+        Label nom = new Label(nomAffiche);
         nom.getStyleClass().add("item-nom");
         nom.setStyle("-fx-font-size: 16px;");
 
@@ -65,12 +97,10 @@ public class EcranChoixClasseController {
         ultime.setWrapText(true);
         ultime.setMaxWidth(220);
 
-        Label voirDetails = new Label("Voir les compétences");
-        voirDetails.setStyle("-fx-font-size: 11px; -fx-text-fill: #4ea8f2; -fx-underline: true;");
-        voirDetails.setCursor(Cursor.HAND);
-        voirDetails.setOnMouseClicked(e -> { afficherDetails(nomClasse, competences); e.consume(); });
+        Label voirFiche = new Label("Voir la fiche");
+        voirFiche.setStyle("-fx-font-size: 11px; -fx-text-fill: #4ea8f2; -fx-underline: true;");
 
-        VBox texte = new VBox(4, nom, special, ultime, voirDetails);
+        VBox texte = new VBox(4, nom, special, ultime, voirFiche);
         texte.setAlignment(Pos.CENTER);
 
         VBox carte = new VBox(texte);
@@ -78,57 +108,16 @@ public class EcranChoixClasseController {
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(240);
         carte.setCursor(Cursor.HAND);
-        carte.setOnMouseClicked(e -> creerJoueur(nomClasse, competences));
+        carte.setOnMouseClicked(e -> ouvrirFiche(classeInterne, nomAffiche, competences));
         return carte;
     }
 
-    public void initData(GameContext ctx, String pseudo) {
-        this.ctx = ctx;
-        this.pseudo = pseudo;
-        sousTitre.setText("Bienvenue, " + pseudo + " ! Choisissez votre classe :");
-    }
-
-    /** Apercu des competences d'une classe, consultable avant de valider le choix. */
-    private void afficherDetails(String nomClasse, Competences competences) {
-        String[] noms = competences.getNomsCompetences();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Attaque de base (100% ATK)\n\n");
-        sb.append(noms[0]).append(" (speciale)\n   ")
-          .append(GuiVisuels.capturerDescription(competences::descriptionAttaqueSpeciale)).append("\n\n");
-        sb.append(noms[1]).append(" (ultime)\n   ")
-          .append(GuiVisuels.capturerDescription(competences::descriptionUltime));
-
-        Alert dialog = new Alert(Alert.AlertType.INFORMATION, sb.toString(), ButtonType.OK);
-        dialog.setTitle(nomClasse);
-        dialog.setHeaderText(null);
-        styliser(dialog);
-        dialog.showAndWait();
-    }
-
-    private void creerJoueur(String classe, Competences competences) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
-                "Confirmer la classe " + classe + " ?\nCe choix est definitif, vous ne pourrez plus en changer.",
-                ButtonType.YES, ButtonType.NO);
-        confirmation.setTitle("Confirmation");
-        confirmation.setHeaderText(null);
-        styliser(confirmation);
-        Optional<ButtonType> reponse = confirmation.showAndWait();
-        if (reponse.isEmpty() || reponse.get() != ButtonType.YES) return;
-
-        Personnage_principale joueur = new Personnage_principale(pseudo, 1);
-        joueur.setGameContext(ctx);
-        joueur.setChoixClasses(classe);
-        joueur.setCompetencesChoisie(competences);
-        ctx.joueur               = joueur;
-        ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
-        ctx.formation.setGestionnaireTitres(ctx.gestionnaireTitres);
-        ctx.personnagesRecruites = new ArrayList<>();
-
+    private void ouvrirFiche(String classeInterne, String nomAffiche, Competences competences) {
         try {
             Stage stage = (Stage) classesBox.getScene().getWindow();
-            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranMenuPrincipal.fxml");
-            EcranMenuPrincipalController controller = loader.getController();
-            controller.initData(ctx);
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranFicheClasse.fxml");
+            EcranFicheClasseController controller = loader.getController();
+            controller.initData(ctx, pseudo, genreChoisi, classeInterne, nomAffiche, competences);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -142,10 +131,5 @@ public class EcranChoixClasseController {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    private void styliser(Dialog<?> dialog) {
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
-        dialog.getDialogPane().getStyleClass().add("root-menu");
     }
 }

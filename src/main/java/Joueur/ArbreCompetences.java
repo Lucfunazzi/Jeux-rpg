@@ -9,18 +9,20 @@ public class ArbreCompetences {
     private int pointsDisponibles = 0;
 
     public ArbreCompetences() {
-        // ── Arbre 1 — budget 100 pts (Chapitre 1 + Chapitre 2) ───────────
-        // Coûts : 3/5/7/8/10/12/14/16/10/15 = 100 pts
+        // ── Arbre 1 — budget 91 pts (Chapitre 1 + Chapitre 2) ───────────
+        // Coûts : 3/5/7/8/10/12/13/15/7/11 = 91 pts
+        // Chaque noeud doit rester strictement moins cher que le meme noeud de l'Arbre 2,
+        // lui-meme moins cher que l'Arbre 3, pour une difficulte reellement progressive.
         noeuds1[0] = new NoeudArbre(1,  "+2% ATK de base",          3,  NoeudArbre.TypeBonus.ATK, 0.02);
         noeuds1[1] = new NoeudArbre(2,  "+2% DEF de base",          5,  NoeudArbre.TypeBonus.DEF, 0.02);
         noeuds1[2] = new NoeudArbre(3,  "+3% PV de base",           7,  NoeudArbre.TypeBonus.PV,  0.03);
         noeuds1[3] = new NoeudArbre(4,  "+2% VIT de base",          8,  NoeudArbre.TypeBonus.VIT, 0.02);
         noeuds1[4] = new NoeudArbre(5,  "+3% ATK de base",          10, NoeudArbre.TypeBonus.ATK, 0.03);
         noeuds1[5] = new NoeudArbre(6,  "+3% DEF de base",          12, NoeudArbre.TypeBonus.DEF, 0.03);
-        noeuds1[6] = new NoeudArbre(7,  "+4% PV de base",           14, NoeudArbre.TypeBonus.PV,  0.04);
-        noeuds1[7] = new NoeudArbre(8,  "+3% VIT de base",          16, NoeudArbre.TypeBonus.VIT, 0.03);
-        noeuds1[8] = new NoeudArbre(9,  "+5% ATK de base",          10, NoeudArbre.TypeBonus.ATK, 0.05);
-        noeuds1[9] = new NoeudArbre(10, "Nouvelle attaque speciale", 15, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
+        noeuds1[6] = new NoeudArbre(7,  "+4% PV de base",           13, NoeudArbre.TypeBonus.PV,  0.04);
+        noeuds1[7] = new NoeudArbre(8,  "+3% VIT de base",          15, NoeudArbre.TypeBonus.VIT, 0.03);
+        noeuds1[8] = new NoeudArbre(9,  "+5% ATK de base",          7,  NoeudArbre.TypeBonus.ATK, 0.05);
+        noeuds1[9] = new NoeudArbre(10, "Nouvelle attaque speciale", 11, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
 
         // ── Arbre 2 — budget 110 pts ──────────────────────────────────────
         // Bonus supérieurs à l'arbre 1, coûts : 5/8/10/11/12/13/14/16/8/13 = 110 pts

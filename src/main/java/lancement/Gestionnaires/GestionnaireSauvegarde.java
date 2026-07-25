@@ -110,6 +110,7 @@ public class GestionnaireSauvegarde {
         data.joueurOr            = joueur.getOr();
         data.joueurClasse        = joueur.getChoixClasses();
         data.joueurChoixComp     = joueur.getChoixComp();
+        data.joueurGenre         = joueur.getGenre();
 
         // Coffre arène
         data.dernierCoffreArene = ctx.dernierCoffreArene;
@@ -363,7 +364,9 @@ public class GestionnaireSauvegarde {
             default         -> null;
         };
         joueur.setChoixClasses(data.joueurClasse);
+        joueur.appliquerStatsClasse(data.joueurClasse);
         joueur.setChoixComp(data.joueurChoixComp);
+        joueur.setGenre(data.joueurGenre != null ? data.joueurGenre : "Homme");
         joueur.setCompetencesChoisie(comp);
         joueur.setOr(data.joueurOr);
         joueur.getArbreCompetences().setEtatNoeuds(data.arbreNoeudDebloques);
