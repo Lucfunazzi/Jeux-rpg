@@ -19,7 +19,7 @@ public class perso_Ikaruga extends PersonnageBase {
         this.role="Tank";
         this.rarete="A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie = 650 * multiplicateurRarete;
         this.attaque=150 *multiplicateurRarete;
         this.defense=140 * multiplicateurRarete;

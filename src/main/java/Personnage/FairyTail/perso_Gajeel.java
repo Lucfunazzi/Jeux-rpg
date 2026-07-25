@@ -13,7 +13,7 @@ public class perso_Gajeel extends PersonnageBase {
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie = 580 * multiplicateurRarete;
         this.attaque = 220 * multiplicateurRarete;
         this.defense = 130 * multiplicateurRarete;

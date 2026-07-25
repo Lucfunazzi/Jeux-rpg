@@ -15,7 +15,7 @@ public class perso_Lucy extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie     = 700 * multiplicateurRarete;
         this.attaque = 120 * multiplicateurRarete;
         this.defense = 90  * multiplicateurRarete;

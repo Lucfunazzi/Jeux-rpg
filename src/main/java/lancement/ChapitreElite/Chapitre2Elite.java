@@ -110,6 +110,7 @@ public class Chapitre2Elite {
                 System.out.println(">> Stage " + (numero + 1) + " debloque !");
             } else {
                 System.out.println(">> Félicitations ! Vous avez terminé le Chapitre 2 Elite !");
+                ctx.gestionnaireTitres.debloquerTitre("Heros de l'Elite");
                 if (estNouveau && !ctx.gestionnaireCreaturesSacrees.isOeufDebloque()) {
                     ctx.gestionnaireCreaturesSacrees.debloquerOeuf();
                     System.out.println(">> Vous avez obtenu un Œuf Mystérieux !");

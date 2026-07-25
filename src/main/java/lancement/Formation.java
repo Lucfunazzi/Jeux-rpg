@@ -4,6 +4,7 @@ import Personnage.PersonnageBase;
 import Joueur.Personnage_principale;
 import lancement.Gestionnaires.GestionnaireLiens;
 import lancement.Gestionnaires.GestionnaireCompagnons;
+import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.Gestionnaire_pet;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Formation {
     private static final GestionnaireLiens gestionnaireLiens = new GestionnaireLiens();
     private GestionnaireCompagnons       gestionnaireCompagnons;
     private Gestionnaire_pet gestionnaireCreaturesSacrees;
+    private GestionnaireTitres gestionnaireTitres;
 
     public Formation(Personnage_principale joueur) {
         this.joueur = joueur;
@@ -44,6 +46,10 @@ public class Formation {
 
     public void setGestionnaireCreaturesSacrees(Gestionnaire_pet gc) {
         this.gestionnaireCreaturesSacrees = gc;
+    }
+
+    public void setGestionnaireTitres(GestionnaireTitres gt) {
+        this.gestionnaireTitres = gt;
     }
 
     // ── Ajout / Retrait ───────────────────────────────────────────────────
@@ -95,11 +101,14 @@ public class Formation {
         double bonusPV  = gestionnaireLiens.getBonusPV(equipe);
         double bonusVIT = gestionnaireLiens.getBonusVIT(equipe);
 
+        double bonusTitre = gestionnaireTitres != null ? gestionnaireTitres.getBonusActif() : 0.0;
+
         for (PersonnageBase p : equipe) {
             p.setBonusLienATK(bonusATK);
             p.setBonusLienDEF(bonusDEF);
             p.setBonusLienPV(bonusPV);
             p.setBonusLienVIT(bonusVIT);
+            p.setBonusTitre(bonusTitre);
         }
 
         // Bonus compagnons (appliqué séparément sur chaque membre)

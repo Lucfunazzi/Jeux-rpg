@@ -18,7 +18,7 @@ public class perso_Vivaldus extends PersonnageBase {
         this.role="Support";
         this.rarete="A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie = 575 * multiplicateurRarete;
         this.attaque=150 *multiplicateurRarete;
         this.defense=125 * multiplicateurRarete;

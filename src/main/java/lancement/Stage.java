@@ -1,7 +1,6 @@
 package lancement;
 
 import Combat.Combat;
-import Effets.BuffTitre;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import Equipement.CarteOr;
@@ -119,15 +118,10 @@ public class Stage {
         System.out.println();
 
         // Combat
-        double bonusTitre = ctx.gestionnaireTitres.getBonusActif();
         List<Combat.PersonnageSnapshot> etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
+        Combat combat = new Combat(equipeAlliee, ennemis);
 
         List<Combat.CombatEvent> evenements = combat.lancerCombatEnregistre();
-
-        // Retirer BuffTitre après le combat
-        for (PersonnageBase perso : equipeAlliee)
-            perso.getEffetsActifs().removeIf(e -> e instanceof BuffTitre);
 
         boolean victoire       = tousKO(ennemis);
         boolean sansAllieMort  = tousVivants(equipeAlliee);

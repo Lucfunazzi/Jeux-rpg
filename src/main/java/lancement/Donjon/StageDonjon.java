@@ -1,7 +1,6 @@
 package lancement.Donjon;
 
 import Combat.Combat;
-import Effets.BuffTitre;
 import Equipement.Equipement;
 import Equipement.EquipementFactory;
 import Equipement.Inventaire;
@@ -11,7 +10,6 @@ import Personnage.PersonnageBase;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireDonjon.TypeDonjon;
 import lancement.Gestionnaires.GestionnaireDonjon.Difficulte;
-import lancement.Gestionnaires.GestionnaireTitres;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,6 @@ public class StageDonjon {
                           Inventaire inventaire,
                           ArrayList<PersonnageBase> personnagesRecruites,
                           GestionnaireDonjon gestionnaireDonjon,
-                          GestionnaireTitres gestionnaireTitres,
                           java.util.Scanner scanner) {
 
         // Reset equipe alliee avant combat
@@ -91,15 +88,9 @@ public class StageDonjon {
             e.getEffetsActifs().clear();
         }
 
-        double bonusTitre = gestionnaireTitres.getBonusActif();
         etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
+        Combat combat = new Combat(equipeAlliee, ennemis);
         evenements = combat.lancerCombatEnregistre();
-
-        // Retirer BuffTitre apres combat
-        for (PersonnageBase perso : equipeAlliee) {
-            perso.getEffetsActifs().removeIf(e -> e instanceof BuffTitre);
-        }
 
         boolean victoire = tousKO(ennemis);
 

@@ -114,6 +114,7 @@ public class GameContext {
         sauvegarde.restaurerCreaturesSacrees(gestionnaireCreaturesSacrees, data);
         sauvegarde.restaurerRecompenses(gestionnaireRecompenses, data);
         this.formation             = new Formation(this.joueur, gestionnaireCompagnons);
+        this.formation.setGestionnaireTitres(this.gestionnaireTitres);
         sauvegarde.restaurerFormation(this.formation, data, this.personnagesRecruites);
         sauvegarde.restaurerChapitre1(chapitre1, data);
         sauvegarde.restaurerChapitre1Elite(chapitre1Elite, data);
@@ -125,6 +126,7 @@ public class GameContext {
         sauvegarde.restaurerQuetes(gestionnaireQuetes, data);
         sauvegarde.restaurerEnergie(gestionnaireEnergie, data);
         sauvegarde.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
+        this.formation.appliquerBonusLiens();
         sauvegarde.restaurerDonjon(gestionnaireDonjon, data);
         sauvegarde.restaurerExamenS(gestionnaireExamenS, data);
         menuRecrutement.setParcheminC(data.parcheminC);

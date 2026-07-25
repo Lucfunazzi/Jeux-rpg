@@ -128,6 +128,7 @@ public class Chapitre3Elite {
                 System.out.println(">> Stage " + (numero + 1) + " debloque !");
             } else {
                 System.out.println(">> Felicitations ! Vous avez termine le Chapitre 3 Elite !");
+                ctx.gestionnaireTitres.debloquerTitre("Legende de l'Elite");
             }
 
             if (estNouveau && !premiereVictoire[numero]) {

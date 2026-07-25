@@ -129,6 +129,7 @@ public class EcranRangTitresController {
         } else {
             gestionnaireTitres.equiperTitre(choix.titre().getNom());
         }
+        ctx.formation.appliquerBonusLiens();
         rafraichir();
     }
 

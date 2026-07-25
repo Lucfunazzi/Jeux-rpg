@@ -9,7 +9,6 @@ import Effets.*;
 public class Combat {
     private List<PersonnageBase> equipeJoueur;
     private List<PersonnageBase> equipeAdverse;
-    private double bonusTitre  = 0.0;
     private int toursUtilises  = 0;
     private boolean donnerXP   = true;
     private List<CombatEvent> evenements; // non-null uniquement pendant lancerCombatEnregistre()
@@ -61,14 +60,6 @@ public class Combat {
                   List<PersonnageBase> equipeAdverse) {
         this.equipeJoueur  = equipeJoueur;
         this.equipeAdverse = equipeAdverse;
-    }
-
-    public Combat(List<PersonnageBase> equipeJoueur,
-                  List<PersonnageBase> equipeAdverse,
-                  double bonusTitre) {
-        this.equipeJoueur  = equipeJoueur;
-        this.equipeAdverse = equipeAdverse;
-        this.bonusTitre    = bonusTitre;
     }
 
     /** Constructeur pour les combats sans gain d'XP (arène). */
@@ -198,14 +189,6 @@ public class Combat {
 
     public void lancerCombat() {
         System.out.println("\n=== COMBAT ===\n");
-
-        if (bonusTitre > 0.0) {
-            for (PersonnageBase perso : equipeJoueur) {
-                perso.ajouterEffet(new BuffTitre(bonusTitre));
-            }
-            System.out.println("[TITRE] Bonus de " + (int)(bonusTitre * 100)
-                    + "% sur toutes les stats de l'equipe !");
-        }
 
         int numeroTour = 1;
         final int MAX_TOURS = 20;
@@ -546,6 +529,15 @@ public class Combat {
                 return;
             }
         }
+        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification
+        if (effet instanceof Etourdissement || effet instanceof Paralysie
+                || effet instanceof Sommeil || effet instanceof Petrification) {
+            Effets.ImmuniteControle immuniteControle = cible.getEffet(Effets.ImmuniteControle.class);
+            if (immuniteControle != null && !immuniteControle.estTermine()) {
+                log.add("🛡 " + cible.getNom() + " resiste aux effets de controle — [" + effet.getNom() + "] bloque !");
+                return;
+            }
+        }
         // Cas spécial Poison : stack au lieu de remplacer
         if (effet instanceof Poison) {
             Poison poisonExistant = cible.getEffet(Poison.class);
@@ -574,6 +566,15 @@ public class Combat {
             Effets.Immunite immunite = cible.getEffet(Effets.Immunite.class);
             if (immunite != null && !immunite.estTermine()) {
                 log.add("🛡 " + cible.getNom() + " est immunisé — [" + effet.getNom() + "] bloqué !");
+                return;
+            }
+        }
+        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification
+        if (effet instanceof Etourdissement || effet instanceof Paralysie
+                || effet instanceof Sommeil || effet instanceof Petrification) {
+            Effets.ImmuniteControle immuniteControle = cible.getEffet(Effets.ImmuniteControle.class);
+            if (immuniteControle != null && !immuniteControle.estTermine()) {
+                log.add("🛡 " + cible.getNom() + " resiste aux effets de controle — [" + effet.getNom() + "] bloque !");
                 return;
             }
         }

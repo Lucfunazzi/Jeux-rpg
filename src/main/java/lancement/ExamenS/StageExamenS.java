@@ -1,7 +1,6 @@
 package lancement.ExamenS;
 
 import Combat.Combat;
-import Effets.BuffTitre;
 import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class StageExamenS {
         }
     }
 
-    public boolean lancer(ArrayList<PersonnageBase> equipeAlliee, double bonusTitre) {
+    public boolean lancer(ArrayList<PersonnageBase> equipeAlliee) {
         for (PersonnageBase p : equipeAlliee) p.reinitialiserPourCombat();
         for (PersonnageBase e : ennemis)       e.reinitialiserPourCombat();
 
@@ -44,12 +43,8 @@ public class StageExamenS {
         System.out.println();
 
         etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis, bonusTitre);
+        Combat combat = new Combat(equipeAlliee, ennemis);
         evenements = combat.lancerCombatEnregistre();
-
-        for (PersonnageBase p : equipeAlliee) {
-            p.getEffetsActifs().removeIf(e -> e instanceof BuffTitre);
-        }
 
         boolean victoire = tousKO(ennemis);
         if (victoire) {

@@ -76,6 +76,14 @@ public class GestionnaireTitres {
             case "Conquerant de l'Elite" ->
                 new Titre("Conquerant de l'Elite",
                         "A triomphe du Chapitre 1 Elite dans toute sa gloire.",
+                        0.01);
+            case "Heros de l'Elite" ->
+                new Titre("Heros de l'Elite",
+                        "A triomphe du Chapitre 2 Elite dans toute sa gloire.",
+                        0.02);
+            case "Legende de l'Elite" ->
+                new Titre("Legende de l'Elite",
+                        "A triomphe du Chapitre 3 Elite dans toute sa gloire.",
                         0.03);
             default -> null;
         };

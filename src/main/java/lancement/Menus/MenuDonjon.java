@@ -141,7 +141,7 @@ public class MenuDonjon {
         StageDonjon stage = creerStage(type, diff, ctx);
         boolean victoire = stage.lancer(ctx.joueur, ctx.formation.getEquipe(),
                 ctx.inventaire, ctx.personnagesRecruites,
-                ctx.gestionnaireDonjon, ctx.gestionnaireTitres, scanner);
+                ctx.gestionnaireDonjon, scanner);
 
         if (victoire) {
             ctx.sauvegarde.sauvegarder(ctx);

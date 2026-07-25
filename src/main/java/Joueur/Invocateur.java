@@ -75,7 +75,16 @@ public class Invocateur implements Competences {
     @Override
     public void competenceArbre3(Personnage_principale utilisateur, PersonnageBase cible,
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-        // TODO
+        log.add("Invocation Aries !");
+        PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
+        double degats = utilisateur.getAttaque() * 1.30;
+        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant() && allie.getRole().equals("DPS")) {
+                Combat.appliquerEffet(utilisateur, allie, new ImmuniteControle(2), log);
+            }
+        }
     }
 
     @Override public void descriptionCompetenceArbre3() {

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import Equipement.Equipement;
 import Equipement.Pierre;
-import Effets.BuffTitre;
 import java.util.HashMap;
 
 public abstract class PersonnageBase implements Statistiques, Attaques {
@@ -70,6 +69,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     private double bonusLienDEF = 0.0;
     private double bonusLienPV  = 0.0;
     private double bonusLienVIT = 0.0;
+    private double bonusTitre   = 0.0;
     private double bonusCompagnonsATK = 0.0;
     private double bonusCompagnonsDEF = 0.0;
     private double bonusCompagnonsPV  = 0.0;
@@ -97,6 +97,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getBonusLienDEF() { return bonusLienDEF; }
     public double getBonusLienPV()  { return bonusLienPV; }
     public double getBonusLienVIT() { return bonusLienVIT; }
+    public void setBonusTitre(double v) { this.bonusTitre = v; }
+    public double getBonusTitre() { return bonusTitre; }
     public void setBonusCompagnonsATK(double v) { this.bonusCompagnonsATK = v; }
     public void setBonusCompagnonsDEF(double v) { this.bonusCompagnonsDEF = v; }
     public void setBonusCompagnonsPV(double v)  { this.bonusCompagnonsPV  = v; }
@@ -303,11 +305,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public void setSpecialeUtilisee(boolean valeur) { this.specialeUtilisee = valeur; }
 
     public double getVieMax() {
-        BuffTitre titre = getEffet(BuffTitre.class);
         double base = this.vieMax * getMultiplicateurEtoile();
         if (compterPiecesRangC() >= 3) base += 200;
         base += getBonusEquipementPV();
-        if (titre != null) base *= (1 + titre.getBonus());
+        if (bonusTitre > 0) base *= (1 + bonusTitre);
         if (bonusLienPV      > 0) base *= (1 + bonusLienPV);
         if (bonusCompagnonsPV > 0) base += bonusCompagnonsPV;
         if (bonusCreaturePV  > 0) base += bonusCreaturePV;
@@ -327,11 +328,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getAttaque() {
         BuffAttaque buff        = getEffet(BuffAttaque.class);
         ReductionAttaque debuff = getEffet(ReductionAttaque.class);
-        BuffTitre titre         = getEffet(BuffTitre.class);
         double base = attaqueBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (titre  != null) base *= (1 + titre.getBonus());
+        if (bonusTitre > 0) base *= (1 + bonusTitre);
         base += getBonusEquipementATK();
         if (compterPiecesRangC() >= 6) base *= 1.05;
         if (bonusLienATK      > 0) base *= (1 + bonusLienATK);
@@ -351,11 +351,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getDefense() {
         BuffDefense buff         = getEffet(BuffDefense.class);
         ReductionDefense debuff  = getEffet(ReductionDefense.class);
-        BuffTitre titre          = getEffet(BuffTitre.class);
         double base = defenseBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (titre  != null) base *= (1 + titre.getBonus());
+        if (bonusTitre > 0) base *= (1 + bonusTitre);
         base += getBonusEquipementDEF();
         if (bonusLienDEF      > 0) base *= (1 + bonusLienDEF);
         if (bonusCompagnonsDEF > 0) base += bonusCompagnonsDEF;
@@ -372,11 +371,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getVitesse() {
         BuffVitesse buff         = getEffet(BuffVitesse.class);
         ReductionVitesse debuff  = getEffet(ReductionVitesse.class);
-        BuffTitre titre          = getEffet(BuffTitre.class);
         double base = vitesseBase * getMultiplicateurEtoile();
         if (buff   != null) base *= (1 + buff.getPourcentage());
         if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (titre  != null) base *= (1 + titre.getBonus());
+        if (bonusTitre > 0) base *= (1 + bonusTitre);
         base += getBonusEquipementVIT();
         if (compterPiecesRangC() >= 4) base *= 1.02;
         if (bonusLienVIT      > 0) base *= (1 + bonusLienVIT);

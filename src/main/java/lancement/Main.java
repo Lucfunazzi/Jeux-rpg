@@ -67,17 +67,20 @@ public class Main {
                     System.out.println("Erreur de chargement. Creation d'une nouvelle partie.");
                     ctx.joueur               = creerNouveauJoueur(scanner, pseudo, ctx);
                     ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
+                    ctx.formation.setGestionnaireTitres(ctx.gestionnaireTitres);
                     ctx.personnagesRecruites = new ArrayList<>();
                 }
             } else {
                 ctx.joueur               = creerNouveauJoueur(scanner, pseudo, ctx);
                 ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
+                ctx.formation.setGestionnaireTitres(ctx.gestionnaireTitres);
                 ctx.personnagesRecruites = new ArrayList<>();
             }
         } else {
             System.out.println("\nBienvenue pour votre premiere aventure, " + pseudo + " !");
             ctx.joueur               = creerNouveauJoueur(scanner, pseudo, ctx);
             ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
+            ctx.formation.setGestionnaireTitres(ctx.gestionnaireTitres);
             ctx.personnagesRecruites = new ArrayList<>();
         }
 

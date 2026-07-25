@@ -101,8 +101,7 @@ public class MenuExamenS {
 
         ArrayList<PersonnageBase> ennemis = creerEnnemis(stage, ctx);
         StageExamenS combatStage = new StageExamenS(stage, ennemis);
-        double bonusTitre = ctx.gestionnaireTitres.getBonusActif();
-        boolean victoire = combatStage.lancer(ctx.formation.getEquipe(), bonusTitre);
+        boolean victoire = combatStage.lancer(ctx.formation.getEquipe());
 
         boolean boiteGagnee = false;
         if (victoire) {

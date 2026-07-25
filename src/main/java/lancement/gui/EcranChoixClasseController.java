@@ -121,6 +121,7 @@ public class EcranChoixClasseController {
         joueur.setCompetencesChoisie(competences);
         ctx.joueur               = joueur;
         ctx.formation            = new Formation(ctx.joueur, ctx.gestionnaireCompagnons);
+        ctx.formation.setGestionnaireTitres(ctx.gestionnaireTitres);
         ctx.personnagesRecruites = new ArrayList<>();
 
         try {

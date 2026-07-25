@@ -3,6 +3,7 @@ package lancement.Menus;
 import Joueur.ArbreCompetences;
 import Joueur.Personnage_principale;
 import java.util.Scanner;
+import lancement.Formation;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.RangJoueur;
@@ -65,7 +66,7 @@ public class MenuRang {
                         System.out.println(resultat);
                     }
                 }
-                case "2" -> afficherMenuTitres(gestionnaireTitres, scanner);
+                case "2" -> afficherMenuTitres(gestionnaireTitres, ctx.formation, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -87,6 +88,7 @@ public class MenuRang {
     }
 
     private void afficherMenuTitres(GestionnaireTitres gestionnaireTitres,
+                                     Formation formation,
                                      Scanner scanner) {
         boolean retour = false;
         while (!retour) {
@@ -113,10 +115,12 @@ public class MenuRang {
 
             if (choix == 0) {
                 gestionnaireTitres.desequiperTitre();
+                formation.appliquerBonusLiens();
                 retour = true;
             } else if (choix >= 1 && choix <= gestionnaireTitres.getTitresObtenus().size()) {
                 Titre t = gestionnaireTitres.getTitresObtenus().get(choix - 1);
                 gestionnaireTitres.equiperTitre(t.getNom());
+                formation.appliquerBonusLiens();
             } else {
                 System.out.println("Choix invalide.");
             }

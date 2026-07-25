@@ -14,7 +14,7 @@ public class perso_Bixrow extends PersonnageBase {
         this.type = "Invocateur";
         this.role = "DPS";
         this.rarete = "A";
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie = 400 * multiplicateurRarete;
         this.attaque = 150 * multiplicateurRarete;
         this.defense = 90 * multiplicateurRarete;

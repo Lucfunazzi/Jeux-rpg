@@ -90,7 +90,6 @@ public class EcranCombatController {
         INFOS_EFFETS.put("Buff Precision",    new EffetInfo("Augmente la precision.", true, "#4ac9c0"));
         INFOS_EFFETS.put("BuffTauxEsquive",   new EffetInfo("Augmente le taux d'esquive.", true, "#7ed9a3"));
         INFOS_EFFETS.put("BuffBlocage",       new EffetInfo("Augmente le taux de blocage.", true, "#6c8ebf"));
-        INFOS_EFFETS.put("BuffTitre",         new EffetInfo("Bonus de toutes les statistiques (titre actif).", true, "#f2c14e"));
         INFOS_EFFETS.put("Bouclier",          new EffetInfo("Absorbe les prochains degats subis.", true, "#5bc8e8"));
         INFOS_EFFETS.put("Regeneration",      new EffetInfo("Restaure des PV chaque tour.", true, "#56c98a"));
         INFOS_EFFETS.put("Invincibilite",     new EffetInfo("Bloque tous les degats subis.", true, "#f2e9c9"));
@@ -98,6 +97,7 @@ public class EcranCombatController {
         INFOS_EFFETS.put("ContreAttaque",     new EffetInfo("Riposte automatiquement en cas d'attaque.", true, "#e08b3d"));
         INFOS_EFFETS.put("Absorption",        new EffetInfo("Vole des PV en infligeant des degats.", true, "#9b6fe0"));
         INFOS_EFFETS.put("Immunite",          new EffetInfo("Bloque les prochains effets negatifs.", true, "#cfd8e3"));
+        INFOS_EFFETS.put("ImmuniteControle",  new EffetInfo("Bloque Etourdissement, Paralysie, Sommeil et Petrification.", true, "#cfd8e3"));
 
         // Debuffs — fleche vers le bas
         INFOS_EFFETS.put("Poison",           new EffetInfo("Perd des PV chaque tour (empire en stacks).", false, "#5a8f3d"));

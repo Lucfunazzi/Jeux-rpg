@@ -14,7 +14,7 @@ public class perso_Evergreen extends PersonnageBase {
         this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "A";
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.40;
         this.vie = 380 * multiplicateurRarete;
         this.attaque = 140 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;

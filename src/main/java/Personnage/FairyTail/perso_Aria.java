@@ -67,8 +67,8 @@ public class perso_Aria extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new BuffTauxCritique(0.20,2), log);
-                
+                Combat.appliquerEffet(this, cible, new Silence(3), log);
+                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.25, 3), log);
             }
         }
     }

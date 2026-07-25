@@ -17,16 +17,25 @@ public class GestionnaireLiens {
         public final String   nom;
         public final String   description;
         public final String[] membres;
+        public final int      minMembres;
         public final double   bonusATK;
         public final double   bonusDEF;
         public final double   bonusPV;
         public final double   bonusVIT;
 
+        /** Lien classique : tous les membres doivent etre presents. */
         public Lien(String nom, String description, String[] membres,
+                    double bonusATK, double bonusDEF, double bonusPV, double bonusVIT) {
+            this(nom, description, membres, membres.length, bonusATK, bonusDEF, bonusPV, bonusVIT);
+        }
+
+        /** Lien a seuil : actif des que "minMembres" personnages parmi "membres" sont presents (ex: 3 parmi 5). */
+        public Lien(String nom, String description, String[] membres, int minMembres,
                     double bonusATK, double bonusDEF, double bonusPV, double bonusVIT) {
             this.nom         = nom;
             this.description = description;
             this.membres     = membres;
+            this.minMembres  = minMembres;
             this.bonusATK    = bonusATK;
             this.bonusDEF    = bonusDEF;
             this.bonusPV     = bonusPV;
@@ -59,7 +68,7 @@ public class GestionnaireLiens {
 
         liens.add(new Lien(
             "Les dragons jumeaux",
-            "Rogue et Sting ensemble : toute l'equipe gagne +8% ATK et +10% VIT",
+            "Rogue et Sting ensemble : toute l'equipe gagne +5% ATK et +15% VIT",
             new String[]{"Rogue", "Sting"},
             0.05, 0.00, 0.00, 0.15
         ));
@@ -83,7 +92,7 @@ public class GestionnaireLiens {
         ));
         liens.add(new Lien(
             "Les tireur d'élites",
-            "Alzack et Bisca ensemble : toute l'equipe gagne +5% ATK et +8% VIT",
+            "Alzack et Bisca ensemble : toute l'equipe gagne +2% ATK et +5% PV",
             new String[]{"Alzack", "Bisca"},
             0.02, 0.00, 0.05, 0.00
         ));
@@ -114,6 +123,28 @@ public class GestionnaireLiens {
             0.00, 0.00, 0.02, 0.02
         ));
 
+        liens.add(new Lien(
+            "Mages de Lamia Scale (renforce)",
+            "Yuka, Cherry, Tobi et Leon ensemble : bonus supplementaire de +3% PV et +3% VIT pour toute l'equipe",
+            new String[]{"Yuka", "Cherry", "Tobi", "Leon"},
+            0.00, 0.00, 0.03, 0.03
+        ));
+
+        liens.add(new Lien(
+            "Glace et Eau",
+            "Gray et Jubia ensemble : toute l'equipe gagne +8% ATK et +5% DEF",
+            new String[]{"Gray", "Jubia"},
+            0.08, 0.05, 0.00, 0.00
+        ));
+
+        liens.add(new Lien(
+            "Coeur de Fairy Tail",
+            "Au moins 3 personnages parmi Lucy, Erza, Gray, Natsu et Wendy dans la formation : "
+                + "toute l'equipe gagne +5% a toutes les stats",
+            new String[]{"Lucy", "Erza", "Gray", "Natsu", "Wendy"}, 3,
+            0.05, 0.05, 0.05, 0.05
+        ));
+
         TOUS_LES_LIENS = Collections.unmodifiableList(liens);
     }
 
@@ -126,11 +157,11 @@ public class GestionnaireLiens {
     }
 
     private boolean estActif(Lien lien, List<PersonnageBase> equipe) {
+        int presents = 0;
         for (String membre : lien.membres) {
-            if (equipe.stream().noneMatch(p -> p.getNom().equals(membre)))
-                return false;
+            if (equipe.stream().anyMatch(p -> p.getNom().equals(membre))) presents++;
         }
-        return true;
+        return presents >= lien.minMembres;
     }
 
     // ── Bonus agrégés en une seule passe ─────────────────────────────────
