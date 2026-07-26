@@ -741,6 +741,14 @@ public class MenuInventaire {
 
         Equipement choisi = equipements.get(choix - 1);
         int valeur = EquipementFactory.valeurRecyclage(choisi.getRarete());
+
+        System.out.print("Recycler " + choisi.getNomAffiche() + " [" + choisi.getRarete() + "] contre "
+                + valeur + " Pieces d'equipement ? Cette action est definitive. (1 : Oui / 0 : Non) : ");
+        if (!scanner.nextLine().trim().equals("1")) {
+            System.out.println("Recyclage annule.");
+            return;
+        }
+
         ctx.inventaire.retirerEquipement(choisi);
         ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, valeur);
         ctx.sauvegarde.sauvegarder(ctx);

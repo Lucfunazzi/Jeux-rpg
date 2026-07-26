@@ -257,21 +257,33 @@ public class Chapitre3Elite {
                 return new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
             }
 
-            // Stage 8 — José seul, sans invite, plus fort
+            // Stage 8 — José élite + escorte d'élite (contre-offensive)
             case 8 -> {
                 e.add(new EnnemiJose(50));
-                return new Stage(8, "[ELITE] José Pora — Seul face à Phantom Lord", 15000, 0, e);
+                e.add(new EnnemiMage3Soigneur(46));
+                e.add(new EnnemiMage9Tank(45));
+                e.add(new EnnemiMage6Debuff(45));
+                e.add(new EnnemiMage2DPS(44));
+                return new Stage(8, "[ELITE] José Pora — Contre-Offensive de Phantom Lord", 15000, 0, e);
             }
 
-            // Stage 9 — José seul, encore plus fort (pas de combat scripte en Elite)
+            // Stage 9 — José élite + escorte d'élite (puissance maximale)
             case 9 -> {
                 e.add(new EnnemiJose(54));
+                e.add(new EnnemiMage3Soigneur(50));
+                e.add(new EnnemiMage9Tank(49));
+                e.add(new EnnemiMage6Debuff(49));
+                e.add(new EnnemiMage2DPS(48));
                 return new Stage(9, "[ELITE] José Pora — Puissance Maximale", 17500, 0, e);
             }
 
-            // Stage 10 — Aria seule, dernier rempart d'élite
+            // Stage 10 — Aria élite + escorte d'élite (dernier rempart)
             case 10 -> {
                 e.add(new EnnemiAria(58));
+                e.add(new EnnemiMage3Soigneur(54));
+                e.add(new EnnemiMage9Tank(53));
+                e.add(new EnnemiMage6Debuff(53));
+                e.add(new EnnemiMage2DPS(52));
                 return new Stage(10, "[ELITE] Aria — Le Dernier Rempart d'Élite", 21000, 0, e);
             }
 
@@ -288,7 +300,7 @@ public class Chapitre3Elite {
             case 5  -> "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite";
             case 6  -> "[ELITE] Aria — Magie du Ciel Vide Transcendée";
             case 7  -> "[ELITE] José — L'Ombre Transcendée";
-            case 8  -> "[ELITE] José Pora — Seul face à Phantom Lord";
+            case 8  -> "[ELITE] José Pora — Contre-Offensive de Phantom Lord";
             case 9  -> "[ELITE] José Pora — Puissance Maximale";
             case 10 -> "[ELITE] Aria — Le Dernier Rempart d'Élite";
             default -> "???";

@@ -9,13 +9,17 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ClipboardContent;
@@ -295,6 +299,9 @@ public class EcranAmeliorationsController {
         panneauDroit.getChildren().setAll(header, blocFort, separateur, blocAff, boutonPierres);
     }
 
+    /** Un cout qui depasse cette fraction des ressources actuelles declenche une confirmation. */
+    private static final double SEUIL_CONFIRMATION_COUTEUX = 0.5;
+
     private void onFortifier(Equipement equip) {
         int fortMax = ctx.joueur.getNiveau();
         if (equip.getNiveauFortification() >= fortMax) {
@@ -304,6 +311,11 @@ public class EcranAmeliorationsController {
         int cout = equip.getCoutFortification();
         if (ctx.joueur.getOr() < cout) {
             labelFeedbackFort.setText("Or insuffisant.");
+            return;
+        }
+        if (cout > ctx.joueur.getOr() * SEUIL_CONFIRMATION_COUTEUX
+                && !confirmer("Fortifier " + equip.getNomAffiche() + " pour " + cout
+                        + " or ? Ca represente une grosse partie de votre or actuel (" + (int) ctx.joueur.getOr() + ").")) {
             return;
         }
         ctx.joueur.retirerOr(cout);
@@ -332,6 +344,11 @@ public class EcranAmeliorationsController {
         int dispo = ctx.inventaire.getQuantiteMateriau(MenuAmeliorations.MATERIAU_AFFINAGE);
         if (dispo < cout) {
             labelFeedbackAff.setText("Pierres d'affinage insuffisantes.");
+            return;
+        }
+        if (cout > dispo * SEUIL_CONFIRMATION_COUTEUX
+                && !confirmer("Affiner " + equip.getNomAffiche() + " pour " + cout
+                        + " pierres d'affinage ? Ca represente une grosse partie de votre stock actuel (" + dispo + ").")) {
             return;
         }
         ctx.inventaire.retirerMateriau(MenuAmeliorations.MATERIAU_AFFINAGE, cout);
@@ -529,5 +546,19 @@ public class EcranAmeliorationsController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean confirmer(String question) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, question, ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Confirmation");
+        confirm.setHeaderText(null);
+        styliser(confirm);
+        Optional<ButtonType> resultat = confirm.showAndWait();
+        return resultat.isPresent() && resultat.get() == ButtonType.YES;
+    }
+
+    private void styliser(Dialog<?> dialog) {
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("root-menu");
     }
 }
