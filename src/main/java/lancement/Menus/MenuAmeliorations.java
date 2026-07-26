@@ -8,6 +8,7 @@ import Joueur.Personnage_principale;
 import java.util.ArrayList;
 import java.util.Scanner;
 import lancement.GameContext;
+import lancement.Gestionnaires.GestionnaireQuetes;
 
 /**
  * Menu Ameliorations — regroupe Fortification et Affinage.
@@ -43,7 +44,7 @@ public class MenuAmeliorations {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> menuFortification(joueur, personnagesRecruites, inventaire, scanner);
+                case "1" -> menuFortification(joueur, personnagesRecruites, inventaire, ctx.gestionnaireQuetes, scanner);
                 case "2" -> {
                     if (affinageDebloque) {
                         menuAffinage(joueur, personnagesRecruites, inventaire, scanner);
@@ -66,6 +67,7 @@ public class MenuAmeliorations {
     private void menuFortification(Personnage_principale joueur,
                                    ArrayList<PersonnageBase> personnagesRecruites,
                                    Inventaire inventaire,
+                                   GestionnaireQuetes gestionnaireQuetes,
                                    Scanner scanner) {
         boolean retour = false;
         while (!retour) {
@@ -80,8 +82,8 @@ public class MenuAmeliorations {
             System.out.print("Votre choix : ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> fortifierEquipe(joueur, personnagesRecruites, inventaire, scanner);
-                case "2" -> fortifierInventaire(joueur, inventaire, scanner);
+                case "1" -> fortifierEquipe(joueur, personnagesRecruites, inventaire, gestionnaireQuetes, scanner);
+                case "2" -> fortifierInventaire(joueur, inventaire, gestionnaireQuetes, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -91,6 +93,7 @@ public class MenuAmeliorations {
     private void fortifierEquipe(Personnage_principale joueur,
                                   ArrayList<PersonnageBase> personnagesRecruites,
                                   Inventaire inventaire,
+                                  GestionnaireQuetes gestionnaireQuetes,
                                   Scanner scanner) {
         PersonnageBase cible = choisirPersonnage(joueur, personnagesRecruites, scanner);
         if (cible == null) return;
@@ -120,7 +123,7 @@ public class MenuAmeliorations {
                 return;
             }
             Equipement cible2 = portes.get(choix - 1);
-            executerFortification(joueur, cible2, scanner);
+            executerFortification(joueur, cible2, gestionnaireQuetes, scanner);
         } catch (NumberFormatException ex) {
             System.out.println("Entree invalide.");
         }
@@ -128,6 +131,7 @@ public class MenuAmeliorations {
 
     private void fortifierInventaire(Personnage_principale joueur,
                                       Inventaire inventaire,
+                                      GestionnaireQuetes gestionnaireQuetes,
                                       Scanner scanner) {
         ArrayList<Equipement> equips = inventaire.getEquipements();
         if (equips.isEmpty()) {
@@ -153,7 +157,7 @@ public class MenuAmeliorations {
                 System.out.println("Choix invalide.");
                 return;
             }
-            executerFortification(joueur, equips.get(choix - 1), scanner);
+            executerFortification(joueur, equips.get(choix - 1), gestionnaireQuetes, scanner);
         } catch (NumberFormatException ex) {
             System.out.println("Entree invalide.");
         }
@@ -164,6 +168,7 @@ public class MenuAmeliorations {
      */
     private void executerFortification(Personnage_principale joueur,
                                         Equipement equip,
+                                        GestionnaireQuetes gestionnaireQuetes,
                                         Scanner scanner) {
         int niveauActuel = equip.getNiveauFortification();
 
@@ -208,7 +213,7 @@ public class MenuAmeliorations {
             System.out.print("Confirmer ? (1 : Oui / 0 : Non) : ");
             if (!scanner.nextLine().trim().equals("1")) return;
 
-            System.out.println(appliquerFortification(joueur, equip, niveauCible));
+            System.out.println(appliquerFortification(joueur, equip, niveauCible, gestionnaireQuetes));
 
         } catch (NumberFormatException ex) {
             System.out.println("Entree invalide.");
@@ -227,7 +232,8 @@ public class MenuAmeliorations {
      * (niveau cible valide, plafond = niveau du joueur, or suffisant). Retourne le message resultat.
      * Reutilisable par la console et l'interface graphique.
      */
-    public String appliquerFortification(Personnage_principale joueur, Equipement equip, int niveauCible) {
+    public String appliquerFortification(Personnage_principale joueur, Equipement equip, int niveauCible,
+                                          GestionnaireQuetes gestionnaireQuetes) {
         int niveauActuel = equip.getNiveauFortification();
         if (niveauActuel >= joueur.getNiveau()) {
             return "Cet equipement est deja a la fortification maximale !";
@@ -248,6 +254,7 @@ public class MenuAmeliorations {
 
         joueur.retirerOr(coutTotal);
         equip.setNiveauFortification(niveauCible);
+        for (int n = niveauActuel; n < niveauCible; n++) gestionnaireQuetes.notifierFortification();
         return "Fortification reussie ! " + equip.getNomAffiche() + " est maintenant Fort." + niveauCible
                 + "\nCout : " + coutTotal + " or"
                 + "\nNouveaux bonus : " + equip.getDescriptionBonus();

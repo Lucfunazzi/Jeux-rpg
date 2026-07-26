@@ -25,6 +25,7 @@ public class EcranPersonnagesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Personnages", "Personnages");
         rafraichir();
     }
 
@@ -45,7 +46,8 @@ public class EcranPersonnagesController {
 
     private Node cartePersonnage(PersonnageBase p) {
         boolean dansFormation = ctx.formation.getEquipe().contains(p);
-        int piecesC = compterPiecesRangC(p);
+        Equipement.Rarete raretesSet = p.getRareteSetDominante();
+        int piecesSet = raretesSet != null ? p.compterPieces(raretesSet) : 0;
 
         Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
 
@@ -60,8 +62,8 @@ public class EcranPersonnagesController {
 
         VBox texte = new VBox(4, nomLabel, detailLabel, GuiVisuels.creerBarrePV(150, 14, p.getVie(), p.getVieMax()));
 
-        if (piecesC > 0) {
-            Label setLabel = new Label("Set C : " + piecesC + "/6");
+        if (raretesSet != null) {
+            Label setLabel = new Label("Set " + raretesSet + " : " + piecesSet + "/6");
             setLabel.getStyleClass().add("item-qte");
             texte.getChildren().add(setLabel);
         }
@@ -78,15 +80,6 @@ public class EcranPersonnagesController {
         carte.setCursor(Cursor.HAND);
         carte.setOnMouseClicked(e -> ouvrirFiche(carte, p));
         return carte;
-    }
-
-    private int compterPiecesRangC(PersonnageBase p) {
-        int count = 0;
-        for (Equipement.Slot slot : Equipement.Slot.values()) {
-            Equipement e = p.getEquipement(slot);
-            if (e != null && e.getRarete() == Equipement.Rarete.C) count++;
-        }
-        return count;
     }
 
     private void ouvrirFiche(Node source, PersonnageBase p) {

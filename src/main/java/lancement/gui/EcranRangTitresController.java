@@ -33,6 +33,7 @@ public class EcranRangTitresController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Rang & Titres", "Rang & Titres");
 
         choixBox.getChildren().setAll(
                 GuiVisuels.creerCarteChoix("Tenter une montée de rang",

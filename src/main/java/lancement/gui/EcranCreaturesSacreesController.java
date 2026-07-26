@@ -32,6 +32,7 @@ public class EcranCreaturesSacreesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Creatures Sacrees", "Créatures Sacrées");
         rafraichir();
     }
 

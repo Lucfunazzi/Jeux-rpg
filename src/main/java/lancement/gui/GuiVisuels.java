@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -25,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lancement.GameContext;
+import lancement.Gestionnaires.GestionnaireTutoriel;
 import lancement.Menus.MenuTirage_recrutement.LigneResultat;
 import lancement.Menus.MenuTirage_recrutement.ResultatTirage;
 
@@ -289,6 +292,27 @@ public final class GuiVisuels {
         carte.getStyleClass().add(nouveauPerso ? "carte-item-joueur" : "carte-item");
         carte.setPrefWidth(240);
         return carte;
+    }
+
+    /**
+     * Affiche, la toute premiere fois qu'un ecran est visite, une popup d'explication de son
+     * fonctionnement interne (independant de la visite guidee du menu principal). Ne fait rien
+     * si aucun texte n'est defini pour cette cle, ou si elle a deja ete vue.
+     */
+    public static void afficherExplicationPremiereVisite(GameContext ctx, String cle, String titre) {
+        if (!ctx.gestionnaireTutoriel.doitAfficherExplicationEcran(cle)) return;
+        String texte = GestionnaireTutoriel.explicationEcran(cle);
+        if (texte == null) return;
+
+        ctx.gestionnaireTutoriel.marquerExplicationEcranVue(cle);
+        ctx.sauvegarde.sauvegarder(ctx);
+
+        Alert info = new Alert(Alert.AlertType.INFORMATION, texte, ButtonType.OK);
+        info.setTitle(titre);
+        info.setHeaderText(null);
+        info.getDialogPane().getStylesheets().add(GuiVisuels.class.getResource("/fxml/style.css").toExternalForm());
+        info.getDialogPane().getStyleClass().add("root-menu");
+        info.showAndWait();
     }
 
     /**

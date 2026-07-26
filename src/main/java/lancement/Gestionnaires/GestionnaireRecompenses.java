@@ -1,5 +1,6 @@
 package lancement.Gestionnaires;
 
+import Equipement.BoiteEquipement;
 import Equipement.CarteOr;
 import Equipement.CristalTranscendance;
 import Equipement.FriandiseFamilier;
@@ -39,9 +40,10 @@ public class GestionnaireRecompenses {
 
     public boolean isNiveauReclame(int index) { return niveauReclame[index]; }
 
-    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau (facultatifs). */
+    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau / boites d'equipement (facultatifs). */
     private record RecompenseNiveau(int or, int cartesOrLv1, int boitesPierreLv1,
-                                     int parcheminsAptitude, SceauDeRang sceau) {}
+                                     int parcheminsAptitude, SceauDeRang sceau,
+                                     int boitesEquipement, BoiteEquipement boiteEquipement) {}
 
     private RecompenseNiveau calculerRecompenseNiveau(int index) {
         int or       = PALIERS_NIVEAU[index] * 500;
@@ -56,7 +58,17 @@ public class GestionnaireRecompenses {
             case 9  -> SceauDeRang.S;  // niveau 100
             default -> null;
         };
-        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau);
+        int boitesEquipement = switch (index) {
+            case 1 -> 3; // niveau 20
+            case 3 -> 2; // niveau 40
+            default -> 0;
+        };
+        BoiteEquipement boiteEquipement = switch (index) {
+            case 1  -> BoiteEquipement.C; // niveau 20
+            case 3  -> BoiteEquipement.B; // niveau 40
+            default -> null;
+        };
+        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau, boitesEquipement, boiteEquipement);
     }
 
     public String afficherRecompenseNiveau(int index) {
@@ -65,6 +77,7 @@ public class GestionnaireRecompenses {
         if (r.boitesPierreLv1() > 0)     sb.append(", ").append(r.boitesPierreLv1()).append(" Boite(s) de pierre Lv.1");
         if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.NOM);
         if (r.sceau() != null)           sb.append(", 1x ").append(r.sceau().nom);
+        if (r.boitesEquipement() > 0)    sb.append(", ").append(r.boitesEquipement()).append("x ").append(r.boiteEquipement().nom);
         return sb.toString();
     }
 
@@ -75,6 +88,7 @@ public class GestionnaireRecompenses {
         if (r.boitesPierreLv1() > 0)    inventaire.ajouterMateriau(BOITE_PIERRE_LV1, r.boitesPierreLv1());
         if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.NOM, r.parcheminsAptitude());
         if (r.sceau() != null)          inventaire.ajouterMateriau(r.sceau().nom, 1);
+        if (r.boitesEquipement() > 0)   inventaire.ajouterMateriau(r.boiteEquipement().nom, r.boitesEquipement());
         niveauReclame[index] = true;
         return "Niveau " + PALIERS_NIVEAU[index] + " reclame ! " + afficherRecompenseNiveau(index);
     }

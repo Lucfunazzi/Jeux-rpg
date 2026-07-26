@@ -28,6 +28,7 @@ public class EcranExamenSController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Examen de Rang S", "Examen de Rang S");
         ctx.gestionnaireExamenS.mettreAJour();
         rafraichir();
     }

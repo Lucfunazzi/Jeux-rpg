@@ -20,6 +20,7 @@ public class EcranHistoireController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Histoire", "Histoire");
 
         choixBox.getChildren().setAll(
                 GuiVisuels.creerCarteChoix("Chapitres",

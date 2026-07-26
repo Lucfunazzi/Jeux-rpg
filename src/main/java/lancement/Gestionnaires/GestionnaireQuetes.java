@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class GestionnaireQuetes {
 
+    /** Niveau joueur requis pour acceder au menu des quetes journalieres. */
+    public static final int NIVEAU_DEBLOCAGE_JOURNALIERES = 30;
 
     private final ArrayList<QueteProgression> quetesProgression = new ArrayList<>();
     private List<QueteJournaliere> quetesJournalieres = new ArrayList<>();
@@ -72,6 +74,10 @@ private void initialiserRecompensesPersonnages() {
     initialiserRecompensesPersonnages();   // ← ajouter
     dernierRenouvellement = LocalDate.now().minusDays(1);
     verifierRenouvellement();
+    // Le tout premier stage du jeu est jouable des le lancement d'une nouvelle partie,
+    // sans etape d'acceptation manuelle (rien a "debloquer" avant lui).
+    QueteProgression c1s1 = trouverQueteProgression("C1S1");
+    if (c1s1 != null) c1s1.setAcceptee(true);
 }
 
     // ── Initialisation des quêtes de progression ──────────────────────────
@@ -385,7 +391,9 @@ private void initialiserRecompensesPersonnages() {
     // Reflète les vraies conditions d'accès de MenuHistoire : un chapitre/élite
     // n'est accessible qu'une fois son prérequis terminé, et le stage doit en
     // plus être débloqué à l'intérieur de ce chapitre.
-    private boolean stageDebloque(lancement.GameContext ctx, int chapitre, int stage, boolean estElite) {
+    // Visibilite package (et non private) : reutilise par GestionnaireSauvegarde pour la
+    // compatibilite retroactive des sauvegardes lors de l'introduction du verrou de quete.
+    boolean stageDebloque(lancement.GameContext ctx, int chapitre, int stage, boolean estElite) {
         boolean accessible;
         boolean[] stagesDebloques;
 
@@ -430,6 +438,40 @@ private void initialiserRecompensesPersonnages() {
     public List<QueteJournaliere> getQuetesJournalieres() { return quetesJournalieres; }
     public void setQuetesJournalieres(List<QueteJournaliere> liste) { this.quetesJournalieres = liste; }
     public ArrayList<QueteProgression> getToutesQuetesProgression() { return quetesProgression; }
+
+    // ── Acceptation des quetes de chapitre : c'est ce qui debloque le stage associe ──
+    private QueteProgression trouverQueteProgression(String id) {
+        for (QueteProgression q : quetesProgression) if (q.getId().equals(id)) return q;
+        return null;
+    }
+
+    private QueteProgression trouverQueteProgressionPourStage(int chapitre, int stage, boolean estElite) {
+        for (QueteProgression q : quetesProgression) {
+            if (q.getChapitreRequis() == chapitre && q.getStageRequis() == stage && q.isElite() == estElite) {
+                return q;
+            }
+        }
+        return null;
+    }
+
+    /** Vrai si le stage est a la fois debloque sequentiellement ET si sa quete a ete acceptee. */
+    public boolean estStageJouable(int chapitre, int stage, boolean estElite) {
+        QueteProgression q = trouverQueteProgressionPourStage(chapitre, stage, estElite);
+        return q != null && q.isAcceptee();
+    }
+
+    /** Accepte une quete de chapitre : debloque le stage associe. Retourne un message resultat. */
+    public String accepterQueteProgression(lancement.GameContext ctx, String id) {
+        QueteProgression q = trouverQueteProgression(id);
+        if (q == null) return "Quete introuvable.";
+        if (q.isAcceptee()) return "Quete deja acceptee.";
+        if (!stageDebloque(ctx, q.getChapitreRequis(), q.getStageRequis(), q.isElite())) {
+            return "Cette quete n'est pas encore disponible.";
+        }
+        q.setAcceptee(true);
+        return "Quete acceptee : " + q.getTitre() + " ! Stage " + q.getStageRequis()
+                + " du Chapitre " + q.getChapitreRequis() + (q.isElite() ? " Elite" : "") + " debloque.";
+    }
 
     // ── Barre de points quotidienne ────────────────────────────────────────
     public int getPointsJournaliers() { return pointsJournaliers; }

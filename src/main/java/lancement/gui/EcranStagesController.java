@@ -55,6 +55,9 @@ public class EcranStagesController {
     }
 
     private Node carteStage(int numero, boolean reussi, boolean debloque) {
+        boolean queteAcceptee = ctx.gestionnaireQuetes.estStageJouable(ligne.numeroChapitre(), numero, ligne.elite());
+        boolean jouable = debloque && queteAcceptee;
+
         String etoiles = ctx.gestionnaireEtoiles.getEtoiles(ligne.numeroChapitre(), numero, ligne.elite()).afficher();
         String runs = ligne.elite() ? "  ·  " + ctx.gestionnaireEnergie.getRunsEliteRestants(numero) + "/10 runs" : "";
 
@@ -63,7 +66,8 @@ public class EcranStagesController {
         nom.setWrapText(true);
         nom.setMaxWidth(320);
 
-        Label detail = new Label((debloque ? etoiles : "Verrouillé") + runs);
+        String etatTexte = !debloque ? "Verrouillé" : !queteAcceptee ? "Quête à accepter (menu Quêtes)" : etoiles;
+        Label detail = new Label(etatTexte + runs);
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);
@@ -73,7 +77,7 @@ public class EcranStagesController {
         carte.setPrefWidth(420);
         carte.getStyleClass().add(reussi ? "carte-item-joueur" : "carte-item");
 
-        if (debloque) {
+        if (jouable) {
             carte.setCursor(Cursor.HAND);
             carte.setOnMouseClicked(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
         } else {

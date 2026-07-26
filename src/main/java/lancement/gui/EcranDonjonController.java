@@ -23,6 +23,7 @@ public class EcranDonjonController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Donjon de ressources", "Donjon de ressources");
         ctx.gestionnaireDonjon.mettreAJour();
         rafraichir();
     }

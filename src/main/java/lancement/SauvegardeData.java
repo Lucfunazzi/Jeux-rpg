@@ -167,6 +167,12 @@ public class SauvegardeData {
     public List<QueteJournaliereData> quetesJournalieresActives  = new ArrayList<>();
     public List<String>               quetesProgressionReclamees  = new ArrayList<>();
     public List<String>               quetesProgressionCompletees = new ArrayList<>();
+    public List<String>               quetesProgressionAcceptees  = new ArrayList<>();
+
+    // ── Tutoriel guide du menu principal ────────────────────────────────────
+    public boolean      tutorielPropose     = false;
+    public boolean      tutorielActif       = false;
+    public List<String> tutorielEtapesVues  = new ArrayList<>();
     public int                        pointsJournaliers           = 0;
     public boolean[]                  barreJournaliereReclame     = null;
 

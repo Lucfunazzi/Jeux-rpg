@@ -32,6 +32,7 @@ public class EcranEtoilesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Etoiles & Fragments", "Étoiles & Fragments");
         rafraichir();
     }
 

@@ -24,6 +24,7 @@ public class EcranTiragesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Tirages", "Tirages");
 
         choixBox.getChildren().setAll(
                 GuiVisuels.creerCarteChoix("Tirage Ordinaire",

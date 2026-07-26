@@ -36,6 +36,7 @@ public class EcranFormationController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Formation", "Formation");
         rafraichir();
     }
 

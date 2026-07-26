@@ -27,6 +27,7 @@ public class EcranCompagnonsController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Compagnons", "Compagnons");
         rafraichir();
     }
 

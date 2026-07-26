@@ -98,7 +98,7 @@ public class GestionnaireSauvegarde {
     }
 
     // ── Sauvegarde via GameContext ────────────────────────────────────────
-    public void sauvegarder(GameContext ctx) {
+    private SauvegardeData construireDonnees(GameContext ctx) {
         SauvegardeData data = new SauvegardeData();
         Personnage_principale joueur = ctx.joueur;
 
@@ -233,6 +233,7 @@ public class GestionnaireSauvegarde {
         for (QueteProgression q : gq.getToutesQuetesProgression()) {
             if (q.isReclamee())  data.quetesProgressionReclamees.add(q.getId());
             if (q.isCompletee()) data.quetesProgressionCompletees.add(q.getId());
+            if (q.isAcceptee())  data.quetesProgressionAcceptees.add(q.getId());
         }
 
         // Énergie
@@ -312,23 +313,63 @@ public class GestionnaireSauvegarde {
         data.examenSFaitAujourdhui = ctx.gestionnaireExamenS.getFaitAujourdhui();
         data.examenSDernierReset   = ctx.gestionnaireExamenS.getDernierReset().toString();
 
-        // Envoi Firebase
+        // Tutoriel
+        data.tutorielPropose    = ctx.gestionnaireTutoriel.isPropose();
+        data.tutorielActif      = ctx.gestionnaireTutoriel.isActif();
+        data.tutorielEtapesVues = new ArrayList<>(ctx.gestionnaireTutoriel.getEtapesVues());
+
+        return data;
+    }
+
+    /**
+     * Sauvegarde asynchrone (par defaut) : l'envoi Firebase se fait en arriere-plan pour ne pas
+     * geler l'interface a chaque action. A utiliser partout SAUF juste avant de fermer l'appli
+     * (voir {@link #sauvegarderSynchrone}), ou l'attente de la reponse n'est pas garantie.
+     */
+    public void sauvegarder(GameContext ctx) {
+        envoyerFirebase(ctx.joueur, construireDonnees(ctx), false);
+    }
+
+    /**
+     * Sauvegarde bloquante : attend la reponse Firebase avant de continuer. Reservee aux moments
+     * ou l'application risque de se fermer juste apres (bouton Quitter), pour garantir que la
+     * sauvegarde parte reellement avant que le processus ne s'arrete.
+     */
+    public void sauvegarderSynchrone(GameContext ctx) {
+        envoyerFirebase(ctx.joueur, construireDonnees(ctx), true);
+    }
+
+    private void envoyerFirebase(Personnage_principale joueur, SauvegardeData data, boolean synchrone) {
         String url     = URL_FIREBASE + "joueurs/" + securiser(joueur.getNom()) + ".json";
         String payload = gson.toJson(data);
-        try {
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .PUT(HttpRequest.BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
-                    .build();
-            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            if (res.statusCode() == 200)
-                System.out.println("Partie de " + joueur.getNom() + " sauvegardee dans le Cloud !");
-            else
-                System.out.println("Erreur Firebase (Code " + res.statusCode() + ") : " + res.body());
-        } catch (Exception e) {
-            System.out.println("Impossible de se connecter a Firebase : " + e.getMessage());
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
+                .build();
+
+        if (synchrone) {
+            try {
+                HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+                logResultatSauvegarde(joueur, res.statusCode(), res.body());
+            } catch (Exception e) {
+                System.out.println("Impossible de se connecter a Firebase : " + e.getMessage());
+            }
+        } else {
+            client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(res -> logResultatSauvegarde(joueur, res.statusCode(), res.body()))
+                    .exceptionally(e -> {
+                        System.out.println("Impossible de se connecter a Firebase : " + e.getMessage());
+                        return null;
+                    });
         }
+    }
+
+    private void logResultatSauvegarde(Personnage_principale joueur, int statusCode, String body) {
+        if (statusCode == 200)
+            System.out.println("Partie de " + joueur.getNom() + " sauvegardee dans le Cloud !");
+        else
+            System.out.println("Erreur Firebase (Code " + statusCode + ") : " + body);
     }
 
     // ── Chargement ────────────────────────────────────────────────────────
@@ -479,7 +520,8 @@ public class GestionnaireSauvegarde {
             }
     }
 
-    public void restaurerQuetes(GestionnaireQuetes gq, SauvegardeData data) {
+    public void restaurerQuetes(lancement.GameContext ctx, SauvegardeData data) {
+        GestionnaireQuetes gq = ctx.gestionnaireQuetes;
         if (data.dernierRenouvellementQuete != null)
             gq.setDernierRenouvellement(LocalDate.parse(data.dernierRenouvellementQuete));
         gq.setIndexQueteJournaliere(data.indexQueteJournaliere);
@@ -505,10 +547,41 @@ public class GestionnaireSauvegarde {
 
         for (QueteProgression q : gq.getToutesQuetesProgression()) {
             if (data.quetesProgressionReclamees.contains(q.getId())) {
-                q.setCompletee(true); q.setReclamee(true);
+                q.setCompletee(true); q.setReclamee(true); q.setAcceptee(true);
             } else if (data.quetesProgressionCompletees.contains(q.getId())) {
-                q.setCompletee(true);
+                q.setCompletee(true); q.setAcceptee(true);
+            } else if (data.quetesProgressionAcceptees.contains(q.getId())) {
+                q.setAcceptee(true);
+            } else if (gq.stageDebloque(ctx, q.getChapitreRequis(), q.getStageRequis(), q.isElite())) {
+                // Compatibilite retroactive : ce verrou de quete n'existait pas avant cette mise
+                // a jour, donc un stage deja debloque dans une sauvegarde existante reste jouable
+                // (la quete associee est consideree comme deja acceptee).
+                q.setAcceptee(true);
             }
+        }
+    }
+
+    /**
+     * Restaure l'etat du tutoriel guide. Cas particulier de compatibilite retroactive :
+     * une sauvegarde qui a deja de la progression (niveau &gt; 1 ou stage 1 deja reussi) mais
+     * dont le champ tutorielPropose est absent/false vient forcement d'avant l'ajout de cette
+     * fonctionnalite -> on ne propose jamais le tutoriel a un joueur qui a deja avance dans le jeu.
+     */
+    public void restaurerTutoriel(lancement.GameContext ctx, SauvegardeData data) {
+        GestionnaireTutoriel gt = ctx.gestionnaireTutoriel;
+        boolean sauvegardeAnterieureALaFonctionnalite = !data.tutorielPropose
+                && (ctx.joueur.getNiveau() > 1 || ctx.chapitre1.getStagesReussis()[1]);
+
+        if (sauvegardeAnterieureALaFonctionnalite) {
+            gt.setPropose(true);
+            gt.setActif(false);
+            for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
+                gt.marquerEtapeVue(e.libelle());
+            }
+        } else {
+            gt.setPropose(data.tutorielPropose);
+            gt.setActif(data.tutorielActif);
+            gt.setEtapesVues(data.tutorielEtapesVues);
         }
     }
 

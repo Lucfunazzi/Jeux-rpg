@@ -8,6 +8,7 @@ import Equipement.Inventaire;
 import Equipement.Materiau;
 import Equipement.ParcheminXP;
 import Equipement.BoiteGuilde;
+import Equipement.BoiteEquipement;
 import Equipement.CleCoffreGuilde;
 import Equipement.Pierre;
 import Equipement.PotionEnergie;
@@ -64,6 +65,7 @@ public class EcranInventaireController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Inventaire", "Inventaire");
         rafraichir();
     }
 
@@ -126,6 +128,8 @@ public class EcranInventaireController {
                     grille.getChildren().add(carteBoiteGuilde(m.getQuantite()));
                 } else if (m.getNom().equals(CleCoffreGuilde.NOM)) {
                     grille.getChildren().add(carteCoffreGuilde(m.getQuantite()));
+                } else if (trouverBoiteEquipement(m.getNom()) != null) {
+                    grille.getChildren().add(carteBoiteEquipement(trouverBoiteEquipement(m.getNom()), m.getQuantite()));
                 } else {
                     grille.getChildren().add(carteSimple(m.getNom(), "x" + m.getQuantite()));
                 }
@@ -296,6 +300,57 @@ public class EcranInventaireController {
     private SceauDeRang trouverSceau(String nomMateriau) {
         for (SceauDeRang s : SceauDeRang.values()) if (s.nom.equals(nomMateriau)) return s;
         return null;
+    }
+
+    /** Carte pour une Boite d'equipement. Clic -> demande une quantite puis ouvre (donne le set complet du rang). */
+    private Node carteBoiteEquipement(BoiteEquipement boite, int quantite) {
+        Node ligne = carteSimple(boite.nom, "x" + quantite);
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> ouvrirBoitesEquipement(boite));
+        return ligne;
+    }
+
+    private BoiteEquipement trouverBoiteEquipement(String nomMateriau) {
+        for (BoiteEquipement b : BoiteEquipement.values()) if (b.nom.equals(nomMateriau)) return b;
+        return null;
+    }
+
+    private void ouvrirBoitesEquipement(BoiteEquipement boite) {
+        int stock = ctx.inventaire.getQuantiteMateriau(boite.nom);
+        if (stock <= 0) {
+            info("Boite d'equipement", "Aucune " + boite.nom + " en stock.");
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog(String.valueOf(stock));
+        dialog.setTitle("Ouvrir des " + boite.nom);
+        dialog.setHeaderText(null);
+        dialog.setContentText("Vous avez " + stock + " x " + boite.nom
+                + ".\nCombien en ouvrir ?");
+        styliser(dialog);
+        Optional<String> reponse = dialog.showAndWait();
+        if (reponse.isEmpty()) return;
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(reponse.get().trim());
+        } catch (NumberFormatException e) {
+            info("Boite d'equipement", "Entree invalide.");
+            return;
+        }
+        if (quantite <= 0) return;
+        if (quantite > stock) {
+            info("Boite d'equipement", "Quantite invalide. Vous en avez " + stock + ".");
+            return;
+        }
+
+        StringBuilder resultats = new StringBuilder();
+        for (int i = 0; i < quantite; i++) {
+            resultats.append(boite.ouvrir(ctx.inventaire)).append("\n");
+        }
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Boite d'equipement", resultats.toString().trim());
+        rafraichir();
     }
 
     private void actionsSceau(SceauDeRang sceau) {

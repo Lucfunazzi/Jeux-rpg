@@ -4,6 +4,7 @@ import Equipement.Equipement;
 import Equipement.EquipementFactory;
 import Equipement.Inventaire;
 import Equipement.ParcheminXP;
+import Equipement.BonusSet;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import java.util.ArrayList;
@@ -20,9 +21,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import lancement.Formation;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireLiens;
@@ -40,7 +43,7 @@ public class EcranFichePersonnageController {
     @FXML private Label titreLabel;
     @FXML private VBox barresBox;
     @FXML private FlowPane statsBox;
-    @FXML private Label statsDetailLabel;
+    @FXML private FlowPane statsDetailBox;
     @FXML private VBox competencesBox;
     @FXML private FlowPane liensBox;
     @FXML private VBox setBox;
@@ -65,7 +68,8 @@ public class EcranFichePersonnageController {
                 GuiVisuels.creerBarrePV(380, 14, perso.getVie(), perso.getVieMax()),
                 GuiVisuels.creerBarreXP(380, 10, perso.getExperience(), perso.getExperienceMax()));
 
-        int piecesC = compterPiecesRangC(perso);
+        Equipement.Rarete raretesSet = perso.getRareteSetDominante();
+        int piecesSet = raretesSet != null ? perso.compterPieces(raretesSet) : 0;
 
         double arbreATK = 0, arbreDEF = 0, arbrePV = 0, arbreVIT = 0;
         if (perso instanceof Personnage_principale pp) {
@@ -74,11 +78,13 @@ public class EcranFichePersonnageController {
             arbrePV  = pp.getArbreCompetences().getBonusPV();
             arbreVIT = pp.getArbreCompetences().getBonusVIT();
         }
-        double bonusPVSet   = piecesC >= 3 ? 200 : 0;
-        double totalPctATK = arbreATK + perso.getBonusLienATK() + (piecesC >= 6 ? 0.05 : 0);
+        double bonusPVSet  = piecesSet >= BonusSet.SEUIL_PV  ? BonusSet.palier(raretesSet).bonusPV() : 0;
+        double bonusVITSet = piecesSet >= BonusSet.SEUIL_VIT ? BonusSet.palier(raretesSet).bonusVitessePct() : 0;
+        double bonusATKSet = piecesSet >= BonusSet.SEUIL_ATK ? BonusSet.palier(raretesSet).bonusAttaquePct() : 0;
+        double totalPctATK = arbreATK + perso.getBonusLienATK() + bonusATKSet;
         double totalPctDEF = arbreDEF + perso.getBonusLienDEF();
         double totalPctPV  = arbrePV  + perso.getBonusLienPV();
-        double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + (piecesC >= 4 ? 0.02 : 0);
+        double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + bonusVITSet;
 
         statsBox.getChildren().setAll(
                 carteStat("PV", String.format("+%.0f", perso.getBonusEquipementPV()),
@@ -90,11 +96,20 @@ public class EcranFichePersonnageController {
                 carteStat("VIT", String.format("%.0f", perso.getVitesse()),
                         String.format("équip +%.0f  +%.0f%%", perso.getBonusEquipementVIT(), totalPctVIT * 100))
         );
-        statsDetailLabel.setText(String.format(
-                "Crit : %.0f%%  ·  Dégât crit : x%.2f  ·  Esquive : %.0f%%  ·  Blocage : %.0f%%  ·  Attaque S : %.0f  ·  Contre : %.0f",
-                perso.getTauxCritique() * 100, perso.getTauxDegatCritique(),
-                perso.getTauxEsquives() * 100, perso.getTauxBlocage() * 100,
-                perso.getTauxAttaqueS(), perso.getTauxContre()));
+        statsDetailBox.getChildren().setAll(
+                statMini("Crit", String.format("%.0f%%", perso.getTauxCritique() * 100),
+                        "Chance de coup critique (dégâts renforcés)."),
+                statMini("Dégât crit", String.format("x%.2f", perso.getTauxDegatCritique()),
+                        "Multiplicateur de dégâts appliqué lors d'un coup critique."),
+                statMini("Esquive", String.format("%.0f%%", perso.getTauxEsquives() * 100),
+                        "Chance d'éviter complètement une attaque ennemie."),
+                statMini("Blocage", String.format("%.0f%%", perso.getTauxBlocage() * 100),
+                        "Chance de bloquer une attaque ennemie et réduire les dégâts subis."),
+                statMini("Attaque S", String.format("%.0f", perso.getTauxAttaqueS()),
+                        "Réduit l'efficacité du Blocage adverse. 100 = neutre."),
+                statMini("Contre", String.format("%.0f", perso.getTauxContre()),
+                        "Réduit la chance de subir un coup critique. 100 = neutre.")
+        );
 
         String[] nomsAttaques = perso.getNomsAttaques();
         competencesBox.getChildren().setAll(
@@ -118,7 +133,7 @@ public class EcranFichePersonnageController {
             liensBox.getChildren().setAll(chips);
         }
 
-        setBox.getChildren().setAll(carteSetBonus(piecesC));
+        setBox.getChildren().setAll(carteSetBonus(raretesSet, piecesSet));
 
         slotsBox.getChildren().clear();
         for (Equipement.Slot slot : Equipement.Slot.values()) {
@@ -146,6 +161,20 @@ public class EcranFichePersonnageController {
         box.getStyleClass().add("carte-item");
         box.setPrefWidth(140);
         return box;
+    }
+
+    /** Petite stat avec info-bulle expliquant ce qu'elle fait (pour les sigles peu explicites : Contre, Attaque S...). */
+    private Node statMini(String libelle, String valeur, String explication) {
+        Label l = new Label(libelle + " : " + valeur);
+        l.getStyleClass().add("item-detail");
+
+        Tooltip tooltip = new Tooltip(explication);
+        tooltip.setShowDelay(Duration.millis(200));
+        tooltip.setWrapText(true);
+        tooltip.setMaxWidth(260);
+        Tooltip.install(l, tooltip);
+
+        return l;
     }
 
     private Node carteCompetence(String nom, String type, String description) {
@@ -180,22 +209,48 @@ public class EcranFichePersonnageController {
         return carte;
     }
 
-    private Node carteSetBonus(int piecesC) {
-        Label titre = new Label("Bonus de Set — Rang C (" + piecesC + "/6)");
+    private Node carteSetBonus(Equipement.Rarete raretesSet, int piecesSet) {
+        Label titre = new Label(raretesSet == null
+                ? "Bonus de Set"
+                : "Bonus de Set — Rang " + raretesSet + " (" + piecesSet + "/6)");
         titre.getStyleClass().add("section-titre");
 
         String etape;
-        if (piecesC < 3)      etape = "Aucun bonus actif. Prochain palier : 3 pièces (+200 PV).";
-        else if (piecesC < 4) etape = "Actif : 3 pièces (+200 PV). Prochain palier : 4 pièces (+2% VIT).";
-        else if (piecesC < 6) etape = "Actifs : 3 et 4 pièces (+200 PV, +2% VIT). Prochain palier : 6 pièces (+5% ATK).";
-        else                  etape = "Tous les bonus actifs : +200 PV, +2% VIT, +5% ATK.";
+        if (raretesSet == null) {
+            etape = "Aucune pièce équipée.";
+        } else {
+            BonusSet.Palier palier = BonusSet.palier(raretesSet);
+            BonusSet.BonusSpecial special = BonusSet.special(raretesSet);
+            int pv = (int) palier.bonusPV();
+            int vit = (int) (palier.bonusVitessePct() * 100);
+            int atk = (int) (palier.bonusAttaquePct() * 100);
+            if (piecesSet < BonusSet.SEUIL_PV)
+                etape = "Aucun bonus actif. Prochain palier : " + BonusSet.SEUIL_PV + " pièces (+" + pv + " PV).";
+            else if (piecesSet < BonusSet.SEUIL_VIT)
+                etape = "Actif : " + BonusSet.SEUIL_PV + " pièces (+" + pv + " PV). Prochain palier : "
+                        + BonusSet.SEUIL_VIT + " pièces (+" + vit + "% VIT).";
+            else if (piecesSet < BonusSet.SET_COMPLET)
+                etape = "Actifs : " + BonusSet.SEUIL_PV + " et " + BonusSet.SEUIL_VIT + " pièces (+" + pv
+                        + " PV, +" + vit + "% VIT). Prochain palier : " + BonusSet.SET_COMPLET + " pièces (+" + atk + "% ATK).";
+            else {
+                etape = "Tous les bonus actifs : +" + pv + " PV, +" + vit + "% VIT, +" + atk + "% ATK.";
+                if (special != null) {
+                    etape += " Bonus spécial : +" + (int) (special.bonusTauxCritique() * 100) + "% crit, +"
+                            + (int) (special.bonusDegatCritiquePct() * 100) + "% dégâts crit, +"
+                            + (int) (special.bonusEsquive() * 100) + "% esquive"
+                            + (special.bonusVolDeVie() > 0
+                                    ? ", +" + (int) (special.bonusVolDeVie() * 100) + "% vol de vie"
+                                    : "") + ".";
+                }
+            }
+        }
 
         Label detail = new Label(etape);
         detail.getStyleClass().add("item-detail");
         detail.setWrapText(true);
         detail.setMaxWidth(380);
 
-        VBox box = new VBox(6, titre, GuiVisuels.creerBarreProgression(240, 12, piecesC, 6), detail);
+        VBox box = new VBox(6, titre, GuiVisuels.creerBarreProgression(240, 12, piecesSet, 6), detail);
         box.setAlignment(Pos.CENTER);
         return box;
     }
@@ -227,15 +282,6 @@ public class EcranFichePersonnageController {
             carte.setOpacity(0.7);
         }
         return carte;
-    }
-
-    private int compterPiecesRangC(PersonnageBase p) {
-        int count = 0;
-        for (Equipement.Slot slot : Equipement.Slot.values()) {
-            Equipement e = p.getEquipement(slot);
-            if (e != null && e.getRarete() == Equipement.Rarete.C) count++;
-        }
-        return count;
     }
 
     private String nomSlot(Equipement.Slot slot) {
@@ -334,6 +380,15 @@ public class EcranFichePersonnageController {
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(320);
         return carte;
+    }
+
+    @FXML
+    private void onAutoEquiper(ActionEvent event) {
+        String resultat = lancement.Gestionnaires.GestionnaireEquipement.equiperMeilleurDisponible(
+                perso, ctx.inventaire, ctx.rangJoueur);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Équiper le meilleur disponible", resultat);
+        rafraichir();
     }
 
     @FXML

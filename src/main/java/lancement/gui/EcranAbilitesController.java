@@ -24,6 +24,7 @@ public class EcranAbilitesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Abilites", "Compétences");
         rafraichir();
     }
 

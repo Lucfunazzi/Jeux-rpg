@@ -20,6 +20,7 @@ import lancement.Gestionnaires.GestionnaireSauvegarde;
 import lancement.Gestionnaires.GestionnaireTitres;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.Gestionnaire_pet;
+import lancement.Gestionnaires.GestionnaireTutoriel;
 import lancement.Menus.MenuEtoilesPerso;
 import lancement.Menus.MenuExamenS;
 import lancement.Menus.MenuRecrutement;
@@ -60,6 +61,7 @@ public class GameContext {
     public GestionnaireCompagnons        gestionnaireCompagnons;
     public Gestionnaire_pet  gestionnaireCreaturesSacrees;
     public GestionnaireRecompenses       gestionnaireRecompenses;
+    public GestionnaireTutoriel          gestionnaireTutoriel;
     public RangJoueur                    rangJoueur;
 
     // ── Menus ─────────────────────────────────────────────────────────────
@@ -100,6 +102,7 @@ public class GameContext {
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
         ctx.gestionnaireCreaturesSacrees = new Gestionnaire_pet();
         ctx.gestionnaireRecompenses      = new GestionnaireRecompenses();
+        ctx.gestionnaireTutoriel         = new GestionnaireTutoriel();
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
         ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
@@ -123,7 +126,8 @@ public class GameContext {
         sauvegarde.restaurerChapitre2Elite2(chapitre2Elite, data);
         sauvegarde.restaurerChapitre3Elite(chapitre3Elite, data);
         sauvegarde.restaurerInventaire(inventaire, data);
-        sauvegarde.restaurerQuetes(gestionnaireQuetes, data);
+        sauvegarde.restaurerQuetes(this, data);
+        sauvegarde.restaurerTutoriel(this, data);
         sauvegarde.restaurerEnergie(gestionnaireEnergie, data);
         sauvegarde.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
         this.formation.appliquerBonusLiens();

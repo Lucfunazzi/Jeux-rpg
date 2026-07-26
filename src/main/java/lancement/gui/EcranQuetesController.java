@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -27,18 +28,53 @@ import lancement.Quetes.QueteProgression;
 public class EcranQuetesController {
 
     private GameContext ctx;
+    private boolean ongletChapitres = true;
 
     @FXML private VBox quetesBox;
+    @FXML private Button ongletJournalieresButton;
+    @FXML private Button ongletChapitresButton;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Quetes", "Quêtes");
         ctx.gestionnaireQuetes.verifierRenouvellement();
+        rafraichir();
+    }
+
+    @FXML
+    private void onOngletJournalieres(ActionEvent event) {
+        if (ctx.joueur.getNiveau() < GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES) {
+            info("Quêtes journalières", "Se débloquent au niveau "
+                    + GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES + ".");
+            return;
+        }
+        ongletChapitres = false;
+        rafraichir();
+    }
+
+    @FXML
+    private void onOngletChapitres(ActionEvent event) {
+        ongletChapitres = true;
         rafraichir();
     }
 
     private void rafraichir() {
         quetesBox.getChildren().clear();
 
+        boolean journalieresDebloquees = ctx.joueur.getNiveau() >= GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES;
+        ongletJournalieresButton.setText(journalieresDebloquees
+                ? "Quêtes journalières"
+                : "Quêtes journalières (Niveau " + GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES + ")");
+        ongletJournalieresButton.setOpacity(journalieresDebloquees ? 1.0 : 0.5);
+
+        ongletJournalieresButton.getStyleClass().removeAll("carte-item-joueur");
+        ongletChapitresButton.getStyleClass().removeAll("carte-item-joueur");
+        (ongletChapitres ? ongletChapitresButton : ongletJournalieresButton).getStyleClass().add("carte-item-joueur");
+
+        if (ongletChapitres) rafraichirChapitres(); else rafraichirJournalieres();
+    }
+
+    private void rafraichirJournalieres() {
         int pts = ctx.gestionnaireQuetes.getPointsJournaliers();
         quetesBox.getChildren().add(titreSection("Barre de points journalière : " + pts + " / 100"));
         for (int i = 0; i < GestionnaireQuetes.PALIERS_BARRE_JOURNALIERE.length; i++) {
@@ -49,11 +85,15 @@ public class EcranQuetesController {
         for (QueteJournaliere qj : ctx.gestionnaireQuetes.getQuetesJournalieres()) {
             quetesBox.getChildren().add(carteQuete(qj));
         }
+    }
 
-        quetesBox.getChildren().add(titreSection("Quêtes de progression"));
+    private void rafraichirChapitres() {
+        quetesBox.getChildren().add(titreSection("Quêtes de chapitre"));
+        quetesBox.getChildren().add(texteVide("Acceptez une quête pour débloquer le stage associé."));
+
         List<QueteProgression> visibles = ctx.gestionnaireQuetes.getQuetesVisibles(ctx);
         if (visibles.isEmpty()) {
-            quetesBox.getChildren().add(texteVide("Aucune quête de progression disponible pour l'instant."));
+            quetesBox.getChildren().add(texteVide("Aucune quête de chapitre disponible pour l'instant."));
         } else {
             for (QueteProgression q : visibles) quetesBox.getChildren().add(carteQuete(q));
         }
@@ -132,22 +172,32 @@ public class EcranQuetesController {
     private String libelleStatut(Quete q) {
         if (q.isReclamee())  return "Réclamée";
         if (q.isCompletee()) return "Prête !";
+        if (q instanceof QueteProgression qp && !qp.isAcceptee()) return "À accepter";
         return "En cours";
     }
 
     private String couleurStatut(Quete q) {
         if (q.isReclamee())  return "#7a7a95";
         if (q.isCompletee()) return "#56c98a";
+        if (q instanceof QueteProgression qp && !qp.isAcceptee()) return "#e07a5f";
         return "#f2c14e";
     }
 
     private void actionQuete(Quete q) {
         if (q.isReclamee()) { info(q.getTitre(), "Récompense déjà réclamée."); return; }
+        if (q instanceof QueteProgression qp && !qp.isAcceptee()) { accepter(qp); return; }
         if (!q.isCompletee()) {
             info(q.getTitre(), q.getDescription() + "\nProgression : " + q.getProgression());
             return;
         }
         reclamer(q);
+    }
+
+    private void accepter(QueteProgression q) {
+        String resultat = ctx.gestionnaireQuetes.accepterQueteProgression(ctx, q.getId());
+        ctx.sauvegarde.sauvegarder(ctx);
+        info(q.getTitre(), resultat);
+        rafraichir();
     }
 
     private void reclamer(Quete q) {

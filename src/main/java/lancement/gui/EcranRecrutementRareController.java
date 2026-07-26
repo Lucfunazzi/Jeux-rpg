@@ -28,6 +28,7 @@ public class EcranRecrutementRareController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Recrutement Rare", "Recrutement Rare");
         rafraichir();
     }
 

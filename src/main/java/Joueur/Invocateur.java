@@ -87,9 +87,7 @@ public class Invocateur implements Competences {
         }
     }
 
-    @Override public void descriptionCompetenceArbre3() {
-        System.out.println("Invocation Aries — Inflige 130% ATK au Tank ennemi . Immunise les attaquants aux effets de contrôle (Etourdissement,Paralysie,Sommeil,Petrification ");
-    }
+   
 
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Invocation de Caelum — Inflige 100% ATK au Tank ennemi. +100% Précision au lanceur (2 tours).");
@@ -103,5 +101,9 @@ public class Invocateur implements Competences {
     }
     @Override public void descriptionCompetenceArbre2() {
         System.out.println("Invocation de Virgo -- Inflige 150% ATK au Tank ennemi. Etourdit la cible pendant 2 tours");
+    }
+    
+     @Override public void descriptionCompetenceArbre3() {
+        System.out.println("Invocation Aries — Inflige 130% ATK au Tank ennemi . Immunise les attaquants aux effets de contrôle (Etourdissement,Paralysie,Sommeil,Petrification ");
     }
 }

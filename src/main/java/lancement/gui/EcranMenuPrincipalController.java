@@ -2,34 +2,56 @@ package lancement.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.GestionnaireExamenS;
+import lancement.Gestionnaires.GestionnaireQuetes;
+import lancement.Gestionnaires.GestionnaireRecompenses;
+import lancement.Gestionnaires.GestionnaireTutoriel;
 import lancement.Gestionnaires.Gestionnaire_pet;
+import lancement.Quetes.QueteJournaliere;
+import lancement.Quetes.QueteProgression;
 
 public class EcranMenuPrincipalController {
 
     private GameContext ctx;
+    private final Map<String, Button> boutonsParLibelle = new LinkedHashMap<>();
 
     @FXML private FlowPane statsBox;
     @FXML private VBox xpBarBox;
     @FXML private VBox boutonsBox;
+    @FXML private ScrollPane menuScrollPane;
+    @FXML private Pane tutorielOverlay;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -76,11 +98,14 @@ public class EcranMenuPrincipalController {
         if (niveau >= 20)                                       modes.add(new BoutonDef("Arene", this::onArene));
         if (niveau >= GestionnaireExamenS.NIVEAU_REQUIS)        modes.add(new BoutonDef("Examen de Rang S", this::onExamenS));
 
+        boutonsParLibelle.clear();
         boutonsBox.getChildren().clear();
         ajouterSection("Progression", progression);
         ajouterSection("Personnages & Équipement", personnages);
         ajouterSection("Recrutement & Gacha", recrutementGacha);
         ajouterSection("Modes & Défis", modes);
+
+        Platform.runLater(this::verifierTutoriel);
     }
 
     private record BoutonDef(String libelle, EventHandler<ActionEvent> action) {}
@@ -99,9 +124,263 @@ public class EcranMenuPrincipalController {
             Button bouton = new Button(b.libelle());
             bouton.getStyleClass().add("menu-bouton");
             bouton.setOnAction(b.action());
-            grille.getChildren().add(bouton);
+            boutonsParLibelle.put(b.libelle(), bouton);
+            grille.getChildren().add(avecBadgeNotification(bouton, aNotification(b.libelle())));
         }
         boutonsBox.getChildren().add(grille);
+    }
+
+    /** Enveloppe le bouton d'un petit point rouge en haut a droite s'il y a quelque chose a reclamer. */
+    private Node avecBadgeNotification(Button bouton, boolean notification) {
+        if (!notification) return bouton;
+
+        Circle point = new Circle(5, Color.web("#e05656"));
+        point.setStroke(Color.web("#1b1b28"));
+        point.setStrokeWidth(1.5);
+        point.setMouseTransparent(true);
+        point.setTranslateX(-6);
+        point.setTranslateY(6);
+
+        StackPane wrapper = new StackPane(bouton, point);
+        StackPane.setAlignment(point, Pos.TOP_RIGHT);
+        return wrapper;
+    }
+
+    // =========================================================================
+    // BADGES DE NOTIFICATION (quelque chose de reclamable dans ce menu)
+    // =========================================================================
+
+    private boolean aNotification(String libelle) {
+        return switch (libelle) {
+            case "Recompenses" -> notificationRecompenses();
+            case "Quetes"      -> notificationQuetes();
+            case "Arene"       -> notificationArene();
+            default -> false;
+        };
+    }
+
+    private boolean notificationRecompenses() {
+        GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+        for (int i = 0; i < GestionnaireRecompenses.PALIERS_NIVEAU.length; i++) {
+            if (gr.estNiveauDisponible(i, ctx.joueur.getNiveau())) return true;
+        }
+        int[] paliersMois = gr.getPaliersMois();
+        for (int i = 0; i < paliersMois.length; i++) {
+            if (gr.estMoisDisponible(i)) return true;
+        }
+        if (!gr.estTerminee()) {
+            for (int jour = 1; jour <= 7; jour++) {
+                if (gr.estJourDisponible(jour)) return true;
+            }
+        }
+        return gr.peutReclamer30min();
+    }
+
+    private boolean notificationQuetes() {
+        GestionnaireQuetes gq = ctx.gestionnaireQuetes;
+        if (ctx.joueur.getNiveau() >= GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES) {
+            for (QueteJournaliere qj : gq.getQuetesJournalieres()) {
+                if (qj.isCompletee() && !qj.isReclamee()) return true;
+            }
+            for (int i = 0; i < GestionnaireQuetes.PALIERS_BARRE_JOURNALIERE.length; i++) {
+                if (gq.estBarreDisponible(i)) return true;
+            }
+        }
+        for (QueteProgression q : gq.getQuetesVisibles(ctx)) {
+            if (!q.isAcceptee() || (q.isCompletee() && !q.isReclamee())) return true;
+        }
+        return false;
+    }
+
+    private boolean notificationArene() {
+        if (ctx.rangJoueur.estCoffreRangDisponible()) return true;
+
+        java.time.LocalDateTime maintenant = java.time.LocalDateTime.now();
+        if (maintenant.getHour() < 20) return false;
+        String cleJour  = maintenant.toLocalDate().toString();
+        String derniere = ctx.dernierCoffreArene != null ? ctx.dernierCoffreArene : "";
+        return !cleJour.equals(derniere);
+    }
+
+    // =========================================================================
+    // TUTORIEL GUIDE
+    // =========================================================================
+
+    private void verifierTutoriel() {
+        GestionnaireTutoriel gt = ctx.gestionnaireTutoriel;
+
+        if (!gt.isPropose()) {
+            gt.setPropose(true);
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Vous decouvrez le jeu ? Une visite guidee peut vous presenter chaque menu disponible.",
+                    ButtonType.YES, ButtonType.NO);
+            confirm.setTitle("Tutoriel");
+            confirm.setHeaderText(null);
+            styliser(confirm);
+            boolean accepte = confirm.showAndWait().orElse(ButtonType.NO) == ButtonType.YES;
+            gt.setActif(accepte);
+            ctx.sauvegarde.sauvegarder(ctx);
+        }
+
+        if (gt.isActif()) {
+            lancerEtapesEnAttente();
+        }
+    }
+
+    private void lancerEtapesEnAttente() {
+        List<GestionnaireTutoriel.EtapeTutoriel> aFaire = new ArrayList<>();
+        for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
+            if (boutonsParLibelle.containsKey(e.libelle()) && !ctx.gestionnaireTutoriel.aEteVue(e.libelle())) {
+                aFaire.add(e);
+            }
+        }
+        if (!aFaire.isEmpty()) afficherEtape(aFaire, 0);
+    }
+
+    private void afficherEtape(List<GestionnaireTutoriel.EtapeTutoriel> etapes, int index) {
+        GestionnaireTutoriel.EtapeTutoriel etape = etapes.get(index);
+        Button cible = boutonsParLibelle.get(etape.libelle());
+        if (cible == null) {
+            avancer(etapes, index);
+            return;
+        }
+
+        tutorielOverlay.setVisible(true);
+        tutorielOverlay.setManaged(true);
+        tutorielOverlay.getChildren().clear();
+
+        Region fond = new Region();
+        fond.setStyle("-fx-background-color: rgba(10,10,18,0.72);");
+        fond.prefWidthProperty().bind(tutorielOverlay.widthProperty());
+        fond.prefHeightProperty().bind(tutorielOverlay.heightProperty());
+        tutorielOverlay.getChildren().add(fond);
+
+        scrollVersBouton(cible);
+        Platform.runLater(() -> positionnerBulle(etapes, index, cible));
+    }
+
+    /** Fait defiler le menu pour amener le bouton cible vers le centre du viewport. */
+    private void scrollVersBouton(Button cible) {
+        boutonsBox.applyCss();
+        boutonsBox.layout();
+
+        Bounds cibleDansBoutonsBox = boutonsBox.sceneToLocal(cible.localToScene(cible.getBoundsInLocal()));
+        double hauteurContenu  = boutonsBox.getBoundsInLocal().getHeight();
+        double hauteurViewport = menuScrollPane.getViewportBounds().getHeight();
+        double centreCible     = cibleDansBoutonsBox.getMinY() + cibleDansBoutonsBox.getHeight() / 2.0;
+        double denominateur    = Math.max(1, hauteurContenu - hauteurViewport);
+        double vValue          = (centreCible - hauteurViewport / 2.0) / denominateur;
+
+        menuScrollPane.setVvalue(Math.max(0, Math.min(1, vValue)));
+    }
+
+    /** Positionne la fleche et la bulle d'explication par-dessus le bouton cible, une fois le defilement applique. */
+    private void positionnerBulle(List<GestionnaireTutoriel.EtapeTutoriel> etapes, int index, Button cible) {
+        GestionnaireTutoriel.EtapeTutoriel etape = etapes.get(index);
+
+        // Force une passe de mise en page synchrone : l'overlay vient d'etre rendu "managed",
+        // sa taille doit etre a jour avant qu'on lise getWidth()/getHeight() ci-dessous.
+        Parent racine = tutorielOverlay.getScene().getRoot();
+        racine.applyCss();
+        racine.layout();
+
+        Bounds sceneBounds   = cible.localToScene(cible.getBoundsInLocal());
+        Bounds overlayBounds = tutorielOverlay.sceneToLocal(sceneBounds);
+        double centreX       = overlayBounds.getMinX() + overlayBounds.getWidth() / 2.0;
+        boolean bulleEnBas   = overlayBounds.getMinY() < tutorielOverlay.getHeight() / 2.0;
+
+        double flecheLargeur = 18, flecheHauteur = 14;
+        Polygon fleche = new Polygon();
+        if (bulleEnBas) {
+            fleche.getPoints().addAll(
+                    centreX - flecheLargeur / 2, overlayBounds.getMaxY() + flecheHauteur,
+                    centreX + flecheLargeur / 2, overlayBounds.getMaxY() + flecheHauteur,
+                    centreX, overlayBounds.getMaxY());
+        } else {
+            fleche.getPoints().addAll(
+                    centreX - flecheLargeur / 2, overlayBounds.getMinY() - flecheHauteur,
+                    centreX + flecheLargeur / 2, overlayBounds.getMinY() - flecheHauteur,
+                    centreX, overlayBounds.getMinY());
+        }
+        fleche.setFill(Color.web("#f2c14e"));
+
+        Label titre = new Label(etape.libelle());
+        titre.getStyleClass().add("item-nom");
+        Label texte = new Label(etape.texte());
+        texte.getStyleClass().add("item-detail");
+        texte.setWrapText(true);
+        texte.setMaxWidth(300);
+
+        Button suivant = new Button(index + 1 < etapes.size() ? "Suivant" : "Terminer");
+        suivant.getStyleClass().add("menu-bouton");
+        suivant.setOnAction(e -> avancer(etapes, index));
+
+        HBox boutons;
+        if (etapes.size() > 1) {
+            // Visite guidee (plusieurs etapes en chaine) : on peut l'abandonner en cours de route.
+            Button passer = new Button("Passer le tutoriel");
+            passer.getStyleClass().add("menu-bouton-danger");
+            passer.setOnAction(e -> abandonnerTutoriel(etapes, index));
+            boutons = new HBox(8, passer, suivant);
+        } else {
+            // Rejeu ponctuel depuis le bouton Aide : rien a "abandonner", juste a fermer.
+            boutons = new HBox(8, suivant);
+        }
+        boutons.setAlignment(Pos.CENTER);
+
+        VBox bulle = new VBox(8, titre, texte, boutons);
+        bulle.setAlignment(Pos.CENTER);
+        bulle.setPadding(new Insets(14));
+        bulle.setStyle("-fx-background-color: #2e2e42; -fx-background-radius: 10;"
+                + " -fx-border-color: #f2c14e; -fx-border-radius: 10; -fx-border-width: 2;");
+        bulle.setMaxWidth(320);
+        bulle.setPrefWidth(320);
+
+        tutorielOverlay.getChildren().addAll(fleche, bulle);
+
+        bulle.applyCss();
+        bulle.layout();
+        double largeurOverlay = tutorielOverlay.getWidth();
+        double hauteurOverlay = tutorielOverlay.getHeight();
+        double bulleHauteur   = bulle.prefHeight(320);
+
+        double bulleX = clamp(centreX - 160, 10, Math.max(10, largeurOverlay - 330));
+        double bulleY = bulleEnBas
+                ? overlayBounds.getMaxY() + flecheHauteur + 4
+                : overlayBounds.getMinY() - flecheHauteur - 4 - bulleHauteur;
+        bulleY = clamp(bulleY, 10, Math.max(10, hauteurOverlay - bulleHauteur - 10));
+
+        bulle.setLayoutX(bulleX);
+        bulle.setLayoutY(bulleY);
+    }
+
+    private double clamp(double v, double min, double max) {
+        return Math.max(min, Math.min(max, v));
+    }
+
+    private void avancer(List<GestionnaireTutoriel.EtapeTutoriel> etapes, int index) {
+        ctx.gestionnaireTutoriel.marquerEtapeVue(etapes.get(index).libelle());
+        if (index + 1 < etapes.size()) {
+            afficherEtape(etapes, index + 1);
+        } else {
+            fermerOverlay();
+            ctx.sauvegarde.sauvegarder(ctx);
+        }
+    }
+
+    private void abandonnerTutoriel(List<GestionnaireTutoriel.EtapeTutoriel> etapes, int indexActuel) {
+        for (int i = indexActuel; i < etapes.size(); i++) {
+            ctx.gestionnaireTutoriel.marquerEtapeVue(etapes.get(i).libelle());
+        }
+        ctx.gestionnaireTutoriel.setActif(false);
+        fermerOverlay();
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    private void fermerOverlay() {
+        tutorielOverlay.setVisible(false);
+        tutorielOverlay.setManaged(false);
+        tutorielOverlay.getChildren().clear();
     }
 
     private void onHistoire(ActionEvent event) {
@@ -187,6 +466,33 @@ public class EcranMenuPrincipalController {
     }
 
     @FXML
+    private void onAide(ActionEvent event) {
+        List<GestionnaireTutoriel.EtapeTutoriel> disponibles = new ArrayList<>();
+        for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
+            if (boutonsParLibelle.containsKey(e.libelle())) disponibles.add(e);
+        }
+        if (disponibles.isEmpty()) return;
+
+        GestionnaireTutoriel.EtapeTutoriel choix = GuiVisuels.choisirParmiCartes(
+                "Aide — Tutoriels disponibles", disponibles, this::carteAide);
+        if (choix == null) return;
+
+        afficherEtape(List.of(choix), 0);
+    }
+
+    private Node carteAide(GestionnaireTutoriel.EtapeTutoriel etape) {
+        Label titre = new Label("Tutoriel " + etape.libelle());
+        titre.getStyleClass().add("item-nom");
+
+        HBox carte = new HBox(titre);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.setPadding(new Insets(10, 16, 10, 16));
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(300);
+        return carte;
+    }
+
+    @FXML
     private void onSauvegarder(ActionEvent event) {
         ctx.sauvegarde.sauvegarder(ctx);
         System.out.println("Partie sauvegardee.");
@@ -206,7 +512,9 @@ public class EcranMenuPrincipalController {
         ButtonType choix = confirm.showAndWait().orElse(ButtonType.CANCEL);
         if (choix == ButtonType.CANCEL) return;
         if (choix == sauvegarderEtQuitter) {
-            ctx.sauvegarde.sauvegarder(ctx);
+            // Synchrone ici : on veut etre certain que la sauvegarde soit partie avant que
+            // la fenetre (et potentiellement le processus) ne se ferme juste apres.
+            ctx.sauvegarde.sauvegarderSynchrone(ctx);
         }
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

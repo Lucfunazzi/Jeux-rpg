@@ -19,8 +19,43 @@ public class MenuQuetes {
         boolean retour = false;
 
         while (!retour) {
+            boolean journalieresDebloquees = ctx.joueur.getNiveau() >= GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES;
+
             System.out.println("\n========================================");
             System.out.println("            QUETES");
+            System.out.println("========================================");
+            System.out.println("1. Quetes de chapitre");
+            if (journalieresDebloquees) {
+                System.out.println("2. Quetes journalieres");
+            } else {
+                System.out.println("2. Quetes journalieres  [Debloque niveau " + GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES + "]");
+            }
+            System.out.println("0. Retour");
+            System.out.print("Votre choix : ");
+
+            switch (scanner.nextLine().trim()) {
+                case "1" -> afficherChapitres(ctx, scanner);
+                case "2" -> {
+                    if (journalieresDebloquees) {
+                        afficherJournalieres(ctx, scanner);
+                    } else {
+                        System.out.println("Les quetes journalieres se debloquent au niveau "
+                                + GestionnaireQuetes.NIVEAU_DEBLOCAGE_JOURNALIERES + " !");
+                    }
+                }
+                case "0" -> retour = true;
+                default  -> System.out.println("Choix invalide.");
+            }
+        }
+    }
+
+    // ── Quetes journalieres (+ barre de points) ────────────────────────────
+    private void afficherJournalieres(GameContext ctx, Scanner scanner) {
+        boolean retour = false;
+
+        while (!retour) {
+            System.out.println("\n========================================");
+            System.out.println("        QUETES JOURNALIERES");
             System.out.println("========================================");
 
             int pts = ctx.gestionnaireQuetes.getPointsJournaliers();
@@ -32,7 +67,7 @@ public class MenuQuetes {
                         + ctx.gestionnaireQuetes.afficherRecompenseBarre(i));
             }
 
-            System.out.println("\n[ Quetes journalieres ]");
+            System.out.println("\n[ Quetes ]");
             for (QueteJournaliere qj : ctx.gestionnaireQuetes.getQuetesJournalieres()) {
                 System.out.println("  " + qj.getEtat() + qj.getTitre());
                 System.out.println("    " + qj.getDescription());
@@ -40,31 +75,16 @@ public class MenuQuetes {
                 System.out.println("    Recompense  : " + qj.afficherRecompenses());
             }
 
-            System.out.println("\n[ Quetes de progression ]");
-            for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles(ctx)) {
-                System.out.println("  " + q.getEtat() + q.getTitre());
-                System.out.println("    " + q.getDescription());
-                System.out.println("    Recompense : " + q.afficherRecompenses());
-            }
-
-            System.out.println("\n1. Reclamer une recompense de quete");
+            System.out.println("\n1. Reclamer une recompense de quete journaliere");
             System.out.println("2. Reclamer un palier de la barre journaliere");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
-            int choix;
-            try {
-                choix = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Entree invalide.");
-                continue;
-            }
-
-            switch (choix) {
-                case 0 -> retour = true;
-                case 1 -> reclamerRecompense(ctx, scanner);
-                case 2 -> reclamerBarre(ctx, scanner);
-                default -> System.out.println("Choix invalide.");
+            switch (scanner.nextLine().trim()) {
+                case "1" -> reclamerRecompenseJournaliere(ctx, scanner);
+                case "2" -> reclamerBarre(ctx, scanner);
+                case "0" -> retour = true;
+                default  -> System.out.println("Choix invalide.");
             }
         }
     }
@@ -102,15 +122,93 @@ public class MenuQuetes {
         }
     }
 
-    private void reclamerRecompense(GameContext ctx, Scanner scanner) {
+    private void reclamerRecompenseJournaliere(GameContext ctx, Scanner scanner) {
         ArrayList<Quete> reclamables = new ArrayList<>();
-
         for (QueteJournaliere qj : ctx.gestionnaireQuetes.getQuetesJournalieres())
             if (qj.isCompletee() && !qj.isReclamee()) reclamables.add(qj);
 
+        reclamerParmi(ctx, scanner, reclamables);
+    }
+
+    // ── Quetes de chapitre (acceptation + reclamation) ─────────────────────
+    private void afficherChapitres(GameContext ctx, Scanner scanner) {
+        boolean retour = false;
+
+        while (!retour) {
+            System.out.println("\n========================================");
+            System.out.println("        QUETES DE CHAPITRE");
+            System.out.println("========================================");
+            System.out.println("Acceptez une quete pour debloquer le stage associe.");
+
+            List<QueteProgression> visibles = ctx.gestionnaireQuetes.getQuetesVisibles(ctx);
+            if (visibles.isEmpty()) {
+                System.out.println("\nAucune quete de chapitre disponible pour l'instant.");
+            } else {
+                System.out.println();
+                for (QueteProgression q : visibles) {
+                    System.out.println("  " + q.getEtat() + q.getTitre());
+                    System.out.println("    " + q.getDescription());
+                    System.out.println("    Recompense : " + q.afficherRecompenses());
+                }
+            }
+
+            System.out.println("\n1. Accepter une quete (debloque le stage associe)");
+            System.out.println("2. Reclamer une recompense de quete");
+            System.out.println("0. Retour");
+            System.out.print("Votre choix : ");
+
+            switch (scanner.nextLine().trim()) {
+                case "1" -> accepterQueteChapitre(ctx, scanner);
+                case "2" -> reclamerRecompenseChapitre(ctx, scanner);
+                case "0" -> retour = true;
+                default  -> System.out.println("Choix invalide.");
+            }
+        }
+    }
+
+    private void accepterQueteChapitre(GameContext ctx, Scanner scanner) {
+        List<QueteProgression> aAccepter = new ArrayList<>();
+        for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles(ctx))
+            if (!q.isAcceptee()) aAccepter.add(q);
+
+        if (aAccepter.isEmpty()) {
+            System.out.println("Aucune quete a accepter pour l'instant.");
+            return;
+        }
+
+        System.out.println("\nQuetes a accepter :");
+        for (int i = 0; i < aAccepter.size(); i++)
+            System.out.println("  " + (i + 1) + ". " + aAccepter.get(i).getTitre());
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > aAccepter.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        System.out.println(ctx.gestionnaireQuetes.accepterQueteProgression(ctx, aAccepter.get(choix - 1).getId()));
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    private void reclamerRecompenseChapitre(GameContext ctx, Scanner scanner) {
+        ArrayList<Quete> reclamables = new ArrayList<>();
         for (QueteProgression q : ctx.gestionnaireQuetes.getQuetesVisibles(ctx))
             if (q.isCompletee() && !q.isReclamee()) reclamables.add(q);
 
+        reclamerParmi(ctx, scanner, reclamables);
+    }
+
+    // ── Reclamation (commun journalieres / chapitre) ────────────────────────
+    private void reclamerParmi(GameContext ctx, Scanner scanner, ArrayList<Quete> reclamables) {
         if (reclamables.isEmpty()) {
             System.out.println("Aucune recompense a reclamer.");
             return;

@@ -35,7 +35,11 @@ public class Chapitre1 {
             System.out.println();
 
             for (int i = 1; i <= NB_STAGES; i++) {
-                String etat = stagesReussis[i] ? "[OK]  " : stagesDebloques[i] ? "[  ]  " : "[###] ";
+                boolean jouable = ctx.gestionnaireQuetes.estStageJouable(1, i, false);
+                String etat = stagesReussis[i] ? "[OK]  "
+                        : !stagesDebloques[i]  ? "[###] "
+                        : jouable              ? "[  ]  "
+                        :                        "[QUETE] ";
                 String etoiles = ctx.gestionnaireEtoiles.getEtoiles(1, i, false).afficher();
                 System.out.println(etat + "Stage " + i + " — " + getTitreStage(i) + "  " + etoiles);
             }
@@ -55,6 +59,8 @@ public class Chapitre1 {
                 System.out.println("Stage invalide.");
             } else if (!stagesDebloques[choix]) {
                 System.out.println("Ce stage est verrouille. Terminez d'abord le stage precedent.");
+            } else if (!ctx.gestionnaireQuetes.estStageJouable(1, choix, false)) {
+                System.out.println("Acceptez d'abord la quete associee a ce stage (menu Quetes).");
             } else {
                 lancerStage(ctx, choix);
             }

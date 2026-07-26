@@ -9,6 +9,7 @@ import Equipement.Inventaire;
 import Equipement.Pierre;
 import Equipement.PotionEnergie;
 import Equipement.BoiteGuilde;
+import Equipement.BoiteEquipement;
 import Equipement.CleCoffreGuilde;
 import Equipement.SceauDeRang;
 import Personnage.PersonnageBase;
@@ -43,6 +44,7 @@ public class MenuInventaire {
             System.out.println("11. Utiliser un Sceau de Rang");
             System.out.println("12. Ouvrir une Boite Mysterieuse de la Guilde");
             System.out.println("13. Ouvrir le Coffre de Guilde (7 cles)");
+            System.out.println("14. Ouvrir une Boite d'equipement");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -60,6 +62,7 @@ public class MenuInventaire {
                 case "11" -> menuUtiliserSceau(ctx, scanner);
                 case "12" -> menuOuvrirBoiteGuilde(ctx, scanner);
                 case "13" -> menuOuvrirCoffreGuilde(ctx, scanner);
+                case "14" -> menuOuvrirBoiteEquipement(ctx, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -165,15 +168,24 @@ public class MenuInventaire {
         System.out.println("\nQue voulez-vous faire ?");
         System.out.println("1. Equiper une piece");
         System.out.println("2. Desequiper une piece");
+        System.out.println("3. Equiper automatiquement le meilleur disponible");
         System.out.println("0. Annuler");
         System.out.print("Votre choix : ");
 
         switch (scanner.nextLine().trim()) {
             case "1" -> equiperPiece(ctx, cible, scanner);
             case "2" -> desequiperPiece(ctx, cible, scanner);
+            case "3" -> equiperMeilleurDisponible(ctx, cible);
             case "0" -> {}
             default  -> System.out.println("Choix invalide.");
         }
+    }
+
+    private void equiperMeilleurDisponible(GameContext ctx, PersonnageBase cible) {
+        String resultat = lancement.Gestionnaires.GestionnaireEquipement.equiperMeilleurDisponible(
+                cible, ctx.inventaire, ctx.rangJoueur);
+        System.out.println("\n" + resultat);
+        ctx.sauvegarde.sauvegarder(ctx);
     }
 
     private void equiperPiece(GameContext ctx, PersonnageBase cible, Scanner scanner) {
@@ -639,6 +651,61 @@ public class MenuInventaire {
         String resultat = GestionnaireGuilde.ouvrirCoffreGuilde(
                 ctx.inventaire, ctx.joueur, ctx.menuTirage, ctx.rangJoueur.getRang());
         System.out.println(resultat);
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    // ── Boite d'equipement (donne un set complet : 4 armes + 5 pieces d'armure) ──
+    private void menuOuvrirBoiteEquipement(GameContext ctx, Scanner scanner) {
+        List<BoiteEquipement> dispo = new ArrayList<>();
+        for (BoiteEquipement b : BoiteEquipement.values()) {
+            if (ctx.inventaire.getQuantiteMateriau(b.nom) > 0) dispo.add(b);
+        }
+        if (dispo.isEmpty()) {
+            System.out.println("Aucune Boite d'equipement en stock.");
+            return;
+        }
+
+        System.out.println("\nBoites disponibles :");
+        for (int i = 0; i < dispo.size(); i++) {
+            BoiteEquipement b = dispo.get(i);
+            System.out.println("  " + (i + 1) + ". " + b.nom + " x" + ctx.inventaire.getQuantiteMateriau(b.nom));
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Laquelle ouvrir ? ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > dispo.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+        BoiteEquipement boite = dispo.get(choix - 1);
+        int stock = ctx.inventaire.getQuantiteMateriau(boite.nom);
+
+        System.out.print("Combien en ouvrir ? (1-" + stock + ", 0 pour annuler) : ");
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (quantite == 0) return;
+        if (quantite < 1 || quantite > stock) {
+            System.out.println("Quantite invalide. Vous en avez " + stock + ".");
+            return;
+        }
+
+        for (int i = 0; i < quantite; i++) {
+            System.out.println(boite.ouvrir(ctx.inventaire));
+        }
         ctx.sauvegarde.sauvegarder(ctx);
     }
 

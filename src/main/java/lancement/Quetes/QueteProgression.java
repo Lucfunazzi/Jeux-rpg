@@ -14,6 +14,7 @@ public class QueteProgression extends Quete {
     private final int chapitreReqis;
     private final int stageRequis;
     private final boolean estElite;
+    private boolean acceptee = false;
 
     public QueteProgression(String id, String titre, String description,
                             int chapitreRequis, int stageRequis, boolean estElite,
@@ -28,8 +29,22 @@ public class QueteProgression extends Quete {
     public int getStageRequis()    { return stageRequis; }
     public boolean isElite()       { return estElite; }
 
+    /** Vrai une fois que le joueur a accepte cette quete depuis le menu Quetes — c'est ce qui debloque le stage associe. */
+    public boolean isAcceptee()        { return acceptee; }
+    public void setAcceptee(boolean v) { acceptee = v; }
+
+    @Override
+    public String getEtat() {
+        if (reclamee)  return "[FAIT]";
+        if (completee) return "[OK]  ";
+        if (acceptee)  return "[EN COURS]";
+        return          "[A ACCEPTER]";
+    }
+
     @Override
     public String getProgression() {
-        return completee ? "Termine" : "En cours";
+        if (completee) return "Termine";
+        if (acceptee)  return "En cours";
+        return "A accepter";
     }
 }

@@ -38,6 +38,7 @@ public class EcranRecompensesController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Recompenses", "Récompenses");
         ctx.gestionnaireRecompenses.mettreAJourPointageMois();
         ctx.gestionnaireRecompenses.mettreAJourConnexion();
         rafraichir();

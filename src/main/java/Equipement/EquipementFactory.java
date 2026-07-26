@@ -75,6 +75,29 @@ public class EquipementFactory {
         });
     }
 
+    /**
+     * Retourne les 9 pieces d'un set complet de la rarete donnee : les 4 armes (une par classe)
+     * + les 5 pieces d'armure. Utilise par les Boites d'equipement (voir {@link BoiteEquipement}).
+     */
+    public static java.util.List<Equipement> piecesSetComplet(Equipement.Rarete rarete) {
+        return switch (rarete) {
+            case C -> java.util.List.of(lanceC(), gantsArmeC(), batonC(), fouetC(),
+                    couvreCheC(), torseC(), mainsC(), jambieresC(), bottesC());
+            case B -> java.util.List.of(lanceB(), gantsArmeB(), batonB(), fouetB(),
+                    couvreCheB(), torseB(), mainsB(), jambieresB(), bottesB());
+            case A -> java.util.List.of(lanceA(), gantsArmeA(), batonA(), fouetA(),
+                    couvreCheA(), torseA(), mainsA(), jambieresA(), bottesA());
+            case S -> java.util.List.of(lanceS(), gantsArmeS(), batonS(), fouetS(),
+                    couvreCheS(), torseS(), mainsS(), jambieresS(), bottesS());
+            case SS -> java.util.List.of(lanceSS(), gantsArmeSS(), batonSS(), fouetSS(),
+                    couvreCheSS(), torseSS(), mainsSS(), jambieresSS(), bottesSS());
+            case SSS -> java.util.List.of(lanceSSS(), gantsArmeSSS(), batonSSS(), fouetSSS(),
+                    couvreCheSSS(), torseSSS(), mainsSSS(), jambieresSSS(), bottesSSS());
+            case UR -> java.util.List.of(lanceUR(), gantsArmeUR(), batonUR(), fouetUR(),
+                    couvreCheUR(), torseUR(), mainsUR(), jambieresUR(), bottesUR());
+        };
+    }
+
     /** Rareté d'équipement fantôme appropriée pour un ennemi de ce niveau (calée sur ce que le joueur peut réellement obtenir à ce stade). */
     public static Equipement.Rarete rareteEnnemiPourNiveau(int niveau) {
         if (niveau < 11) return Equipement.Rarete.C;   // Chapitre 1

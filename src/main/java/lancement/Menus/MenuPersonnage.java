@@ -6,6 +6,7 @@ import Equipement.Equipement;
 import Equipement.EquipementFactory;
 import Equipement.Inventaire;
 import Equipement.ParcheminXP;
+import Equipement.BonusSet;
 import lancement.Formation;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireLiens;
@@ -39,8 +40,10 @@ public class MenuPersonnage {
 
             for (int i = 0; i < tousLesPersonnages.size(); i++) {
                 PersonnageBase p = tousLesPersonnages.get(i);
-                int piecesC = compterPiecesRangC(p);
-                String set  = piecesC > 0 ? "  Set C : " + piecesC + "/6" : "";
+                Equipement.Rarete raretesSet = p.getRareteSetDominante();
+                String set = raretesSet != null
+                        ? "  Set " + raretesSet + " : " + p.compterPieces(raretesSet) + "/6"
+                        : "";
                 boolean dansFormation = formation.getEquipe().contains(p);
                 String tag = dansFormation ? " [F]" : "";
                 System.out.println((i + 1) + ". " + p.getNom()
@@ -83,7 +86,8 @@ public class MenuPersonnage {
         boolean retour = false;
 
         while (!retour) {
-            int piecesC = compterPiecesRangC(perso);
+            Equipement.Rarete raretesSet = perso.getRareteSetDominante();
+            int piecesSet = raretesSet != null ? perso.compterPieces(raretesSet) : 0;
             List<GestionnaireLiens.Lien> liensActifs = formation.getLiensActifs();
 
             System.out.println("\n========================================");
@@ -95,7 +99,9 @@ public class MenuPersonnage {
             System.out.println("========================================");
 
             System.out.println("\n[ Stats ]");
-            double bonusPVSet = piecesC >= 3 ? 200 : 0;
+            double bonusPVSet  = piecesSet >= BonusSet.SEUIL_PV  ? BonusSet.palier(raretesSet).bonusPV() : 0;
+            double bonusVITSet = piecesSet >= BonusSet.SEUIL_VIT ? BonusSet.palier(raretesSet).bonusVitessePct() : 0;
+            double bonusATKSet = piecesSet >= BonusSet.SEUIL_ATK ? BonusSet.palier(raretesSet).bonusAttaquePct() : 0;
             // Bonus arbre de competences (uniquement pour le personnage principal)
             double arbreATK = 0, arbreDEF = 0, arbrePV = 0, arbreVIT = 0;
             if (perso instanceof Joueur.Personnage_principale pp) {
@@ -105,10 +111,10 @@ public class MenuPersonnage {
                 arbreVIT = pp.getArbreCompetences().getBonusVIT();
             }
             // Total % par stat = arbre + lien + set
-            double totalPctATK = arbreATK + perso.getBonusLienATK() + (piecesC >= 6 ? 0.05 : 0);
+            double totalPctATK = arbreATK + perso.getBonusLienATK() + bonusATKSet;
             double totalPctDEF = arbreDEF + perso.getBonusLienDEF();
             double totalPctPV  = arbrePV  + perso.getBonusLienPV();
-            double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + (piecesC >= 4 ? 0.02 : 0);
+            double totalPctVIT = arbreVIT + perso.getBonusLienVIT() + bonusVITSet;
 
             System.out.println("  PV  : " + String.format("%.0f", perso.getVie())
                     + " / " + String.format("%.0f", perso.getVieMax())
@@ -147,19 +153,41 @@ public class MenuPersonnage {
             }
 
             // Bonus de set
-            System.out.println("\n[ Bonus de Set — Rang C (" + piecesC + "/6) ]");
-            if (piecesC < 3) {
-                System.out.println("  Aucun bonus actif.  Prochain : 3 pieces — +200 PV");
+            if (raretesSet == null) {
+                System.out.println("\n[ Bonus de Set ]  Aucune piece equipee.");
             } else {
-                System.out.println("  [OK] 3 pieces : +200 PV");
-                if (piecesC < 4)
-                    System.out.println("  Prochain : 4 pieces — +2% VIT");
-                else {
-                    System.out.println("  [OK] 4 pieces : +2% VIT");
-                    if (piecesC < 6)
-                        System.out.println("  Prochain : 6 pieces — +5% ATK  (manque " + (6 - piecesC) + ")");
-                    else
-                        System.out.println("  [OK] 6 pieces : +5% ATK");
+                BonusSet.Palier palier = BonusSet.palier(raretesSet);
+                BonusSet.BonusSpecial special = BonusSet.special(raretesSet);
+                System.out.println("\n[ Bonus de Set — Rang " + raretesSet + " (" + piecesSet + "/6) ]");
+                if (piecesSet < BonusSet.SEUIL_PV) {
+                    System.out.println("  Aucun bonus actif.  Prochain : " + BonusSet.SEUIL_PV
+                            + " pieces — +" + (int) palier.bonusPV() + " PV");
+                } else {
+                    System.out.println("  [OK] " + BonusSet.SEUIL_PV + " pieces : +" + (int) palier.bonusPV() + " PV");
+                    if (piecesSet < BonusSet.SEUIL_VIT)
+                        System.out.println("  Prochain : " + BonusSet.SEUIL_VIT + " pieces — +"
+                                + (int) (palier.bonusVitessePct() * 100) + "% VIT");
+                    else {
+                        System.out.println("  [OK] " + BonusSet.SEUIL_VIT + " pieces : +"
+                                + (int) (palier.bonusVitessePct() * 100) + "% VIT");
+                        if (piecesSet < BonusSet.SET_COMPLET)
+                            System.out.println("  Prochain : " + BonusSet.SET_COMPLET + " pieces — +"
+                                    + (int) (palier.bonusAttaquePct() * 100) + "% ATK"
+                                    + "  (manque " + (BonusSet.SET_COMPLET - piecesSet) + ")");
+                        else {
+                            System.out.println("  [OK] " + BonusSet.SET_COMPLET + " pieces : +"
+                                    + (int) (palier.bonusAttaquePct() * 100) + "% ATK");
+                            if (special != null) {
+                                System.out.println("  [OK] Bonus special : +"
+                                        + (int) (special.bonusTauxCritique() * 100) + "% crit, +"
+                                        + (int) (special.bonusDegatCritiquePct() * 100) + "% degats crit, +"
+                                        + (int) (special.bonusEsquive() * 100) + "% esquive"
+                                        + (special.bonusVolDeVie() > 0
+                                                ? ", +" + (int) (special.bonusVolDeVie() * 100) + "% vol de vie"
+                                                : ""));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -427,15 +455,6 @@ public class MenuPersonnage {
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────
-    private int compterPiecesRangC(PersonnageBase perso) {
-        int count = 0;
-        for (Equipement.Slot slot : Equipement.Slot.values()) {
-            Equipement e = perso.getEquipement(slot);
-            if (e != null && e.getRarete() == Equipement.Rarete.C) count++;
-        }
-        return count;
-    }
-
     private boolean estCompatible(PersonnageBase perso, Equipement e) {
         String type = perso.getType();
         if (type == null && perso instanceof Joueur.Personnage_principale pp) {

@@ -6,34 +6,45 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="lancement.gui.EcranMenuPrincipalController"
-            styleClass="root-menu">
-    <top>
-        <VBox alignment="CENTER" spacing="6">
-            <padding><Insets top="20" bottom="10"/></padding>
-            <Label text="MENU PRINCIPAL" styleClass="titre"/>
-            <FlowPane fx:id="statsBox" hgap="8" vgap="8" alignment="CENTER" prefWrapLength="480"/>
-            <VBox fx:id="xpBarBox" alignment="CENTER" spacing="2"/>
-        </VBox>
-    </top>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="lancement.gui.EcranMenuPrincipalController"
+           styleClass="root-menu">
+    <BorderPane styleClass="root-menu">
+        <top>
+            <StackPane>
+                <VBox alignment="CENTER" spacing="6">
+                    <padding><Insets top="20" bottom="10"/></padding>
+                    <Label text="MENU PRINCIPAL" styleClass="titre"/>
+                    <FlowPane fx:id="statsBox" hgap="8" vgap="8" alignment="CENTER" prefWrapLength="480"/>
+                    <VBox fx:id="xpBarBox" alignment="CENTER" spacing="2"/>
+                </VBox>
+                <Button text="?" onAction="#onAide" styleClass="bouton-aide" StackPane.alignment="TOP_LEFT">
+                    <StackPane.margin><Insets top="20" left="20"/></StackPane.margin>
+                </Button>
+            </StackPane>
+        </top>
 
-    <center>
-        <ScrollPane fitToWidth="true">
-            <VBox fx:id="boutonsBox" alignment="CENTER" spacing="8">
-                <padding><Insets top="10" bottom="10" left="20" right="20"/></padding>
+        <center>
+            <ScrollPane fx:id="menuScrollPane" fitToWidth="true">
+                <VBox fx:id="boutonsBox" alignment="CENTER" spacing="8">
+                    <padding><Insets top="10" bottom="10" left="20" right="20"/></padding>
+                </VBox>
+            </ScrollPane>
+        </center>
+
+        <bottom>
+            <VBox alignment="CENTER" spacing="10">
+                <padding><Insets top="10" bottom="20"/></padding>
+                <Button text="Sauvegarder" onAction="#onSauvegarder" styleClass="menu-bouton"/>
+                <Button text="Quitter" onAction="#onQuitter" styleClass="menu-bouton"/>
             </VBox>
-        </ScrollPane>
-    </center>
+        </bottom>
+    </BorderPane>
 
-    <bottom>
-        <VBox alignment="CENTER" spacing="10">
-            <padding><Insets top="10" bottom="20"/></padding>
-            <Button text="Sauvegarder" onAction="#onSauvegarder" styleClass="menu-bouton"/>
-            <Button text="Quitter" onAction="#onQuitter" styleClass="menu-bouton"/>
-        </VBox>
-    </bottom>
-</BorderPane>
+    <Pane fx:id="tutorielOverlay" visible="false" managed="false"/>
+</StackPane>

@@ -31,7 +31,7 @@
                 <VBox alignment="CENTER" spacing="6">
                     <Label text="Statistiques" styleClass="section-titre"/>
                     <FlowPane fx:id="statsBox" hgap="10" vgap="10" alignment="CENTER" prefWrapLength="480"/>
-                    <Label fx:id="statsDetailLabel" styleClass="item-detail" wrapText="true" maxWidth="440"/>
+                    <FlowPane fx:id="statsDetailBox" hgap="14" vgap="4" alignment="CENTER" prefWrapLength="440"/>
                 </VBox>
 
                 <VBox alignment="CENTER" spacing="6">
@@ -48,6 +48,7 @@
 
                 <VBox alignment="CENTER" spacing="6">
                     <Label text="Équipement" styleClass="section-titre"/>
+                    <Button onAction="#onAutoEquiper" text="Équiper le meilleur disponible" styleClass="menu-bouton" wrapText="true" prefWidth="320"/>
                     <VBox fx:id="slotsBox" alignment="CENTER" spacing="6"/>
                 </VBox>
 

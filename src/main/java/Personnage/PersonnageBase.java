@@ -23,10 +23,12 @@ import Effets.ReductionVitesse;
 import Effets.Poison;
 import Effets.Bouclier;
 import Effets.Brulure;
+import Effets.Absorption;
 import java.util.ArrayList;
 import java.util.List;
 import Equipement.Equipement;
 import Equipement.Pierre;
+import Equipement.BonusSet;
 import java.util.HashMap;
 
 public abstract class PersonnageBase implements Statistiques, Attaques {
@@ -299,6 +301,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     this.rage = 0;
     this.specialeUtilisee = false;
     this.effetsActifs.clear();
+    BonusSet.BonusSpecial special = bonusSetSpecialActif();
+    if (special != null && special.bonusVolDeVie() > 0) {
+        ajouterEffet(new Absorption(Integer.MAX_VALUE, special.bonusVolDeVie()));
+    }
 }
 
     public boolean getSpecialeUtilisee() { return this.specialeUtilisee; }
@@ -306,7 +312,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getVieMax() {
         double base = this.vieMax * getMultiplicateurEtoile();
-        if (compterPiecesRangC() >= 3) base += 200;
+        base += bonusSetPV();
         base += getBonusEquipementPV();
         if (bonusTitre > 0) base *= (1 + bonusTitre);
         if (bonusLienPV      > 0) base *= (1 + bonusLienPV);
@@ -333,7 +339,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         if (bonusTitre > 0) base *= (1 + bonusTitre);
         base += getBonusEquipementATK();
-        if (compterPiecesRangC() >= 6) base *= 1.05;
+        base *= (1 + bonusSetAttaquePct());
         if (bonusLienATK      > 0) base *= (1 + bonusLienATK);
         if (bonusCompagnonsATK > 0) base += bonusCompagnonsATK;
         if (bonusCreatureATK  > 0) base += bonusCreatureATK;
@@ -376,7 +382,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (debuff != null) base *= (1 - debuff.getPourcentage());
         if (bonusTitre > 0) base *= (1 + bonusTitre);
         base += getBonusEquipementVIT();
-        if (compterPiecesRangC() >= 4) base *= 1.02;
+        base *= (1 + bonusSetVitessePct());
         if (bonusLienVIT      > 0) base *= (1 + bonusLienVIT);
         if (bonusCompagnonsVIT > 0) base += bonusCompagnonsVIT;
         if (bonusCreatureVIT  > 0) base += bonusCreatureVIT;
@@ -394,7 +400,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getTauxCritique() {
         BuffTauxCritique buff = getEffet(BuffTauxCritique.class);
         double base = buff != null ? tauxCritiquesBase + buff.getBonus() : tauxCritiquesBase;
-        return base + getBonusPierreFraction(Pierre.Type.CRITIQUE);
+        base += getBonusPierreFraction(Pierre.Type.CRITIQUE);
+        BonusSet.BonusSpecial special = bonusSetSpecialActif();
+        if (special != null) base += special.bonusTauxCritique();
+        return base;
     }
 
     public void setTauxCritique(double taux) {
@@ -405,7 +414,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     @Override
     public double getTauxDegatCritique() {
         BuffDegatCritique buff = getEffet(BuffDegatCritique.class);
-        return buff != null ? degatCritiquesBase + buff.getBonus() : degatCritiquesBase;
+        double base = buff != null ? degatCritiquesBase + buff.getBonus() : degatCritiquesBase;
+        BonusSet.BonusSpecial special = bonusSetSpecialActif();
+        if (special != null) base += special.bonusDegatCritiquePct();
+        return base;
     }
 
     public void setTauxDegatCritique(double degat) {
@@ -428,7 +440,10 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public double getTauxEsquives() {
         BuffTauxEsquive buff = getEffet(BuffTauxEsquive.class);
         double base = buff != null ? tauxEsquivesBase + buff.getBonus() : tauxEsquivesBase;
-        return base + getBonusPierreFraction(Pierre.Type.ESQUIVE);
+        base += getBonusPierreFraction(Pierre.Type.ESQUIVE);
+        BonusSet.BonusSpecial special = bonusSetSpecialActif();
+        if (special != null) base += special.bonusEsquive();
+        return base;
     }
 
     public void setTauxEsquives(double esquive) {
@@ -625,11 +640,61 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         return getBonusPierrePoints(type) / 100.0;
     }
 
-    private int compterPiecesRangC() {
+    /** Nombre de pieces equipees de la rarete donnee (max 6, une par emplacement). */
+    public int compterPieces(Equipement.Rarete rarete) {
         int count = 0;
         for (Equipement e : equipements.values()) {
-            if (e.getRarete() == Equipement.Rarete.C) count++;
+            if (e.getRarete() == rarete) count++;
         }
         return count;
+    }
+
+    /**
+     * Rarete du set actuellement porte en plus grand nombre (pour l'affichage de la progression
+     * du bonus de set), ou {@code null} si aucune piece n'est equipee.
+     */
+    public Equipement.Rarete getRareteSetDominante() {
+        Equipement.Rarete dominante = null;
+        int max = 0;
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            int n = compterPieces(r);
+            if (n > max) { max = n; dominante = r; }
+        }
+        return dominante;
+    }
+
+    private double bonusSetPV() {
+        double total = 0;
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            if (compterPieces(r) >= BonusSet.SEUIL_PV) total += BonusSet.palier(r).bonusPV();
+        }
+        return total;
+    }
+
+    private double bonusSetVitessePct() {
+        double total = 0;
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            if (compterPieces(r) >= BonusSet.SEUIL_VIT) total += BonusSet.palier(r).bonusVitessePct();
+        }
+        return total;
+    }
+
+    private double bonusSetAttaquePct() {
+        double total = 0;
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            if (compterPieces(r) >= BonusSet.SEUIL_ATK) total += BonusSet.palier(r).bonusAttaquePct();
+        }
+        return total;
+    }
+
+    /** Bonus special de set complet (6/6) actif, uniquement pour SSS/UR ; {@code null} sinon. */
+    private BonusSet.BonusSpecial bonusSetSpecialActif() {
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            if (compterPieces(r) >= BonusSet.SET_COMPLET) {
+                BonusSet.BonusSpecial special = BonusSet.special(r);
+                if (special != null) return special;
+            }
+        }
+        return null;
     }
 }

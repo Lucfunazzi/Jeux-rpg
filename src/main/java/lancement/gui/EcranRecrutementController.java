@@ -35,6 +35,7 @@ public class EcranRecrutementController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Recrutement", "Recrutement");
         rafraichir();
     }
 

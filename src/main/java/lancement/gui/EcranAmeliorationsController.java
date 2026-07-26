@@ -67,6 +67,7 @@ public class EcranAmeliorationsController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Ameliorations", "Améliorations");
         rafraichirPersonnages();
         selectionnerPersonnage(ctx.joueur);
     }
@@ -307,6 +308,7 @@ public class EcranAmeliorationsController {
         }
         ctx.joueur.retirerOr(cout);
         equip.fortifier();
+        ctx.gestionnaireQuetes.notifierFortification();
         labelFeedbackFort.setText("");
         mettreAJourValeursFort(equip);
         mettreAJourCarteSlot(slotSelectionne, equip);

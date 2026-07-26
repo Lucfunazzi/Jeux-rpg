@@ -34,6 +34,7 @@ public class EcranAreneController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        GuiVisuels.afficherExplicationPremiereVisite(ctx, "Arene", "Arène");
         this.gestionnaireArene = new GestionnaireArene(ctx.sauvegarde::creerPersonnageParNom);
 
         choixBox.getChildren().setAll(
