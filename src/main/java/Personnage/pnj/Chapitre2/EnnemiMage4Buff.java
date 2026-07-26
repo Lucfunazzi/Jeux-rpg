@@ -50,7 +50,7 @@ public class EnnemiMage4Buff extends PersonnageBase {
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         for (PersonnageBase e :equipeAlliee){
             if (e.estVivant() && e.getRole().equals("Support")){
-                Combat.appliquerEffet(e, new BuffAttaque(0.10,2), log);
+                Combat.appliquerEffet(this, e, new BuffAttaque(0.10,2), log);
             }
         }
     }
@@ -60,22 +60,22 @@ public class EnnemiMage4Buff extends PersonnageBase {
         log.add(this.nom + " Boost le taux critique de son équipe !");
         for (PersonnageBase e : equipeAlliee) {
             if (e.estVivant()){
-                Combat.appliquerEffet(e, new BuffTauxCritique(0.15,2), log);
+                Combat.appliquerEffet(this, e, new BuffTauxCritique(0.15,2), log);
             }
             
         }
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Eclair Maudit", "Explosion Arcanique", "Pluie de Maledictions"};
+        return new String[]{"Eclair Maudit", "Explosion Arcanique", "Rituel de Puissance"};
     }
     @Override public void descriptionAttaqueBase() {
         System.out.println("Eclair Maudit : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Explosion Arcanique : inflige 160% ATK a la cible.");
+        System.out.println("Explosion Arcanique : inflige 80% ATK a la cible et augmente l'ATK des Supports alliés de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Pluie de Maledictions : inflige 135% ATK a toute l'equipe ennemie.");
+        System.out.println("Rituel de Puissance : augmente le taux critique de toute l'équipe de 15% pendant 2 tours.");
     }
 }

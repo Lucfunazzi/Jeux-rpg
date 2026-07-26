@@ -73,15 +73,15 @@ public class EnnemiMage3Soigneur extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Salve Magique", "Orbe de Tenebres", "Tempete Magique"};
+        return new String[]{"Salve Magique", "Bénédiction Salvatrice", "Aura de Guérison"};
     }
     @Override public void descriptionAttaqueBase() {
         System.out.println("Salve Magique : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Orbe de Tenebres : inflige 150% ATK a la cible.");
+        System.out.println("Bénédiction Salvatrice : soigne l'allié le plus faible de 70% ATK et retire 2 effets négatifs.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tempete Magique : inflige 130% ATK a toute l'equipe ennemie.");
+        System.out.println("Aura de Guérison : soigne toute l'équipe de 50% ATK et retire 1 effet négatif a chacun.");
     }
 }

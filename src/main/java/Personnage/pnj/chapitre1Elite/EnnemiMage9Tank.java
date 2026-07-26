@@ -64,15 +64,15 @@ public class EnnemiMage9Tank extends PersonnageBase {
     }
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Coup de Bouclier", "Frappe Brutale", "Charge Devastatrice"};
+        return new String[]{"Coup de Bouclier", "Rune de Solidification", "Charge Devastatrice"};
     }
     @Override public void descriptionAttaqueBase() {
         System.out.println("Coup de Bouclier : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Frappe Brutale : inflige 140% ATK a la cible.");
+        System.out.println("Rune de Solidification : augmente sa DEF de 20% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Charge Devastatrice : inflige 120% ATK a toute l'equipe ennemie.");
+        System.out.println("Charge Devastatrice : inflige 70% ATK a toute l'equipe ennemie et se régénère de 20% des PV max pendant 2 tours.");
     }
 }

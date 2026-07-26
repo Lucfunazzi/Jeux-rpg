@@ -49,7 +49,7 @@ public class EnnemiMage8DPS extends PersonnageBase {
         double degats = this.getAttaque() * 1.40;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (Math.random() <0.20){
-            Combat.appliquerEffet(cible, new Gel(2), log);
+            Combat.appliquerEffet(this, cible, new Gel(2), log);
         }
     }
 
@@ -60,10 +60,9 @@ public class EnnemiMage8DPS extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-
-            }
-            if (Math.random() < 0.30){
-                Combat.appliquerEffet(cible, new Gel(2), log);
+                if (Math.random() < 0.30){
+                    Combat.appliquerEffet(this, cible, new Gel(2), log);
+                }
             }
         }
     }

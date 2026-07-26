@@ -59,7 +59,7 @@ public class EnnemiYuka extends PersonnageBase {
         log.add("Yuka Lance Onde Explosive " + cible.getNom() + " — une explosion dévaste la cible !");
         double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(cible,this,new BuffTauxEsquive(0.15,2),log );
+        Combat.appliquerEffet(this, new BuffTauxEsquive(0.15,2), log);
 
     }
 

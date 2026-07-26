@@ -78,7 +78,7 @@ public class perso_DucEverlue extends PersonnageBase {
         System.out.println("Nage — Diver : Plonge dans le sol et surgit sous la cible, inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (70% ATK chacun), Augmente son blocage de 15%.");
+        System.out.println("Rebond de Terre : Rebondit sur tous les ennemis (60% ATK chacun), Augmente son blocage de 15%.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Invocation de Virgo : inflige 120% ATK à un seul ennemi + étourdit la cible pendant 1 tour.");

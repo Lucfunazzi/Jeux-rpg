@@ -48,7 +48,7 @@ public class EnnemiMage6Debuff extends PersonnageBase {
         log.add(this.nom + " invoque briseur de défense" + cible.getNom() + " !");
         double degats = this.getAttaque() * 0.70;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(cible, new ReductionDefense(0.10,2), log);
+        Combat.appliquerEffet(this, cible, new ReductionDefense(0.10,2), log);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class EnnemiMage6Debuff extends PersonnageBase {
         System.out.println("Frappe de l'Ombre : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Surgissement : inflige 170% ATK a la cible.");
+        System.out.println("Surgissement : inflige 70% ATK a la cible et réduit sa DEF de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Disparition : inflige 120% ATK a toute l'equipe ennemie.");
+        System.out.println("Disparition : inflige 40% ATK a toute l'equipe ennemie et réduit leur VIT de 10% pendant 2 tours.");
     }
 }

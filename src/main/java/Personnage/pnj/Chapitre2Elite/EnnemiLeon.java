@@ -88,12 +88,12 @@ public class EnnemiLeon extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK et réduit la VIT de 15% pendant 2 tours.");
+        System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, réduit ATK de 20% pendant 2 tours, 35% de gel 1 tour.");
+        System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, 35% de chance de geler 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 25%.");
+        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 10% pendant 2 tours, 25% de chance de geler 1 tour.");
     }
 }

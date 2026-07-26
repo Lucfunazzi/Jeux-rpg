@@ -79,12 +79,12 @@ public class EnnemiEligor extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Lame de Vent Tranchante — Inflige 100% ATK, réduit la VIT de 15% pendant 2 tours.");
+        System.out.println("Lame de Vent Tranchante — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Mur Tempête — +25% DEF, inflige 120% ATK, réduit ATK cible de 20% pendant 2 tours.");
+        System.out.println("Mur Tempête — Inflige 120% ATK et réduit l'ATK de la cible de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Mur de Vent — Inflige 85% ATK à tous, silence 2 tours, réduit VIT de 25%.");
+        System.out.println("Mur de Vent — Inflige 50% ATK à tous les ennemis et augmente son esquive de 10% pendant 2 tours.");
     }
 }

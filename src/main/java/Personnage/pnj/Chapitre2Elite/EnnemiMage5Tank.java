@@ -59,15 +59,15 @@ public class EnnemiMage5Tank extends PersonnageBase {
 
 
     @Override public String[] getNomsAttaques() {
-        return new String[]{"Shuriken", "Technique de l'Ombre", "Invasion de Clones"};
+        return new String[]{"Frappe de la Lame", "Lame du Chevalier", "Bouclier Absolu"};
     }
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Shuriken : attaque de base sur la cible.");
+        System.out.println("Frappe de la Lame : attaque de base sur la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Technique de l'Ombre : inflige 130% ATK a la cible.");
+        System.out.println("Lame du Chevalier : inflige 110% ATK a la cible et augmente sa DEF de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Invasion de Clones : inflige 110% ATK a toute l'equipe ennemie.");
+        System.out.println("Bouclier Absolu : se protège avec un bouclier equivalent a 30% de ses PV max.");
     }
 }

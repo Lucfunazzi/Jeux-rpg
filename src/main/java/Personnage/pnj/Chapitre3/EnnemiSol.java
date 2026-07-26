@@ -95,6 +95,6 @@ public class EnnemiSol extends PersonnageBase {
         System.out.println("Merci la Vie — Illusion de Mémoire : Inflige 110% ATK, 50% confusion ou étourdissement, réduit ATK de 18%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Sol Liquide — Sonate de Plâtre : +30% DEF, alliés +15% DEF, 90% ATK à tous + étourdissement");
+        System.out.println("Sol Liquide — Sonate de Plâtre : augmente sa DEF de 15% pendant 3 tours, inflige 80% ATK à une cible et l'étourdit pendant 2 tours.");
     }
 }

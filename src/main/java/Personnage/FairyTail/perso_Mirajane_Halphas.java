@@ -107,7 +107,7 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
     // ── Descriptions ──────────────────────────────────────────────────────
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Griffe de Halphas — inflige 120% ATK a une cible.");
+        System.out.println("Griffe de Halphas — inflige 150% ATK a une cible.");
     }
 
     @Override

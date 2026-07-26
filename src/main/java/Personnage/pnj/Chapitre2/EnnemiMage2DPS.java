@@ -70,6 +70,6 @@ public class EnnemiMage2DPS extends PersonnageBase {
         System.out.println("Orbe de Tenebres : inflige 150% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Tempete Magique : inflige 130% ATK a toute l'equipe ennemie.");
+        System.out.println("Tempete Magique : inflige 60% ATK a toute l'equipe ennemie.");
     }
 }

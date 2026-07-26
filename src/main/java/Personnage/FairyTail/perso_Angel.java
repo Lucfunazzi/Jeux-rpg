@@ -101,7 +101,7 @@ public class perso_Angel extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Aile Celeste — inflige 120% ATK a une cible.");
+        System.out.println("Epée de Caelum — inflige 120% ATK a une cible.");
     }
 
     @Override

@@ -94,14 +94,14 @@ public class perso_Biska extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Stinger Shot — inflige 120% ATK a une cible, "
+        System.out.println("Stinger Shot — inflige 80% ATK a une cible, "
                 + "applique Saignement (3% PV/tour) pendant 2 tours. "
                 + "[Synergie Duo de tireurs] Alzack vivant : +5% ATK pendant 2 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Tir a tete chercheuse — inflige 140% ATK aux 2 ennemis ayant le plus de PV, "
+        System.out.println("Tir a tete chercheuse — inflige 120% ATK aux 2 ennemis ayant le plus de PV, "
                 + "applique Saignement (3% PV/tour) pendant 2 tours sur chacun. "
                 + "Puissance augmentee par la Rage.");
     }

@@ -79,7 +79,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Armure Adamantine — attaque à 130% un ennemi se protège avec un bouclier (50% PV max), "
+        System.out.println("Armure Adamantine — attaque à 130% un ennemi se protège avec un bouclier (30% PV max), "
                 + "augmente sa défense de 15% et son blocage de 15% pendant 3 tours.");
     }
 

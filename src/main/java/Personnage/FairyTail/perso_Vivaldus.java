@@ -25,6 +25,7 @@ public class perso_Vivaldus extends PersonnageBase {
         this.vitesse = 135 *multiplicateurRarete;
         this.taux_critiques = 0.10;
         this.degat_critiques = 1.25;
+        this.taux_precisions = 100.00;
         this.taux_esquives = 0.05;
         this.taux_blocage=0.05;
         this.reduction_blocage = 0.20;

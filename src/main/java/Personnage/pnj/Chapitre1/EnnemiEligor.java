@@ -66,7 +66,7 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal libère Storm Bringer sur toute l'équipe ennemie !");
+        log.add("Eligoal libère Mur de Vent — Prison de Tornades sur toute l'équipe ennemie !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         
@@ -87,6 +87,6 @@ public class EnnemiEligor extends PersonnageBase {
         System.out.println("Lame de Vent —  inflige 140% ATK à un ennemi.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Storm Bringer— 70% ATK à tous les ennemis, inflige saignement pendants 2 tours (5% des pv).");
+        System.out.println("Mur de Vent — Prison de Tornades — 70% ATK à tous les ennemis, inflige saignement pendants 2 tours (5% des pv).");
     }
 }

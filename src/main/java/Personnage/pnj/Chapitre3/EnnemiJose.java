@@ -94,6 +94,6 @@ public class EnnemiJose extends PersonnageBase {
         System.out.println("Méduse — Fantôme Colossal : Inflige 170% ATK, réduit DEF de 25% 3 tours, 35% étourdissement.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Vague Fantomatique — Dead Wave : +30% ATK, 140% ATK à tous, -20% ATK/DEF 3 tours, draine 12% PV.");
+        System.out.println("Vague Fantomatique — Dead Wave : +30% ATK pendant 3 tours, inflige 140% ATK à tous, réduit leur ATK de 15% pendant 2 tours, se soigne de 12% des PV max.");
     }
 }

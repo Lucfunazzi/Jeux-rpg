@@ -21,8 +21,8 @@ public class perso_Elfman extends PersonnageBase {
         this.degat_critiques = 1.30;
         this.taux_precisions = 100.00;
         this.taux_esquives = 0.08;
-        this.taux_blocage = 0.05;
-        this.reduction_blocage = 0.15;
+        this.taux_blocage = 0.10;
+        this.reduction_blocage = 0.30;
         this.degats_renvoi = 0.80;
         initialiserVieMax();
     }

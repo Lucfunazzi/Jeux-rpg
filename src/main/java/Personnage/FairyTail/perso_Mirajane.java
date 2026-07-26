@@ -2,7 +2,6 @@ package Personnage.FairyTail;
 import Combat.Combat;
 import Effets.*;
 import Personnage.PersonnageBase;
-import java.util.ArrayList;
 import java.util.List;
 public class perso_Mirajane extends PersonnageBase {
 

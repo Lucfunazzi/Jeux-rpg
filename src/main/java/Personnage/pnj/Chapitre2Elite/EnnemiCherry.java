@@ -76,12 +76,9 @@ public class EnnemiCherry extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.50;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-
-
-
-            }
-            if (Math.random() < 0.30){
-                 Combat.appliquerEffet(this, cible, new Silence(2), log);
+                if (Math.random() < 0.30){
+                    Combat.appliquerEffet(this, cible, new Silence(2), log);
+                }
             }
         }
     }
@@ -90,7 +87,7 @@ public class EnnemiCherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Contrôle des Esprits — Inflige 110% ATK et réduit l'ATK de 15% de la cible.");
+        System.out.println("Marionnette de l'Amour — Soigne l'allié le plus faible de 120% ATK et le purifie d'un effet négatif.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Marionnette de l'Amour — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");

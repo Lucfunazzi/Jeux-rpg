@@ -70,6 +70,6 @@ public class EnnemiMage7DPS extends PersonnageBase {
         System.out.println("Execution : inflige 180% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Destruction Totale : inflige 140% ATK a toute l'equipe ennemie.");
+        System.out.println("Destruction Totale : inflige 100% ATK a toute l'equipe ennemie.");
     }
 }

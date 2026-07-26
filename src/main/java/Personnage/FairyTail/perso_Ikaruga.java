@@ -26,6 +26,7 @@ public class perso_Ikaruga extends PersonnageBase {
         this.vitesse = 100 *multiplicateurRarete;
         this.taux_critiques = 0.05;
         this.degat_critiques = 1.25;
+        this.taux_precisions = 100.00;
         this.taux_esquives = 0.10;
         this.taux_blocage=0.15;
         this.reduction_blocage = 0.20;
@@ -59,7 +60,7 @@ public class perso_Ikaruga extends PersonnageBase {
         
         double degats = this.getAttaque() * 1.15;
         Combat.appliquerDegatsAvecLog(this, cibleDPS, degats, log);
-        Combat.appliquerEffet(this, cibleDPS, new Brulure(2, 0.6), log); 
+        Combat.appliquerEffet(this, cibleDPS, new Brulure(2, 0.06), log);
         Combat.appliquerEffet(this, new ContreAttaque(2,0.20), log);
     }
     

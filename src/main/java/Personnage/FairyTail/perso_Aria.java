@@ -53,7 +53,7 @@ public class perso_Aria extends PersonnageBase {
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         
-        Combat.appliquerEffet(this, cible, new Silence(2), log);
+        Combat.appliquerEffet(this, cible, new Fragilite(2,0.20), log);
     }
 
     @Override
@@ -62,18 +62,18 @@ public class perso_Aria extends PersonnageBase {
         log.add("Aria retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace autour des ennemis !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-        Combat.appliquerEffet(this, new BuffAttaque(0.25, 2), log);
+        
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                Combat.appliquerEffet(this, cible, new Silence(3), log);
-                Combat.appliquerEffet(this, cible, new ReductionAttaque(0.25, 3), log);
+                Combat.appliquerEffet(this, cible, new Poison(2,0.06), log);
+               
             }
         }
     }
 
     @Override public void descriptionAttaqueBase() { System.out.println("Zetsu — Jets Invisibles : 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Metsu — Drain Magique : 160% ATK, maudit et silence 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Zéro — Vide Absolu : +25% ATK, 120% ATK à tous (x rage), silence 3 tours, réduit ATK de 25%."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Metsu — Drain Magique : 160% ATK, fragilité de 20% pendants 2 tours."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Zéro — Vide Absolu :  120% ATK à tous , poison de 6% pendants 2 tours."); }
 }

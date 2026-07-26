@@ -2,7 +2,9 @@ package Personnage.pnj.Chapitre3;
 
 import Combat.Combat;
 import Effets.BuffAttaque;
+import Effets.Fragilite;
 import Effets.Malediction;
+import Effets.Poison;
 import Effets.ReductionAttaque;
 import Effets.Silence;
 import Personnage.PersonnageBase;
@@ -46,7 +48,7 @@ public class EnnemiAria extends PersonnageBase {
         initialiserVieMax();
     }
 
-    @Override
+  @Override
     public String[] getNomsAttaques() {
         return new String[]{"Zetsu — Jets d'Air Invisibles", "Metsu — Drain Magique", "Zéro — Vide Absolu"};
     }
@@ -56,41 +58,36 @@ public class EnnemiAria extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Aria projette des jets d'air invisible sur " + cible.getNom() + " — l'attaque est indétectable !");
         Combat.attaquer(this, cible, log);
-        
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Aria place ses mains ouvertes vers " + cible.getNom() + " — METSU ! Sa magie est aspirée et se dissipe dans l'air !");
+        log.add("Aria place ses mains vers " + cible.getNom() + " — METSU ! Sa magie est complètement aspirée !");
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Malediction(2,0.25), log);
         
+        Combat.appliquerEffet(this, cible, new Fragilite(2,0.20), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Aria retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace adverse !");
-        Combat.appliquerEffet(this, new BuffAttaque(0.25, 2), log);
+        log.add("Aria retire son bandeau — ZÉRO ! L'air est aspiré de tout l'espace autour des ennemis !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 1.20;
+                double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+                Combat.appliquerEffet(this, cible, new Poison(2,0.06), log);
                
-              
             }
         }
     }
 
-    @Override public void descriptionAttaqueBase() {
-        System.out.println("Zetsu — Jets d'Air Invisibles : Inflige 100% ATK, réduit ATK de 12% pendant 2 tours.");
-    }
-    @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Metsu — Drain Magique : Inflige 160% ATK, maudit et réduit au silence 2 tours.");
-    }
-    @Override public void descriptionAttaqueUltime() {
-        System.out.println("Zéro — Vide Absolu : +25% ATK, inflige 120% ATK à tous, silence 3 tours, réduit ATK de 25%.");
-    }
+    @Override public void descriptionAttaqueBase() { System.out.println("Zetsu — Jets Invisibles : 100% ATK."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Metsu — Drain Magique : 160% ATK, fragilité de 20% pendants 2 tours."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Zéro — Vide Absolu :  120% ATK à tous , poison de 6% pendants 2 tours."); }
 }

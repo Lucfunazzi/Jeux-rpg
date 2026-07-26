@@ -125,6 +125,6 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     @Override
     public void descriptionAttaqueUltime() { 
         System.out.println("ARC EN CIEL — Applique un bouclier à tous les alliés (sauf lui) égal à 50% des PV Max de Lucas. "
-                + "Attaque tous les ennemis à 120% ATK. S'octroie Invincibilité pendant 1 tour et ressuscite un allié KO avec 30% PV."); 
+                + "Attaque tous les ennemis à 120% ATK (bonus selon la Rage).");
     }
 }

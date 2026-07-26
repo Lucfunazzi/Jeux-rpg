@@ -70,6 +70,6 @@ public class EnnemiMage1DPS extends PersonnageBase {
         System.out.println("Sort Sombre : inflige 130% ATK a la cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Onde Magique : inflige 110% ATK a toute l'equipe ennemie.");
+        System.out.println("Onde Magique : inflige 60% ATK a toute l'equipe ennemie.");
     }
 }

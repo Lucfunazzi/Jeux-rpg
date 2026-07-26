@@ -75,7 +75,7 @@ public class perso_Miliana extends PersonnageBase{
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Arbre Marionnette — Inflige 100% ATK");
+        System.out.println("Coup de poing félin — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Entraves Féline multiples — Inflige 80% ATK aux Supports ennemis, 50% de chance d'étourdir chacun d'eux pendant 1 tour.");
