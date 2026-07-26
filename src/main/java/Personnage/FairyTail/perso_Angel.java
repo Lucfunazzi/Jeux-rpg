@@ -30,13 +30,13 @@ public class perso_Angel extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Aile Celeste", "Caelum", "Aries"};
+        return new String[]{"Epée de caelum", "Caelum", "Aries"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Angel utilise epée de calium " + cible.getNom() + " !");
+        log.add("Angel utilise epée de caelum " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }

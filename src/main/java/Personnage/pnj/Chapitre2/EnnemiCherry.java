@@ -79,9 +79,7 @@ public class EnnemiCherry extends PersonnageBase {
                
                 
             }
-            if (Math.random() < 0.30){
-                 Combat.appliquerEffet(this, cible, new Silence(2), log);
-            }
+           
         }
     }
 

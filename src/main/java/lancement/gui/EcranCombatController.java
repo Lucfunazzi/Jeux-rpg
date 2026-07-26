@@ -106,7 +106,7 @@ public class EcranCombatController {
         INFOS_EFFETS.put("Gel",              new EffetInfo("Ne peut plus agir tant que l'effet dure.", false, "#7fd6e8"));
         INFOS_EFFETS.put("Petrification",    new EffetInfo("Ne peut pas agir tant que l'effet dure.", false, "#8a8a8a"));
         INFOS_EFFETS.put("Etourdissement",   new EffetInfo("Passe son prochain tour.", false, "#e0c22a"));
-        INFOS_EFFETS.put("Silence",          new EffetInfo("Ne peut plus utiliser de competence speciale.", false, "#6a5a8a"));
+        INFOS_EFFETS.put("Silence",          new EffetInfo("Ne peut plus utiliser de competence speciale ni ultime.", false, "#6a5a8a"));
         INFOS_EFFETS.put("Sommeil",          new EffetInfo("Dort et ne peut pas agir.", false, "#4a4a8a"));
         INFOS_EFFETS.put("Paralysie",        new EffetInfo("Chance de ne pas pouvoir agir a chaque tour.", false, "#e8e02a"));
         INFOS_EFFETS.put("Confusion",        new EffetInfo("Peut attaquer un allie par erreur.", false, "#c04ac0"));

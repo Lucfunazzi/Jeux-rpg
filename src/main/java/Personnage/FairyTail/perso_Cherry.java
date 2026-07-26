@@ -23,7 +23,7 @@ public class perso_Cherry extends PersonnageBase {
         this.degat_critiques   = 1.10;
         this.taux_precisions   = 100.00;
         this.taux_esquives     = 0.06;
-        this.taux_blocage      = 0.10;
+        this.taux_blocage      = 0.05;
         this.reduction_blocage = 0.12;
         this.degats_renvoi     = 0.80;
         initialiserVieMax();
@@ -64,9 +64,7 @@ public class perso_Cherry extends PersonnageBase {
                 double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
 
-                if (Math.random() < 0.30) {
-                    Combat.appliquerEffet(this, cible, new Silence(2), log);
-                }
+                
             }
         }
     }
@@ -78,6 +76,6 @@ public class perso_Cherry extends PersonnageBase {
         System.out.println("Marionnette de l'amour — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Forêt de l'Amour — Inflige 70% ATK à tous, 30% de chance de silence 2 tours sur chaque cible touchée.");
+        System.out.println("Forêt de l'Amour — Inflige 70% ATK à tous.");
     }
 }

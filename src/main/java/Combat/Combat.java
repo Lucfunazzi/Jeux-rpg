@@ -275,10 +275,18 @@ public class Combat {
                 List<String> log = new ArrayList<>();
 
                 if (attaquant.getRage() >= 100) {
-                    System.out.println("\n[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
-                    log.add("[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
-                    attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
-                    attaquant.reinitialiserRage();
+                    Silence silenceUltime = attaquant.getEffet(Silence.class);
+                    if (silenceUltime != null && silenceUltime.empecheSpeciale()) {
+                        System.out.println("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
+                        log.add("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
+                        attaquer(attaquant, cible, log);
+                        attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 40 : 20);
+                    } else {
+                        System.out.println("\n[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
+                        log.add("[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
+                        attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
+                        attaquant.reinitialiserRage();
+                    }
 
                 } else if (attaquant.getRage() >= 50 && !attaquant.getSpecialeUtilisee()) {
                     Silence silence = attaquant.getEffet(Silence.class);
