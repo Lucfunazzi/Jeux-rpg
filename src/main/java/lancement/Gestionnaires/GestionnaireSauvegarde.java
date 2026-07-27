@@ -55,6 +55,7 @@ import java.util.List;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
+import lancement.Chapitres.Chapitre4;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
@@ -170,6 +171,11 @@ public class GestionnaireSauvegarde {
         if (ctx.chapitre3 != null) {
             copierTableaux(ctx.chapitre3.getStagesDebloques(), data.chapitre3Debloques);
             copierTableaux(ctx.chapitre3.getStagesReussis(),   data.chapitre3Reussis);
+        }
+
+        if (ctx.chapitre4 != null) {
+            copierTableaux(ctx.chapitre4.getStagesDebloques(), data.chapitre4Debloques);
+            copierTableaux(ctx.chapitre4.getStagesReussis(),   data.chapitre4Reussis);
         }
 
         // Parchemins
@@ -652,6 +658,11 @@ public class GestionnaireSauvegarde {
     public void restaurerChapitre3(Chapitre3 c, SauvegardeData data) {
         if (data.chapitre3Debloques != null) c.setStagesDebloques(data.chapitre3Debloques);
         if (data.chapitre3Reussis   != null) c.setStagesReussis(data.chapitre3Reussis);
+    }
+
+    public void restaurerChapitre4(Chapitre4 c, SauvegardeData data) {
+        if (data.chapitre4Debloques != null) c.setStagesDebloques(data.chapitre4Debloques);
+        if (data.chapitre4Reussis   != null) c.setStagesReussis(data.chapitre4Reussis);
     }
 
     public void restaurerChapitre2Elite2(Chapitre2Elite c, SauvegardeData data) {

@@ -248,36 +248,69 @@ private void initialiserRecompensesPersonnages() {
                 "Jose Porla — Maitre de Phantom Lord", "Terminez le stage 10 du Chapitre 3.",
                 3, 10, false, 43950, 8000, 200));
 
+        // ── Chapitre 3 Elite (niv 35 → 41 | total ~1 461 000 XP) ────────────
         quetesProgression.add(new QueteProgression("C3E1",
                 "L'assaut de Phantom Lord Renforce", "Terminez le stage 1 du Chapitre 3 Elite.",
-                3, 1, true, 320000, 4000, 0));
+                3, 1, true, 141000, 4000, 0));
         quetesProgression.add(new QueteProgression("C3E2",
                 "Totomaru — Sept Flammes d'Elite", "Terminez le stage 2 du Chapitre 3 Elite.",
-                3, 2, true, 325000, 4500, 0));
+                3, 2, true, 143000, 4500, 0));
         quetesProgression.add(new QueteProgression("C3E3",
                 "Sol — L'Impenetrable d'Elite", "Terminez le stage 3 du Chapitre 3 Elite.",
-                3, 3, true, 328000, 5000, 0));
+                3, 3, true, 145000, 5000, 0));
         quetesProgression.add(new QueteProgression("C3E4",
                 "L'Element 4 Renforce", "Terminez le stage 4 du Chapitre 3 Elite.",
-                3, 4, true, 330000, 5500, 0));
+                3, 4, true, 146000, 5500, 0));
         quetesProgression.add(new QueteProgression("C3E5",
                 "Jubia — L'Eau qui Brise d'Elite", "Terminez le stage 5 du Chapitre 3 Elite.",
-                3, 5, true, 330000, 6000, 0));
+                3, 5, true, 146000, 6000, 0));
         quetesProgression.add(new QueteProgression("C3E6",
                 "L'Element 4 Complet d'Elite", "Terminez le stage 6 du Chapitre 3 Elite.",
-                3, 6, true, 333000, 6500, 0));
+                3, 6, true, 147000, 6500, 0));
         quetesProgression.add(new QueteProgression("C3E7",
                 "Aria — Magie du Ciel Vide Transcendee", "Terminez le stage 7 du Chapitre 3 Elite.",
-                3, 7, true, 333000, 7000, 0));
+                3, 7, true, 147000, 7000, 0));
         quetesProgression.add(new QueteProgression("C3E8",
                 "L'Element 4 — Ultime Resistance", "Terminez le stage 8 du Chapitre 3 Elite.",
-                3, 8, true, 335000, 7500, 0));
+                3, 8, true, 148000, 7500, 0));
         quetesProgression.add(new QueteProgression("C3E9",
                 "Jose — L'Ombre Transcendee", "Terminez le stage 9 du Chapitre 3 Elite.",
-                3, 9, true, 335000, 8000, 0));
+                3, 9, true, 148000, 8000, 0));
         quetesProgression.add(new QueteProgression("C3E10",
                 "Jose Porla — Forme Spectrale Supreme", "Terminez le stage 10 du Chapitre 3 Elite.",
-                3, 10, true, 340000, 12000, 0));
+                3, 10, true, 150000, 12000, 0));
+
+        // ── Chapitre 4 normal (niv 41 → 47 | total ~4 360 000 XP) ───────────
+        quetesProgression.add(new QueteProgression("C4S1",
+                "Embuscade dans le casino", "Terminez le stage 1 du Chapitre 4.",
+                4, 1, false, 305000, 6500, 0));
+        quetesProgression.add(new QueteProgression("C4S2",
+                "Infiltration dans la tour du paradis", "Terminez le stage 2 du Chapitre 4.",
+                4, 2, false, 349000, 7000, 0));
+        quetesProgression.add(new QueteProgression("C4S3",
+                "Miaou, Il faut sauver Happy", "Terminez le stage 3 du Chapitre 4.",
+                4, 3, false, 392000, 7500, 0));
+        quetesProgression.add(new QueteProgression("C4S4",
+                "Libération d'erza", "Terminez le stage 4 du Chapitre 4.",
+                4, 4, false, 436000, 8000, 0));
+        quetesProgression.add(new QueteProgression("C4S5",
+                "Les esprits et l'eau", "Terminez le stage 5 du Chapitre 4.",
+                4, 5, false, 436000, 8500, 0));
+        quetesProgression.add(new QueteProgression("C4S6",
+                "Le hiboux assasin", "Terminez le stage 6 du Chapitre 4.",
+                4, 6, false, 480000, 9000, 0));
+        quetesProgression.add(new QueteProgression("C4S7",
+                "Epée contre Epée", "Terminez le stage 7 du Chapitre 4.",
+                4, 7, false, 480000, 9500, 0));
+        quetesProgression.add(new QueteProgression("C4S8",
+                "Ikaruga — L'Epee du Ciel", "Terminez le stage 8 du Chapitre 4.",
+                4, 8, false, 523000, 10000, 0));
+        quetesProgression.add(new QueteProgression("C4S9",
+                "Erza contre Jellal", "Terminez le stage 9 du Chapitre 4.",
+                4, 9, false, 523000, 10500, 0));
+        quetesProgression.add(new QueteProgression("C4S10",
+                "Jellal — L'Effondrement de la Tour du Paradis", "Terminez le stage 10 du Chapitre 4.",
+                4, 10, false, 436000, 14000, 250));
     }
 
     // ── Renouvellement automatique à minuit ───────────────────────────────
@@ -424,6 +457,10 @@ private void initialiserRecompensesPersonnages() {
                     accessible      = ctx.chapitre3Elite != null && ctx.chapitre3Elite.estDebloque();
                     stagesDebloques = ctx.chapitre3Elite != null ? ctx.chapitre3Elite.getStagesDebloques() : null;
                 }
+            }
+            case 4 -> {
+                accessible      = ctx.chapitre3.getStagesReussis()[10];
+                stagesDebloques = ctx.chapitre4 != null ? ctx.chapitre4.getStagesDebloques() : null;
             }
             default -> {
                 accessible      = false;

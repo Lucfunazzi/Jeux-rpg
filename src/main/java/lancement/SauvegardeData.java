@@ -54,7 +54,10 @@ public class SauvegardeData {
     public boolean[] chapitre3Debloques = new boolean[11];
     public boolean[] chapitre3Reussis   = new boolean[11];
 
- 
+    public boolean[] chapitre4Debloques = new boolean[11];
+    public boolean[] chapitre4Reussis   = new boolean[11];
+
+
 
     // ── Recrutement ───────────────────────────────────────────────────────
     public int parcheminC;

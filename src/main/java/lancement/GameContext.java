@@ -6,6 +6,7 @@ import Personnage.PersonnageBase;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
+import lancement.Chapitres.Chapitre4;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
@@ -43,6 +44,7 @@ public class GameContext {
     public Chapitre1      chapitre1;
     public Chapitre2      chapitre2;
     public Chapitre3      chapitre3;
+    public Chapitre4      chapitre4;
 
     // ── Chapitres élite ───────────────────────────────────────────────────
     public Chapitre1Elite chapitre1Elite;
@@ -91,6 +93,7 @@ public class GameContext {
         ctx.chapitre1            = new Chapitre1();
         ctx.chapitre2            = new Chapitre2();
         ctx.chapitre3            = new Chapitre3();
+        ctx.chapitre4            = new Chapitre4();
         ctx.gestionnaireQuetes   = new GestionnaireQuetes();
         ctx.gestionnaireEnergie  = new GestionnaireEnergie();
         ctx.rangJoueur           = new RangJoueur();
@@ -123,6 +126,7 @@ public class GameContext {
         sauvegarde.restaurerChapitre1Elite(chapitre1Elite, data);
         sauvegarde.restaurerChapitre2(chapitre2, data);
         sauvegarde.restaurerChapitre3(chapitre3, data);
+        sauvegarde.restaurerChapitre4(chapitre4, data);
         sauvegarde.restaurerChapitre2Elite2(chapitre2Elite, data);
         sauvegarde.restaurerChapitre3Elite(chapitre3Elite, data);
         sauvegarde.restaurerInventaire(inventaire, data);

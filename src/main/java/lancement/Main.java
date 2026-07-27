@@ -37,7 +37,7 @@ public class Main {
         MenuAmeliorations   menuAmeliorations   = new MenuAmeliorations();
         MenuFormation       menuFormation       = new MenuFormation();
         MenuRang            menuRang            = new MenuRang();
-        MenuHistoire        menuHistoire        = new MenuHistoire(ctx.chapitre1, ctx.chapitre1Elite, ctx.chapitre2, ctx.chapitre2Elite, ctx.chapitre3, ctx.chapitre3Elite);
+        MenuHistoire        menuHistoire        = new MenuHistoire(ctx.chapitre1, ctx.chapitre1Elite, ctx.chapitre2, ctx.chapitre2Elite, ctx.chapitre3, ctx.chapitre3Elite, ctx.chapitre4);
         MenuQuetes          menuQuetes          = new MenuQuetes();
         MenuDonjon          menuDonjon          = new MenuDonjon();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();

@@ -33,6 +33,7 @@ public class EcranHistoireController {
     private void onChapitres(MouseEvent event) {
         boolean c1Fini = ctx.chapitre1.getStagesReussis()[10];
         boolean c2Fini = ctx.chapitre2.getStagesReussis()[10];
+        boolean c3Fini = ctx.chapitre3.getStagesReussis()[10];
 
         List<LigneChapitre> lignes = new ArrayList<>();
         lignes.add(new LigneChapitre("Chapitre 1 - L'Eveil", true, null,
@@ -41,6 +42,8 @@ public class EcranHistoireController {
                 2, false, ctx.chapitre2::getStagesReussis, ctx.chapitre2::getStagesDebloques, ctx.chapitre2::getTitreStage, ctx.chapitre2::lancerStage));
         lignes.add(new LigneChapitre("Chapitre 3 - Phantom Lord", c2Fini, "Terminez le Chapitre 2 pour debloquer.",
                 3, false, ctx.chapitre3::getStagesReussis, ctx.chapitre3::getStagesDebloques, ctx.chapitre3::getTitreStage, ctx.chapitre3::lancerStage));
+        lignes.add(new LigneChapitre("Chapitre 4 - La Tour du Paradis", c3Fini, "Terminez le Chapitre 3 pour debloquer.",
+                4, false, ctx.chapitre4::getStagesReussis, ctx.chapitre4::getStagesDebloques, ctx.chapitre4::getTitreStage, ctx.chapitre4::lancerStage));
 
         naviguerVersListe(event, "CHAPITRES", lignes);
     }

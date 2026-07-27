@@ -6,6 +6,7 @@ import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
 import lancement.Chapitres.Chapitre3;
+import lancement.Chapitres.Chapitre4;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import java.util.Scanner;
@@ -18,14 +19,16 @@ public class MenuHistoire {
     private final Chapitre2Elite chapitre2Elite;
     private final Chapitre3Elite chapitre3Elite;
     private final Chapitre3      chapitre3;
+    private final Chapitre4      chapitre4;
 
-    public MenuHistoire(Chapitre1 chapitre1, Chapitre1Elite chapitre1Elite, Chapitre2 chapitre2, Chapitre2Elite chapitre2Elite, Chapitre3 chapitre3, Chapitre3Elite chapitre3Elite) {
+    public MenuHistoire(Chapitre1 chapitre1, Chapitre1Elite chapitre1Elite, Chapitre2 chapitre2, Chapitre2Elite chapitre2Elite, Chapitre3 chapitre3, Chapitre3Elite chapitre3Elite, Chapitre4 chapitre4) {
         this.chapitre1      = chapitre1;
         this.chapitre1Elite = chapitre1Elite;
         this.chapitre2      = chapitre2;
         this.chapitre2Elite = chapitre2Elite;
         this.chapitre3Elite = chapitre3Elite;
         this.chapitre3      = chapitre3;
+        this.chapitre4      = chapitre4;
     }
 
     public void afficher(GameContext ctx, Scanner scanner) {
@@ -64,6 +67,8 @@ public class MenuHistoire {
                 afficherLigneChapitreAvecCoffres(ctx, 2, false, "2. Chapitre 2 — L'Île de Galuna", true);
             if (chapitre2.getStagesReussis()[10])
                 afficherLigneChapitreAvecCoffres(ctx, 3, false, "3. Chapitre 3 — Phantom Lord", true);
+            if (chapitre3.getStagesReussis()[10])
+                afficherLigneChapitreAvecCoffres(ctx, 4, false, "4. Chapitre 4 — La Tour du Paradis", true);
 
             System.out.println("0. Retour");
             System.out.println();
@@ -87,6 +92,14 @@ public class MenuHistoire {
                 }
                 case "3c" -> {
                     if (chapitre2.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 3, false);
+                    else System.out.println("Choix invalide.");
+                }
+                case "4" -> {
+                    if (chapitre3.getStagesReussis()[10]) chapitre4.afficher(ctx, scanner);
+                    else System.out.println("Choix invalide.");
+                }
+                case "4c" -> {
+                    if (chapitre3.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 4, false);
                     else System.out.println("Choix invalide.");
                 }
                 case "0" -> retour = true;

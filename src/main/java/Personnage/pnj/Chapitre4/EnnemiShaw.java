@@ -1,28 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package Personnage.FairyTail;
+package Personnage.pnj.Chapitre4;
+
 import Combat.Combat;
 import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
+
 /**
- *
- * @author Lucas
+ * Shaw — compagnon d'enfance d'Erza a la Tour du Paradis, encore sous l'emprise de
+ * Jellal lors de ce combat, rang B. Combat aux cartes dimensionnelles.
  */
-public class perso_Shaw extends PersonnageBase {
-    public perso_Shaw(){
-         this.nom    = "Shaw";
+public class EnnemiShaw extends PersonnageBase {
+
+    public EnnemiShaw() { this(47); }
+
+    public EnnemiShaw(int niveau) {
+        this.nom    = "Shaw";
+        this.niveau = niveau;
         this.type   = "Chevalier";
         this.role   = "Support";
         this.rarete = "B";
-        this.niveau = 1;
+
         double mult = 1.30;
-        this.vie     = 350 * mult;
-        this.attaque = 150 * mult;
-        this.defense = 110 * mult;
-        this.vitesse = 150 * mult;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        this.vie     = 350.0 * mult * niv;
+        this.attaque = 150.0 * mult * niv;
+        this.defense = 110.0 * mult * niv;
+        this.vitesse = 150.0 * mult * vit;
+
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.25;
         this.taux_precisions   = 100.00;
@@ -30,8 +35,10 @@ public class perso_Shaw extends PersonnageBase {
         this.taux_blocage      = 0.05;
         this.reduction_blocage = 0.08;
         this.degats_renvoi     = 0.80;
+
         initialiserVieMax();
     }
+
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Projection leger de carte", "Projection de Cartes avancée", "Cartes Dimensionnelles"};
@@ -42,7 +49,6 @@ public class perso_Shaw extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Shaw utilise projection leger de carte sur " + cible.getNom() + " !");
         Combat.attaquer(this, cible, log);
-        
     }
 
     @Override
@@ -51,8 +57,7 @@ public class perso_Shaw extends PersonnageBase {
         log.add("Shaw utilise projection de cartes avancées sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(cible, new Marquage(2,0.20), log);
-        
+        Combat.appliquerEffet(cible, new Marquage(2, 0.20), log);
     }
 
     @Override
@@ -82,7 +87,4 @@ public class perso_Shaw extends PersonnageBase {
                 + "20% de chance d'infliger Silence (2 tour) sur chacune de ces cibles, "
                 + "et Shaw gagne 10% de taux critique pendant 2 tours.");
     }
-    
-    
-    
 }

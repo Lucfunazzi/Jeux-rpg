@@ -465,23 +465,54 @@ public class EcranMenuPrincipalController {
         }
     }
 
+    private static final Object CARTE_EFFETS = new Object();
+
+    private static final String[][] EFFETS_NEGATIFS = {
+        {"Brulure", "Inflige un pourcentage des PV actuels en degats a chaque tour, pendant plusieurs tours (contourne la defense)."},
+        {"Saignement", "Inflige un pourcentage des PV max en degats a chaque tour, pendant plusieurs tours."},
+        {"Poison", "Inflige un pourcentage des PV max en degats a chaque tour ; chaque stack supplementaire augmente les degats."},
+        {"Gel", "Empeche totalement d'agir pendant plusieurs tours."},
+        {"Petrification", "Empeche d'agir et fait recevoir 20% de degats supplementaires pendant sa duree."},
+        {"Etourdissement", "Fait passer le prochain tour de la cible."},
+        {"Silence", "Empeche l'utilisation de l'attaque speciale pendant plusieurs tours."},
+        {"Paralysie", "Empeche d'agir, avec une chance de se liberer a chaque tour."},
+        {"Sommeil", "Empeche d'agir jusqu'a la fin de la duree ; se termine immediatement si la cible subit des degats."},
+        {"Confusion", "La cible attaque un allie au hasard au lieu de sa cible prevue."},
+        {"Aveuglement", "Reduit la precision, augmentant les chances de rater ses attaques."},
+        {"Ralentissement", "Reduit le gain de rage par tour."},
+        {"Reduction d'attaque", "Reduit l'attaque de base pendant plusieurs tours."},
+        {"Reduction de defense", "Reduit la defense pendant plusieurs tours."},
+        {"Reduction de vitesse", "Reduit la vitesse pendant plusieurs tours."},
+        {"Fragilite", "Augmente les degats recus pendant plusieurs tours."},
+        {"Malediction", "Reduit les soins recus pendant plusieurs tours."},
+        {"Marquage", "Augmente les degats recus pendant plusieurs tours."},
+        {"Trempe", "Rend plus vulnerable au Gel et a la Paralysie."},
+        {"Provocation", "Force la cible a attaquer en priorite l'auteur de la provocation."},
+    };
+
     @FXML
     private void onAide(ActionEvent event) {
-        List<GestionnaireTutoriel.EtapeTutoriel> disponibles = new ArrayList<>();
+        List<Object> disponibles = new ArrayList<>();
+        disponibles.add(CARTE_EFFETS);
         for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
             if (boutonsParLibelle.containsKey(e.libelle())) disponibles.add(e);
         }
-        if (disponibles.isEmpty()) return;
 
-        GestionnaireTutoriel.EtapeTutoriel choix = GuiVisuels.choisirParmiCartes(
+        Object choix = GuiVisuels.choisirParmiCartes(
                 "Aide — Tutoriels disponibles", disponibles, this::carteAide);
         if (choix == null) return;
 
-        afficherEtape(List.of(choix), 0);
+        if (choix == CARTE_EFFETS) {
+            afficherEffetsNegatifs();
+            return;
+        }
+        afficherEtape(List.of((GestionnaireTutoriel.EtapeTutoriel) choix), 0);
     }
 
-    private Node carteAide(GestionnaireTutoriel.EtapeTutoriel etape) {
-        Label titre = new Label("Tutoriel " + etape.libelle());
+    private Node carteAide(Object item) {
+        Label titre = new Label(item == CARTE_EFFETS
+                ? "Les differents effets"
+                : "Tutoriel " + ((GestionnaireTutoriel.EtapeTutoriel) item).libelle());
         titre.getStyleClass().add("item-nom");
 
         HBox carte = new HBox(titre);
@@ -490,6 +521,39 @@ public class EcranMenuPrincipalController {
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(300);
         return carte;
+    }
+
+    private void afficherEffetsNegatifs() {
+        VBox liste = new VBox(8);
+        for (String[] effet : EFFETS_NEGATIFS) {
+            Label nom = new Label(effet[0]);
+            nom.getStyleClass().add("item-nom");
+
+            Label description = new Label(effet[1]);
+            description.getStyleClass().add("item-detail");
+            description.setWrapText(true);
+            description.setMaxWidth(460);
+
+            VBox ligne = new VBox(2, nom, description);
+            ligne.setPadding(new Insets(8, 16, 8, 16));
+            ligne.getStyleClass().add("carte-item");
+            liste.getChildren().add(ligne);
+        }
+
+        ScrollPane scroll = new ScrollPane(liste);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("scroll-pane");
+        scroll.setStyle("-fx-background-color: transparent;");
+        scroll.setPrefViewportWidth(520);
+        scroll.setPrefViewportHeight(480);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Les differents effets");
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("root-menu");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().setContent(scroll);
+        dialog.showAndWait();
     }
 
     @FXML
