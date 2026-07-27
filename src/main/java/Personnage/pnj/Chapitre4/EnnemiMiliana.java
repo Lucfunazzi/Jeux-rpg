@@ -54,12 +54,24 @@ public class EnnemiMiliana extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Miliana utilise entraves feline multiples sur les Supports ennemis !");
+        boolean toucheSupport = false;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals("Support")) {
+                toucheSupport = true;
                 double degats = this.getAttaque() * 0.80;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (Math.random() < 0.50) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
+                }
+            }
+        }
+        if (!toucheSupport) {
+            PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+            if (repli != null) {
+                double degats = this.getAttaque() * 0.80;
+                Combat.appliquerDegatsAvecLog(this, repli, degats, log);
+                if (Math.random() < 0.50) {
+                    Combat.appliquerEffet(this, repli, new Etourdissement(1), log);
                 }
             }
         }
@@ -70,6 +82,7 @@ public class EnnemiMiliana extends PersonnageBase {
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Miliana utilise Kitten Blast sur le Tank ennemi !");
         PersonnageBase cibleTank = Combat.cibleParRole(equipeEnnemie, "Tank");
+        if (cibleTank == null) cibleTank = Combat.choisirCible(this, equipeEnnemie);
         if (cibleTank == null) return;
         double degats = this.getAttaque() * 1.30;
         Combat.appliquerDegatsAvecLog(this, cibleTank, degats, log);

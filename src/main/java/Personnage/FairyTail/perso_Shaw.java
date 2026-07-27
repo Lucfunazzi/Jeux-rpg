@@ -59,12 +59,24 @@ public class perso_Shaw extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Shaw utilise Cartes Dimensionnelles sur le Tank et les DPS ennemis !");
+        boolean frappe = false;
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant() && (cible.getRole().equals("Tank") || cible.getRole().equals("DPS"))) {
+                frappe = true;
                 double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 if (Math.random() < 0.20) {
                     Combat.appliquerEffet(this, cible, new Silence(2), log);
+                }
+            }
+        }
+        if (!frappe) {
+            PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+            if (repli != null) {
+                double degats = this.getAttaque() * 1.20;
+                Combat.appliquerDegatsAvecLog(this, repli, degats, log);
+                if (Math.random() < 0.20) {
+                    Combat.appliquerEffet(this, repli, new Silence(2), log);
                 }
             }
         }

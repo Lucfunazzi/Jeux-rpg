@@ -242,6 +242,18 @@ public class EcranQuetesController {
         }
     }
 
+    @FXML
+    private void onRetourHistoire(ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranHistoire.fxml");
+            EcranHistoireController controller = loader.getController();
+            controller.initData(ctx);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void info(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.setTitle(titre);

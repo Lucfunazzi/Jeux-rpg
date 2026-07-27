@@ -4,6 +4,7 @@ import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -181,6 +182,18 @@ public class EcranStagesController {
     @FXML
     private void onRetour() {
         onRetour.run();
+    }
+
+    @FXML
+    private void onQuetes(ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranQuetes.fxml");
+            EcranQuetesController controller = loader.getController();
+            controller.initData(ctx);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void info(String titre, String message) {

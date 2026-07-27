@@ -191,6 +191,18 @@ public class EcranListeChapitresController {
         onRetour.run();
     }
 
+    @FXML
+    private void onQuetes(ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranQuetes.fxml");
+            EcranQuetesController controller = loader.getController();
+            controller.initData(ctx);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void info(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.setTitle(titre);

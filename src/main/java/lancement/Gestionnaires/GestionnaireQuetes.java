@@ -303,10 +303,10 @@ private void initialiserRecompensesPersonnages() {
                 "Epée contre Epée", "Terminez le stage 7 du Chapitre 4.",
                 4, 7, false, 480000, 9500, 0));
         quetesProgression.add(new QueteProgression("C4S8",
-                "Ikaruga — L'Epee du Ciel", "Terminez le stage 8 du Chapitre 4.",
+                "Erza contre Jellal — Le Passe Ressurgit", "Terminez le stage 8 du Chapitre 4.",
                 4, 8, false, 523000, 10000, 0));
         quetesProgression.add(new QueteProgression("C4S9",
-                "Erza contre Jellal", "Terminez le stage 9 du Chapitre 4.",
+                "Simon Revient — L'Assaut sur Jellal", "Terminez le stage 9 du Chapitre 4.",
                 4, 9, false, 523000, 10500, 0));
         quetesProgression.add(new QueteProgression("C4S10",
                 "Jellal — L'Effondrement de la Tour du Paradis", "Terminez le stage 10 du Chapitre 4.",

@@ -34,7 +34,10 @@
     <bottom>
         <VBox alignment="CENTER" spacing="10">
             <padding><Insets top="10" bottom="20"/></padding>
-            <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+            <HBox alignment="CENTER" spacing="10">
+                <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+                <Button text="Menu Histoire" onAction="#onRetourHistoire" styleClass="menu-bouton"/>
+            </HBox>
         </VBox>
     </bottom>
 </BorderPane>

@@ -48,6 +48,10 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     log.add("Natsu utilise Poings d'acier du dragon de feu !");
     List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
     if (attaquants.isEmpty()) {
+        PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+        if (repli != null) attaquants = List.of(repli);
+    }
+    if (attaquants.isEmpty()) {
         log.add("Aucun attaquant ennemi a cibler !");
     } else {
         double degats = this.getAttaque() * 0.80;
@@ -66,6 +70,10 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Lotus pourpre du dragon de feu !");
     List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
+    if (attaquants.isEmpty()) {
+        PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+        if (repli != null) attaquants = List.of(repli);
+    }
     if (attaquants.isEmpty()) {
         log.add("Aucun attaquant ennemi a cibler !");
     } else {
