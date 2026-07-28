@@ -525,6 +525,30 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         this.tauxBlocageBase    = this.taux_blocage;
     }
 
+    /**
+     * Reinitialise ce personnage au niveau 1 en annulant exactement la croissance des stats
+     * accumulee par les montees de niveau (inverse de monterDeNiveau/monterDeNiveauSilencieux).
+     * L'equipement, les etoiles, les liens et les autres bonus externes restent inchanges car
+     * ils sont recalcules dynamiquement par les getters (getAttaque(), getVieMax()...).
+     * Utilise par le transfert de niveaux entre personnages (MenuPersonnage.transfererNiveaux).
+     */
+    public void reinitialiserNiveauUn() {
+        if (this.niveau <= 1) return;
+        double diviseurStat = Math.pow(1.05, this.niveau - 1);
+        double diviseurVit  = Math.pow(1.03, this.niveau - 1);
+        this.attaqueBase /= diviseurStat;
+        this.defenseBase /= diviseurStat;
+        this.vitesseBase /= diviseurVit;
+        this.vieMax      /= diviseurStat;
+        this.attaque = this.attaqueBase;
+        this.defense = this.defenseBase;
+        this.vitesse = this.vitesseBase;
+        this.vie     = getVieMax();
+        this.niveau       = 1;
+        this.experience    = 0;
+        this.experienceMax = 300;
+    }
+
     public void ajouterEffet(Effet effet) {
         if (effet instanceof Poison) {
             Poison poisonExistant = getEffet(Poison.class);

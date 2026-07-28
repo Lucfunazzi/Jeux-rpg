@@ -227,6 +227,7 @@ public class MenuPersonnage {
             System.out.println("\nEntrez le numero du slot pour equiper/desequiper");
             if (!estJoueurPrincipal) {
                 System.out.println("P. Utiliser un Parchemin XP");
+                System.out.println("T. Transferer les niveaux vers un autre personnage");
             }
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -237,6 +238,8 @@ public class MenuPersonnage {
                 retour = true;
             } else if (!estJoueurPrincipal && input.equalsIgnoreCase("P")) {
                 utiliserParcheminXP(perso, ctx, scanner);
+            } else if (!estJoueurPrincipal && input.equalsIgnoreCase("T")) {
+                transfererNiveauxConsole(perso, ctx, scanner);
             } else {
                 int choixSlot;
                 try {
@@ -375,6 +378,108 @@ public class MenuPersonnage {
             total += seuil;
         }
         return total;
+    }
+
+    // ── Transfert de niveaux entre personnages (console) ───────────────────
+    private void transfererNiveauxConsole(PersonnageBase donneur, GameContext ctx, Scanner scanner) {
+        if (donneur.getNiveau() <= 1) {
+            System.out.println("  " + donneur.getNom() + " est deja au niveau 1, rien a transferer.");
+            return;
+        }
+
+        List<PersonnageBase> cibles = new ArrayList<>();
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p != donneur) cibles.add(p);
+        }
+        if (cibles.isEmpty()) {
+            System.out.println("  Aucun autre personnage recrute pour recevoir le transfert.");
+            return;
+        }
+
+        System.out.println("\n[ Transferer les niveaux de " + donneur.getNom() + " (Niv." + donneur.getNiveau() + ") vers... ]");
+        for (int i = 0; i < cibles.size(); i++) {
+            PersonnageBase p = cibles.get(i);
+            System.out.println("  " + (i + 1) + ". " + p.getNom() + "  Niv." + p.getNiveau() + "  [" + p.getRarete() + "]");
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > cibles.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+        PersonnageBase receveur = cibles.get(choix - 1);
+
+        int niveaux = niveauxTransferables(donneur, receveur, ctx);
+        if (niveaux <= 0) {
+            System.out.println("  " + receveur.getNom() + " est deja au niveau maximum autorise ("
+                    + ctx.joueur.getNiveau() + "), rien a transferer.");
+            return;
+        }
+
+        int cout = coutTransfertNiveaux(niveaux);
+        System.out.println("  Cout : " + cout + " or  (vous avez " + String.format("%.0f", ctx.joueur.getOr()) + ")");
+        System.out.println("  " + donneur.getNom() + " retombera au niveau 1.");
+        System.out.print("  Confirmer ? (O/N) : ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("O")) {
+            System.out.println("  Transfert annule.");
+            return;
+        }
+        if (ctx.joueur.getOr() < cout) {
+            System.out.println("  Or insuffisant.");
+            return;
+        }
+
+        ctx.joueur.retirerOr(cout);
+        System.out.println("\n>> " + transfererNiveaux(donneur, receveur, ctx));
+    }
+
+    // ── Transfert de niveaux entre personnages ─────────────────────────────
+
+    /** Cout en or pour transferer un nombre donne de niveaux (5000 or/niveau, progressif). */
+    public static int coutTransfertNiveaux(int niveaux) {
+        return 5000 * niveaux;
+    }
+
+    /**
+     * Nombre de niveaux qu'un transfert de {@code donneur} vers {@code receveur} accorderait
+     * reellement : limite par les niveaux disponibles chez le donneur (son niveau - 1, puisqu'il
+     * retombe toujours a 1) et par la place disponible chez le receveur avant le plafond du
+     * personnage principal (meme regle que les Parchemins XP).
+     */
+    public int niveauxTransferables(PersonnageBase donneur, PersonnageBase receveur, GameContext ctx) {
+        int disponibles     = donneur.getNiveau() - 1;
+        int placeReceveur   = ctx.joueur.getNiveau() - receveur.getNiveau();
+        return Math.max(0, Math.min(disponibles, placeReceveur));
+    }
+
+    /**
+     * Transfere les niveaux de {@code donneur} vers {@code receveur} (plafonne par
+     * {@link #niveauxTransferables}) : le receveur monte du nombre de niveaux calcule, le
+     * donneur retombe systematiquement au niveau 1. Ne gere pas le cout en or (a la charge de
+     * l'appelant). Retourne le message resultat.
+     */
+    public String transfererNiveaux(PersonnageBase donneur, PersonnageBase receveur, GameContext ctx) {
+        int niveaux = niveauxTransferables(donneur, receveur, ctx);
+        if (niveaux <= 0) return "Aucun niveau transferable.";
+
+        int niveauDonneurAvant = donneur.getNiveau();
+        for (int i = 0; i < niveaux; i++) {
+            receveur.monterDeNiveauSilencieux();
+        }
+        donneur.reinitialiserNiveauUn();
+        ctx.sauvegarde.sauvegarder(ctx);
+
+        return receveur.getNom() + " gagne " + niveaux + " niveau(x) (-> Niv." + receveur.getNiveau() + ") !\n"
+                + donneur.getNom() + " retombe au niveau 1 (etait Niv." + niveauDonneurAvant + ").";
     }
 
     // ── Affichage stock parchemins ─────────────────────────────────────────

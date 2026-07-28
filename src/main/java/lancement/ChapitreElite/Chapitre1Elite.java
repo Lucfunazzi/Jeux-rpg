@@ -110,12 +110,6 @@ public class Chapitre1Elite {
             ctx.gestionnaireEtoiles.mettreAJour(1, numero, true,
                     resultatStage.victoire, resultatStage.sansAllieMort, resultatStage.enMoinsDe10Tours);
 
-            if (numero == 10 && new Random().nextInt(100) < 25) {
-                ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 1);
-                System.out.println(">> Drop rare : Echarpe blanche d'Ignir !");
-                System.out.println("   (Total : "
-                        + ctx.inventaire.getQuantiteMateriau("Echarpe blanche d'Ignir") + "/50)");
-            }
         }
         return resultatStage;
     }

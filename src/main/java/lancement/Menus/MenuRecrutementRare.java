@@ -6,22 +6,33 @@ import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Natsu_Etherion;
 import Personnage.FairyTail.perso_Mirajane;
 import Personnage.FairyTail.perso_Mirajane_Halphas;
+import Personnage.FairyTail.perso_jellal;
 import Equipement.Inventaire;
+import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
 import java.util.Scanner;
 import lancement.Formation;
 import lancement.GameContext;
 
+/**
+ * Recrutement des personnages rares contre des Parchemins de Chasse A/S/SS
+ * (obtenus via le mini-jeu Chasse au tresor, voir MenuChasseTresor), un palier
+ * de raretes par personnage/evolution — pas de materiau dedie par personnage.
+ */
 public class MenuRecrutementRare {
 
-    public static final String MATERIAU_NATSU      = "Echarpe blanche d'Ignir";
-    public static final int    COUT_RECRUTEMENT    = 50;
-    public static final int    COUT_EVOLUTION      = 150;
+    public static final String PARCHEMIN_A  = GestionnaireChasseTresor.PARCHEMIN_A;
+    public static final String PARCHEMIN_S  = GestionnaireChasseTresor.PARCHEMIN_S;
+    public static final String PARCHEMIN_SS = GestionnaireChasseTresor.PARCHEMIN_SS;
 
-    public static final String MATERIAU_MIRAJANE   = "Aile de demon";
-    public static final int    COUT_MIRAJANE_S     = 100;
-    public static final int    COUT_MIRAJANE_SS    = 250;
+    public static final int COUT_RECRUTEMENT_NATSU = 30;  // Parchemin A -> Natsu [A]
+    public static final int COUT_EVOLUTION_NATSU    = 65;  // Parchemin S -> Natsu Etherion [S]
 
+    public static final int COUT_MIRAJANE_S  = 60;  // Parchemin S  -> Mirajane [S]
+    public static final int COUT_MIRAJANE_SS = 125;  // Parchemin SS -> Mirajane Halphas [SS]
+
+    public static final int COUT_JELLAL = 75;  // Parchemin S -> Jellal [S]
+    public static final int COUT_JELLAL_SS=145;
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale      joueur               = ctx.joueur;
         ArrayList<PersonnageBase>  personnagesRecruites = ctx.personnagesRecruites;
@@ -33,38 +44,53 @@ public class MenuRecrutementRare {
             System.out.println("\n========================================");
             System.out.println("       RECRUTEMENT RARE");
             System.out.println("========================================");
+            System.out.println("Parchemins de Chasse : "
+                    + inventaire.getQuantiteMateriau(PARCHEMIN_A)  + "x A  |  "
+                    + inventaire.getQuantiteMateriau(PARCHEMIN_S)  + "x S  |  "
+                    + inventaire.getQuantiteMateriau(PARCHEMIN_SS) + "x SS");
+            System.out.println("(Fouillez la Chasse au tresor pour en trouver davantage.)");
 
             // ── Natsu ──────────────────────────────────────────────────────
-            int possedeIgnir     = inventaire.getQuantiteMateriau(MATERIAU_NATSU);
+            int possedeA         = inventaire.getQuantiteMateriau(PARCHEMIN_A);
+            int possedeS         = inventaire.getQuantiteMateriau(PARCHEMIN_S);
             boolean natsuA       = dejaRecruteParNom("Natsu",           personnagesRecruites);
             boolean natsuS       = dejaRecruteParNom("Natsu Etherion",  personnagesRecruites);
 
             System.out.println();
             System.out.println("[ Natsu ]");
-            System.out.println("  1. Natsu [A]  — " + MATERIAU_NATSU
-                    + " : " + possedeIgnir + "/" + COUT_RECRUTEMENT
+            System.out.println("  1. Natsu [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_NATSU
                     + (natsuA || natsuS ? "  [DEJA RECRUTE]" : ""));
             if (natsuA) {
-                System.out.println("  2. Natsu Etherion [S]  — " + MATERIAU_NATSU
-                        + " : " + possedeIgnir + "/" + COUT_EVOLUTION
+                System.out.println("  2. Natsu Etherion [S]  — " + PARCHEMIN_S
+                        + " : " + possedeS + "/" + COUT_EVOLUTION_NATSU
                         + "  [EVOLUTION]");
             }
 
             // ── Mirajane ───────────────────────────────────────────────────
-            int possedeAile      = inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+            int possedeSS        = inventaire.getQuantiteMateriau(PARCHEMIN_SS);
             boolean miraS        = dejaRecruteParNom("Mirajane",          personnagesRecruites);
             boolean miraSS       = dejaRecruteParNom("Mirajane Halphas",  personnagesRecruites);
 
             System.out.println();
             System.out.println("[ Mirajane ]");
-            System.out.println("  3. Mirajane [S]  — " + MATERIAU_MIRAJANE
-                    + " : " + possedeAile + "/" + COUT_MIRAJANE_S
+            System.out.println("  3. Mirajane [S]  — " + PARCHEMIN_S
+                    + " : " + possedeS + "/" + COUT_MIRAJANE_S
                     + (miraS || miraSS ? "  [DEJA RECRUTE]" : ""));
             if (miraS) {
-                System.out.println("  4. Mirajane Halphas [SS]  — " + MATERIAU_MIRAJANE
-                        + " : " + possedeAile + "/" + COUT_MIRAJANE_SS
+                System.out.println("  4. Mirajane Halphas [SS]  — " + PARCHEMIN_SS
+                        + " : " + possedeSS + "/" + COUT_MIRAJANE_SS
                         + "  [EVOLUTION]");
             }
+
+            // ── Jellal ─────────────────────────────────────────────────────
+            boolean jellalRecru = dejaRecruteParNom("Jellal", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Jellal ]");
+            System.out.println("  5. Jellal [S]  — " + PARCHEMIN_S
+                    + " : " + possedeS + "/" + COUT_JELLAL
+                    + (jellalRecru ? "  [DEJA RECRUTE]" : ""));
 
             System.out.println();
             System.out.println("0. Retour");
@@ -96,6 +122,10 @@ public class MenuRecrutementRare {
                     if (!miraS) System.out.println("Vous devez d'abord recruter Mirajane [S].");
                     else tenterEvolutionMirajane(ctx, scanner);
                 }
+                case 5 -> {
+                    if (jellalRecru) System.out.println("Jellal est deja dans vos allies !");
+                    else tenterRecrutementJellal(ctx, scanner);
+                }
                 default -> System.out.println("Choix invalide.");
             }
         }
@@ -103,14 +133,14 @@ public class MenuRecrutementRare {
 
     // ── Recrutement Natsu A ───────────────────────────────────────────────
     private void tenterRecrutementNatsu(GameContext ctx, Scanner scanner) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
-        if (possede < COUT_RECRUTEMENT) {
-            System.out.println("Materiaux insuffisants : "
-                    + possede + "/" + COUT_RECRUTEMENT + " " + MATERIAU_NATSU);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_NATSU) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_RECRUTEMENT_NATSU + " " + PARCHEMIN_A);
             return;
         }
-        System.out.println("Recruter Natsu [A] pour " + COUT_RECRUTEMENT
-                + " " + MATERIAU_NATSU + " ? (1 : Oui / 2 : Non)");
+        System.out.println("Recruter Natsu [A] pour " + COUT_RECRUTEMENT_NATSU
+                + " " + PARCHEMIN_A + " ? (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
         System.out.println(">> " + recruterNatsu(ctx));
@@ -118,14 +148,14 @@ public class MenuRecrutementRare {
 
     // ── Evolution Natsu A → Natsu Etherion S ─────────────────────────────
     private void tenterEvolutionNatsu(GameContext ctx, Scanner scanner) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
-        if (possede < COUT_EVOLUTION) {
-            System.out.println("Materiaux insuffisants : "
-                    + possede + "/" + COUT_EVOLUTION + " " + MATERIAU_NATSU);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_EVOLUTION_NATSU) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_EVOLUTION_NATSU + " " + PARCHEMIN_S);
             return;
         }
         System.out.println("Evoluer Natsu [A] vers Natsu Etherion [S] pour "
-                + COUT_EVOLUTION + " " + MATERIAU_NATSU + " ?");
+                + COUT_EVOLUTION_NATSU + " " + PARCHEMIN_S + " ?");
         System.out.println("ATTENTION : Natsu [A] sera remplace definitivement. (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
@@ -134,14 +164,14 @@ public class MenuRecrutementRare {
 
     // ── Recrutement Mirajane S ────────────────────────────────────────────
     private void tenterRecrutementMirajane(GameContext ctx, Scanner scanner) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_MIRAJANE_S) {
-            System.out.println("Materiaux insuffisants : "
-                    + possede + "/" + COUT_MIRAJANE_S + " " + MATERIAU_MIRAJANE);
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_MIRAJANE_S + " " + PARCHEMIN_S);
             return;
         }
         System.out.println("Recruter Mirajane [S] pour " + COUT_MIRAJANE_S
-                + " " + MATERIAU_MIRAJANE + " ? (1 : Oui / 2 : Non)");
+                + " " + PARCHEMIN_S + " ? (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
         System.out.println(">> " + recruterMirajane(ctx));
@@ -149,29 +179,44 @@ public class MenuRecrutementRare {
 
     // ── Evolution Mirajane S → Mirajane Halphas SS ───────────────────────
     private void tenterEvolutionMirajane(GameContext ctx, Scanner scanner) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
         if (possede < COUT_MIRAJANE_SS) {
-            System.out.println("Materiaux insuffisants : "
-                    + possede + "/" + COUT_MIRAJANE_SS + " " + MATERIAU_MIRAJANE);
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_MIRAJANE_SS + " " + PARCHEMIN_SS);
             return;
         }
         System.out.println("Evoluer Mirajane [S] vers Mirajane Halphas [SS] pour "
-                + COUT_MIRAJANE_SS + " " + MATERIAU_MIRAJANE + " ?");
+                + COUT_MIRAJANE_SS + " " + PARCHEMIN_SS + " ?");
         System.out.println("ATTENTION : Mirajane [S] sera remplacee definitivement. (1 : Oui / 2 : Non)");
         if (!scanner.nextLine().trim().equals("1")) return;
 
         System.out.println(evoluerMirajane(ctx));
     }
 
+    // ── Recrutement Jellal S ──────────────────────────────────────────────
+    private void tenterRecrutementJellal(GameContext ctx, Scanner scanner) {
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_JELLAL) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_JELLAL + " " + PARCHEMIN_S);
+            return;
+        }
+        System.out.println("Recruter Jellal [S] pour " + COUT_JELLAL
+                + " " + PARCHEMIN_S + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterJellal(ctx));
+    }
+
     // ── Logique pure (reutilisable par la console et l'interface graphique) ─
 
-    /** Tente de recruter Natsu [A]. Retourne le message resultat (materiaux non deduits si echec). */
+    /** Tente de recruter Natsu [A]. Retourne le message resultat (parchemins non deduits si echec). */
     public String recruterNatsu(GameContext ctx) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
-        if (possede < COUT_RECRUTEMENT) {
-            return "Materiaux insuffisants : " + possede + "/" + COUT_RECRUTEMENT + " " + MATERIAU_NATSU;
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_NATSU) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_NATSU + " " + PARCHEMIN_A;
         }
-        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_RECRUTEMENT);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_A, COUT_RECRUTEMENT_NATSU);
         ctx.personnagesRecruites.add(new perso_Natsu());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Natsu a rejoint vos allies !";
@@ -179,9 +224,9 @@ public class MenuRecrutementRare {
 
     /** Tente de faire evoluer Natsu [A] en Natsu Etherion [S]. */
     public String evoluerNatsu(GameContext ctx) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_NATSU);
-        if (possede < COUT_EVOLUTION) {
-            return "Materiaux insuffisants : " + possede + "/" + COUT_EVOLUTION + " " + MATERIAU_NATSU;
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_EVOLUTION_NATSU) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_EVOLUTION_NATSU + " " + PARCHEMIN_S;
         }
 
         PersonnageBase natsuA = null;
@@ -192,7 +237,7 @@ public class MenuRecrutementRare {
 
         ctx.formation.retirerPersonnage(natsuA);
         ctx.personnagesRecruites.remove(natsuA);
-        ctx.inventaire.retirerMateriau(MATERIAU_NATSU, COUT_EVOLUTION);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S, COUT_EVOLUTION_NATSU);
 
         perso_Natsu_Etherion natsuS = new perso_Natsu_Etherion();
         while (natsuS.getNiveau() < natsuA.getNiveau()) natsuS.monterDeNiveau();
@@ -204,11 +249,11 @@ public class MenuRecrutementRare {
 
     /** Tente de recruter Mirajane [S]. */
     public String recruterMirajane(GameContext ctx) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_MIRAJANE_S) {
-            return "Materiaux insuffisants : " + possede + "/" + COUT_MIRAJANE_S + " " + MATERIAU_MIRAJANE;
+            return "Parchemins insuffisants : " + possede + "/" + COUT_MIRAJANE_S + " " + PARCHEMIN_S;
         }
-        ctx.inventaire.retirerMateriau(MATERIAU_MIRAJANE, COUT_MIRAJANE_S);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S, COUT_MIRAJANE_S);
         ctx.personnagesRecruites.add(new perso_Mirajane());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Mirajane a rejoint vos allies !";
@@ -216,9 +261,9 @@ public class MenuRecrutementRare {
 
     /** Tente de faire evoluer Mirajane [S] en Mirajane Halphas [SS]. */
     public String evoluerMirajane(GameContext ctx) {
-        int possede = ctx.inventaire.getQuantiteMateriau(MATERIAU_MIRAJANE);
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
         if (possede < COUT_MIRAJANE_SS) {
-            return "Materiaux insuffisants : " + possede + "/" + COUT_MIRAJANE_SS + " " + MATERIAU_MIRAJANE;
+            return "Parchemins insuffisants : " + possede + "/" + COUT_MIRAJANE_SS + " " + PARCHEMIN_SS;
         }
 
         PersonnageBase miraS = null;
@@ -229,7 +274,7 @@ public class MenuRecrutementRare {
 
         ctx.formation.retirerPersonnage(miraS);
         ctx.personnagesRecruites.remove(miraS);
-        ctx.inventaire.retirerMateriau(MATERIAU_MIRAJANE, COUT_MIRAJANE_SS);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_SS, COUT_MIRAJANE_SS);
 
         perso_Mirajane_Halphas miraSS = new perso_Mirajane_Halphas();
         while (miraSS.getNiveau() < miraS.getNiveau()) miraSS.monterDeNiveau();
@@ -237,6 +282,18 @@ public class MenuRecrutementRare {
         ctx.sauvegarde.sauvegarder(ctx);
 
         return "Mirajane a eveille sa forme demoniaque ultime !\nMirajane Halphas [SS] est desormais disponible dans votre formation.";
+    }
+
+    /** Tente de recruter Jellal [S]. Retourne le message resultat (parchemins non deduits si echec). */
+    public String recruterJellal(GameContext ctx) {
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_JELLAL) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_JELLAL + " " + PARCHEMIN_S;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S, COUT_JELLAL);
+        ctx.personnagesRecruites.add(new perso_jellal());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Jellal a rejoint vos allies !";
     }
 
     // ── Utilitaire ────────────────────────────────────────────────────────

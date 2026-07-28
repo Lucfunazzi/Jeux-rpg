@@ -90,6 +90,7 @@ public class EcranMenuPrincipalController {
         List<BoutonDef> recrutementGacha = new ArrayList<>();
         if (niveau >= 6)                                       recrutementGacha.add(new BoutonDef("Recrutement", this::onRecrutement));
         if (chapitre2Fini)                                     recrutementGacha.add(new BoutonDef("Recrutement Rare", this::onRecrutementRare));
+        if (chapitre2Fini)                                     recrutementGacha.add(new BoutonDef("Chasse au tresor", this::onChasseTresor));
         recrutementGacha.add(new BoutonDef("Tirages", this::onTirages));
         if (niveau >= 6)                                       recrutementGacha.add(new BoutonDef("Etoiles & Fragments", this::onEtoiles));
 
@@ -433,6 +434,10 @@ public class EcranMenuPrincipalController {
 
     private void onRecrutementRare(ActionEvent event) {
         naviguerVers(event, "/fxml/EcranRecrutementRare.fxml", c -> ((EcranRecrutementRareController) c).initData(ctx));
+    }
+
+    private void onChasseTresor(ActionEvent event) {
+        naviguerVers(event, "/fxml/EcranChasseTresor.fxml", c -> ((EcranChasseTresorController) c).initData(ctx));
     }
 
     private void onTirages(ActionEvent event) {

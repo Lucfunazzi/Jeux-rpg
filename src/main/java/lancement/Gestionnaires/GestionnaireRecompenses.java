@@ -222,9 +222,9 @@ public class GestionnaireRecompenses {
 
     public boolean isJourReclame(int jour) { return jourReclame[jour - 1]; }
 
-    /** Materiau et quantite requise pour recruter Natsu [A] — voir MenuRecrutementRare. */
-    public static final String MATERIAU_IGNIR       = lancement.Menus.MenuRecrutementRare.MATERIAU_NATSU;
-    public static final int    QUANTITE_IGNIR_JOUR2 = lancement.Menus.MenuRecrutementRare.COUT_RECRUTEMENT;
+    /** Coup de pouce jour 2 : Parchemins de Chasse A, utilisables au Recrutement Rare. */
+    public static final String MATERIAU_PARCHEMIN_JOUR2 = GestionnaireChasseTresor.PARCHEMIN_A;
+    public static final int    QUANTITE_PARCHEMIN_JOUR2 = 10;
 
     /** Personnages proposes dans le coffre de rang S du jour 7 (l'utilisateur en choisit un). */
     public static final String[] CHOIX_COFFRE_RANG_S = {"Yukino", "Sting", "Rogue"};
@@ -232,7 +232,7 @@ public class GestionnaireRecompenses {
     public String afficherRecompenseJour(int jour) {
         return switch (jour) {
             case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie, 2x " + JetonIncursion.NOM;
-            case 2 -> QUANTITE_IGNIR_JOUR2 + "x " + MATERIAU_IGNIR + " (recrute Natsu [A] instantanement), 5x " + JetonIncursion.NOM;
+            case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 5x " + JetonIncursion.NOM;
             case 3 -> "2 Petite(s) Potion(s) d'Energie, 8x " + JetonIncursion.NOM;
             case 4 -> "3 000 or";
             case 5 -> "1 Boite de pierre Lv.1";
@@ -250,7 +250,7 @@ public class GestionnaireRecompenses {
                 inventaire.ajouterMateriau(JetonIncursion.NOM, 2);
             }
             case 2 -> {
-                inventaire.ajouterMateriau(MATERIAU_IGNIR, QUANTITE_IGNIR_JOUR2);
+                inventaire.ajouterMateriau(MATERIAU_PARCHEMIN_JOUR2, QUANTITE_PARCHEMIN_JOUR2);
                 inventaire.ajouterMateriau(JetonIncursion.NOM, 5);
             }
             case 3 -> {

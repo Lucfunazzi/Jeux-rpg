@@ -48,6 +48,7 @@ public class EcranAreneController {
 
         gestionnaireArene.chargerDepuisFirebase();
         initialiserJoueur();
+        gestionnaireArene.uploaderRangJoueur(joueurArene);
         rafraichir();
     }
 

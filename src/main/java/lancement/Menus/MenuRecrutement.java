@@ -26,6 +26,13 @@ import Personnage.FairyTail.perso_Elfman;
 import Personnage.FairyTail.perso_Lucy;
 import Personnage.FairyTail.perso_Jubia_4elements;
 import Personnage.FairyTail.perso_Ul;
+import Personnage.FairyTail.perso_Ikaruga;
+import Personnage.FairyTail.perso_Owl;
+import Personnage.FairyTail.perso_Vivaldus;
+import Personnage.FairyTail.perso_Miliana;
+import Personnage.FairyTail.perso_Wolly;
+import Personnage.FairyTail.perso_Simon;
+import Personnage.FairyTail.perso_Shaw;
 import Equipement.ParcheminXP;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,24 +64,31 @@ public class MenuRecrutement {
         new InfoPerso("Eligoal",     "DPS"),
         new InfoPerso("Cherry",      "Support"),
         new InfoPerso("Tobi",        "DPS"),
-        new InfoPerso("Yuka",        "Tank")
+        new InfoPerso("Yuka",        "Tank"),
+        new InfoPerso("Miliana",     "Support")
     );
 
     private static final List<InfoPerso> PAGE2 = List.of(
-       
+
         new InfoPerso("Kana",        "Support"),
         new InfoPerso("Levy",        "Support"),
         new InfoPerso("Lisanna",     "Support"),
         new InfoPerso("Elfman", "Tank"),
         new InfoPerso("Leon",        "DPS"),
         new InfoPerso("Totomaru",    "DPS"),
-        new InfoPerso("Sol",         "Tank")
+        new InfoPerso("Sol",         "Tank"),
+        new InfoPerso("Wolly",       "DPS"),
+        new InfoPerso("Simon",       "Tank"),
+        new InfoPerso("Shaw",        "Support")
     );
 
     private static final List<InfoPerso> PAGE3 = List.of(
         new InfoPerso("Aria",        "DPS"),
         new InfoPerso("Lucy", "Support"),
-        new InfoPerso("Jubia (phantom Lord)", "Support")
+        new InfoPerso("Jubia (phantom Lord)", "Support"),
+        new InfoPerso("Ikaruga",     "Tank"),
+        new InfoPerso("Owl",         "DPS"),
+        new InfoPerso("Vivaldus",    "Support")
     );
 
     private int parcheminC = 0;
@@ -419,6 +433,13 @@ public class MenuRecrutement {
             case "Lucy"        -> new perso_Lucy();
             case "Ul Milkovich" -> new perso_Ul();
             case "Jubia (phantom Lord)" -> new perso_Jubia_4elements();
+            case "Ikaruga"     -> new perso_Ikaruga();
+            case "Owl"         -> new perso_Owl();
+            case "Vivaldus"    -> new perso_Vivaldus();
+            case "Miliana"     -> new perso_Miliana();
+            case "Wolly"       -> new perso_Wolly();
+            case "Simon"       -> new perso_Simon();
+            case "Shaw"        -> new perso_Shaw();
             default            -> null;
         };
     }

@@ -193,21 +193,28 @@ public class MenuDonjon {
             case NORMAL -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Nab (C) | DPS: Alzack (C), Bisca (C)
+                        // Tank: Nab (C) | DPS: Alzack (C), Bisca (C) | Support: Miliana (C), Shaw (B)
                         ennemis.add(niv(new perso_Nab(),     niv));
                         ennemis.add(niv(new perso_Arzak(),  niv));
                         ennemis.add(niv(new perso_Biska(),   niv));
+                        ennemis.add(niv(new perso_Miliana(), niv));
+                        ennemis.add(niv(new perso_Shaw(),    niv));
                     }
                     case AFFINAGE -> {
-                        // Support: Levy (B), Lisanna (B)
+                        // Support: Levy (B), Lisanna (B), Miliana (C) | Tank: Simon (B) | DPS: Wolly (C)
                         ennemis.add(niv(new perso_Levy(),       niv));
                         ennemis.add(niv(new perso_Lisanna(),    niv));
+                        ennemis.add(niv(new perso_Miliana(),    niv));
+                        ennemis.add(niv(new perso_Simon(),      niv));
+                        ennemis.add(niv(new perso_Wolly(),      niv));
                     }
                     case XP -> {
-                        // Tank: Nab (C) | DPS: Elfman (C)
+                        // Tank: Nab (C) | Support: Shaw (B), Miliana (C) | DPS: Eligoal (C), Wolly (C)
                         ennemis.add(niv(new perso_Nab(),       niv));
-                        ennemis.add(niv(new perso_Elfman(),    niv));
-                        
+                        ennemis.add(niv(new perso_Eligor(),    niv));
+                        ennemis.add(niv(new perso_Shaw(),      niv));
+                        ennemis.add(niv(new perso_Miliana(),   niv));
+                        ennemis.add(niv(new perso_Wolly(),     niv));
                     }
                 }
             }
@@ -246,28 +253,28 @@ public class MenuDonjon {
             case EXTREME -> {
                 switch (type) {
                     case OR -> {
-                       
+                        // Tank: Erza (S) | DPS: Sting (S), Natsu (A), Angel (A) | Support: Yukino (S)
                         ennemis.add(niv(new perso_Erza(),      niv));
-                        ennemis.add(niv(new perso_Erza(),    niv));
                         ennemis.add(niv(new perso_Sting(),   niv));
                         ennemis.add(niv(new perso_Natsu(),     niv));
                         ennemis.add(niv(new perso_Angel(),     niv));
+                        ennemis.add(niv(new perso_Yukino(),    niv));
                     }
                     case AFFINAGE -> {
-                        
+                        // Tank: Rogue (S) | DPS: Mirajane Halphas (SS), Jellal (S) | Support: Jubia (A), Freed (A)
                         ennemis.add(niv(new perso_Mirajane_Halphas(),           niv));
                         ennemis.add(niv(new perso_Rogue(),        niv));
-                        ennemis.add(niv(new perso_Mirajane(),           niv));
-                        ennemis.add(niv(new perso_Mirajane(),      niv));
+                        ennemis.add(niv(new perso_jellal(),           niv));
                         ennemis.add(niv(new perso_Jubia_4elements(),         niv));
+                        ennemis.add(niv(new perso_Freed(),     niv));
                     }
                     case XP -> {
-                        
+                        // Tank: Ikaruga (A) | DPS: Natsu Etherion (S), Owl (A) | Support: Lucas (SS), Yukino (S)
                         ennemis.add(niv(new perso_Lucas(),           niv));
                         ennemis.add(niv(new perso_Yukino(),    niv));
                         ennemis.add(niv(new perso_Natsu_Etherion(), niv));
-                        ennemis.add(niv(new perso_Natsu(),     niv));
-                        ennemis.add(niv(new perso_Wendy(),         niv));
+                        ennemis.add(niv(new perso_Owl(),     niv));
+                        ennemis.add(niv(new perso_Ikaruga(),         niv));
                     }
                 }
             }

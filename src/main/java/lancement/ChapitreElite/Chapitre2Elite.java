@@ -124,11 +124,6 @@ public class Chapitre2Elite {
                 }
             }
 
-            if (numero == NB_STAGES && Math.random() < 0.50) {
-                ctx.inventaire.ajouterMateriau("Echarpe blanche d'Ignir", 1);
-                System.out.println("   + 1x Echarpe blanche d'Ignir !");
-            }
-
             ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
             ctx.gestionnaireQuetes.notifierStageFini(2, numero, true,
                     ctx.joueur, ctx.menuRecrutement, ctx.personnagesRecruites);

@@ -17,13 +17,7 @@ import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * Chapitre 4 — La Tour du Paradis. Une embuscade reunit d'emblee Wolly, Miliana, Shaw et
- * Simon (encore sous l'emprise de Jellal) contre l'equipe, avant que Shaw (stage 4) puis
- * Simon (stage 6) ne rejoignent la cause d'Erza. Ikaruga garde l'acces final (stage 7) avant
- * le duel scripte Erza contre Jellal (stage 8), l'assaut de toute l'equipe avec Simon (stage 9)
- * et l'affrontement final avec Natsu Etherion (stage 10).
- */
+
 public class Chapitre4 {
 
     private static final int NB_STAGES = 10;
@@ -306,7 +300,7 @@ public class Chapitre4 {
                 e.add(new EnnemiMage9Tank(48));
                 e.add(new EnnemiMage3Soigneur(48));
                 e.add(new EnnemiMage2DPS(48));
-                return new Stage(9, "Simon Revient — L'Assaut sur Jellal", 5200, 82, e);
+                return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 82, e);
             }
 
             // Stage 10 — Natsu Etherion vs Jellal + gardes generiques
@@ -333,7 +327,7 @@ public class Chapitre4 {
             case 6  -> "Le hiboux assasin";
             case 7  -> "Epée contre Epée";
             case 8  -> "Erza contre Jellal — Le Passe Ressurgit";
-            case 9  -> "Simon Revient — L'Assaut sur Jellal";
+            case 9  -> "Le sacrifice de Simon — L'Assaut sur Jellal";
             case 10 -> "Jellal — L'Effondrement de la Tour du Paradis";
             default -> "???";
         };

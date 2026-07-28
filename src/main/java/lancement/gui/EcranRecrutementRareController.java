@@ -35,29 +35,41 @@ public class EcranRecrutementRareController {
     private void rafraichir() {
         boutonsBox.getChildren().clear();
 
-        int possedeIgnir = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.MATERIAU_NATSU);
+        int possedeA  = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.PARCHEMIN_A);
+        int possedeS  = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.PARCHEMIN_S);
+        int possedeSS = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.PARCHEMIN_SS);
+
+        Label solde = new Label("Parchemins : " + possedeA + "x A  |  " + possedeS + "x S  |  " + possedeSS + "x SS");
+        solde.getStyleClass().add("item-detail");
+        boutonsBox.getChildren().add(solde);
+
         boolean natsuA = MenuRecrutementRare.dejaRecruteParNom("Natsu", ctx.personnagesRecruites);
         boolean natsuS = MenuRecrutementRare.dejaRecruteParNom("Natsu Etherion", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Natsu"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "A", possedeIgnir,
-                MenuRecrutementRare.COUT_RECRUTEMENT, natsuA || natsuS, this::confirmerEtRecruterNatsu));
+        boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "A", possedeA,
+                MenuRecrutementRare.COUT_RECRUTEMENT_NATSU, natsuA || natsuS, this::confirmerEtRecruterNatsu));
         if (natsuA) {
-            boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "S", possedeIgnir,
-                    MenuRecrutementRare.COUT_EVOLUTION, false, this::confirmerEtEvoluerNatsu));
+            boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "S", possedeS,
+                    MenuRecrutementRare.COUT_EVOLUTION_NATSU, false, this::confirmerEtEvoluerNatsu));
         }
 
-        int possedeAile = ctx.inventaire.getQuantiteMateriau(MenuRecrutementRare.MATERIAU_MIRAJANE);
         boolean miraS  = MenuRecrutementRare.dejaRecruteParNom("Mirajane", ctx.personnagesRecruites);
         boolean miraSS = MenuRecrutementRare.dejaRecruteParNom("Mirajane Halphas", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Mirajane"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "S", possedeAile,
+        boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "S", possedeS,
                 MenuRecrutementRare.COUT_MIRAJANE_S, miraS || miraSS, this::confirmerEtRecruterMirajane));
         if (miraS) {
-            boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "SS", possedeAile,
+            boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "SS", possedeSS,
                     MenuRecrutementRare.COUT_MIRAJANE_SS, false, this::confirmerEtEvoluerMirajane));
         }
+
+        boolean jellalRecru = MenuRecrutementRare.dejaRecruteParNom("Jellal", ctx.personnagesRecruites);
+
+        boutonsBox.getChildren().add(titreSection("Jellal"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Jellal", "S", possedeS,
+                MenuRecrutementRare.COUT_JELLAL, jellalRecru, this::confirmerEtRecruterJellal));
     }
 
     private Label titreSection(String texte) {
@@ -91,28 +103,34 @@ public class EcranRecrutementRareController {
     }
 
     private void confirmerEtRecruterNatsu() {
-        if (!confirmer("Recruter Natsu [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT + " " + MenuRecrutementRare.MATERIAU_NATSU + " ?")) return;
+        if (!confirmer("Recruter Natsu [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_NATSU + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterNatsu(ctx));
         rafraichir();
     }
 
     private void confirmerEtEvoluerNatsu() {
-        if (!confirmer("Evoluer Natsu [A] vers Natsu Etherion [S] pour " + MenuRecrutementRare.COUT_EVOLUTION + " " + MenuRecrutementRare.MATERIAU_NATSU
+        if (!confirmer("Evoluer Natsu [A] vers Natsu Etherion [S] pour " + MenuRecrutementRare.COUT_EVOLUTION_NATSU + " " + MenuRecrutementRare.PARCHEMIN_S
                 + " ?\nATTENTION : Natsu [A] sera remplace definitivement.")) return;
         info("Recrutement Rare", menuRecrutementRare.evoluerNatsu(ctx));
         rafraichir();
     }
 
     private void confirmerEtRecruterMirajane() {
-        if (!confirmer("Recruter Mirajane [S] pour " + MenuRecrutementRare.COUT_MIRAJANE_S + " " + MenuRecrutementRare.MATERIAU_MIRAJANE + " ?")) return;
+        if (!confirmer("Recruter Mirajane [S] pour " + MenuRecrutementRare.COUT_MIRAJANE_S + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterMirajane(ctx));
         rafraichir();
     }
 
     private void confirmerEtEvoluerMirajane() {
-        if (!confirmer("Evoluer Mirajane [S] vers Mirajane Halphas [SS] pour " + MenuRecrutementRare.COUT_MIRAJANE_SS + " " + MenuRecrutementRare.MATERIAU_MIRAJANE
+        if (!confirmer("Evoluer Mirajane [S] vers Mirajane Halphas [SS] pour " + MenuRecrutementRare.COUT_MIRAJANE_SS + " " + MenuRecrutementRare.PARCHEMIN_SS
                 + " ?\nATTENTION : Mirajane [S] sera remplacee definitivement.")) return;
         info("Recrutement Rare", menuRecrutementRare.evoluerMirajane(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterJellal() {
+        if (!confirmer("Recruter Jellal [S] pour " + MenuRecrutementRare.COUT_JELLAL + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterJellal(ctx));
         rafraichir();
     }
 

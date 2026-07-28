@@ -49,6 +49,7 @@ public class EcranFichePersonnageController {
     @FXML private VBox setBox;
     @FXML private VBox slotsBox;
     @FXML private Button parcheminButton;
+    @FXML private Button transfertButton;
 
     public void initData(GameContext ctx, PersonnageBase perso, Runnable onRetour) {
         this.ctx = ctx;
@@ -145,6 +146,12 @@ public class EcranFichePersonnageController {
         parcheminButton.setManaged(!estPrincipal);
         if (!estPrincipal) {
             parcheminButton.setText("Utiliser un Parchemin XP  (Niv." + perso.getNiveau() + " / max " + ctx.joueur.getNiveau() + ")");
+        }
+
+        transfertButton.setVisible(!estPrincipal);
+        transfertButton.setManaged(!estPrincipal);
+        if (!estPrincipal) {
+            transfertButton.setText("Transferer les niveaux vers un autre personnage");
         }
     }
 
@@ -436,6 +443,71 @@ public class EcranFichePersonnageController {
         String resultat = menuPersonnage.appliquerParcheminsXP(perso, ctx, rarete, quantite);
         info("Parchemin XP", resultat);
         rafraichir();
+    }
+
+    @FXML
+    private void onTransfererNiveaux(ActionEvent event) {
+        if (perso.getNiveau() <= 1) {
+            info("Transfert de niveaux", perso.getNom() + " est deja au niveau 1, rien a transferer.");
+            return;
+        }
+
+        List<PersonnageBase> cibles = new ArrayList<>();
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p != perso) cibles.add(p);
+        }
+        if (cibles.isEmpty()) {
+            info("Transfert de niveaux", "Aucun autre personnage recrute pour recevoir le transfert.");
+            return;
+        }
+
+        PersonnageBase receveur = GuiVisuels.choisirParmiCartes(
+                "Transferer les niveaux de " + perso.getNom() + " vers...", cibles, this::cartePersonnageChoix);
+        if (receveur == null) return;
+
+        int niveaux = menuPersonnage.niveauxTransferables(perso, receveur, ctx);
+        if (niveaux <= 0) {
+            info("Transfert de niveaux", receveur.getNom()
+                    + " est deja au niveau maximum autorise (" + ctx.joueur.getNiveau() + "), rien a transferer.");
+            return;
+        }
+
+        int cout = MenuPersonnage.coutTransfertNiveaux(niveaux);
+        if (ctx.joueur.getOr() < cout) {
+            info("Transfert de niveaux", "Or insuffisant (il faut " + cout + ", vous avez "
+                    + String.format("%.0f", ctx.joueur.getOr()) + ").");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Transferer " + niveaux + " niveau(x) de " + perso.getNom() + " (Niv." + perso.getNiveau()
+                        + ") vers " + receveur.getNom() + " (Niv." + receveur.getNiveau() + ") pour " + cout + " or ?\n"
+                        + perso.getNom() + " retombera au niveau 1.",
+                ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Transfert de niveaux");
+        confirm.setHeaderText(null);
+        styliser(confirm);
+        if (confirm.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) return;
+
+        ctx.joueur.retirerOr(cout);
+        String resultat = menuPersonnage.transfererNiveaux(perso, receveur, ctx);
+        info("Transfert de niveaux", resultat);
+        rafraichir();
+    }
+
+    private Node cartePersonnageChoix(PersonnageBase p) {
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nom = new Label(p.getNom());
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(p.getRole() + "  ·  Niv." + p.getNiveau() + "  ·  " + GuiVisuels.nomClasseAffiche(p));
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(10, badge, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(260);
+        return carte;
     }
 
     @FXML

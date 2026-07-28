@@ -205,6 +205,10 @@ public class SauvegardeData {
     public int[][]  donjonRuns        = new int[3][3];
     public String   donjonDernierReset;
 
+    // ── Chasse au tresor ─────────────────────────────────────────────────
+    public int    chasseTresorFouilles;
+    public String chasseTresorDernierReset;
+
     // ── Examen de Rang S ──────────────────────────────────────────────────
     public boolean[] examenSDejaReussi     = new boolean[11];
     public boolean[] examenSFaitAujourdhui = new boolean[11];

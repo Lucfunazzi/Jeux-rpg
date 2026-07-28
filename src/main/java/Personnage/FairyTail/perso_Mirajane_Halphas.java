@@ -22,8 +22,8 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
 
         double multiplicateurRarete = 1.75;
         this.vie      = 650 * multiplicateurRarete;   // 1137
-        this.attaque  = 260 * multiplicateurRarete;   // 455
-        this.defense  = 100 * multiplicateurRarete;   // 175
+        this.attaque  = 450 * multiplicateurRarete;   // 455
+        this.defense  = 150 * multiplicateurRarete;   // 175
         this.vitesse  = 140 * multiplicateurRarete;   // 245
 
         this.taux_critiques    = 0.25;   // +5% vs Mirajane S

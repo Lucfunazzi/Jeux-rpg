@@ -314,6 +314,10 @@ public class GestionnaireSauvegarde {
         data.donjonRuns         = ctx.gestionnaireDonjon.getRuns();
         data.donjonDernierReset = ctx.gestionnaireDonjon.getDernierReset().toString();
 
+        // Chasse au tresor
+        data.chasseTresorFouilles     = ctx.gestionnaireChasseTresor.getFouillesUtilisees();
+        data.chasseTresorDernierReset = ctx.gestionnaireChasseTresor.getDernierReset().toString();
+
         // Examen de Rang S
         data.examenSDejaReussi     = ctx.gestionnaireExamenS.getDejaReussi();
         data.examenSFaitAujourdhui = ctx.gestionnaireExamenS.getFaitAujourdhui();
@@ -684,6 +688,11 @@ public class GestionnaireSauvegarde {
     public void restaurerDonjon(GestionnaireDonjon gd, SauvegardeData data) {
         if (data.donjonRuns != null)        gd.setRuns(data.donjonRuns);
         if (data.donjonDernierReset != null) gd.setDernierReset(LocalDate.parse(data.donjonDernierReset));
+    }
+
+    public void restaurerChasseTresor(GestionnaireChasseTresor gc, SauvegardeData data) {
+        gc.setFouillesUtilisees(data.chasseTresorFouilles);
+        if (data.chasseTresorDernierReset != null) gc.setDernierReset(LocalDate.parse(data.chasseTresorDernierReset));
     }
 
     public void restaurerExamenS(GestionnaireExamenS ge, SauvegardeData data) {

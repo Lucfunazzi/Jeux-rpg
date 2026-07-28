@@ -25,21 +25,20 @@ public class GestionnaireArene {
     // dans creerPersonnageConnu() sont utilisés ici.
 
     private static final List<String> TANKS_C = List.of("Nab", "Duc Everlue", "Yuka");
-    private static final List<String> TANKS_B = List.of("Elfman", "Sol");
-    // Aucun Tank de rang A n'existe dans le package : on réutilise les Tanks B.
-    private static final List<String> TANKS_A = TANKS_B;
+    private static final List<String> TANKS_B = List.of("Elfman", "Sol", "Simon");
+    private static final List<String> TANKS_A = List.of("Ikaruga");
     private static final List<String> TANKS_S = List.of("Erza", "Rogue");
 
-    private static final List<String> SUPPORTS_C  = List.of("Cherry");
-    private static final List<String> SUPPORTS_B  = List.of("Kana", "Levy", "Lisanna");
-    private static final List<String> SUPPORTS_A  = List.of("Evergreen", "Freed", "Jubia", "Lucy", "Wendy");
+    private static final List<String> SUPPORTS_C  = List.of("Cherry", "Miliana");
+    private static final List<String> SUPPORTS_B  = List.of("Kana", "Levy", "Lisanna", "Shaw");
+    private static final List<String> SUPPORTS_A  = List.of("Evergreen", "Freed", "Jubia", "Lucy", "Wendy", "Vivaldus");
     private static final List<String> SUPPORTS_S  = List.of("Yukino");
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
-    private static final List<String> DPS_C  = List.of("Alzack", "Bisca", "Bora", "Eligoal", "Tobi");
+    private static final List<String> DPS_C  = List.of("Alzack", "Bisca", "Bora", "Eligoal", "Tobi", "Wolly");
     private static final List<String> DPS_B  = List.of("Leon", "Totomaru");
-    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria", "Bickslow");
-    private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora");
+    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria", "Bickslow", "Owl");
+    private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora", "Jellal");
     private static final List<String> DPS_SS = List.of("Mirajane Halphas", "Ul Milkovich");
 
     private static final String[] CLASSES_IA = {"Chevalier", "Chasseur de Dragon", "Mage", "Constellationniste"};
@@ -264,15 +263,18 @@ public class GestionnaireArene {
 
     public AreneData getOuCreerJoueur(String userId, String pseudo,
                                        List<String> equipeNoms, String principalNom) {
-        for (AreneData a : classement) {
-            if (a.getUserId().equals(userId)) return a;
-        }
+        int niveauMoyen = calculerNiveauMoyen(equipeNoms);
 
-        int niveauMoyen = equipeNoms.stream()
-                .map(factory)
-                .filter(p -> p != null)
-                .mapToInt(PersonnageBase::getNiveau)
-                .reduce(0, Integer::sum) / Math.max(1, equipeNoms.size());
+        // Si le profil existe deja (localement ou charge depuis Firebase), on le resynchronise
+        // sur l'equipe/niveau actuels au lieu de renvoyer tel quel le dernier instantane connu —
+        // sinon un joueur qui a progresse depuis sa premiere visite reste fige a ses stats
+        // d'origine aux yeux des autres joueurs qui l'affrontent en defense.
+        for (AreneData a : classement) {
+            if (a.getUserId().equals(userId)) {
+                a.actualiserEquipeDefensive(equipeNoms, niveauMoyen);
+                return a;
+            }
+        }
 
         AreneData nouveau = new AreneData(
             userId, pseudo, false, TAILLE_CLASSEMENT, 500, 0,
@@ -281,6 +283,14 @@ public class GestionnaireArene {
         );
         classement.set(TAILLE_CLASSEMENT - 1, nouveau);
         return nouveau;
+    }
+
+    private int calculerNiveauMoyen(List<String> equipeNoms) {
+        return equipeNoms.stream()
+                .map(factory)
+                .filter(p -> p != null)
+                .mapToInt(PersonnageBase::getNiveau)
+                .reduce(0, Integer::sum) / Math.max(1, equipeNoms.size());
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────

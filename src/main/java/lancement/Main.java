@@ -3,6 +3,7 @@ package lancement;
 import lancement.Menus.MenuAbilite;
 import lancement.Menus.MenuAmeliorations;
 import lancement.Menus.MenuArene;
+import lancement.Menus.MenuChasseTresor;
 import lancement.Menus.MenuDonjon;
 import lancement.Menus.MenuFormation;
 import lancement.Menus.MenuHistoire;
@@ -40,6 +41,7 @@ public class Main {
         MenuHistoire        menuHistoire        = new MenuHistoire(ctx.chapitre1, ctx.chapitre1Elite, ctx.chapitre2, ctx.chapitre2Elite, ctx.chapitre3, ctx.chapitre3Elite, ctx.chapitre4);
         MenuQuetes          menuQuetes          = new MenuQuetes();
         MenuDonjon          menuDonjon          = new MenuDonjon();
+        MenuChasseTresor    menuChasseTresor    = new MenuChasseTresor();
         MenuCompagnons      menuCompagnons      = new MenuCompagnons();
         Menu_Pet menuCreaturesSacrees = new Menu_Pet();
         MenuRecompenses     menuRecompenses     = new MenuRecompenses();
@@ -121,6 +123,7 @@ public class Main {
             System.out.println("17. Tirages");
             if (ctx.joueur.getNiveau() >= lancement.Gestionnaires.GestionnaireExamenS.NIVEAU_REQUIS) System.out.println("18. Examen de Rang S");
             System.out.println("19. Recompenses");
+            if (chapitre2Fini)                                                                 System.out.println("20. Chasse au tresor");
             System.out.println("12. Sauvegarder");
             System.out.println("0.  Quitter");
             System.out.print("Votre choix : ");
@@ -175,6 +178,10 @@ public class Main {
                     else System.out.println("Choix invalide.");
                 }
                 case "19" -> { menuRecompenses.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                case "20" -> {
+                    if (ctx.chapitre2.getStagesReussis()[10]) { menuChasseTresor.afficher(ctx, scanner); modifieDepuisSauvegarde = true; }
+                    else System.out.println("Choix invalide.");
+                }
                 case "0"  -> {
                     if (modifieDepuisSauvegarde) {
                         System.out.println("Vous avez des modifications non sauvegardees.");

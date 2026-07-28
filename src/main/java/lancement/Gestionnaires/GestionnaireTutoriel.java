@@ -81,9 +81,12 @@ public class GestionnaireTutoriel {
               + "remboursement partiel de l'or en cas de defaite) ou en automatique (x10 parties d'un coup). Vous pouvez "
               + "aussi echanger des parchemins de recrutement contre des Parchemins XP pour faire monter un personnage en niveau."),
         java.util.Map.entry("Recrutement Rare",
-                "Recrutez certains personnages rares grace a un materiau qui leur est propre, obtenu en jouant "
-              + "(quetes, connexion, evenements). Une fois recrute, chaque personnage rare peut ensuite evoluer "
-              + "vers une forme superieure en depensant a nouveau ce meme materiau."),
+                "Recrutez certains personnages rares (Natsu, Mirajane, Jellal...) contre des Parchemins de Chasse "
+              + "A/S/SS selon leur rarete, trouves a la Chasse au tresor. Une fois recrute, un personnage rare peut "
+              + "ensuite evoluer vers une forme superieure en depensant le palier de parchemin superieur."),
+        java.util.Map.entry("Chasse au tresor",
+                "Fouillez jusqu'a 5 emplacements par jour (reset a minuit) pour trouver des Parchemins de Chasse "
+              + "A/S/SS, utilises au Recrutement Rare pour recruter ou faire evoluer les personnages rares."),
         java.util.Map.entry("Tirages",
                 "Deux types de tirages : le Tirage Ordinaire (Parchemins Ordinaires, donne des fragments C/B/A, "
               + "avec une petite chance d'obtenir directement un personnage) et le Tirage Elite (Parchemins Elite, "

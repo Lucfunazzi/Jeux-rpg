@@ -53,6 +53,7 @@
                 </VBox>
 
                 <Button fx:id="parcheminButton" onAction="#onParcheminXP" styleClass="menu-bouton" wrapText="true" prefWidth="320"/>
+                <Button fx:id="transfertButton" onAction="#onTransfererNiveaux" styleClass="menu-bouton" wrapText="true" prefWidth="320"/>
             </VBox>
         </ScrollPane>
     </center>

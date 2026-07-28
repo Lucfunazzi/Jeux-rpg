@@ -40,6 +40,7 @@ public class MenuArene {
 
         gestionnaireArene.chargerDepuisFirebase();
         initialiserJoueur();
+        gestionnaireArene.uploaderRangJoueur(joueurArene);
 
         boolean continuer = true;
         while (continuer) continuer = afficherMenuPrincipal();

@@ -84,13 +84,12 @@ public class AreneData {
                 })
                 .collect(java.util.stream.Collectors.toList());
 
-        // Equipement fantome uniquement pour les faux joueurs (IA), selon leur position
-        // au classement — un vrai joueur adverse n'en reçoit pas.
-        if (estFauxJoueur) {
-            Equipement.Rarete rarete = EquipementFactory.rareteEnnemiPourRangArene(rang);
-            for (PersonnageBase p : equipe) {
-                EquipementFactory.equiperSetStandard(p, rarete);
-            }
+        // Equipement fantome selon la position au classement — la reconstruction de l'equipe
+        // defensive (a partir des noms) ne reprend jamais l'equipement reel des personnages,
+        // donc un vrai joueur en defense recevrait sinon une equipe totalement nue.
+        Equipement.Rarete rarete = EquipementFactory.rareteEnnemiPourRangArene(rang);
+        for (PersonnageBase p : equipe) {
+            EquipementFactory.equiperSetStandard(p, rarete);
         }
 
         return equipe;
@@ -116,4 +115,12 @@ public class AreneData {
     public void setPointsBoutique(int pts)            { this.pointsBoutique = pts; }
     public void ajouterPointsBoutique(int pts)        { this.pointsBoutique += pts; }
     public void setDerniereMiseAJour(long ts)         { this.derniereMiseAJour = ts; }
+
+    /** Resynchronise l'equipe defensive (noms + niveau moyen) sur l'etat actuel du joueur.
+     *  A appeler a chaque visite de l'arene : sans cela, l'equipe/niveau enregistres restent
+     *  figes a leur valeur de creation du profil et ne suivent plus la progression reelle. */
+    public void actualiserEquipeDefensive(List<String> equipeNoms, int niveauMoyen) {
+        this.equipeDefensiveNoms = new ArrayList<>(equipeNoms);
+        this.niveauMoyenEquipe   = niveauMoyen;
+    }
 }

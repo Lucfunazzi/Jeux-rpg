@@ -10,6 +10,7 @@ import lancement.Chapitres.Chapitre4;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
+import lancement.Gestionnaires.GestionnaireChasseTresor;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEnergie;
 import lancement.Gestionnaires.GestionnaireEtoiles;
@@ -57,6 +58,7 @@ public class GameContext {
     public GestionnaireEnergie           gestionnaireEnergie;
     public GestionnaireTitres            gestionnaireTitres;
     public GestionnaireDonjon            gestionnaireDonjon;
+    public GestionnaireChasseTresor      gestionnaireChasseTresor;
     public GestionnaireExamenS           gestionnaireExamenS;
     public GestionnaireEtoiles           gestionnaireEtoiles;
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
@@ -99,6 +101,7 @@ public class GameContext {
         ctx.rangJoueur           = new RangJoueur();
         ctx.gestionnaireTitres   = new GestionnaireTitres();
         ctx.gestionnaireDonjon   = new GestionnaireDonjon();
+        ctx.gestionnaireChasseTresor = new GestionnaireChasseTresor();
         ctx.gestionnaireExamenS  = new GestionnaireExamenS();
         ctx.menuExamenS          = new MenuExamenS();
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
@@ -136,6 +139,7 @@ public class GameContext {
         sauvegarde.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
         this.formation.appliquerBonusLiens();
         sauvegarde.restaurerDonjon(gestionnaireDonjon, data);
+        sauvegarde.restaurerChasseTresor(gestionnaireChasseTresor, data);
         sauvegarde.restaurerExamenS(gestionnaireExamenS, data);
         menuRecrutement.setParcheminC(data.parcheminC);
         menuRecrutement.setParcheminB(data.parcheminB);

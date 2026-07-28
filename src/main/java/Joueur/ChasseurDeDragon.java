@@ -76,8 +76,11 @@ public class ChasseurDeDragon implements Competences {
             List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Triples Tir du Dragon de l'eau !");
         PersonnageBase cibleFinale = Combat.choisirCible(utilisateur, equipeEnnemie);
-        double degats = utilisateur.getAttaque() * 1.30;
-        Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degats, log);
+        double degatsParTir = utilisateur.getAttaque() * 1.30 / 3;
+        for (int tir = 1; tir <= 3 && cibleFinale.estVivant(); tir++) {
+            log.add("Tir n°" + tir + " !");
+            Combat.appliquerDegatsAvecLog(utilisateur, cibleFinale, degatsParTir, log);
+        }
 
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant() && allie.getRole().equals("DPS")) {
