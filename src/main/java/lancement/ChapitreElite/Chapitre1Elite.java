@@ -2,6 +2,7 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.chapitre1Elite.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import Personnage.pnj.Chapitre1.EnnemiBora;
 import Personnage.pnj.Chapitre1.EnnemiEvaro;
 import Personnage.pnj.Chapitre1.EnnemiEligor;
@@ -14,14 +15,21 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Chapitre1Elite {
+public class Chapitre1Elite implements ChapitreElite {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
     private final boolean[] stagesReussis   = new boolean[NB_STAGES + 1];
 
+    private final Chapitre1 chapitre1;
+
     public Chapitre1Elite(Chapitre1 chapitre1) {
+        this.chapitre1     = chapitre1;
         stagesDebloques[1] = true;
+    }
+
+    public boolean estDebloque() {
+        return chapitre1.getStagesReussis()[10];
     }
 
     public void afficher(GameContext ctx, Scanner scanner) {
@@ -31,7 +39,7 @@ public class Chapitre1Elite {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("      CHAPITRE 1 ELITE — L'Eveil");
+            System.out.println("      CHAPITRE 1 ELITE — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -126,7 +134,7 @@ public class Chapitre1Elite {
         switch (numero) {
             case 1 -> {
                 ennemis.add(new EnnemiMage1DPS(niveau));ennemis.add(new EnnemiMage2DPS(niveau));
-                ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+                ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
                 Equipement arme;
                 int roll = new Random().nextInt(4);
                 if (roll == 0)      arme = EquipementFactory.lanceC();
@@ -135,39 +143,39 @@ public class Chapitre1Elite {
                 else                arme = EquipementFactory.fouetC();
                 return new Stage(1, "Prologue Elite", 100, 0, ennemis, arme);
             }
-            case 2  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 2  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(2, "Bora le charmeur Elite", 1500, 300, ennemis, EquipementFactory.couvreCheC()); }
 
-            case 3  -> { ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                        ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+            case 3  -> { ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                        ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau));
                          return new Stage(3, "Chemin vers fairy tail Elite", 2000, 310, ennemis, EquipementFactory.bottesC()); }
 
-            case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+            case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau));
                          return new Stage(4, "L'arrivée de la reine des fées Elite", 2800, 320, ennemis, EquipementFactory.jambieresC()); }
 
-            case 5  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+            case 5  -> { ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(5, "Premier mission pour Lucy Elite", 3400, 330, ennemis, EquipementFactory.mainsC()); }
 
-            case 6  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiMage7DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+            case 6  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
                         ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(6, "Le duc evarlo Elite", 3800, 340, ennemis, EquipementFactory.torseC()); }
 
 
             case 7  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiBora(niveau));
-                         ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage4Buff(niveau));
+                         ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
                          return new Stage(7, "Retour a fairy tail Elite ", 4400, 350, ennemis); }
 
 
-            case 8  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
-                         ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
+            case 8  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1_ELITE, niveau));
+                         ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
                          return new Stage(8, "Eisen Wald Elite", 5200, 360, ennemis); }
 
 
-            case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiEligor(niveau));
-                         ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
+            case 9  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiEligor(niveau));
+                         ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage6Debuff(niveau));
                          return new Stage(9, "Eligor le mage de vent Elite", 6200, 370, ennemis); }
 
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
@@ -192,6 +200,8 @@ public class Chapitre1Elite {
             default -> "???";
         };
     }
+
+    public String getNomChapitre() { return "L'Eveil"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

@@ -129,7 +129,7 @@ public class MenuRecompenses {
                 System.out.println("  " + (i + 1) + ". " + info[0] + " [" + info[1] + "] — " + prix + " points/fragment");
             }
             System.out.println("  0. Retour");
-            System.out.print("Acheter 1 fragment de qui ? ");
+            System.out.print("Acheter des fragments de qui ? ");
 
             int choix = lireChoix(scanner);
             if (choix == 0) { retour = true; continue; }
@@ -138,7 +138,12 @@ public class MenuRecompenses {
                 continue;
             }
             String[] info = catalogue.get(choix - 1);
-            System.out.println(gr.acheterFragmentBoutiqueMois(info[0], info[1], ctx.inventaire));
+
+            System.out.print("Combien de fragments de " + info[0] + " voulez-vous acheter ? ");
+            int quantite = lireChoix(scanner);
+            if (quantite <= 0) { System.out.println("Quantite invalide."); continue; }
+
+            System.out.println(gr.acheterFragmentBoutiqueMois(info[0], info[1], ctx.inventaire, quantite));
             ctx.sauvegarde.sauvegarder(ctx);
         }
     }

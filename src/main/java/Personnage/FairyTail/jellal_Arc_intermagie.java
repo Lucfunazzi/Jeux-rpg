@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class jellal_Arc_intermagie extends PersonnageBase {
     public jellal_Arc_intermagie(){
-     this.nom="Jellal";
+     this.nom="Jellal Intermagie";
          this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "SS";

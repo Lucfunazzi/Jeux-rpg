@@ -1,35 +1,12 @@
 package lancement.Menus;
 
-import lancement.Chapitres.Chapitre1;
-import lancement.Chapitres.Chapitre2;
-import lancement.ChapitreElite.Chapitre1Elite;
-import lancement.ChapitreElite.Chapitre2Elite;
-import lancement.ChapitreElite.Chapitre3Elite;
-import lancement.Chapitres.Chapitre3;
-import lancement.Chapitres.Chapitre4;
+import lancement.Chapitres.Chapitre;
+import lancement.ChapitreElite.ChapitreElite;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import java.util.Scanner;
 
 public class MenuHistoire {
-
-    private final Chapitre1      chapitre1;
-    private final Chapitre1Elite chapitre1Elite;
-    private final Chapitre2      chapitre2;
-    private final Chapitre2Elite chapitre2Elite;
-    private final Chapitre3Elite chapitre3Elite;
-    private final Chapitre3      chapitre3;
-    private final Chapitre4      chapitre4;
-
-    public MenuHistoire(Chapitre1 chapitre1, Chapitre1Elite chapitre1Elite, Chapitre2 chapitre2, Chapitre2Elite chapitre2Elite, Chapitre3 chapitre3, Chapitre3Elite chapitre3Elite, Chapitre4 chapitre4) {
-        this.chapitre1      = chapitre1;
-        this.chapitre1Elite = chapitre1Elite;
-        this.chapitre2      = chapitre2;
-        this.chapitre2Elite = chapitre2Elite;
-        this.chapitre3Elite = chapitre3Elite;
-        this.chapitre3      = chapitre3;
-        this.chapitre4      = chapitre4;
-    }
 
     public void afficher(GameContext ctx, Scanner scanner) {
         boolean retour = false;
@@ -62,50 +39,37 @@ public class MenuHistoire {
             System.out.println("            CHAPITRES");
             System.out.println("========================================");
 
-            afficherLigneChapitreAvecCoffres(ctx, 1, false, "1. Chapitre 1 — Prologue", true);
-            if (chapitre1.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 2, false, "2. Chapitre 2 — L'Île de Galuna", true);
-            if (chapitre2.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 3, false, "3. Chapitre 3 — Phantom Lord", true);
-            if (chapitre3.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 4, false, "4. Chapitre 4 — La Tour du Paradis", true);
+            for (int i = 1; i <= ctx.chapitres.size(); i++) {
+                if (chapitreNormalDebloque(ctx, i)) {
+                    Chapitre c = ctx.chapitres.get(i - 1);
+                    afficherLigneChapitreAvecCoffres(ctx, i, false,
+                            i + ". Chapitre " + i + " — " + c.getNomChapitre(), true);
+                }
+            }
 
             System.out.println("0. Retour");
             System.out.println();
             System.out.print("Votre choix : ");
 
             String choix = scanner.nextLine().trim();
-            switch (choix) {
-                case "1" -> chapitre1.afficher(ctx, scanner);
-                case "1c" -> reclamerCoffresMenu(ctx, scanner, 1, false);
-                case "2" -> {
-                    if (chapitre1.getStagesReussis()[10]) chapitre2.afficher(ctx, scanner);
-                    else System.out.println("Choix invalide.");
-                }
-                case "2c" -> {
-                    if (chapitre1.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 2, false);
-                    else System.out.println("Choix invalide.");
-                }
-                case "3" -> {
-                    if (chapitre2.getStagesReussis()[10]) chapitre3.afficher(ctx, scanner);
-                    else System.out.println("Choix invalide.");
-                }
-                case "3c" -> {
-                    if (chapitre2.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 3, false);
-                    else System.out.println("Choix invalide.");
-                }
-                case "4" -> {
-                    if (chapitre3.getStagesReussis()[10]) chapitre4.afficher(ctx, scanner);
-                    else System.out.println("Choix invalide.");
-                }
-                case "4c" -> {
-                    if (chapitre3.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 4, false);
-                    else System.out.println("Choix invalide.");
-                }
-                case "0" -> retour = true;
-                default  -> System.out.println("Choix invalide.");
+            if (choix.equals("0")) { retour = true; continue; }
+
+            boolean coffres  = choix.endsWith("c");
+            Integer numero   = parseNumeroChapitre(coffres ? choix.substring(0, choix.length() - 1) : choix);
+
+            if (numero == null || numero < 1 || numero > ctx.chapitres.size() || !chapitreNormalDebloque(ctx, numero)) {
+                System.out.println("Choix invalide.");
+                continue;
             }
+
+            if (coffres) reclamerCoffresMenu(ctx, scanner, numero, false);
+            else ctx.chapitres.get(numero - 1).afficher(ctx, scanner);
         }
+    }
+
+    /** Vrai si le chapitre normal `numero` est accessible (chapitre 1, ou chapitre precedent termine). */
+    private boolean chapitreNormalDebloque(GameContext ctx, int numero) {
+        return numero == 1 || ctx.chapitres.get(numero - 2).getStagesReussis()[10];
     }
 
     // ── Onglet Chapitres Elite ────────────────────────────────────────────
@@ -117,55 +81,51 @@ public class MenuHistoire {
             System.out.println("          CHAPITRES ELITE");
             System.out.println("========================================");
 
-            if (chapitre1.getStagesReussis()[10])
-                afficherLigneChapitreAvecCoffres(ctx, 1, true, "1. Chapitre 1 Elite", true);
-            else
-                System.out.println("[###] Chapitre 1 Elite (terminez le Chapitre 1 pour debloquer)");
-
-            if (chapitre2Elite.estDebloque())
-                afficherLigneChapitreAvecCoffres(ctx, 2, true, "2. Chapitre 2 Elite", true);
-            else
-                System.out.println("[###] Chapitre 2 Elite (terminez C1, C2 et C1 Elite pour debloquer)");
-
-            if (chapitre3Elite.estDebloque())
-                afficherLigneChapitreAvecCoffres(ctx, 3, true, "3. Chapitre 3 Elite", true);
-            else
-                System.out.println("[###] Chapitre 3 Elite (terminez C3 et C2 Elite pour debloquer)");
+            for (int i = 1; i <= ctx.chapitresElite.size(); i++) {
+                ChapitreElite ce = ctx.chapitresElite.get(i - 1);
+                if (ce.estDebloque()) {
+                    afficherLigneChapitreAvecCoffres(ctx, i, true, i + ". Chapitre " + i + " Elite", true);
+                } else {
+                    System.out.println("[###] Chapitre " + i + " Elite (" + prerequisElite(i) + ")");
+                }
+            }
 
             System.out.println("0. Retour");
             System.out.println();
             System.out.print("Votre choix : ");
 
             String choix = scanner.nextLine().trim();
-            switch (choix) {
-                case "1" -> {
-                    if (chapitre1.getStagesReussis()[10]) chapitre1Elite.afficher(ctx, scanner);
-                    else System.out.println("Terminez d'abord le Chapitre 1.");
-                }
-                case "1c" -> {
-                    if (chapitre1.getStagesReussis()[10]) reclamerCoffresMenu(ctx, scanner, 1, true);
-                    else System.out.println("Choix invalide.");
-                }
-                case "2" -> {
-                    if (chapitre2Elite.estDebloque()) chapitre2Elite.afficher(ctx, scanner);
-                    else System.out.println("Terminez le Chapitre 1, le Chapitre 2 et le Chapitre 1 Elite pour debloquer.");
-                }
-                case "2c" -> {
-                    if (chapitre2Elite.estDebloque()) reclamerCoffresMenu(ctx, scanner, 2, true);
-                    else System.out.println("Choix invalide.");
-                }
-                case "3" -> {
-                    if (chapitre3Elite.estDebloque()) chapitre3Elite.afficher(ctx, scanner);
-                    else System.out.println("Terminez le Chapitre 3 et le Chapitre 2 Elite pour debloquer.");
-                }
-                case "3c" -> {
-                    if (chapitre3Elite.estDebloque()) reclamerCoffresMenu(ctx, scanner, 3, true);
-                    else System.out.println("Choix invalide.");
-                }
-                case "0" -> retour = true;
-                default  -> System.out.println("Choix invalide.");
+            if (choix.equals("0")) { retour = true; continue; }
+
+            boolean coffres = choix.endsWith("c");
+            Integer numero  = parseNumeroChapitre(coffres ? choix.substring(0, choix.length() - 1) : choix);
+
+            if (numero == null || numero < 1 || numero > ctx.chapitresElite.size()) {
+                System.out.println("Choix invalide.");
+                continue;
             }
+
+            ChapitreElite ce = ctx.chapitresElite.get(numero - 1);
+            if (!ce.estDebloque()) {
+                System.out.println(coffres ? "Choix invalide." : "Terminez " + prerequisElite(numero) + ".");
+                continue;
+            }
+
+            if (coffres) reclamerCoffresMenu(ctx, scanner, numero, true);
+            else ce.afficher(ctx, scanner);
         }
+    }
+
+    /** Texte de prerequis affiche quand le chapitre elite `numero` n'est pas encore debloque. */
+    private String prerequisElite(int numero) {
+        return numero == 1
+                ? "terminez le Chapitre 1 pour debloquer"
+                : "terminez C" + numero + " et C" + (numero - 1) + " Elite pour debloquer";
+    }
+
+    private Integer parseNumeroChapitre(String s) {
+        try { return Integer.parseInt(s); }
+        catch (NumberFormatException e) { return null; }
     }
 
     // ── Affichage ligne chapitre avec indicateur coffres ──────────────────
@@ -183,7 +143,7 @@ public class MenuHistoire {
         boolean unDispo = ge.coffreDisponible(chapitre, elite, 1)
                        || ge.coffreDisponible(chapitre, elite, 2)
                        || ge.coffreDisponible(chapitre, elite, 3);
-        String hint = unDispo ? "  (tapez " + (elite ? chapitre : chapitre) + "c pour coffres)" : "";
+        String hint = unDispo ? "  (tapez " + chapitre + "c pour coffres)" : "";
         System.out.println(label + "  [" + etoiles + "/30★]" + coffres + hint);
     }
 

@@ -3,6 +3,7 @@ package lancement.Chapitres;
 import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre3.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Elfman;
 import Personnage.FairyTail.perso_Gray;
@@ -13,7 +14,7 @@ import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Chapitre3 {
+public class Chapitre3 implements Chapitre {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
@@ -30,7 +31,7 @@ public class Chapitre3 {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 3 — Phantom Lord");
+            System.out.println("   CHAPITRE 3 — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -86,53 +87,23 @@ public class Chapitre3 {
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = switch (numero) {
             case 2 -> {
-                perso_Natsu invite = new perso_Natsu();
-                invite.setNiveau(24);
-                invite.setVie(1300);
-                invite.setVieMax(1300);
-                invite.setAttaque(260);
-                invite.setDefense(150);
-                invite.setVitesse(150);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 24, 1300, 260, 150, 150);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 3 -> {
-                perso_Elfman invite = new perso_Elfman();
-                invite.setNiveau(26);
-                invite.setVie(1900);
-                invite.setVieMax(1900);
-                invite.setAttaque(180);
-                invite.setDefense(260);
-                invite.setVitesse(110);
+                perso_Elfman invite = Formation.creerInvite(perso_Elfman::new, 26, 1900, 180, 260, 110);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4 -> {
-                perso_Gray invite = new perso_Gray();
-                invite.setNiveau(28);
-                invite.setVie(1450);
-                invite.setVieMax(1450);
-                invite.setAttaque(270);
-                invite.setDefense(170);
-                invite.setVitesse(140);
+                perso_Gray invite = Formation.creerInvite(perso_Gray::new, 28, 1450, 270, 170, 140);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 5 -> {
-                perso_Natsu invite = new perso_Natsu();
-                invite.setNiveau(30);
-                invite.setVie(1600);
-                invite.setVieMax(1600);
-                invite.setAttaque(300);
-                invite.setDefense(180);
-                invite.setVitesse(160);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 30, 1600, 300, 180, 160);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 6, 7 -> {
-                perso_Erza invite = new perso_Erza();
-                invite.setNiveau(32);
-                invite.setVie(2100);
-                invite.setVieMax(2100);
-                invite.setAttaque(320);
-                invite.setDefense(280);
-                invite.setVitesse(150);
+                perso_Erza invite = Formation.creerInvite(perso_Erza::new, 32, 2100, 320, 280, 150);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 9 -> lancerStage9AvecMakarov(ctx, stage, estNouveau);
@@ -165,10 +136,10 @@ public class Chapitre3 {
 
             // Stage 1 — Avant-garde Phantom Lord (combat generique)
             case 1 -> {
-                e.add(new EnnemiMage9Tank(22));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 22));
                 e.add(new EnnemiMage1DPS(22));
                 e.add(new EnnemiMage2DPS(22));
-                e.add(new EnnemiMage8DPS(21));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 21));
                 e.add(new EnnemiMage3Soigneur(21));
                 return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
@@ -177,7 +148,7 @@ public class Chapitre3 {
             case 2 -> {
                 e.add(new EnnemiTotomaru(25));
                 e.add(new EnnemiMage2DPS(24));
-                e.add(new EnnemiMage9Tank(24));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 24));
                 e.add(new EnnemiMage1DPS(23));
                 e.add(new EnnemiMage3Soigneur(23));
                 return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
@@ -186,7 +157,7 @@ public class Chapitre3 {
             // Stage 3 — Elfman contre Sol + ennemis generiques
             case 3 -> {
                 e.add(new EnnemiSol(27));
-                e.add(new EnnemiMage8DPS(25));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 25));
                 e.add(new EnnemiMage6Debuff(25));
                 e.add(new EnnemiMage2DPS(24));
                 e.add(new EnnemiMage3Soigneur(24));
@@ -198,7 +169,7 @@ public class Chapitre3 {
                 e.add(new EnnemiJubia_4elements(29));
                 e.add(new EnnemiMage2DPS(27));
                 e.add(new EnnemiMage2DPS(26));
-                e.add(new EnnemiMage9Tank(25));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 25));
                 e.add(new EnnemiMage3Soigneur(25));
                 return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
             }
@@ -207,7 +178,7 @@ public class Chapitre3 {
             case 5 -> {
                 e.add(new EnnemiGadjeel(30));
                 e.add(new EnnemiMage3Soigneur(27));
-                e.add(new EnnemiMage9Tank(26));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 26));
                 e.add(new EnnemiMage2DPS(26));
                 e.add(new EnnemiMage3Soigneur(25));
                 return new Stage(5, "Natsu contre Gadjeel — Le Dragon d'Acier", 675, 35, e);
@@ -216,7 +187,7 @@ public class Chapitre3 {
             // Stage 6 — Erza contre Aria + ennemis generiques
             case 6 -> {
                 e.add(new EnnemiAria(32));
-                e.add(new EnnemiMage9Tank(30));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 30));
                 e.add(new EnnemiMage3Soigneur(29));
                 e.add(new EnnemiMage2DPS(29));
                 e.add(new EnnemiMage6Debuff(28));
@@ -226,10 +197,10 @@ public class Chapitre3 {
             // Stage 7 — Erza contre José + ennemis generiques
             case 7 -> {
                 e.add(new EnnemiJose(34));
-                e.add(new EnnemiMage9Tank(31));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 31));
                 e.add(new EnnemiMage3Soigneur(31));
                 e.add(new EnnemiMage2DPS(30));
-                e.add(new EnnemiMage8DPS(30));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 30));
                 return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 43, e);
             }
 
@@ -270,6 +241,8 @@ public class Chapitre3 {
             default -> "???";
         };
     }
+
+    public String getNomChapitre() { return "Phantom Lord"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

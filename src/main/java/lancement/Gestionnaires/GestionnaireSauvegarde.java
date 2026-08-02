@@ -3,76 +3,17 @@ package lancement.Gestionnaires;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import Joueur.Personnage_principale;
-import Joueur.Elementaliste;
-import Joueur.ChasseurDeDragon;
-import Joueur.Chevalier;
-import Joueur.Invocateur;
-import Joueur.Competences;
 import Personnage.PersonnageBase;
-
-
-import Personnage.FairyTail.*;
-
-
-
-import Personnage.FairyTail.perso_Arzak;
-import Personnage.FairyTail.perso_Biska;
-import Personnage.FairyTail.perso_Elfman;
-import Personnage.FairyTail.perso_Nab;
-import Personnage.FairyTail.perso_Levy;
-import Personnage.FairyTail.perso_Lisanna;
-import Personnage.FairyTail.perso_Bixrow;
-import Personnage.FairyTail.perso_Evergreen;
-import Personnage.FairyTail.perso_Kana;
-
-import Personnage.FairyTail.perso_Angel;
-import Personnage.FairyTail.perso_Freed;
-import Personnage.FairyTail.perso_Gajeel;
-import Personnage.FairyTail.perso_Gray;
-import Personnage.FairyTail.perso_Jubia_4elements;
-import Personnage.FairyTail.perso_Lucy;
-import Personnage.FairyTail.perso_Natsu;
-import Personnage.FairyTail.perso_Wendy;
-import Personnage.FairyTail.perso_Erza;
-import Personnage.FairyTail.perso_Mirajane;
-import Personnage.FairyTail.perso_Natsu_Etherion;
-import Personnage.FairyTail.perso_Rogue;
-import Personnage.FairyTail.perso_Sting;
-import Personnage.FairyTail.perso_Yukino;
-import Personnage.FairyTail.perso_Lucas;
-import Personnage.FairyTail.perso_Mirajane_Halphas;
-import Equipement.CarteOr;
-import Equipement.Equipement;
 import Equipement.Inventaire;
-import Equipement.Materiau;
-import Equipement.ParcheminXP;
-import Equipement.Pierre;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import lancement.Chapitres.Chapitre1;
-import lancement.Chapitres.Chapitre2;
-import lancement.Chapitres.Chapitre3;
-import lancement.Chapitres.Chapitre4;
-import lancement.ChapitreElite.Chapitre1Elite;
-import lancement.ChapitreElite.Chapitre2Elite;
+import lancement.Chapitres.Chapitre;
 import lancement.ChapitreElite.Chapitre3Elite;
+import lancement.ChapitreElite.ChapitreElite;
 import lancement.Formation;
 import lancement.GameContext;
-import lancement.Quetes.QueteJournaliere;
-import lancement.Quetes.QueteProgression;
 import lancement.RangJoueur;
 import lancement.SauvegardeData;
-import lancement.Titre;
-import lancement.Gestionnaires.GestionnaireDonjon;
-import lancement.Gestionnaires.GestionnaireExamenS;
-import lancement.Gestionnaires.GestionnaireEtoiles;
-import lancement.Gestionnaires.GestionnaireCompagnons;
-import lancement.Menus.MenuRecrutement;
-import lancement.EtoilesStage;
-import java.util.Map;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -101,82 +42,9 @@ public class GestionnaireSauvegarde {
     // ── Sauvegarde via GameContext ────────────────────────────────────────
     private SauvegardeData construireDonnees(GameContext ctx) {
         SauvegardeData data = new SauvegardeData();
-        Personnage_principale joueur = ctx.joueur;
 
-        // Joueur de base
-        data.joueurNom           = joueur.getNom();
-        data.joueurNiveau        = joueur.getNiveau();
-        data.joueurExperience    = joueur.getExperience();
-        data.joueurExperienceMax = joueur.getExperienceMax();
-        data.joueurOr            = joueur.getOr();
-        data.joueurClasse        = joueur.getChoixClasses();
-        data.joueurChoixComp     = joueur.getChoixComp();
-        data.joueurGenre         = joueur.getGenre();
-
-        // Coffre arène
-        data.dernierCoffreArene = ctx.dernierCoffreArene;
-
-        // Arbre de compétences
-        data.arbreNoeudDebloques      = joueur.getArbreCompetences().getEtatNoeuds();
-        data.arbreNoeudDebloques2     = joueur.getArbreCompetences().getEtatNoeuds2();
-        data.arbreNoeudDebloques3     = joueur.getArbreCompetences().getEtatNoeuds3();
-        data.arbrePointsDisponibles   = joueur.getArbreCompetences().getPointsDisponibles();
-        data.competenceSpecialeActive = joueur.getCompetenceSpecialeActive();
-
-        // Équipements portés par le joueur principal
-        for (Equipement e : joueur.getEquipementsPortes())
-            data.joueurEquipementsPortes.add(versEquipementData(e, 1));
-
-        // Personnages recrutés
-        for (PersonnageBase p : ctx.personnagesRecruites) {
-            SauvegardeData.PersonnageData pd = new SauvegardeData.PersonnageData(
-                p.getNom(), p.getNiveau(), p.getExperience(), p.getExperienceMax()
-            );
-            pd.nbreEtoiles = p.getNbreEtoiles();
-            for (Equipement e : p.getEquipementsPortes())
-                pd.equipementsPortes.add(versEquipementData(e, 1));
-            data.personnagesRecruites.add(pd);
-        }
-
-        // Formation
-        if (ctx.formation.getTank() != null)
-            data.formationTank = ctx.formation.getTank().getNom();
-        for (PersonnageBase a : ctx.formation.getAttaquants())
-            data.formationAttaquants.add(a.getNom());
-        for (PersonnageBase s : ctx.formation.getSupports())
-            data.formationSupports.add(s.getNom());
-
-        // Chapitre 1
-        copierTableaux(ctx.chapitre1.getStagesDebloques(), data.chapitre1Debloques);
-        copierTableaux(ctx.chapitre1.getStagesReussis(),   data.chapitre1Reussis);
-
-        // Chapitre 1 Elite
-        copierTableaux(ctx.chapitre1Elite.getStagesDebloques(), data.chapitre1EliteDebloques);
-        copierTableaux(ctx.chapitre1Elite.getStagesReussis(),   data.chapitre1EliteReussis);
-
-        // Chapitre 2
-        copierTableaux(ctx.chapitre2.getStagesDebloques(), data.chapitre2Debloques);
-        copierTableaux(ctx.chapitre2.getStagesReussis(),   data.chapitre2Reussis);
-
-        if (ctx.chapitre2Elite != null) {
-            copierTableaux(ctx.chapitre2Elite.getStagesDebloques(), data.chapitre2EliteDebloques);
-            copierTableaux(ctx.chapitre2Elite.getStagesReussis(),   data.chapitre2EliteReussis);
-        }
-        if (ctx.chapitre3Elite != null) {
-            copierTableaux(ctx.chapitre3Elite.getStagesDebloques(),  data.chapitre3EliteDebloques);
-            copierTableaux(ctx.chapitre3Elite.getStagesReussis(),    data.chapitre3EliteReussis);
-            copierTableaux(ctx.chapitre3Elite.getPremiereVictoire(), data.chapitre3ElitePremiereVictoire);
-        }
-
-        if (ctx.chapitre3 != null) {
-            copierTableaux(ctx.chapitre3.getStagesDebloques(), data.chapitre3Debloques);
-            copierTableaux(ctx.chapitre3.getStagesReussis(),   data.chapitre3Reussis);
-        }
-
-        if (ctx.chapitre4 != null) {
-            copierTableaux(ctx.chapitre4.getStagesDebloques(), data.chapitre4Debloques);
-            copierTableaux(ctx.chapitre4.getStagesReussis(),   data.chapitre4Reussis);
-        }
+        SauvegardeJoueur.sauvegarder(ctx, data);
+        SauvegardeChapitres.sauvegarder(ctx, data);
 
         // Parchemins
         data.parcheminC = ctx.menuRecrutement.getParcheminC();
@@ -193,140 +61,19 @@ public class GestionnaireSauvegarde {
         }
 
         // Inventaire
-        for (Inventaire.StackEquipement s : ctx.inventaire.getStacks())
-            data.inventaireEquipements.add(versEquipementData(s.getEquipement(), s.getQuantite()));
-
-        // Matériaux
-        for (Materiau m : ctx.inventaire.getMateriaux())
-            data.materiaux.add(new SauvegardeData.MateriauData(m.getNom(), m.getQuantite()));
-
-        // Parchemins XP (consommables)
-        for (Inventaire.StackParchemin s : ctx.inventaire.getParchemins())
-            data.inventaireParcheminsXP.add(
-                new SauvegardeData.ParcheminXPData(s.getRarete().name(), s.getQuantite()));
-
-        // Cartes d'or
-        for (Inventaire.StackCarteOr s : ctx.inventaire.getCartesOr())
-            data.inventaireCartesOr.add(
-                new SauvegardeData.CarteOrData(s.getCarte().name(), s.getQuantite()));
-
-        // Pierres (stock non equipe)
-        for (Inventaire.StackPierre s : ctx.inventaire.getPierres())
-            data.inventairePierres.add(
-                new SauvegardeData.PierreStackData(s.getType().name(), s.getNiveau(), s.getQuantite()));
+        SauvegardeInventaire.sauvegarder(ctx, data);
 
         // Quêtes
-        GestionnaireQuetes gq = ctx.gestionnaireQuetes;
-        data.dernierRenouvellementQuete = gq.getDernierRenouvellement().toString();
-        data.indexQueteJournaliere      = gq.getIndexQueteJournaliere();
-        data.quetesJournalieresActives  = new ArrayList<>();
-        for (QueteJournaliere qj : gq.getQuetesJournalieres()) {
-            SauvegardeData.QueteJournaliereData qjd = new SauvegardeData.QueteJournaliereData();
-            qjd.id            = qj.getId();
-            qjd.titre         = qj.getTitre();
-            qjd.description   = qj.getDescription();
-            qjd.typeObjectif  = qj.getTypeObjectif().name();
-            qjd.objectifCible = qj.getObjectifCible();
-            qjd.recompenseXP  = qj.getRecompenseXP();
-            qjd.recompenseOr  = qj.getRecompenseOr();
-            qjd.progression   = qj.getProgressionValeur();
-            qjd.completee     = qj.isCompletee();
-            qjd.reclamee      = qj.isReclamee();
-            data.quetesJournalieresActives.add(qjd);
-        }
-        data.pointsJournaliers       = gq.getPointsJournaliers();
-        data.barreJournaliereReclame = gq.getBarreJournaliereReclame();
-        for (QueteProgression q : gq.getToutesQuetesProgression()) {
-            if (q.isReclamee())  data.quetesProgressionReclamees.add(q.getId());
-            if (q.isCompletee()) data.quetesProgressionCompletees.add(q.getId());
-            if (q.isAcceptee())  data.quetesProgressionAcceptees.add(q.getId());
-        }
+        SauvegardeQuetes.sauvegarder(ctx, data);
 
-        // Énergie
-        GestionnaireEnergie ge = ctx.gestionnaireEnergie;
-        data.energie                 = ge.getEnergie();
-        data.derniereRechargeEnergie = ge.getDerniereRecharge().toString();
-        data.rechargesUtilisees      = ge.getRechargesUtilisees();
-        data.dernierResetRecharge    = ge.getDernierResetRecharge().toString();
-        data.runsEliteParStage       = ge.getRunsEliteParStage();
-        data.dernierResetRunsElite   = ge.getDernierResetRunsElite().toString();
+        // Énergie, donjon, chasse au tresor, examen de rang S
+        SauvegardeActivites.sauvegarder(ctx, data);
 
-        // Etoiles & coffres
-        for (Map.Entry<String, EtoilesStage> entry : ctx.gestionnaireEtoiles.getEtoilesMap().entrySet()) {
-            EtoilesStage e = entry.getValue();
-            data.etoiles.add(new SauvegardeData.EtoileData(
-                    entry.getKey(), e.isEtoile1(), e.isEtoile2(), e.isEtoile3()));
-        }
-        for (Map.Entry<String, Boolean> entry : ctx.gestionnaireEtoiles.getCoffresClaimes().entrySet()) {
-            if (Boolean.TRUE.equals(entry.getValue())) data.coffresClaimes.add(entry.getKey());
-        }
-
-        // Compagnons
-        if (ctx.gestionnaireCompagnons != null) {
-            data.compagnonsType   = ctx.gestionnaireCompagnons.getType().name();
-            data.compagnonsNiveau = ctx.gestionnaireCompagnons.getNiveau();
-        }
-
-        // Récompenses
-        if (ctx.gestionnaireRecompenses != null) {
-            GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
-            data.recompensesNiveauReclame           = gr.getNiveauReclame();
-            data.recompensesJoursCumulesMois         = gr.getJoursCumulesMois();
-            data.recompensesDernierJourMois          = gr.getDernierJourComptePointage() != null
-                    ? gr.getDernierJourComptePointage().toString() : null;
-            data.recompensesMoisCompte               = gr.getMoisComptePointage();
-            data.recompensesMoisReclame              = gr.getMoisReclame();
-            data.recompensesJourConnexion            = gr.getJourConnexion();
-            data.recompensesDernierJourConnexion     = gr.getDernierJourConnexion() != null
-                    ? gr.getDernierJourConnexion().toString() : null;
-            data.recompensesJourReclame              = gr.getJourReclame();
-            data.recompensesTerminee                 = gr.estTerminee();
-            data.recompensesDerniereReclamation30min = gr.getDerniereReclamation30min() != null
-                    ? gr.getDerniereReclamation30min().toString() : null;
-            data.recompensesPointsMois               = gr.getPointsMois();
-        }
-
-        // Créature sacrée
-        if (ctx.gestionnaireCreaturesSacrees != null) {
-            Gestionnaire_pet gcs = ctx.gestionnaireCreaturesSacrees;
-            data.creatureType             = gcs.getType().name();
-            data.creatureNiveau           = gcs.getNiveau();
-            data.creatureExperience       = gcs.getExperience();
-            data.creatureOeufDebloque     = gcs.isOeufDebloque();
-            data.creatureEntrainement     = gcs.getEntrainementActif() != null
-                    ? gcs.getEntrainementActif().name() : null;
-            data.creatureDebutEntrainement = gcs.getDebutEntrainement() != null
-                    ? gcs.getDebutEntrainement().toString() : null;
-        }
+        // Etoiles/coffres, compagnons, recompenses, creature sacree, rang & titres, tutoriel
+        SauvegardeProgression.sauvegarder(ctx, data);
 
         // Coupons
         data.coupons = ctx.coupons;
-
-        // Rang & titres (sans prestige)
-        data.rangJoueur = ctx.rangJoueur.getRangNom();
-        data.rangJoueurCoffresReclames = ctx.rangJoueur.getCoffreRangReclame();
-        for (Titre t : ctx.gestionnaireTitres.getTitresObtenus())
-            data.titresObtenus.add(t.getNom());
-        if (ctx.gestionnaireTitres.getTitreActif() != null)
-            data.titreActifNom = ctx.gestionnaireTitres.getTitreActif().getNom();
-
-        // Donjon
-        data.donjonRuns         = ctx.gestionnaireDonjon.getRuns();
-        data.donjonDernierReset = ctx.gestionnaireDonjon.getDernierReset().toString();
-
-        // Chasse au tresor
-        data.chasseTresorFouilles     = ctx.gestionnaireChasseTresor.getFouillesUtilisees();
-        data.chasseTresorDernierReset = ctx.gestionnaireChasseTresor.getDernierReset().toString();
-
-        // Examen de Rang S
-        data.examenSDejaReussi     = ctx.gestionnaireExamenS.getDejaReussi();
-        data.examenSFaitAujourdhui = ctx.gestionnaireExamenS.getFaitAujourdhui();
-        data.examenSDernierReset   = ctx.gestionnaireExamenS.getDernierReset().toString();
-
-        // Tutoriel
-        data.tutorielPropose    = ctx.gestionnaireTutoriel.isPropose();
-        data.tutorielActif      = ctx.gestionnaireTutoriel.isActif();
-        data.tutorielEtapesVues = new ArrayList<>(ctx.gestionnaireTutoriel.getEtapesVues());
 
         return data;
     }
@@ -406,41 +153,7 @@ public class GestionnaireSauvegarde {
      * Restaure aussi le coffre arène.
      */
     public Personnage_principale restaurerJoueur(SauvegardeData data, GameContext ctx) {
-        Personnage_principale joueur = new Personnage_principale(data.joueurNom, 1);
-        Competences comp = switch (data.joueurClasse) {
-            case "Mage"     -> new Elementaliste();
-            case "Chasseur de Dragon"  -> new ChasseurDeDragon();
-            case "Chevalier"           -> new Chevalier();
-            case "Constellationniste"  -> new Invocateur();
-            default         -> null;
-        };
-        joueur.setChoixClasses(data.joueurClasse);
-        joueur.appliquerStatsClasse(data.joueurClasse);
-        joueur.setChoixComp(data.joueurChoixComp);
-        joueur.setGenre(data.joueurGenre != null ? data.joueurGenre : "Homme");
-        joueur.setCompetencesChoisie(comp);
-        joueur.setOr(data.joueurOr);
-        joueur.getArbreCompetences().setEtatNoeuds(data.arbreNoeudDebloques);
-        joueur.getArbreCompetences().setPointsDisponibles(data.arbrePointsDisponibles);
-        joueur.getArbreCompetences().setEtatNoeuds2(data.arbreNoeudDebloques2);
-        joueur.getArbreCompetences().setEtatNoeuds3(data.arbreNoeudDebloques3);
-        joueur.setCompetenceSpecialeActive(data.competenceSpecialeActive);
-        while (joueur.getNiveau() < data.joueurNiveau) joueur.monterDeNiveau();
-        joueur.setExperience(data.joueurExperience);
-        joueur.setExperienceMax(data.joueurExperienceMax);
-        if (data.joueurEquipementsPortes != null)
-            for (SauvegardeData.EquipementData ed : data.joueurEquipementsPortes)
-                joueur.equiper(versEquipement(ed));
-
-        // Injection du contexte pour le multiplicateur de rang
-        joueur.setGameContext(ctx);
-
-        // Restauration du coffre arène
-        if (ctx != null) {
-            ctx.dernierCoffreArene = data.dernierCoffreArene;
-        }
-
-        return joueur;
+        return SauvegardeJoueur.restaurerJoueur(data, ctx);
     }
 
     /**
@@ -448,127 +161,44 @@ public class GestionnaireSauvegarde {
      * Le setGameContext devra être fait manuellement dans ce cas.
      */
     public Personnage_principale restaurerJoueur(SauvegardeData data) {
-        return restaurerJoueur(data, null);
+        return SauvegardeJoueur.restaurerJoueur(data, null);
     }
 
     public ArrayList<PersonnageBase> restaurerPersonnagesRecruites(SauvegardeData data) {
-        ArrayList<PersonnageBase> liste = new ArrayList<>();
-        for (SauvegardeData.PersonnageData pd : data.personnagesRecruites) {
-            PersonnageBase p = creerPersonnageParNom(pd.nom);
-            if (p != null) {
-                appliquerNiveaux(p, pd);
-                p.setNbreEtoiles(pd.nbreEtoiles);
-                if (pd.equipementsPortes != null)
-                    for (SauvegardeData.EquipementData ed : pd.equipementsPortes)
-                        p.equiper(versEquipement(ed));
-                liste.add(p);
-            }
-        }
-        return liste;
+        return SauvegardeJoueur.restaurerPersonnagesRecruites(data);
     }
 
     public void restaurerFormation(Formation formation,
                                    SauvegardeData data,
                                    ArrayList<PersonnageBase> personnagesRecruites) {
-        for (PersonnageBase p : personnagesRecruites) {
-            if (data.formationTank != null && p.getNom().equals(data.formationTank))
-                formation.ajouterPersonnage(p);
-            else if (data.formationAttaquants.contains(p.getNom()))
-                formation.ajouterPersonnage(p);
-            else if (data.formationSupports.contains(p.getNom()))
-                formation.ajouterPersonnage(p);
-        }
+        SauvegardeJoueur.restaurerFormation(formation, data, personnagesRecruites);
     }
 
-    public void restaurerChapitre1(Chapitre1 c, SauvegardeData data) {
-        c.setStagesDebloques(data.chapitre1Debloques);
-        c.setStagesReussis(data.chapitre1Reussis);
+    /** Restaure les 13 chapitres normaux depuis les maps generiques (cle = "c" + numero de chapitre). */
+    public void restaurerChapitres(java.util.List<Chapitre> chapitres,
+                                    java.util.Map<String, boolean[]> debloquesMap,
+                                    java.util.Map<String, boolean[]> reussisMap) {
+        SauvegardeChapitres.restaurerChapitres(chapitres, debloquesMap, reussisMap);
     }
 
-    public void restaurerChapitre1Elite(Chapitre1Elite c, SauvegardeData data) {
-        if (data.chapitre1EliteDebloques != null) c.setStagesDebloques(data.chapitre1EliteDebloques);
-        if (data.chapitre1EliteReussis   != null) c.setStagesReussis(data.chapitre1EliteReussis);
+    /** Restaure les 13 chapitres elite depuis les maps generiques (cle = "c" + numero de chapitre). */
+    public void restaurerChapitresElite(java.util.List<ChapitreElite> chapitresElite,
+                                         java.util.Map<String, boolean[]> debloquesMap,
+                                         java.util.Map<String, boolean[]> reussisMap) {
+        SauvegardeChapitres.restaurerChapitresElite(chapitresElite, debloquesMap, reussisMap);
     }
 
-    public void restaurerChapitre2(Chapitre2 c, SauvegardeData data) {
-        if (data.chapitre2Debloques != null) c.setStagesDebloques(data.chapitre2Debloques);
-        if (data.chapitre2Reussis   != null) c.setStagesReussis(data.chapitre2Reussis);
+    /** Specifique au Chapitre 3 Elite : restaure le suivi de premiere victoire (drop de fragments). */
+    public void restaurerChapitre3ElitePremiereVictoire(Chapitre3Elite c, SauvegardeData data) {
+        SauvegardeChapitres.restaurerChapitre3ElitePremiereVictoire(c, data);
     }
 
     public void restaurerInventaire(Inventaire inventaire, SauvegardeData data) {
-        if (data.inventaireEquipements != null)
-            for (SauvegardeData.EquipementData ed : data.inventaireEquipements) {
-                Equipement e = versEquipement(ed);
-                int q = ed.quantite > 0 ? ed.quantite : 1;
-                for (int i = 0; i < q; i++) inventaire.ajouterEquipement(e);
-            }
-        if (data.materiaux != null)
-            for (SauvegardeData.MateriauData md : data.materiaux)
-                inventaire.ajouterMateriau(md.nom, md.quantite);
-
-        // Parchemins XP
-        if (data.inventaireParcheminsXP != null)
-            for (SauvegardeData.ParcheminXPData pd : data.inventaireParcheminsXP)
-                inventaire.ajouterParcheminXP(
-                    ParcheminXP.Rarete.valueOf(pd.rarete), pd.quantite);
-
-        // Cartes d'or
-        if (data.inventaireCartesOr != null)
-            for (SauvegardeData.CarteOrData cd : data.inventaireCartesOr) {
-                try {
-                    CarteOr niveau = CarteOr.valueOf(cd.niveau);
-                    inventaire.ajouterCartesOr(niveau, cd.quantite);
-                } catch (IllegalArgumentException ignored) {}
-            }
-
-        // Pierres (stock non equipe)
-        if (data.inventairePierres != null)
-            for (SauvegardeData.PierreStackData pd : data.inventairePierres) {
-                try {
-                    inventaire.ajouterPierre(Pierre.Type.valueOf(pd.type), pd.niveau, pd.quantite);
-                } catch (IllegalArgumentException ignored) {}
-            }
+        SauvegardeInventaire.restaurer(inventaire, data);
     }
 
     public void restaurerQuetes(lancement.GameContext ctx, SauvegardeData data) {
-        GestionnaireQuetes gq = ctx.gestionnaireQuetes;
-        if (data.dernierRenouvellementQuete != null)
-            gq.setDernierRenouvellement(LocalDate.parse(data.dernierRenouvellementQuete));
-        gq.setIndexQueteJournaliere(data.indexQueteJournaliere);
-
-        if (data.quetesJournalieresActives != null && !data.quetesJournalieresActives.isEmpty()) {
-            List<QueteJournaliere> restaurees = new ArrayList<>();
-            for (SauvegardeData.QueteJournaliereData qjd : data.quetesJournalieresActives) {
-                QueteJournaliere qj = new QueteJournaliere(
-                    qjd.id, qjd.titre, qjd.description,
-                    QueteJournaliere.TypeObjectif.valueOf(qjd.typeObjectif),
-                    qjd.objectifCible, qjd.recompenseXP, qjd.recompenseOr,
-                    GestionnaireQuetes.recompensesItemsPourId(qjd.id)
-                );
-                qj.ajouterProgression(qjd.progression);
-                qj.setCompletee(qjd.completee);
-                qj.setReclamee(qjd.reclamee);
-                restaurees.add(qj);
-            }
-            gq.setQuetesJournalieres(restaurees);
-        }
-        gq.setPointsJournaliers(data.pointsJournaliers);
-        gq.setBarreJournaliereReclame(data.barreJournaliereReclame);
-
-        for (QueteProgression q : gq.getToutesQuetesProgression()) {
-            if (data.quetesProgressionReclamees.contains(q.getId())) {
-                q.setCompletee(true); q.setReclamee(true); q.setAcceptee(true);
-            } else if (data.quetesProgressionCompletees.contains(q.getId())) {
-                q.setCompletee(true); q.setAcceptee(true);
-            } else if (data.quetesProgressionAcceptees.contains(q.getId())) {
-                q.setAcceptee(true);
-            } else if (gq.stageDebloque(ctx, q.getChapitreRequis(), q.getStageRequis(), q.isElite())) {
-                // Compatibilite retroactive : ce verrou de quete n'existait pas avant cette mise
-                // a jour, donc un stage deja debloque dans une sauvegarde existante reste jouable
-                // (la quete associee est consideree comme deja acceptee).
-                q.setAcceptee(true);
-            }
-        }
+        SauvegardeQuetes.restaurer(ctx, data);
     }
 
     /**
@@ -578,127 +208,45 @@ public class GestionnaireSauvegarde {
      * fonctionnalite -> on ne propose jamais le tutoriel a un joueur qui a deja avance dans le jeu.
      */
     public void restaurerTutoriel(lancement.GameContext ctx, SauvegardeData data) {
-        GestionnaireTutoriel gt = ctx.gestionnaireTutoriel;
-        boolean sauvegardeAnterieureALaFonctionnalite = !data.tutorielPropose
-                && (ctx.joueur.getNiveau() > 1 || ctx.chapitre1.getStagesReussis()[1]);
-
-        if (sauvegardeAnterieureALaFonctionnalite) {
-            gt.setPropose(true);
-            gt.setActif(false);
-            for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
-                gt.marquerEtapeVue(e.libelle());
-            }
-        } else {
-            gt.setPropose(data.tutorielPropose);
-            gt.setActif(data.tutorielActif);
-            gt.setEtapesVues(data.tutorielEtapesVues);
-        }
+        SauvegardeProgression.restaurerTutoriel(ctx, data);
     }
 
     public void restaurerEnergie(GestionnaireEnergie ge, SauvegardeData data) {
-        ge.setEnergie(data.energie);
-        if (data.derniereRechargeEnergie != null)
-            ge.setDerniereRecharge(LocalDateTime.parse(data.derniereRechargeEnergie));
-        ge.setRechargesUtilisees(data.rechargesUtilisees);
-        if (data.dernierResetRecharge != null)
-            ge.setDernierResetRecharge(LocalDate.parse(data.dernierResetRecharge));
-        if (data.runsEliteParStage != null)
-            ge.setRunsEliteParStage(data.runsEliteParStage);
-        if (data.dernierResetRunsElite != null)
-            ge.setDernierResetRunsElite(LocalDate.parse(data.dernierResetRunsElite));
+        SauvegardeActivites.restaurerEnergie(ge, data);
     }
 
     public void restaurerRangEtTitres(RangJoueur rangJoueur,
                                        GestionnaireTitres gestionnaireTitres,
                                        SauvegardeData data) {
-        if (data.rangJoueur != null) rangJoueur.setRangDepuisNom(data.rangJoueur);
-        if (data.rangJoueurCoffresReclames != null) rangJoueur.setCoffreRangReclame(data.rangJoueurCoffresReclames);
-        if (data.titresObtenus != null)
-            for (String nom : data.titresObtenus)
-                gestionnaireTitres.debloquerTitre(nom);
-        if (data.titreActifNom != null)
-            gestionnaireTitres.equiperTitre(data.titreActifNom);
+        SauvegardeProgression.restaurerRangEtTitres(rangJoueur, gestionnaireTitres, data);
     }
 
     public void restaurerEtoiles(GestionnaireEtoiles ge, SauvegardeData data) {
-        if (data.etoiles != null)
-            for (SauvegardeData.EtoileData ed : data.etoiles)
-                ge.setEtoiles(ed.cle, ed.e1, ed.e2, ed.e3);
-        if (data.coffresClaimes != null)
-            for (String cle : data.coffresClaimes)
-                ge.setCoffreClaime(cle, true);
+        SauvegardeProgression.restaurerEtoiles(ge, data);
     }
 
     public void restaurerCompagnons(GestionnaireCompagnons gc, SauvegardeData data) {
-        if (data.compagnonsType != null) {
-            gc.restaurer(data.compagnonsType, data.compagnonsNiveau);
-        }
+        SauvegardeProgression.restaurerCompagnons(gc, data);
     }
 
     public void restaurerCreaturesSacrees(Gestionnaire_pet gcs, SauvegardeData data) {
-        if (data.creatureType != null) {
-            gcs.restaurer(data.creatureType, data.creatureNiveau, data.creatureExperience,
-                    data.creatureOeufDebloque, data.creatureEntrainement, data.creatureDebutEntrainement);
-        }
+        SauvegardeProgression.restaurerCreaturesSacrees(gcs, data);
     }
 
     public void restaurerRecompenses(GestionnaireRecompenses gr, SauvegardeData data) {
-        gr.setNiveauReclame(data.recompensesNiveauReclame);
-        gr.setJoursCumulesMois(data.recompensesJoursCumulesMois);
-        if (data.recompensesDernierJourMois != null)
-            gr.setDernierJourComptePointage(java.time.LocalDate.parse(data.recompensesDernierJourMois));
-        gr.setMoisComptePointage(data.recompensesMoisCompte);
-        gr.setMoisReclame(data.recompensesMoisReclame);
-        gr.setJourConnexion(data.recompensesJourConnexion);
-        if (data.recompensesDernierJourConnexion != null)
-            gr.setDernierJourConnexion(java.time.LocalDate.parse(data.recompensesDernierJourConnexion));
-        gr.setJourReclame(data.recompensesJourReclame);
-        gr.setTerminee(data.recompensesTerminee);
-        if (data.recompensesDerniereReclamation30min != null)
-            gr.setDerniereReclamation30min(java.time.LocalDateTime.parse(data.recompensesDerniereReclamation30min));
-        gr.setPointsMois(data.recompensesPointsMois);
-    }
-
-    public void restaurerChapitre3(Chapitre3 c, SauvegardeData data) {
-        if (data.chapitre3Debloques != null) c.setStagesDebloques(data.chapitre3Debloques);
-        if (data.chapitre3Reussis   != null) c.setStagesReussis(data.chapitre3Reussis);
-    }
-
-    public void restaurerChapitre4(Chapitre4 c, SauvegardeData data) {
-        if (data.chapitre4Debloques != null) c.setStagesDebloques(data.chapitre4Debloques);
-        if (data.chapitre4Reussis   != null) c.setStagesReussis(data.chapitre4Reussis);
-    }
-
-    public void restaurerChapitre2Elite2(Chapitre2Elite c, SauvegardeData data) {
-        if (data.chapitre2EliteDebloques != null)
-            c.setStagesDebloques(data.chapitre2EliteDebloques);
-        if (data.chapitre2EliteReussis != null)
-            c.setStagesReussis(data.chapitre2EliteReussis);
-    }
-
-    public void restaurerChapitre3Elite(Chapitre3Elite c, SauvegardeData data) {
-        if (data.chapitre3EliteDebloques != null)
-            c.setStagesDebloques(data.chapitre3EliteDebloques);
-        if (data.chapitre3EliteReussis != null)
-            c.setStagesReussis(data.chapitre3EliteReussis);
-        if (data.chapitre3ElitePremiereVictoire != null)
-            c.setPremiereVictoire(data.chapitre3ElitePremiereVictoire);
+        SauvegardeProgression.restaurerRecompenses(gr, data);
     }
 
     public void restaurerDonjon(GestionnaireDonjon gd, SauvegardeData data) {
-        if (data.donjonRuns != null)        gd.setRuns(data.donjonRuns);
-        if (data.donjonDernierReset != null) gd.setDernierReset(LocalDate.parse(data.donjonDernierReset));
+        SauvegardeActivites.restaurerDonjon(gd, data);
     }
 
     public void restaurerChasseTresor(GestionnaireChasseTresor gc, SauvegardeData data) {
-        gc.setFouillesUtilisees(data.chasseTresorFouilles);
-        if (data.chasseTresorDernierReset != null) gc.setDernierReset(LocalDate.parse(data.chasseTresorDernierReset));
+        SauvegardeActivites.restaurerChasseTresor(gc, data);
     }
 
     public void restaurerExamenS(GestionnaireExamenS ge, SauvegardeData data) {
-        if (data.examenSDejaReussi != null)     ge.setDejaReussi(data.examenSDejaReussi);
-        if (data.examenSFaitAujourdhui != null) ge.setFaitAujourdhui(data.examenSFaitAujourdhui);
-        if (data.examenSDernierReset != null)   ge.setDernierReset(LocalDate.parse(data.examenSDernierReset));
+        SauvegardeActivites.restaurerExamenS(ge, data);
     }
 
     // ── Utilitaires privés ────────────────────────────────────────────────
@@ -706,93 +254,7 @@ public class GestionnaireSauvegarde {
         return nom.trim().toLowerCase().replace(" ", "_");
     }
 
-    private void copierTableaux(boolean[] src, boolean[] dst) {
-        for (int i = 0; i < src.length && i < dst.length; i++) dst[i] = src[i];
-    }
-
-    private SauvegardeData.EquipementData versEquipementData(Equipement e, int quantite) {
-        SauvegardeData.EquipementData ed = new SauvegardeData.EquipementData(
-            e.getNom(), e.getSlot().name(), e.getRarete().name(), e.getTypeArme().name(),
-            e.getBonusATKBase(), e.getBonusDEFBase(), e.getBonusPVBase(), e.getBonusVITBase(),
-            quantite
-        );
-        ed.niveauFortification = e.getNiveauFortification();
-        ed.niveauAffinage      = e.getNiveauAffinage();
-        for (Pierre p : e.getPierres()) {
-            ed.pierres.add(p != null ? new SauvegardeData.PierreData(p.getType().name(), p.getNiveau()) : null);
-        }
-        return ed;
-    }
-
-    private Equipement versEquipement(SauvegardeData.EquipementData ed) {
-        Equipement e = new Equipement(
-            ed.nom,
-            Equipement.Slot.valueOf(ed.slot),
-            Equipement.Rarete.valueOf(ed.rarete),
-            Equipement.TypeArme.valueOf(ed.typeArme),
-            ed.bonusATK, ed.bonusDEF, ed.bonusPV, ed.bonusVIT
-        );
-        e.setNiveauFortification(ed.niveauFortification);
-        e.setNiveauAffinage(ed.niveauAffinage);
-        if (ed.pierres != null) {
-            for (int i = 0; i < ed.pierres.size() && i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) {
-                SauvegardeData.PierreData pd = ed.pierres.get(i);
-                if (pd != null) {
-                    try {
-                        e.insererPierre(i, new Pierre(Pierre.Type.valueOf(pd.type), pd.niveau));
-                    } catch (IllegalArgumentException ignored) {}
-                }
-            }
-        }
-        return e;
-    }
-
-   public PersonnageBase creerPersonnageParNom(String nom) {
-    PersonnageBase p = switch (nom) {
-        // Rang C
-        case "Alzack"         -> new perso_Arzak();
-        case "Bisca"          -> new perso_Biska();
-        case "Elfman"         -> new perso_Elfman();
-        case "Nab"            -> new perso_Nab();
-        // Rang B
-        case "Bickslow"       -> new perso_Bixrow();
-        case "Evergreen"      -> new perso_Evergreen();
-        case "Kana"           -> new perso_Kana();
-
-        case "Levy"           -> new perso_Levy();
-        case "Lisanna"        -> new perso_Lisanna();
-        // Rang A
-        case "Angel"          -> new perso_Angel();
-        case "Freed"          -> new perso_Freed();
-        case "Gajeel"         -> new perso_Gajeel();
-        case "Gray"           -> new perso_Gray();
-        case "Jubia"          -> new perso_Jubia_4elements();
-        case "Lucy"           -> new perso_Lucy();
-        case "Natsu"          -> new perso_Natsu();
-        case "Wendy"          -> new perso_Wendy();
-        // Rang S+
-        case "Erza"           -> new perso_Erza();
-        case "Mirajane"       -> new perso_Mirajane();
-        case "Natsu Etherion" -> new perso_Natsu_Etherion();
-        case "Rogue"          -> new perso_Rogue();
-        case "Sting"          -> new perso_Sting();
-        case "Yukino"         -> new perso_Yukino();
-        case "Lucas"          -> new perso_Lucas();
-        case "Mirajane Halphas" -> new perso_Mirajane_Halphas();
-        case "José Pora"      -> new perso_Jose();
-        case "Ul Milkovich"   -> new perso_Ul();
-        default               -> null;
-    };
-    // Repli sur la fabrique du Recrutement normal (Cherry, Duc Everlue, Tobi, Yuka,
-    // Leon, Totomaru, Sol, Aria, Bora, Eligoal...) qui n'etait pas connue ici,
-    // ce qui faisait disparaitre silencieusement ces personnages au rechargement.
-    if (p == null) p = new MenuRecrutement().creerPersonnage(nom);
-    return p;
-}
-
-    private void appliquerNiveaux(PersonnageBase p, SauvegardeData.PersonnageData pd) {
-        while (p.getNiveau() < pd.niveau) p.monterDeNiveau();
-        p.setExperience(pd.experience);
-        p.setExperienceMax(pd.experienceMax);
+    public PersonnageBase creerPersonnageParNom(String nom) {
+        return SauvegardeJoueur.creerPersonnageParNom(nom);
     }
 }

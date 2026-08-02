@@ -3,6 +3,7 @@ package lancement.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -156,7 +158,25 @@ public class EcranRecompensesController {
 
         int index = items.indexOf(choisi);
         String[] infoPerso = catalogue.get(index);
-        info("Boutique du mois", gr.acheterFragmentBoutiqueMois(infoPerso[0], infoPerso[1], ctx.inventaire));
+
+        TextInputDialog qteDialog = new TextInputDialog("1");
+        qteDialog.setTitle("Boutique du mois");
+        qteDialog.setHeaderText(null);
+        qteDialog.setContentText("Combien de fragments de " + infoPerso[0] + " voulez-vous acheter ?");
+        styliser(qteDialog);
+        Optional<String> qteStr = qteDialog.showAndWait();
+        if (qteStr.isEmpty()) return;
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(qteStr.get().trim());
+        } catch (NumberFormatException e) {
+            info("Boutique du mois", "Entree invalide.");
+            return;
+        }
+        if (quantite <= 0) return;
+
+        info("Boutique du mois", gr.acheterFragmentBoutiqueMois(infoPerso[0], infoPerso[1], ctx.inventaire, quantite));
         ctx.sauvegarde.sauvegarder(ctx);
         rafraichir();
     }

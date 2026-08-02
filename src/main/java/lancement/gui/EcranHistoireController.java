@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lancement.Chapitres.Chapitre;
+import lancement.ChapitreElite.ChapitreElite;
 import lancement.GameContext;
 
 public class EcranHistoireController {
@@ -31,33 +33,28 @@ public class EcranHistoireController {
     }
 
     private void onChapitres(MouseEvent event) {
-        boolean c1Fini = ctx.chapitre1.getStagesReussis()[10];
-        boolean c2Fini = ctx.chapitre2.getStagesReussis()[10];
-        boolean c3Fini = ctx.chapitre3.getStagesReussis()[10];
-
         List<LigneChapitre> lignes = new ArrayList<>();
-        lignes.add(new LigneChapitre("Chapitre 1 - L'Eveil", true, null,
-                1, false, ctx.chapitre1::getStagesReussis, ctx.chapitre1::getStagesDebloques, ctx.chapitre1::getTitreStage, ctx.chapitre1::lancerStage));
-        lignes.add(new LigneChapitre("Chapitre 2 - L'Ile de Galuna", c1Fini, "Terminez le Chapitre 1 pour debloquer.",
-                2, false, ctx.chapitre2::getStagesReussis, ctx.chapitre2::getStagesDebloques, ctx.chapitre2::getTitreStage, ctx.chapitre2::lancerStage));
-        lignes.add(new LigneChapitre("Chapitre 3 - Phantom Lord", c2Fini, "Terminez le Chapitre 2 pour debloquer.",
-                3, false, ctx.chapitre3::getStagesReussis, ctx.chapitre3::getStagesDebloques, ctx.chapitre3::getTitreStage, ctx.chapitre3::lancerStage));
-        lignes.add(new LigneChapitre("Chapitre 4 - La Tour du Paradis", c3Fini, "Terminez le Chapitre 3 pour debloquer.",
-                4, false, ctx.chapitre4::getStagesReussis, ctx.chapitre4::getStagesDebloques, ctx.chapitre4::getTitreStage, ctx.chapitre4::lancerStage));
+        for (int i = 1; i <= ctx.chapitres.size(); i++) {
+            Chapitre c = ctx.chapitres.get(i - 1);
+            boolean deverrouille = (i == 1) || ctx.chapitres.get(i - 2).getStagesReussis()[10];
+            String messageVerrouille = (i == 1) ? null : "Terminez le Chapitre " + (i - 1) + " pour debloquer.";
+            lignes.add(new LigneChapitre("Chapitre " + i + " - " + c.getNomChapitre(), deverrouille, messageVerrouille,
+                    i, false, c::getStagesReussis, c::getStagesDebloques, c::getTitreStage, c::lancerStage));
+        }
 
         naviguerVersListe(event, "CHAPITRES", lignes);
     }
 
     private void onChapitresElite(MouseEvent event) {
-        boolean c1Fini = ctx.chapitre1.getStagesReussis()[10];
-
         List<LigneChapitre> lignes = new ArrayList<>();
-        lignes.add(new LigneChapitre("Chapitre 1 Elite", c1Fini, "Terminez le Chapitre 1 pour debloquer.",
-                1, true, ctx.chapitre1Elite::getStagesReussis, ctx.chapitre1Elite::getStagesDebloques, ctx.chapitre1Elite::getTitreStage, ctx.chapitre1Elite::lancerStage));
-        lignes.add(new LigneChapitre("Chapitre 2 Elite", ctx.chapitre2Elite.estDebloque(), "Terminez C1, C2 et C1 Elite pour debloquer.",
-                2, true, ctx.chapitre2Elite::getStagesReussis, ctx.chapitre2Elite::getStagesDebloques, ctx.chapitre2Elite::getTitreStage, ctx.chapitre2Elite::lancerStage));
-        lignes.add(new LigneChapitre("Chapitre 3 Elite", ctx.chapitre3Elite.estDebloque(), "Terminez C3 et C2 Elite pour debloquer.",
-                3, true, ctx.chapitre3Elite::getStagesReussis, ctx.chapitre3Elite::getStagesDebloques, ctx.chapitre3Elite::getTitreStage, ctx.chapitre3Elite::lancerStage));
+        for (int i = 1; i <= ctx.chapitresElite.size(); i++) {
+            ChapitreElite c = ctx.chapitresElite.get(i - 1);
+            String messageVerrouille = (i == 1)
+                    ? "Terminez le Chapitre 1 pour debloquer."
+                    : "Terminez C" + i + " et C" + (i - 1) + " Elite pour debloquer.";
+            lignes.add(new LigneChapitre("Chapitre " + i + " Elite", c.estDebloque(), messageVerrouille,
+                    i, true, c::getStagesReussis, c::getStagesDebloques, c::getTitreStage, c::lancerStage));
+        }
 
         naviguerVersListe(event, "CHAPITRES ELITE", lignes);
     }

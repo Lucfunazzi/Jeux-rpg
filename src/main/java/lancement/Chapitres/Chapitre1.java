@@ -2,6 +2,7 @@ package lancement.Chapitres;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre1.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import lancement.GameContext;
 import lancement.Formation;
 import lancement.Stage;
@@ -11,7 +12,7 @@ import Personnage.FairyTail.perso_Erza;
 import Personnage.FairyTail.perso_Gray;
 import Personnage.FairyTail.perso_Natsu;
 
-public class Chapitre1 {
+public class Chapitre1 implements Chapitre {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
@@ -28,7 +29,7 @@ public class Chapitre1 {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("      CHAPITRE 1 — Prologue ");
+            System.out.println("      CHAPITRE 1 — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -128,18 +129,18 @@ public class Chapitre1 {
                          return new Stage(3, "Chemin vers fairy tail", 11, 2, ennemis); }
             case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau));
                          return new Stage(4, "L'arrivée de la reine des fées", 15, 3, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+            case 5  -> { ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          return new Stage(5, "Premier mission pour Lucy", 18, 3, ennemis); }
             case 6  -> { ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiEvaro(niveau));
                          return new Stage(6, "Le duc evarlo", 22, 4, ennemis); }
-            case 7  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+            case 7  -> { ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, niveau));
                          return new Stage(7, "Retour a fairy tail ", 25, 4, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
-                         ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
+            case 8  -> { ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, niveau));
+                         ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, niveau));
                          return new Stage(8, "Eisen Wald", 29, 5, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiEligor(niveau));  ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+            case 9  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                         ennemis.add(new EnnemiEligor(niveau));  ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, niveau));
                          return new Stage(9, "Eligor le mage de vent", 34, 5, ennemis); }
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
                          return new Stage(10, "La flute maudite", 43, 6, ennemis); }
@@ -169,6 +170,8 @@ public class Chapitre1 {
         return false;
     }
 
+    public String getNomChapitre() { return "Prologue"; }
+
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= 10; i++) stagesDebloques[i] = d[i]; }
@@ -176,13 +179,7 @@ public class Chapitre1 {
   
     
     private Stage.ResultatStage lancerStage4AvecErza(GameContext ctx,Stage stage, boolean estNouveau){
-        perso_Erza erzaTemporaire = new perso_Erza();
-        erzaTemporaire.setNiveau(70);
-        erzaTemporaire.setVie(10000);
-        erzaTemporaire.setVieMax(10000);
-        erzaTemporaire.setAttaque(4500);
-        erzaTemporaire.setDefense(10);
-        erzaTemporaire.setVitesse(4000);
+        perso_Erza erzaTemporaire = Formation.creerInvite(perso_Erza::new, 70, 10000, 4500, 10, 4000);
         erzaTemporaire.ajouterRage(100);
 
     ArrayList<PersonnageBase> equipeAvecErza = ctx.formation.getEquipe();
@@ -203,30 +200,13 @@ public class Chapitre1 {
     private Stage.ResultatStage lancerStage10AvecN_G_E(GameContext ctx, Stage stage, boolean estNouveau) {
 
     // Natsu
-    perso_Natsu natsuTemporaire = new perso_Natsu();
-    
-   natsuTemporaire.setVie(6000);
-natsuTemporaire.setVieMax(6000);
-natsuTemporaire.setAttaque(900);
-natsuTemporaire.setDefense(250);
-natsuTemporaire.setVitesse(180);
+    perso_Natsu natsuTemporaire = Formation.creerInvite(perso_Natsu::new, 6000, 900, 250, 180);
 
     // Gray
-    perso_Gray grayTemporaire = new perso_Gray();
-    
- grayTemporaire.setVie(5500);
-grayTemporaire.setVieMax(5500);
-grayTemporaire.setAttaque(750);
-grayTemporaire.setDefense(320);
-grayTemporaire.setVitesse(150);
+    perso_Gray grayTemporaire = Formation.creerInvite(perso_Gray::new, 5500, 750, 320, 150);
 
     // Erza
-    perso_Erza erza = new perso_Erza();
-    erza.setVie(8000);
-erza.setVieMax(8000);
-erza.setAttaque(850);
-erza.setDefense(500);
-erza.setVitesse(160);
+    perso_Erza erza = Formation.creerInvite(perso_Erza::new, 8000, 850, 500, 160);
 
     // Équipe fixe — sans les personnages du joueur
     ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();

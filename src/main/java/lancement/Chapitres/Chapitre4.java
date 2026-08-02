@@ -3,6 +3,7 @@ package lancement.Chapitres;
 import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre4.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Gray;
 import Personnage.FairyTail.perso_Lucy;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class Chapitre4 {
+public class Chapitre4 implements Chapitre {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
@@ -35,7 +36,7 @@ public class Chapitre4 {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 4 — La Tour du Paradis");
+            System.out.println("   CHAPITRE 4 — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -93,103 +94,43 @@ public class Chapitre4 {
             case 1 -> lancerStage1AvecEquipeHeros(ctx, stage, estNouveau);
             // Stage 2 : pas d'invite, l'equipe du joueur affronte seule les gardes generiques.
             case 3 -> {
-                perso_Natsu invite = new perso_Natsu();
-                invite.setNiveau(47);
-                invite.setVie(3600);
-                invite.setVieMax(3600);
-                invite.setAttaque(1050);
-                invite.setDefense(480);
-                invite.setVitesse(210);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 47, 3600, 1050, 480, 210);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4 -> {
-                perso_Erza invite = new perso_Erza();
-                invite.setNiveau(47);
-                invite.setVie(4200);
-                invite.setVieMax(4200);
-                invite.setAttaque(950);
-                invite.setDefense(650);
-                invite.setVitesse(190);
+                perso_Erza invite = Formation.creerInvite(perso_Erza::new, 47, 4200, 950, 650, 190);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 5 -> {
-                perso_Lucy lucy = new perso_Lucy();
-                lucy.setNiveau(48);
-                lucy.setVie(3300);
-                lucy.setVieMax(3300);
-                lucy.setAttaque(650);
-                lucy.setDefense(420);
-                lucy.setVitesse(200);
+                perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, 48, 3300, 650, 420, 200);
 
-                perso_Jubia_4elements jubia = new perso_Jubia_4elements();
-                jubia.setNiveau(48);
-                jubia.setVie(3500);
-                jubia.setVieMax(3500);
-                jubia.setAttaque(750);
-                jubia.setDefense(500);
-                jubia.setVitesse(198);
+                perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, 48, 3500, 750, 500, 198);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, lucy, jubia);
             }
             case 6 -> {
-                perso_Natsu natsu = new perso_Natsu();
-                natsu.setNiveau(48);
-                natsu.setVie(3600);
-                natsu.setVieMax(3600);
-                natsu.setAttaque(1050);
-                natsu.setDefense(480);
-                natsu.setVitesse(210);
+                perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, 48, 3600, 1050, 480, 210);
 
                 // Simon vient de devoiler sa veritable allegeance : il combat desormais a nos cotes.
-                perso_Simon simon = new perso_Simon();
-                simon.setNiveau(48);
-                simon.setVie(4000);
-                simon.setVieMax(4000);
-                simon.setAttaque(700);
-                simon.setDefense(900);
-                simon.setVitesse(170);
+                perso_Simon simon = Formation.creerInvite(perso_Simon::new, 48, 4000, 700, 900, 170);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, natsu, simon);
             }
             case 7 -> {
-                perso_Erza erza = new perso_Erza();
-                erza.setNiveau(49);
-                erza.setVie(4200);
-                erza.setVieMax(4200);
-                erza.setAttaque(950);
-                erza.setDefense(650);
-                erza.setVitesse(190);
+                perso_Erza erza = Formation.creerInvite(perso_Erza::new, 49, 4200, 950, 650, 190);
 
-                perso_Shaw shaw = new perso_Shaw();
-                shaw.setNiveau(49);
-                shaw.setVie(3600);
-                shaw.setVieMax(3600);
-                shaw.setAttaque(800);
-                shaw.setDefense(550);
-                shaw.setVitesse(200);
+                perso_Shaw shaw = Formation.creerInvite(perso_Shaw::new, 49, 3600, 800, 550, 200);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, erza, shaw);
             }
             case 8 -> lancerStage8AvecErza(ctx, stage, estNouveau);
             case 9 -> {
                 // Simon (desormais alliee) prete main forte a l'equipe pour l'assaut sur Jellal.
-                perso_Simon invite = new perso_Simon();
-                invite.setNiveau(49);
-                invite.setVie(4000);
-                invite.setVieMax(4000);
-                invite.setAttaque(700);
-                invite.setDefense(900);
-                invite.setVitesse(170);
+                perso_Simon invite = Formation.creerInvite(perso_Simon::new, 49, 4000, 700, 900, 170);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 10 -> {
-                perso_Natsu_Etherion invite = new perso_Natsu_Etherion();
-                invite.setNiveau(51);
-                invite.setVie(4800);
-                invite.setVieMax(4800);
-                invite.setAttaque(1400);
-                invite.setDefense(650);
-                invite.setVitesse(230);
+                perso_Natsu_Etherion invite = Formation.creerInvite(perso_Natsu_Etherion::new, 51, 4800, 1400, 650, 230);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
@@ -230,9 +171,9 @@ public class Chapitre4 {
 
             // Stage 2 — gardes generiques
             case 2 -> {
-                e.add(new EnnemiMage7DPS(46));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_4, 46));
                 e.add(new EnnemiMage2DPS(45));
-                e.add(new EnnemiMage9Tank(45));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 45));
                 e.add(new EnnemiMage1DPS(45));
                 e.add(new EnnemiMage3Soigneur(45));
                 return new Stage(2, "Infiltration dans la tour du paradis", 2150, 64, e);
@@ -243,7 +184,7 @@ public class Chapitre4 {
                 e.add(new EnnemiMiliana(47));
                 e.add(new EnnemiWolly(46));
                 e.add(new EnnemiMage6Debuff(46));
-                e.add(new EnnemiMage5Tank(46));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, 46));
                 e.add(new EnnemiMage3Soigneur(45));
                 return new Stage(3, "Miaou, Il faut sauver Happy", 2400, 66, e);
             }
@@ -253,7 +194,7 @@ public class Chapitre4 {
                 e.add(new EnnemiShaw(47));
                 e.add(new EnnemiMage2DPS(46));
                 e.add(new EnnemiMage2DPS(46));
-                e.add(new EnnemiMage9Tank(46));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 46));
                 e.add(new EnnemiMage3Soigneur(46));
                 return new Stage(4, "Libération d'erza", 2700, 68, e);
             }
@@ -262,7 +203,7 @@ public class Chapitre4 {
             case 5 -> {
                 e.add(new EnnemiVivaldus(48));
                 e.add(new EnnemiMage3Soigneur(47));
-                e.add(new EnnemiMage9Tank(47));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
                 e.add(new EnnemiMage2DPS(47));
                 e.add(new EnnemiMage3Soigneur(46));
                 return new Stage(5, "Les esprits et l'eau", 3050, 70, e);
@@ -271,7 +212,7 @@ public class Chapitre4 {
             // Stage 6 — Natsu et Simon contre Owl + gardes generiques
             case 6 -> {
                 e.add(new EnnemiOwl(48));
-                e.add(new EnnemiMage9Tank(47));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
                 e.add(new EnnemiMage3Soigneur(47));
                 e.add(new EnnemiMage2DPS(47));
                 e.add(new EnnemiMage6Debuff(47));
@@ -281,10 +222,10 @@ public class Chapitre4 {
             // Stage 7 — Erza + Shaw vs Ikaruga + gardes generiques
             case 7 -> {
                 e.add(new EnnemiIkaruga(47));
-                e.add(new EnnemiMage9Tank(48));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
                 e.add(new EnnemiMage3Soigneur(48));
                 e.add(new EnnemiMage2DPS(48));
-                e.add(new EnnemiMage8DPS(48));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 48));
                 return new Stage(7, "Epée contre Epée", 3900, 74, e);
             }
 
@@ -297,7 +238,7 @@ public class Chapitre4 {
             // Stage 9 — Simon (alliee) + equipe contre Jellal + gardes generiques
             case 9 -> {
                 e.add(new EnnemiJellal(49));
-                e.add(new EnnemiMage9Tank(48));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
                 e.add(new EnnemiMage3Soigneur(48));
                 e.add(new EnnemiMage2DPS(48));
                 return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 82, e);
@@ -306,10 +247,10 @@ public class Chapitre4 {
             // Stage 10 — Natsu Etherion vs Jellal + gardes generiques
             case 10 -> {
                 e.add(new EnnemiJellal(52));
-                e.add(new EnnemiMage9Tank(50));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 50));
                 e.add(new EnnemiMage3Soigneur(50));
                 e.add(new EnnemiMage2DPS(50));
-                e.add(new EnnemiMage8DPS(50));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 50));
                 return new Stage(10, "Jellal — L'Effondrement de la Tour du Paradis", 6500, 84, e);
             }
 
@@ -332,6 +273,8 @@ public class Chapitre4 {
             default -> "???";
         };
     }
+
+    public String getNomChapitre() { return "La Tour du Paradis"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }
@@ -377,49 +320,19 @@ public class Chapitre4 {
     private Stage.ResultatStage lancerStage1AvecEquipeHeros(GameContext ctx, Stage stage, boolean estNouveau) {
         // Combat scripte : notre formation n'intervient pas, l'embuscade oppose l'equipe
         // partie en mission (Erza, Jubia, Lucy, Gray, Natsu) a Wolly, Miliana, Shaw et Simon.
-        perso_Erza erza = new perso_Erza();
-        erza.setNiveau(45);
-        erza.setVie(4200);
-        erza.setVieMax(4200);
-        erza.setAttaque(950);
-        erza.setDefense(650);
-        erza.setVitesse(190);
+        perso_Erza erza = Formation.creerInvite(perso_Erza::new, 45, 4200, 950, 650, 190);
         EquipementFactory.equiperSetStandard(erza, EquipementFactory.rareteEnnemiPourNiveau(erza.getNiveau()));
 
-        perso_Jubia_4elements jubia = new perso_Jubia_4elements();
-        jubia.setNiveau(45);
-        jubia.setVie(3500);
-        jubia.setVieMax(3500);
-        jubia.setAttaque(750);
-        jubia.setDefense(500);
-        jubia.setVitesse(198);
+        perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, 45, 3500, 750, 500, 198);
         EquipementFactory.equiperSetStandard(jubia, EquipementFactory.rareteEnnemiPourNiveau(jubia.getNiveau()));
 
-        perso_Lucy lucy = new perso_Lucy();
-        lucy.setNiveau(45);
-        lucy.setVie(3300);
-        lucy.setVieMax(3300);
-        lucy.setAttaque(650);
-        lucy.setDefense(420);
-        lucy.setVitesse(200);
+        perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, 45, 3300, 650, 420, 200);
         EquipementFactory.equiperSetStandard(lucy, EquipementFactory.rareteEnnemiPourNiveau(lucy.getNiveau()));
 
-        perso_Gray gray = new perso_Gray();
-        gray.setNiveau(45);
-        gray.setVie(3700);
-        gray.setVieMax(3700);
-        gray.setAttaque(1000);
-        gray.setDefense(550);
-        gray.setVitesse(195);
+        perso_Gray gray = Formation.creerInvite(perso_Gray::new, 45, 3700, 1000, 550, 195);
         EquipementFactory.equiperSetStandard(gray, EquipementFactory.rareteEnnemiPourNiveau(gray.getNiveau()));
 
-        perso_Natsu natsu = new perso_Natsu();
-        natsu.setNiveau(45);
-        natsu.setVie(3600);
-        natsu.setVieMax(3600);
-        natsu.setAttaque(1050);
-        natsu.setDefense(480);
-        natsu.setVitesse(210);
+        perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, 45, 3600, 1050, 480, 210);
         EquipementFactory.equiperSetStandard(natsu, EquipementFactory.rareteEnnemiPourNiveau(natsu.getNiveau()));
 
         ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();
@@ -441,13 +354,7 @@ public class Chapitre4 {
     private Stage.ResultatStage lancerStage8AvecErza(GameContext ctx, Stage stage, boolean estNouveau) {
         // Combat scripte : notre formation n'intervient pas, seule Erza affronte Jellal.
         // Stats relevees pour rester competitives face a Jellal(51) (~6200 PV / 2580 ATK avec la formule).
-        perso_Erza erza = new perso_Erza();
-        erza.setNiveau(51);
-        erza.setVie(6800);
-        erza.setVieMax(6800);
-        erza.setAttaque(2300);
-        erza.setDefense(1500);
-        erza.setVitesse(210);
+        perso_Erza erza = Formation.creerInvite(perso_Erza::new, 51, 6800, 2300, 1500, 210);
         EquipementFactory.equiperSetStandard(erza, EquipementFactory.rareteEnnemiPourNiveau(erza.getNiveau()));
 
         ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();

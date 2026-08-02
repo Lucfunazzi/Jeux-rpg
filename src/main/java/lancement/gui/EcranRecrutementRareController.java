@@ -43,33 +43,65 @@ public class EcranRecrutementRareController {
         solde.getStyleClass().add("item-detail");
         boutonsBox.getChildren().add(solde);
 
+        int niveauJoueur = ctx.joueur.getNiveau();
+
         boolean natsuA = MenuRecrutementRare.dejaRecruteParNom("Natsu", ctx.personnagesRecruites);
         boolean natsuS = MenuRecrutementRare.dejaRecruteParNom("Natsu Etherion", ctx.personnagesRecruites);
+        boolean natsuGrayVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY;
+        boolean evoNatsuVerrouille  = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU;
 
         boutonsBox.getChildren().add(titreSection("Natsu"));
         boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "A", possedeA,
-                MenuRecrutementRare.COUT_RECRUTEMENT_NATSU, natsuA || natsuS, this::confirmerEtRecruterNatsu));
+                MenuRecrutementRare.COUT_RECRUTEMENT_NATSU, natsuA || natsuS,
+                natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterNatsu));
         if (natsuA) {
             boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "S", possedeS,
-                    MenuRecrutementRare.COUT_EVOLUTION_NATSU, false, this::confirmerEtEvoluerNatsu));
+                    MenuRecrutementRare.COUT_EVOLUTION_NATSU, false,
+                    evoNatsuVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU, this::confirmerEtEvoluerNatsu));
         }
+
+        boolean grayRecru = MenuRecrutementRare.dejaRecruteParNom("Gray", ctx.personnagesRecruites);
+
+        boutonsBox.getChildren().add(titreSection("Gray"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Gray", "A", possedeA,
+                MenuRecrutementRare.COUT_RECRUTEMENT_GRAY, grayRecru,
+                natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterGray));
 
         boolean miraS  = MenuRecrutementRare.dejaRecruteParNom("Mirajane", ctx.personnagesRecruites);
         boolean miraSS = MenuRecrutementRare.dejaRecruteParNom("Mirajane Halphas", ctx.personnagesRecruites);
+        boolean miraJellalVerrouille   = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL;
+        boolean evoMiraJellalVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL;
 
         boutonsBox.getChildren().add(titreSection("Mirajane"));
         boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "S", possedeS,
-                MenuRecrutementRare.COUT_MIRAJANE_S, miraS || miraSS, this::confirmerEtRecruterMirajane));
+                MenuRecrutementRare.COUT_MIRAJANE_S, miraS || miraSS,
+                miraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL, this::confirmerEtRecruterMirajane));
         if (miraS) {
             boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "SS", possedeSS,
-                    MenuRecrutementRare.COUT_MIRAJANE_SS, false, this::confirmerEtEvoluerMirajane));
+                    MenuRecrutementRare.COUT_MIRAJANE_SS, false,
+                    evoMiraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL, this::confirmerEtEvoluerMirajane));
         }
 
-        boolean jellalRecru = MenuRecrutementRare.dejaRecruteParNom("Jellal", ctx.personnagesRecruites);
+        boolean jellalRecru  = MenuRecrutementRare.dejaRecruteParNom("Jellal", ctx.personnagesRecruites);
+        boolean jellalEvolue = MenuRecrutementRare.dejaRecruteParNom("Jellal Intermagie", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Jellal"));
         boutonsBox.getChildren().add(carteRecrutementRare("Jellal", "S", possedeS,
-                MenuRecrutementRare.COUT_JELLAL, jellalRecru, this::confirmerEtRecruterJellal));
+                MenuRecrutementRare.COUT_JELLAL, jellalRecru || jellalEvolue,
+                miraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL, this::confirmerEtRecruterJellal));
+        if (jellalRecru) {
+            boutonsBox.getChildren().add(carteRecrutementRare("Jellal Intermagie (évolution)", "SS", possedeSS,
+                    MenuRecrutementRare.COUT_JELLAL_SS, false,
+                    evoMiraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL, this::confirmerEtEvoluerJellal));
+        }
+
+        boolean erzaRecru = MenuRecrutementRare.dejaRecruteParNom("Erza", ctx.personnagesRecruites);
+        boolean erzaVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_ERZA;
+
+        boutonsBox.getChildren().add(titreSection("Erza"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Erza", "S", possedeS,
+                MenuRecrutementRare.COUT_ERZA, erzaRecru,
+                erzaVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_ERZA, this::confirmerEtRecruterErza));
     }
 
     private Label titreSection(String texte) {
@@ -78,7 +110,8 @@ public class EcranRecrutementRareController {
         return l;
     }
 
-    private Node carteRecrutementRare(String nom, String rang, int possede, int cout, boolean dejaFait, Runnable action) {
+    private Node carteRecrutementRare(String nom, String rang, int possede, int cout, boolean dejaFait,
+                                       boolean verrouille, int niveauRequis, Runnable action) {
         Label badge = GuiVisuels.creerBadgeRarete(rang);
         Label nomLabel = new Label(nom);
         nomLabel.getStyleClass().add("item-nom");
@@ -90,6 +123,12 @@ public class EcranRecrutementRareController {
 
         if (dejaFait) {
             Label tag = new Label("Déjà recruté");
+            tag.getStyleClass().add("item-vide");
+            carte.getChildren().add(tag);
+            carte.getStyleClass().add("carte-item");
+            carte.setOpacity(0.5);
+        } else if (verrouille) {
+            Label tag = new Label("Niveau " + niveauRequis + " requis");
             tag.getStyleClass().add("item-vide");
             carte.getChildren().add(tag);
             carte.getStyleClass().add("carte-item");
@@ -115,6 +154,12 @@ public class EcranRecrutementRareController {
         rafraichir();
     }
 
+    private void confirmerEtRecruterGray() {
+        if (!confirmer("Recruter Gray [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_GRAY + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterGray(ctx));
+        rafraichir();
+    }
+
     private void confirmerEtRecruterMirajane() {
         if (!confirmer("Recruter Mirajane [S] pour " + MenuRecrutementRare.COUT_MIRAJANE_S + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterMirajane(ctx));
@@ -131,6 +176,19 @@ public class EcranRecrutementRareController {
     private void confirmerEtRecruterJellal() {
         if (!confirmer("Recruter Jellal [S] pour " + MenuRecrutementRare.COUT_JELLAL + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterJellal(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtEvoluerJellal() {
+        if (!confirmer("Evoluer Jellal [S] vers Jellal Intermagie [SS] pour " + MenuRecrutementRare.COUT_JELLAL_SS + " " + MenuRecrutementRare.PARCHEMIN_SS
+                + " ?\nATTENTION : Jellal [S] sera remplace definitivement.")) return;
+        info("Recrutement Rare", menuRecrutementRare.evoluerJellal(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterErza() {
+        if (!confirmer("Recruter Erza [S] pour " + MenuRecrutementRare.COUT_ERZA + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterErza(ctx));
         rafraichir();
     }
 

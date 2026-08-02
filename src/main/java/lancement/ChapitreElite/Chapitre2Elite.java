@@ -2,6 +2,7 @@ package lancement.ChapitreElite;
 
 import Personnage.PersonnageBase;
 import Personnage.pnj.Chapitre2Elite.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import lancement.GameContext;
 import lancement.Stage;
 import lancement.Chapitres.Chapitre1;
@@ -10,7 +11,7 @@ import lancement.ChapitreElite.Chapitre1Elite;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Chapitre2Elite {
+public class Chapitre2Elite implements ChapitreElite {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
@@ -46,7 +47,7 @@ public class Chapitre2Elite {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("    CHAPITRE 2 ELITE — L'Ile de Galuna");
+            System.out.println("    CHAPITRE 2 ELITE — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -145,35 +146,35 @@ public class Chapitre2Elite {
         // uniquement l'equipe du joueur contre les ennemis du Chapitre 2, en version elite.
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(1, "Prologue Chapitre 2 Elite", 3000, 30, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                        ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 2  -> { ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                        ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(2, "Arrivée a l'ile de galuna Elite", 3750, 50, ennemis); }
             case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(3, "Cherry, l'amour d'elite", 4500, 100, ennemis); }
             case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau));
                          return new Stage(4, "Yuka, l'annuleur renforce", 5500, 150, ennemis); }
             case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage7DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+                         ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(5, "Tobi,les griffes paralysantes d'elite", 6500, 160, ennemis); }
             case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         ennemis.add(new EnnemiMage9Tank(niveau));
+                         ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(6, "Leon Bastia d'elite", 8000, 170, ennemis); }
             case 7  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiYuka(niveau));
                          ennemis.add(new EnnemiCherry(niveau));
                          return new Stage(7, "Leon et son equipes", 9750, 180, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
-                        ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
+                        ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          return new Stage(8, "Leon Bastia — Resistance d'elite", 11500, 190, ennemis); }
-            case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage7DPS(niveau));
-                         ennemis.add(new EnnemiMage8DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau));
+            case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(9, "Leon et L'homme mysterieux — Elite", 13500, 200, ennemis); }
             case 10 -> { ennemis.add(new EnnemiDeliora(niveau));
                          return new Stage(10, "Deliora le demon Elite", 16000, 210, ennemis); }
@@ -198,8 +199,10 @@ public class Chapitre2Elite {
     }
     
 
+    public String getNomChapitre() { return "L'Ile de Galuna"; }
+
     public boolean[] getStagesDebloques() { return stagesDebloques; }
-    
+
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= NB_STAGES; i++) stagesDebloques[i] = d[i]; }
     public void setStagesReussis(boolean[] r)   { for (int i = 0; i <= NB_STAGES; i++) stagesReussis[i]   = r[i]; }

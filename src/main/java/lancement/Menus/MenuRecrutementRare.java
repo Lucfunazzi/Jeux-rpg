@@ -4,9 +4,12 @@ import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Natsu_Etherion;
+import Personnage.FairyTail.perso_Gray;
 import Personnage.FairyTail.perso_Mirajane;
 import Personnage.FairyTail.perso_Mirajane_Halphas;
 import Personnage.FairyTail.perso_jellal;
+import Personnage.FairyTail.jellal_Arc_intermagie;
+import Personnage.FairyTail.perso_Erza;
 import Equipement.Inventaire;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
@@ -28,11 +31,23 @@ public class MenuRecrutementRare {
     public static final int COUT_RECRUTEMENT_NATSU = 30;  // Parchemin A -> Natsu [A]
     public static final int COUT_EVOLUTION_NATSU    = 65;  // Parchemin S -> Natsu Etherion [S]
 
+    public static final int COUT_RECRUTEMENT_GRAY = 30;  // Parchemin A -> Gray [A] (memes valeurs que Natsu, rang A)
+
     public static final int COUT_MIRAJANE_S  = 60;  // Parchemin S  -> Mirajane [S]
     public static final int COUT_MIRAJANE_SS = 125;  // Parchemin SS -> Mirajane Halphas [SS]
 
     public static final int COUT_JELLAL = 75;  // Parchemin S -> Jellal [S]
-    public static final int COUT_JELLAL_SS=145;
+    public static final int COUT_JELLAL_SS=145;  // Parchemin SS -> Jellal Intermagie [SS]
+
+    public static final int COUT_ERZA = 80;  // Parchemin S -> Erza [S]
+
+    // ── Niveaux requis ────────────────────────────────────────────────────
+    public static final int NIVEAU_REQUIS_NATSU_GRAY            = 30;  // Recrutement Natsu / Gray
+    public static final int NIVEAU_REQUIS_EVOLUTION_NATSU       = 40;  // Evolution Natsu Etherion (evolution de Gray pas encore implementee)
+    public static final int NIVEAU_REQUIS_MIRAJANE_JELLAL           = 70;  // Recrutement Mirajane / Jellal
+    public static final int NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL = 80;  // Evolution Mirajane Halphas / Jellal Intermagie
+    public static final int NIVEAU_REQUIS_ERZA                  = 85;  // Recrutement Erza (evolution niveau 95 pas encore implementee)
+
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale      joueur               = ctx.joueur;
         ArrayList<PersonnageBase>  personnagesRecruites = ctx.personnagesRecruites;
@@ -57,15 +72,24 @@ public class MenuRecrutementRare {
             boolean natsuS       = dejaRecruteParNom("Natsu Etherion",  personnagesRecruites);
 
             System.out.println();
-            System.out.println("[ Natsu ]");
+            System.out.println("[ Natsu ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
             System.out.println("  1. Natsu [A]  — " + PARCHEMIN_A
                     + " : " + possedeA + "/" + COUT_RECRUTEMENT_NATSU
                     + (natsuA || natsuS ? "  [DEJA RECRUTE]" : ""));
             if (natsuA) {
                 System.out.println("  2. Natsu Etherion [S]  — " + PARCHEMIN_S
                         + " : " + possedeS + "/" + COUT_EVOLUTION_NATSU
-                        + "  [EVOLUTION]");
+                        + "  [EVOLUTION]  (niveau " + NIVEAU_REQUIS_EVOLUTION_NATSU + " requis)");
             }
+
+            // ── Gray ───────────────────────────────────────────────────────
+            boolean grayRecru = dejaRecruteParNom("Gray", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Gray ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
+            System.out.println("  3. Gray [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_GRAY
+                    + (grayRecru ? "  [DEJA RECRUTE]" : ""));
 
             // ── Mirajane ───────────────────────────────────────────────────
             int possedeSS        = inventaire.getQuantiteMateriau(PARCHEMIN_SS);
@@ -73,24 +97,39 @@ public class MenuRecrutementRare {
             boolean miraSS       = dejaRecruteParNom("Mirajane Halphas",  personnagesRecruites);
 
             System.out.println();
-            System.out.println("[ Mirajane ]");
-            System.out.println("  3. Mirajane [S]  — " + PARCHEMIN_S
+            System.out.println("[ Mirajane ]  (niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " requis)");
+            System.out.println("  4. Mirajane [S]  — " + PARCHEMIN_S
                     + " : " + possedeS + "/" + COUT_MIRAJANE_S
                     + (miraS || miraSS ? "  [DEJA RECRUTE]" : ""));
             if (miraS) {
-                System.out.println("  4. Mirajane Halphas [SS]  — " + PARCHEMIN_SS
+                System.out.println("  5. Mirajane Halphas [SS]  — " + PARCHEMIN_SS
                         + " : " + possedeSS + "/" + COUT_MIRAJANE_SS
-                        + "  [EVOLUTION]");
+                        + "  [EVOLUTION]  (niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " requis)");
             }
 
             // ── Jellal ─────────────────────────────────────────────────────
-            boolean jellalRecru = dejaRecruteParNom("Jellal", personnagesRecruites);
+            boolean jellalRecru    = dejaRecruteParNom("Jellal", personnagesRecruites);
+            boolean jellalEvolue   = dejaRecruteParNom("Jellal Intermagie", personnagesRecruites);
 
             System.out.println();
-            System.out.println("[ Jellal ]");
-            System.out.println("  5. Jellal [S]  — " + PARCHEMIN_S
+            System.out.println("[ Jellal ]  (niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " requis)");
+            System.out.println("  6. Jellal [S]  — " + PARCHEMIN_S
                     + " : " + possedeS + "/" + COUT_JELLAL
-                    + (jellalRecru ? "  [DEJA RECRUTE]" : ""));
+                    + (jellalRecru || jellalEvolue ? "  [DEJA RECRUTE]" : ""));
+            if (jellalRecru) {
+                System.out.println("  7. Jellal Intermagie [SS]  — " + PARCHEMIN_SS
+                        + " : " + possedeSS + "/" + COUT_JELLAL_SS
+                        + "  [EVOLUTION]  (niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " requis)");
+            }
+
+            // ── Erza ───────────────────────────────────────────────────────
+            boolean erzaRecru = dejaRecruteParNom("Erza", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Erza ]  (niveau " + NIVEAU_REQUIS_ERZA + " requis)");
+            System.out.println("  8. Erza [S]  — " + PARCHEMIN_S
+                    + " : " + possedeS + "/" + COUT_ERZA
+                    + (erzaRecru ? "  [DEJA RECRUTE]" : ""));
 
             System.out.println();
             System.out.println("0. Retour");
@@ -115,16 +154,28 @@ public class MenuRecrutementRare {
                     else tenterEvolutionNatsu(ctx, scanner);
                 }
                 case 3 -> {
+                    if (grayRecru) System.out.println("Gray est deja dans vos allies !");
+                    else tenterRecrutementGray(ctx, scanner);
+                }
+                case 4 -> {
                     if (miraS || miraSS) System.out.println("Mirajane est deja dans vos allies !");
                     else tenterRecrutementMirajane(ctx, scanner);
                 }
-                case 4 -> {
+                case 5 -> {
                     if (!miraS) System.out.println("Vous devez d'abord recruter Mirajane [S].");
                     else tenterEvolutionMirajane(ctx, scanner);
                 }
-                case 5 -> {
-                    if (jellalRecru) System.out.println("Jellal est deja dans vos allies !");
+                case 6 -> {
+                    if (jellalRecru || jellalEvolue) System.out.println("Jellal est deja dans vos allies !");
                     else tenterRecrutementJellal(ctx, scanner);
+                }
+                case 7 -> {
+                    if (!jellalRecru) System.out.println("Vous devez d'abord recruter Jellal [S].");
+                    else tenterEvolutionJellal(ctx, scanner);
+                }
+                case 8 -> {
+                    if (erzaRecru) System.out.println("Erza est deja dans vos allies !");
+                    else tenterRecrutementErza(ctx, scanner);
                 }
                 default -> System.out.println("Choix invalide.");
             }
@@ -133,6 +184,10 @@ public class MenuRecrutementRare {
 
     // ── Recrutement Natsu A ───────────────────────────────────────────────
     private void tenterRecrutementNatsu(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            System.out.println("Natsu se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !");
+            return;
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
         if (possede < COUT_RECRUTEMENT_NATSU) {
             System.out.println("Parchemins insuffisants : "
@@ -148,6 +203,10 @@ public class MenuRecrutementRare {
 
     // ── Evolution Natsu A → Natsu Etherion S ─────────────────────────────
     private void tenterEvolutionNatsu(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_NATSU) {
+            System.out.println("Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_NATSU + " !");
+            return;
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_EVOLUTION_NATSU) {
             System.out.println("Parchemins insuffisants : "
@@ -162,8 +221,31 @@ public class MenuRecrutementRare {
         System.out.println(evoluerNatsu(ctx));
     }
 
+    // ── Recrutement Gray A ────────────────────────────────────────────────
+    private void tenterRecrutementGray(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            System.out.println("Gray se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_GRAY) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_RECRUTEMENT_GRAY + " " + PARCHEMIN_A);
+            return;
+        }
+        System.out.println("Recruter Gray [A] pour " + COUT_RECRUTEMENT_GRAY
+                + " " + PARCHEMIN_A + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterGray(ctx));
+    }
+
     // ── Recrutement Mirajane S ────────────────────────────────────────────
     private void tenterRecrutementMirajane(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_MIRAJANE_JELLAL) {
+            System.out.println("Mirajane se debloque au niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " !");
+            return;
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_MIRAJANE_S) {
             System.out.println("Parchemins insuffisants : "
@@ -179,6 +261,10 @@ public class MenuRecrutementRare {
 
     // ── Evolution Mirajane S → Mirajane Halphas SS ───────────────────────
     private void tenterEvolutionMirajane(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL) {
+            System.out.println("Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " !");
+            return;
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
         if (possede < COUT_MIRAJANE_SS) {
             System.out.println("Parchemins insuffisants : "
@@ -195,6 +281,10 @@ public class MenuRecrutementRare {
 
     // ── Recrutement Jellal S ──────────────────────────────────────────────
     private void tenterRecrutementJellal(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_MIRAJANE_JELLAL) {
+            System.out.println("Jellal se debloque au niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " !");
+            return;
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_JELLAL) {
             System.out.println("Parchemins insuffisants : "
@@ -208,10 +298,52 @@ public class MenuRecrutementRare {
         System.out.println(">> " + recruterJellal(ctx));
     }
 
+    // ── Evolution Jellal S → Jellal Intermagie SS ────────────────────────
+    private void tenterEvolutionJellal(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL) {
+            System.out.println("Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_JELLAL_SS) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_JELLAL_SS + " " + PARCHEMIN_SS);
+            return;
+        }
+        System.out.println("Evoluer Jellal [S] vers Jellal Intermagie [SS] pour "
+                + COUT_JELLAL_SS + " " + PARCHEMIN_SS + " ?");
+        System.out.println("ATTENTION : Jellal [S] sera remplace definitivement. (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(evoluerJellal(ctx));
+    }
+
+    // ── Recrutement Erza S ────────────────────────────────────────────────
+    private void tenterRecrutementErza(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_ERZA) {
+            System.out.println("Erza se debloque au niveau " + NIVEAU_REQUIS_ERZA + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_ERZA) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_ERZA + " " + PARCHEMIN_S);
+            return;
+        }
+        System.out.println("Recruter Erza [S] pour " + COUT_ERZA
+                + " " + PARCHEMIN_S + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterErza(ctx));
+    }
+
     // ── Logique pure (reutilisable par la console et l'interface graphique) ─
 
     /** Tente de recruter Natsu [A]. Retourne le message resultat (parchemins non deduits si echec). */
     public String recruterNatsu(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            return "Natsu se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !";
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
         if (possede < COUT_RECRUTEMENT_NATSU) {
             return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_NATSU + " " + PARCHEMIN_A;
@@ -222,8 +354,26 @@ public class MenuRecrutementRare {
         return "Natsu a rejoint vos allies !";
     }
 
+    /** Tente de recruter Gray [A] (memes valeurs que Natsu, rang A). */
+    public String recruterGray(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            return "Gray se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_GRAY) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_GRAY + " " + PARCHEMIN_A;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_A, COUT_RECRUTEMENT_GRAY);
+        ctx.personnagesRecruites.add(new perso_Gray());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Gray a rejoint vos allies !";
+    }
+
     /** Tente de faire evoluer Natsu [A] en Natsu Etherion [S]. */
     public String evoluerNatsu(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_NATSU) {
+            return "Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_NATSU + " !";
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_EVOLUTION_NATSU) {
             return "Parchemins insuffisants : " + possede + "/" + COUT_EVOLUTION_NATSU + " " + PARCHEMIN_S;
@@ -249,6 +399,9 @@ public class MenuRecrutementRare {
 
     /** Tente de recruter Mirajane [S]. */
     public String recruterMirajane(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_MIRAJANE_JELLAL) {
+            return "Mirajane se debloque au niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " !";
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_MIRAJANE_S) {
             return "Parchemins insuffisants : " + possede + "/" + COUT_MIRAJANE_S + " " + PARCHEMIN_S;
@@ -261,6 +414,9 @@ public class MenuRecrutementRare {
 
     /** Tente de faire evoluer Mirajane [S] en Mirajane Halphas [SS]. */
     public String evoluerMirajane(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL) {
+            return "Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " !";
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
         if (possede < COUT_MIRAJANE_SS) {
             return "Parchemins insuffisants : " + possede + "/" + COUT_MIRAJANE_SS + " " + PARCHEMIN_SS;
@@ -286,6 +442,9 @@ public class MenuRecrutementRare {
 
     /** Tente de recruter Jellal [S]. Retourne le message resultat (parchemins non deduits si echec). */
     public String recruterJellal(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_MIRAJANE_JELLAL) {
+            return "Jellal se debloque au niveau " + NIVEAU_REQUIS_MIRAJANE_JELLAL + " !";
+        }
         int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
         if (possede < COUT_JELLAL) {
             return "Parchemins insuffisants : " + possede + "/" + COUT_JELLAL + " " + PARCHEMIN_S;
@@ -294,6 +453,49 @@ public class MenuRecrutementRare {
         ctx.personnagesRecruites.add(new perso_jellal());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Jellal a rejoint vos allies !";
+    }
+
+    /** Tente de faire evoluer Jellal [S] en Jellal Intermagie [SS]. */
+    public String evoluerJellal(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL) {
+            return "Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_JELLAL_SS) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_JELLAL_SS + " " + PARCHEMIN_SS;
+        }
+
+        PersonnageBase jellalS = null;
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p.getNom().equals("Jellal")) { jellalS = p; break; }
+        }
+        if (jellalS == null) return "Erreur : Jellal introuvable dans les recrues.";
+
+        ctx.formation.retirerPersonnage(jellalS);
+        ctx.personnagesRecruites.remove(jellalS);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_SS, COUT_JELLAL_SS);
+
+        jellal_Arc_intermagie jellalSS = new jellal_Arc_intermagie();
+        while (jellalSS.getNiveau() < jellalS.getNiveau()) jellalSS.monterDeNiveau();
+        ctx.personnagesRecruites.add(jellalSS);
+        ctx.sauvegarde.sauvegarder(ctx);
+
+        return "Jellal a evolue en Jellal Intermagie [SS] !\nJellal Intermagie est desormais disponible dans votre formation.";
+    }
+
+    /** Tente de recruter Erza [S]. */
+    public String recruterErza(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_ERZA) {
+            return "Erza se debloque au niveau " + NIVEAU_REQUIS_ERZA + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_ERZA) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_ERZA + " " + PARCHEMIN_S;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S, COUT_ERZA);
+        ctx.personnagesRecruites.add(new perso_Erza());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Erza a rejoint vos allies !";
     }
 
     // ── Utilitaire ────────────────────────────────────────────────────────

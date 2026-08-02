@@ -7,12 +7,7 @@ import Personnage.pnj.Chapitre3.EnnemiSol;
 import Personnage.pnj.Chapitre3.EnnemiAria;
 import Personnage.pnj.Chapitre3.EnnemiJose;
 import Personnage.pnj.Chapitre3.EnnemiGadjeel;
-import Personnage.pnj.Chapitre3.EnnemiMage1DPS;
-import Personnage.pnj.Chapitre3.EnnemiMage2DPS;
-import Personnage.pnj.Chapitre3.EnnemiMage3Soigneur;
-import Personnage.pnj.Chapitre3.EnnemiMage6Debuff;
-import Personnage.pnj.Chapitre3.EnnemiMage8DPS;
-import Personnage.pnj.Chapitre3.EnnemiMage9Tank;
+import Personnage.pnj.EnnemisGeneriques.*;
 import Equipement.CarteOr;
 import Equipement.Equipement;
 import Equipement.FragmentEquipement;
@@ -24,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Chapitre3Elite {
+public class Chapitre3Elite implements ChapitreElite {
 
     private static final int    NB_STAGES              = 10;
     private static final double CHANCE_CARTE_OR_REPLAY = 0.30;
@@ -63,7 +58,7 @@ public class Chapitre3Elite {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 3 ELITE — Phantom Lord Transcendé");
+            System.out.println("   CHAPITRE 3 ELITE — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -190,9 +185,9 @@ public class Chapitre3Elite {
             // Stage 1 — Avant-garde renforcée (+12 niveaux vs normal)
             case 1 -> {
                 e.add(new EnnemiMage1DPS(34));
-                e.add(new EnnemiMage8DPS(34));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 34));
                 e.add(new EnnemiMage2DPS(33));
-                e.add(new EnnemiMage9Tank(33));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 33));
                 e.add(new EnnemiMage3Soigneur(32));
                 return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 4500, 0, e);
             }
@@ -201,7 +196,7 @@ public class Chapitre3Elite {
             case 2 -> {
                 e.add(new EnnemiTotomaru(38));
                 e.add(new EnnemiMage2DPS(36));
-                e.add(new EnnemiMage9Tank(35));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 35));
                 e.add(new EnnemiMage3Soigneur(34));
                 e.add(new EnnemiMage3Soigneur(34));
                 return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 5500, 0, e);
@@ -210,7 +205,7 @@ public class Chapitre3Elite {
             // Stage 3 — Sol élite + troupe lourde
             case 3 -> {
                 e.add(new EnnemiSol(39));
-                e.add(new EnnemiMage8DPS(36));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 36));
                 e.add(new EnnemiMage6Debuff(36));
                 e.add(new EnnemiMage2DPS(35));
                 e.add(new EnnemiMage3Soigneur(35));
@@ -221,7 +216,7 @@ public class Chapitre3Elite {
             case 4 -> {
                 e.add(new EnnemiJubia_4elements(41));
                 e.add(new EnnemiMage3Soigneur(38));
-                e.add(new EnnemiMage9Tank(37));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 37));
                 e.add(new EnnemiMage6Debuff(37));
                 e.add(new EnnemiMage2DPS(36));
                 return new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
@@ -231,7 +226,7 @@ public class Chapitre3Elite {
             case 5 -> {
                 e.add(new EnnemiGadjeel(43));
                 e.add(new EnnemiMage3Soigneur(40));
-                e.add(new EnnemiMage9Tank(39));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 39));
                 e.add(new EnnemiMage6Debuff(39));
                 e.add(new EnnemiMage2DPS(38));
                 return new Stage(5, "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
@@ -241,7 +236,7 @@ public class Chapitre3Elite {
             case 6 -> {
                 e.add(new EnnemiAria(45));
                 e.add(new EnnemiMage3Soigneur(41));
-                e.add(new EnnemiMage9Tank(41));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 41));
                 e.add(new EnnemiMage6Debuff(40));
                 e.add(new EnnemiMage2DPS(40));
                 return new Stage(6, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 11000, 0, e);
@@ -251,7 +246,7 @@ public class Chapitre3Elite {
             case 7 -> {
                 e.add(new EnnemiJose(47));
                 e.add(new EnnemiMage3Soigneur(43));
-                e.add(new EnnemiMage9Tank(42));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 42));
                 e.add(new EnnemiMage6Debuff(42));
                 e.add(new EnnemiMage2DPS(41));
                 return new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
@@ -261,7 +256,7 @@ public class Chapitre3Elite {
             case 8 -> {
                 e.add(new EnnemiJose(50));
                 e.add(new EnnemiMage3Soigneur(46));
-                e.add(new EnnemiMage9Tank(45));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 45));
                 e.add(new EnnemiMage6Debuff(45));
                 e.add(new EnnemiMage2DPS(44));
                 return new Stage(8, "[ELITE] José Pora — Contre-Offensive de Phantom Lord", 15000, 0, e);
@@ -271,7 +266,7 @@ public class Chapitre3Elite {
             case 9 -> {
                 e.add(new EnnemiJose(54));
                 e.add(new EnnemiMage3Soigneur(50));
-                e.add(new EnnemiMage9Tank(49));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 49));
                 e.add(new EnnemiMage6Debuff(49));
                 e.add(new EnnemiMage2DPS(48));
                 return new Stage(9, "[ELITE] José Pora — Puissance Maximale", 17500, 0, e);
@@ -281,7 +276,7 @@ public class Chapitre3Elite {
             case 10 -> {
                 e.add(new EnnemiAria(58));
                 e.add(new EnnemiMage3Soigneur(54));
-                e.add(new EnnemiMage9Tank(53));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 53));
                 e.add(new EnnemiMage6Debuff(53));
                 e.add(new EnnemiMage2DPS(52));
                 return new Stage(10, "[ELITE] Aria — Le Dernier Rempart d'Élite", 21000, 0, e);
@@ -306,6 +301,8 @@ public class Chapitre3Elite {
             default -> "???";
         };
     }
+
+    public String getNomChapitre() { return "Phantom Lord Transcendé"; }
 
     public boolean[] getStagesDebloques()  { return stagesDebloques; }
     public boolean[] getStagesReussis()    { return stagesReussis; }

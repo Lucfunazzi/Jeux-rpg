@@ -207,6 +207,31 @@ public class Formation {
         };
     }
 
+    /** Construit et configure un invite temporaire (avec niveau) pour un combat scripte. */
+    public static <T extends PersonnageBase> T creerInvite(java.util.function.Supplier<T> constructeur,
+            int niveau, double vie, double attaque, double defense, double vitesse) {
+        T invite = constructeur.get();
+        invite.setNiveau(niveau);
+        invite.setVie(vie);
+        invite.setVieMax(vie);
+        invite.setAttaque(attaque);
+        invite.setDefense(defense);
+        invite.setVitesse(vitesse);
+        return invite;
+    }
+
+    /** Variante sans niveau, pour les quelques invites historiques qui ne le definissent pas. */
+    public static <T extends PersonnageBase> T creerInvite(java.util.function.Supplier<T> constructeur,
+            double vie, double attaque, double defense, double vitesse) {
+        T invite = constructeur.get();
+        invite.setVie(vie);
+        invite.setVieMax(vie);
+        invite.setAttaque(attaque);
+        invite.setDefense(defense);
+        invite.setVitesse(vitesse);
+        return invite;
+    }
+
     /**
      * Ajoute un invite (Erza, Natsu, Gray, Elfman, ...) a une copie d'equipe pour la duree
      * d'un seul combat, en respectant les regles de formation (1 Tank max, 3 DPS max joueur

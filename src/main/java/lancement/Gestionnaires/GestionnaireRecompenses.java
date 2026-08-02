@@ -180,13 +180,20 @@ public class GestionnaireRecompenses {
 
     /** Achete 1 fragment du personnage donne a la boutique du mois. */
     public String acheterFragmentBoutiqueMois(String nomPersonnage, String rarete, Inventaire inventaire) {
-        int prix = prixFragmentBoutiqueMois(rarete);
-        if (pointsMois < prix) {
-            return "Points insuffisants : " + pointsMois + " / " + prix + " points.";
+        return acheterFragmentBoutiqueMois(nomPersonnage, rarete, inventaire, 1);
+    }
+
+    /** Achete plusieurs fragments du personnage donne a la boutique du mois. */
+    public String acheterFragmentBoutiqueMois(String nomPersonnage, String rarete, Inventaire inventaire, int quantite) {
+        if (quantite <= 0) return "Quantite invalide.";
+        int prixUnitaire = prixFragmentBoutiqueMois(rarete);
+        int prixTotal = prixUnitaire * quantite;
+        if (pointsMois < prixTotal) {
+            return "Points insuffisants : " + pointsMois + " / " + prixTotal + " points.";
         }
-        pointsMois -= prix;
-        GestionnaireEtoilesPerso.ajouterFragments(inventaire, nomPersonnage, 1);
-        return "1 fragment de " + nomPersonnage + " achete pour " + prix + " points ! (Points restants : " + pointsMois + ")";
+        pointsMois -= prixTotal;
+        GestionnaireEtoilesPerso.ajouterFragments(inventaire, nomPersonnage, quantite);
+        return quantite + " fragment(s) de " + nomPersonnage + " achete(s) pour " + prixTotal + " points ! (Points restants : " + pointsMois + ")";
     }
 
     public void setJoursCumulesMois(int n)                { this.joursCumulesMois = n; }

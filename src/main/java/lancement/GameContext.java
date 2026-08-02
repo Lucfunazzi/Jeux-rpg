@@ -3,13 +3,34 @@ package lancement;
 import Equipement.Inventaire;
 import Joueur.Personnage_principale;
 import Personnage.PersonnageBase;
+import lancement.Chapitres.Chapitre;
 import lancement.Chapitres.Chapitre1;
 import lancement.Chapitres.Chapitre2;
 import lancement.Chapitres.Chapitre3;
 import lancement.Chapitres.Chapitre4;
+import lancement.Chapitres.Chapitre5;
+import lancement.Chapitres.Chapitre6;
+import lancement.Chapitres.Chapitre7;
+import lancement.Chapitres.Chapitre8;
+import lancement.Chapitres.Chapitre9;
+import lancement.Chapitres.Chapitre10;
+import lancement.Chapitres.Chapitre11;
+import lancement.Chapitres.Chapitre12;
+import lancement.Chapitres.Chapitre13;
+import lancement.ChapitreElite.ChapitreElite;
 import lancement.ChapitreElite.Chapitre1Elite;
 import lancement.ChapitreElite.Chapitre2Elite;
 import lancement.ChapitreElite.Chapitre3Elite;
+import lancement.ChapitreElite.Chapitre4Elite;
+import lancement.ChapitreElite.Chapitre5Elite;
+import lancement.ChapitreElite.Chapitre6Elite;
+import lancement.ChapitreElite.Chapitre7Elite;
+import lancement.ChapitreElite.Chapitre8Elite;
+import lancement.ChapitreElite.Chapitre9Elite;
+import lancement.ChapitreElite.Chapitre10Elite;
+import lancement.ChapitreElite.Chapitre11Elite;
+import lancement.ChapitreElite.Chapitre12Elite;
+import lancement.ChapitreElite.Chapitre13Elite;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import lancement.Gestionnaires.GestionnaireDonjon;
 import lancement.Gestionnaires.GestionnaireEnergie;
@@ -28,6 +49,7 @@ import lancement.Menus.MenuExamenS;
 import lancement.Menus.MenuRecrutement;
 import lancement.Menus.MenuTirage_recrutement;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Conteneur central passé à chaque chapitre, stage et menu.
@@ -46,11 +68,35 @@ public class GameContext {
     public Chapitre2      chapitre2;
     public Chapitre3      chapitre3;
     public Chapitre4      chapitre4;
+    public Chapitre5      chapitre5;
+    public Chapitre6      chapitre6;
+    public Chapitre7      chapitre7;
+    public Chapitre8      chapitre8;
+    public Chapitre9      chapitre9;
+    public Chapitre10     chapitre10;
+    public Chapitre11     chapitre11;
+    public Chapitre12     chapitre12;
+    public Chapitre13     chapitre13;
 
     // ── Chapitres élite ───────────────────────────────────────────────────
     public Chapitre1Elite chapitre1Elite;
     public Chapitre2Elite chapitre2Elite;
     public Chapitre3Elite chapitre3Elite;
+    public Chapitre4Elite chapitre4Elite;
+    public Chapitre5Elite chapitre5Elite;
+    public Chapitre6Elite chapitre6Elite;
+    public Chapitre7Elite chapitre7Elite;
+    public Chapitre8Elite chapitre8Elite;
+    public Chapitre9Elite chapitre9Elite;
+    public Chapitre10Elite chapitre10Elite;
+    public Chapitre11Elite chapitre11Elite;
+    public Chapitre12Elite chapitre12Elite;
+    public Chapitre13Elite chapitre13Elite;
+
+    /** Vue generique des chapitres 1-13, indexee a partir de 0 (chapitres.get(0) = chapitre 1). */
+    public List<Chapitre>       chapitres;
+    /** Vue generique des chapitres elite 1-13, indexee a partir de 0 (chapitresElite.get(0) = chapitre 1 elite). */
+    public List<ChapitreElite>  chapitresElite;
 
     // ── Managers ──────────────────────────────────────────────────────────
     public GestionnaireSauvegarde        sauvegarde;
@@ -96,6 +142,15 @@ public class GameContext {
         ctx.chapitre2            = new Chapitre2();
         ctx.chapitre3            = new Chapitre3();
         ctx.chapitre4            = new Chapitre4();
+        ctx.chapitre5            = new Chapitre5();
+        ctx.chapitre6            = new Chapitre6();
+        ctx.chapitre7            = new Chapitre7();
+        ctx.chapitre8            = new Chapitre8();
+        ctx.chapitre9            = new Chapitre9();
+        ctx.chapitre10           = new Chapitre10();
+        ctx.chapitre11           = new Chapitre11();
+        ctx.chapitre12           = new Chapitre12();
+        ctx.chapitre13           = new Chapitre13();
         ctx.gestionnaireQuetes   = new GestionnaireQuetes();
         ctx.gestionnaireEnergie  = new GestionnaireEnergie();
         ctx.rangJoueur           = new RangJoueur();
@@ -112,6 +167,24 @@ public class GameContext {
         ctx.chapitre1Elite         = new Chapitre1Elite(ctx.chapitre1);
         ctx.chapitre2Elite         = new Chapitre2Elite(ctx.chapitre1, ctx.chapitre2, ctx.chapitre1Elite);
         ctx.chapitre3Elite         = new Chapitre3Elite(ctx.chapitre3, ctx.chapitre2Elite);
+        ctx.chapitre4Elite         = new Chapitre4Elite(ctx.chapitre4, ctx.chapitre3Elite);
+        ctx.chapitre5Elite         = new Chapitre5Elite(ctx.chapitre5, ctx.chapitre4Elite);
+        ctx.chapitre6Elite         = new Chapitre6Elite(ctx.chapitre6, ctx.chapitre5Elite);
+        ctx.chapitre7Elite         = new Chapitre7Elite(ctx.chapitre7, ctx.chapitre6Elite);
+        ctx.chapitre8Elite         = new Chapitre8Elite(ctx.chapitre8, ctx.chapitre7Elite);
+        ctx.chapitre9Elite         = new Chapitre9Elite(ctx.chapitre9, ctx.chapitre8Elite);
+        ctx.chapitre10Elite        = new Chapitre10Elite(ctx.chapitre10, ctx.chapitre9Elite);
+        ctx.chapitre11Elite        = new Chapitre11Elite(ctx.chapitre11, ctx.chapitre10Elite);
+        ctx.chapitre12Elite        = new Chapitre12Elite(ctx.chapitre12, ctx.chapitre11Elite);
+        ctx.chapitre13Elite        = new Chapitre13Elite(ctx.chapitre13, ctx.chapitre12Elite);
+
+        ctx.chapitres = List.of(ctx.chapitre1, ctx.chapitre2, ctx.chapitre3, ctx.chapitre4, ctx.chapitre5,
+                ctx.chapitre6, ctx.chapitre7, ctx.chapitre8, ctx.chapitre9, ctx.chapitre10,
+                ctx.chapitre11, ctx.chapitre12, ctx.chapitre13);
+        ctx.chapitresElite = List.of(ctx.chapitre1Elite, ctx.chapitre2Elite, ctx.chapitre3Elite, ctx.chapitre4Elite,
+                ctx.chapitre5Elite, ctx.chapitre6Elite, ctx.chapitre7Elite, ctx.chapitre8Elite, ctx.chapitre9Elite,
+                ctx.chapitre10Elite, ctx.chapitre11Elite, ctx.chapitre12Elite, ctx.chapitre13Elite);
+
         return ctx;
     }
 
@@ -125,13 +198,9 @@ public class GameContext {
         this.formation             = new Formation(this.joueur, gestionnaireCompagnons);
         this.formation.setGestionnaireTitres(this.gestionnaireTitres);
         sauvegarde.restaurerFormation(this.formation, data, this.personnagesRecruites);
-        sauvegarde.restaurerChapitre1(chapitre1, data);
-        sauvegarde.restaurerChapitre1Elite(chapitre1Elite, data);
-        sauvegarde.restaurerChapitre2(chapitre2, data);
-        sauvegarde.restaurerChapitre3(chapitre3, data);
-        sauvegarde.restaurerChapitre4(chapitre4, data);
-        sauvegarde.restaurerChapitre2Elite2(chapitre2Elite, data);
-        sauvegarde.restaurerChapitre3Elite(chapitre3Elite, data);
+        sauvegarde.restaurerChapitres(chapitres, data.chapitresDebloques, data.chapitresReussis);
+        sauvegarde.restaurerChapitresElite(chapitresElite, data.chapitresEliteDebloques, data.chapitresEliteReussis);
+        sauvegarde.restaurerChapitre3ElitePremiereVictoire(chapitre3Elite, data);
         sauvegarde.restaurerInventaire(inventaire, data);
         sauvegarde.restaurerQuetes(this, data);
         sauvegarde.restaurerTutoriel(this, data);

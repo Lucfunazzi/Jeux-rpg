@@ -1,7 +1,9 @@
 package lancement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SauvegardeData {
 
@@ -37,27 +39,17 @@ public class SauvegardeData {
     public List<String> formationAttaquants = new ArrayList<>();
     public List<String> formationSupports   = new ArrayList<>();
 
-    // ── Progression Chapitre 1 ────────────────────────────────────────────
-    public boolean[] chapitre1Debloques      = new boolean[11];
-    public boolean[] chapitre1Reussis        = new boolean[11];
-    public boolean[] chapitre1EliteDebloques = new boolean[11];
-    public boolean[] chapitre1EliteReussis   = new boolean[11];
-
-    public boolean[] chapitre2Debloques      = new boolean[11];
-    public boolean[] chapitre2Reussis        = new boolean[11];
-    public boolean[] chapitre2EliteDebloques = new boolean[11];
-    public boolean[] chapitre2EliteReussis   = new boolean[11];
-    public boolean[] chapitre3EliteDebloques  = new boolean[11];
-    public boolean[] chapitre3EliteReussis    = new boolean[11];
+    // ── Progression des chapitres (cles = "c" + numero de chapitre, ex. "c1"-"c13") ──
+    // Prefixe "c" volontaire : Firebase Realtime Database convertit silencieusement en
+    // tableau JSON tout objet dont les cles sont des entiers purs ("1","2",...), ce qui
+    // casse la desertialisation Gson d'une Map au rechargement. Des cles non numeriques
+    // evitent cette coercion.
+    public Map<String, boolean[]> chapitresDebloques      = new HashMap<>();
+    public Map<String, boolean[]> chapitresReussis        = new HashMap<>();
+    public Map<String, boolean[]> chapitresEliteDebloques = new HashMap<>();
+    public Map<String, boolean[]> chapitresEliteReussis   = new HashMap<>();
+    /** Specifique au Chapitre 3 Elite (drop de fragments a la premiere victoire). */
     public boolean[] chapitre3ElitePremiereVictoire = new boolean[11];
-
-    public boolean[] chapitre3Debloques = new boolean[11];
-    public boolean[] chapitre3Reussis   = new boolean[11];
-
-    public boolean[] chapitre4Debloques = new boolean[11];
-    public boolean[] chapitre4Reussis   = new boolean[11];
-
-
 
     // ── Recrutement ───────────────────────────────────────────────────────
     public int parcheminC;

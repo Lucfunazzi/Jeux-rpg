@@ -65,7 +65,8 @@ public class MenuRecrutement {
         new InfoPerso("Cherry",      "Support"),
         new InfoPerso("Tobi",        "DPS"),
         new InfoPerso("Yuka",        "Tank"),
-        new InfoPerso("Miliana",     "Support")
+        new InfoPerso("Miliana",     "Support"),
+        new InfoPerso("Wolly",       "DPS")
     );
 
     private static final List<InfoPerso> PAGE2 = List.of(
@@ -77,7 +78,6 @@ public class MenuRecrutement {
         new InfoPerso("Leon",        "DPS"),
         new InfoPerso("Totomaru",    "DPS"),
         new InfoPerso("Sol",         "Tank"),
-        new InfoPerso("Wolly",       "DPS"),
         new InfoPerso("Simon",       "Tank"),
         new InfoPerso("Shaw",        "Support")
     );

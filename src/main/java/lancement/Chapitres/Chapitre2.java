@@ -4,6 +4,7 @@ import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 
 import Personnage.pnj.Chapitre2.*;
+import Personnage.pnj.EnnemisGeneriques.*;
 import Personnage.FairyTail.perso_Lucy;
 import Personnage.FairyTail.perso_Natsu;
 import Personnage.FairyTail.perso_Gray;
@@ -13,7 +14,7 @@ import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Chapitre2 {
+public class Chapitre2 implements Chapitre {
 
     private static final int NB_STAGES = 10;
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
@@ -30,7 +31,7 @@ public class Chapitre2 {
             ctx.gestionnaireEnergie.mettreAJourRecharge();
 
             System.out.println("\n========================================");
-            System.out.println("   CHAPITRE 2 — L'Île de Galuna");
+            System.out.println("   CHAPITRE 2 — " + getNomChapitre());
             System.out.println("========================================");
             System.out.println("Or : " + String.format("%.0f", ctx.joueur.getOr())
                     + "  |  " + ctx.gestionnaireEnergie.afficherEnergie());
@@ -86,33 +87,15 @@ public class Chapitre2 {
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = switch (numero) {
             case 3 -> {
-                perso_Lucy invite = new perso_Lucy();
-                invite.setNiveau(15);
-                invite.setVie(900);
-                invite.setVieMax(900);
-                invite.setAttaque(140);
-                invite.setDefense(95);
-                invite.setVitesse(160);
+                perso_Lucy invite = Formation.creerInvite(perso_Lucy::new, 15, 900, 140, 95, 160);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4, 5 -> {
-                perso_Natsu invite = new perso_Natsu();
-                invite.setNiveau(18);
-                invite.setVie(1100);
-                invite.setVieMax(1100);
-                invite.setAttaque(220);
-                invite.setDefense(130);
-                invite.setVitesse(140);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 18, 1100, 220, 130, 140);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 6, 8 -> {
-                perso_Gray invite = new perso_Gray();
-                invite.setNiveau(19);
-                invite.setVie(950);
-                invite.setVieMax(950);
-                invite.setAttaque(210);
-                invite.setDefense(140);
-                invite.setVitesse(120);
+                perso_Gray invite = Formation.creerInvite(perso_Gray::new, 19, 950, 210, 140, 120);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 9  -> lancerStage9AvecUl(ctx, stage, estNouveau);
@@ -149,17 +132,17 @@ public class Chapitre2 {
         // mais un peu plus d'XP qu'au Chapitre 1 pour suivre la progression des chapitres.
         switch (numero) {
             case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(1, "Prologue Chapitre 2", 75, 8, ennemis); }
 
-            case 2  -> { ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                        ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 2  -> { ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+                        ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          ennemis.add(new EnnemiMage2DPS(niveau));
                          return new Stage(2, "Arrivée a l'ile de galuna", 90, 9, ennemis); }
 
             case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(niveau)); ennemis.add(new EnnemiMage4Buff(niveau));
+                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2, niveau));
 
                          return new Stage(3, "Lucy VS Cherry", 105, 10, ennemis); } // Lucy rejoint l'equipe : voir lancerStage3AvecLucy
 
@@ -170,21 +153,21 @@ public class Chapitre2 {
                          return new Stage(4, "Yuka contre Natsu", 125, 12, ennemis); } // Natsu rejoint l'equipe : voir lancerStageAvecNatsu
 
             case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                         ennemis.add(new EnnemiMage9Tank(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+                         ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
 
                          return new Stage(5, "Tobi contre Natsu", 140, 13, ennemis); }// Natsu rejoint l'equipe : voir lancerStageAvecNatsu
 
             case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
                          ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         ennemis.add(new EnnemiMage9Tank(niveau));
+                         ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_2, niveau));
 
                          return new Stage(6, "Gray vs Leon 1", 160, 15, ennemis); }//Gray rejoint l'equipe : voir lancerStageAvecGray
 
             case 7  -> { ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                           ennemis.add(new EnnemiMage5Tank(niveau)); //combat avec Natsu contre  homme mysterieux ( ultia en gros combat demonstation)
+                           ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2, niveau)); //combat avec Natsu contre  homme mysterieux ( ultia en gros combat demonstation)
                          return new Stage(7, "Natsu contre l'homme mysterieux", 190, 16, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(niveau)); // Gray rejoint l'equipe : voir lancerStageAvecGray
-                        ennemis.add(new EnnemiMage4Buff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2, niveau)); // Gray rejoint l'equipe : voir lancerStageAvecGray
+                        ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
                          return new Stage(8, "Gray vs Leon part 2", 215, 18, ennemis); }
             case 9  -> { ennemis.add(new EnnemiDeliora_passe()); // Combat flashback (niveau fixe) : Ul seule contre Deliora, voir lancerStage9AvecUl
                          return new Stage(9, "Le passé de Gray", 240, 19, ennemis); }
@@ -209,6 +192,8 @@ public class Chapitre2 {
             default -> "???";
         };
     }
+
+    public String getNomChapitre() { return "L'Île de Galuna"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }
