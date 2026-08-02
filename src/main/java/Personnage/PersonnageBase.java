@@ -279,14 +279,21 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getRage() { return this.rage; }
 
-    /** Chance fixe (identique pour tous, alliés comme ennemis) que tout gain de rage soit doublé. */
+    /** Chance fixe qu'un don de rage a un allie (pas un gain sur sa propre action) soit double. */
     private static final double CHANCE_RAGE_CRITIQUE = 0.15;
 
+    /** Gain de rage sur sa propre action (attaque de base, compensation d'esquive, etc.) : deterministe,
+     *  le seul doublement possible est celui du coup critique (deja applique par l'appelant). */
     public void ajouterRage(double montant) {
         Ralentissement ralen = getEffet(Ralentissement.class);
         if (ralen != null) montant = ralen.appliquerSurGainRage(montant);
-        if (Math.random() < CHANCE_RAGE_CRITIQUE) montant *= 2;
         this.rage += montant;
+    }
+
+    /** Rage donnee par un autre personnage (synergie, effet de soutien...) : chance fixe d'etre doublee. */
+    public void ajouterRageAllie(double montant) {
+        if (Math.random() < CHANCE_RAGE_CRITIQUE) montant *= 2;
+        ajouterRage(montant);
     }
 
     public void reinitialiserRage() {

@@ -47,12 +47,17 @@ public class Combat {
         public final List<String> lignes;
         public final List<PersonnageSnapshot> etat;
         public final boolean finDeCombat;
+        /** Non-null uniquement quand cet evenement est le declenchement d'un ultime : nom de l'attaque
+         *  (via PersonnageBase.getNomsAttaques()), pour l'affichage d'une banniere dediee cote UI. */
+        public final String ultimeNom;
 
-        CombatEvent(String titre, List<String> lignes, List<PersonnageSnapshot> etat, boolean finDeCombat) {
+        CombatEvent(String titre, List<String> lignes, List<PersonnageSnapshot> etat, boolean finDeCombat,
+                    String ultimeNom) {
             this.titre       = titre;
             this.lignes      = lignes;
             this.etat        = etat;
             this.finDeCombat = finDeCombat;
+            this.ultimeNom   = ultimeNom;
         }
     }
 
@@ -166,12 +171,16 @@ public class Combat {
     }
 
     private void enregistrer(String titre, List<String> lignes) {
-        enregistrer(titre, lignes, false);
+        enregistrer(titre, lignes, false, null);
     }
 
     private void enregistrer(String titre, List<String> lignes, boolean fin) {
+        enregistrer(titre, lignes, fin, null);
+    }
+
+    private void enregistrer(String titre, List<String> lignes, boolean fin, String ultimeNom) {
         if (evenements == null) return;
-        evenements.add(new CombatEvent(titre, new ArrayList<>(lignes), snapshotEquipes(equipeJoueur, equipeAdverse), fin));
+        evenements.add(new CombatEvent(titre, new ArrayList<>(lignes), snapshotEquipes(equipeJoueur, equipeAdverse), fin, ultimeNom));
     }
 
     /**
@@ -273,6 +282,7 @@ public class Combat {
 
                 // Le log est créé ici et imprimé après chaque action
                 List<String> log = new ArrayList<>();
+                String ultimeDeclenche = null;
 
                 if (attaquant.getRage() >= 100) {
                     Silence silenceUltime = attaquant.getEffet(Silence.class);
@@ -286,6 +296,8 @@ public class Combat {
                         log.add("[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
                         attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
                         attaquant.reinitialiserRage();
+                        String[] nomsAttaques = attaquant.getNomsAttaques();
+                        ultimeDeclenche = (nomsAttaques != null && nomsAttaques.length > 2) ? nomsAttaques[2] : "Ultime";
                     }
 
                 } else if (attaquant.getRage() >= 50 && !attaquant.getSpecialeUtilisee()) {
@@ -318,7 +330,7 @@ public class Combat {
                 for (String ligne : log) {
                     System.out.println(ligne);
                 }
-                if (!log.isEmpty()) enregistrer(attaquant.getNom(), log);
+                if (!log.isEmpty()) enregistrer(attaquant.getNom(), log, false, ultimeDeclenche);
             }
             numeroTour++;
         }

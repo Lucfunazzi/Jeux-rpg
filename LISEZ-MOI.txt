@@ -1,0 +1,22 @@
+========================================
+   FAIRY TAIL RPG - Comment jouer
+========================================
+
+Pour jouer :
+
+    1. Ouvrez le dossier "Fairy Tail RPG"
+    2. Double-cliquez sur "Fairy Tail RPG.exe"
+
+(Si Windows affiche un avertissement "Windows a protege votre
+ordinateur", cliquez sur "Informations complementaires" puis
+"Executer quand meme" - c'est normal pour un programme qui n'est
+pas signe numeriquement, ce n'est pas un virus.)
+
+
+----------------------------------------
+Pour les developpeurs
+----------------------------------------
+Le dossier "Jeu" contient le jeu deja construit (pret a etre copie
+sur un autre ordinateur, sans rien installer). Il est regenere par
+build-exe.bat a partir du code source (dossier "src"), qui necessite
+Maven et le JDK.

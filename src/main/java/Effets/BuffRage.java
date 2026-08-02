@@ -14,14 +14,14 @@ public class BuffRage {
     }
 
     public void appliquer(PersonnageBase cible) {
-        cible.ajouterRage(quantiteRage);
+        cible.ajouterRageAllie(quantiteRage);
         System.out.println(cible.getNom() + " gagne " + quantiteRage + " rage !");
     }
 
     public void appliquerSurEquipe(ArrayList<PersonnageBase> equipe) {
         for (PersonnageBase perso : equipe) {
             if (perso.estVivant()) {
-                perso.ajouterRage(quantiteRage);
+                perso.ajouterRageAllie(quantiteRage);
                 System.out.println(perso.getNom() + " gagne " + quantiteRage + " rage !");
             }
         }

@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -22,18 +23,22 @@
         </VBox>
     </top>
     <center>
-        <HBox spacing="20" alignment="TOP_CENTER">
-            <padding><Insets left="20" right="20" top="4"/></padding>
-            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
-                <GridPane fx:id="equipeJoueurBox" hgap="14" vgap="8" alignment="CENTER"/>
-            </ScrollPane>
-            <VBox alignment="CENTER">
-                <Label text="VS" styleClass="vs-badge" alignment="CENTER"/>
-            </VBox>
-            <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
-                <GridPane fx:id="equipeAdverseBox" hgap="14" vgap="8" alignment="CENTER"/>
-            </ScrollPane>
-        </HBox>
+        <StackPane>
+            <HBox spacing="20" alignment="TOP_CENTER">
+                <padding><Insets left="20" right="20" top="4"/></padding>
+                <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
+                    <GridPane fx:id="equipeJoueurBox" hgap="14" vgap="8" alignment="CENTER"/>
+                </ScrollPane>
+                <VBox alignment="CENTER">
+                    <Label text="VS" styleClass="vs-badge" alignment="CENTER"/>
+                </VBox>
+                <ScrollPane fitToWidth="true" prefWidth="300" styleClass="scroll-pane" HBox.hgrow="ALWAYS">
+                    <GridPane fx:id="equipeAdverseBox" hgap="14" vgap="8" alignment="CENTER"/>
+                </ScrollPane>
+            </HBox>
+            <Label fx:id="ultimeLabel" styleClass="banniere-ultime" visible="false" managed="false"
+                   StackPane.alignment="CENTER"/>
+        </StackPane>
     </center>
     <bottom>
         <VBox spacing="10" alignment="CENTER">

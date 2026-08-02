@@ -1,0 +1,15 @@
+# Build Maven
+target/
+
+# Jeu pre-construit (genere par build-exe.bat, distribue via les Releases GitHub)
+Jeu/
+*.zip
+
+# NetBeans
+nbproject/private/
+nb-configuration.xml
+
+# IDE divers
+.idea/
+*.iml
+.vscode/

@@ -7,8 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -41,6 +47,7 @@ public class EcranCombatController {
 
     @FXML private Label etapeLabel;
     @FXML private Label banniereLabel;
+    @FXML private Label ultimeLabel;
     @FXML private GridPane equipeJoueurBox;
     @FXML private GridPane equipeAdverseBox;
     @FXML private TextArea logArea;
@@ -59,6 +66,8 @@ public class EcranCombatController {
     private boolean victoire;
 
     private static final class CarteCombat {
+        final String nom;
+        final StackPane conteneur;
         final VBox racine;
         final Rectangle barrePV;
         final Rectangle barreRage;
@@ -66,7 +75,10 @@ public class EcranCombatController {
         final Label rageTexte;
         final FlowPane effetsBox;
 
-        CarteCombat(VBox racine, Rectangle barrePV, Rectangle barreRage, Label pvTexte, Label rageTexte, FlowPane effetsBox) {
+        CarteCombat(String nom, StackPane conteneur, VBox racine, Rectangle barrePV, Rectangle barreRage,
+                    Label pvTexte, Label rageTexte, FlowPane effetsBox) {
+            this.nom = nom;
+            this.conteneur = conteneur;
             this.racine = racine;
             this.barrePV = barrePV;
             this.barreRage = barreRage;
@@ -211,13 +223,13 @@ public class EcranCombatController {
                 // Seul occupant de la colonne (ex. le Tank) : centre sur toute la hauteur
                 // disponible plutot que coince en haut, meme si les colonnes voisines
                 // comptent davantage de membres.
-                Node carte = cartes[membres.get(0)].racine;
+                Node carte = cartes[membres.get(0)].conteneur;
                 grille.add(carte, col, 1);
                 GridPane.setRowSpan(carte, lignesMax);
                 GridPane.setValignment(carte, VPos.CENTER);
             } else {
                 for (int ligne = 0; ligne < membres.size(); ligne++) {
-                    Node carte = cartes[membres.get(ligne)].racine;
+                    Node carte = cartes[membres.get(ligne)].conteneur;
                     grille.add(carte, col, ligne + 1);
                     GridPane.setValignment(carte, VPos.TOP);
                 }
@@ -263,8 +275,14 @@ public class EcranCombatController {
         racine.setAlignment(Pos.CENTER);
         racine.setPrefWidth(LARGEUR_CARTE);
 
-        CarteCombat carte = new CarteCombat(racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox);
-        appliquerEtat(carte, snap, false, false);
+        // StackPane englobant : sert de support aux nombres de degats/soins flottants,
+        // affiches par-dessus la carte sans perturber sa mise en page.
+        StackPane conteneur = new StackPane(racine);
+        conteneur.setPrefWidth(LARGEUR_CARTE);
+        StackPane.setAlignment(racine, Pos.CENTER);
+
+        CarteCombat carte = new CarteCombat(snap.nom, conteneur, racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox);
+        appliquerEtat(carte, snap, 0);
         return carte;
     }
 
@@ -319,14 +337,22 @@ public class EcranCombatController {
         return pane;
     }
 
-    private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, boolean flashDegats, boolean flashSoin) {
+    /**
+     * @param deltaVie variation de PV depuis l'etat precedent (negatif = degats, positif =
+     *                 soin, 0 = pas de variation a mettre en evidence, ex. etat initial).
+     */
+    private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, double deltaVie) {
+        appliquerEtat(carte, snap, deltaVie, false);
+    }
+
+    private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, double deltaVie, boolean critique) {
         double ratioPV = snap.vieMax > 0 ? Math.max(0, Math.min(1, snap.vie / snap.vieMax)) : 0;
-        carte.barrePV.setWidth(LARGEUR_BARRE * ratioPV);
+        animerBarre(carte.barrePV, LARGEUR_BARRE * ratioPV);
         carte.barrePV.setFill(couleurPV(ratioPV));
         carte.pvTexte.setText("PV : " + (int) Math.ceil(snap.vie) + " / " + (int) Math.ceil(snap.vieMax));
 
         double ratioRage = Math.max(0, Math.min(1, snap.rage / 100.0));
-        carte.barreRage.setWidth(LARGEUR_BARRE * ratioRage);
+        animerBarre(carte.barreRage, LARGEUR_BARRE * ratioRage);
         carte.barreRage.setFill(Color.web("#4ea8f2"));
         carte.rageTexte.setText("Rage : " + (int) snap.rage + " / 100");
 
@@ -338,13 +364,55 @@ public class EcranCombatController {
         carte.racine.getStyleClass().removeAll("carte-combat-hit", "carte-combat-heal", "carte-combat-ko");
         if (!snap.vivant) {
             carte.racine.getStyleClass().add("carte-combat-ko");
-        } else if (flashDegats) {
+        } else if (deltaVie < 0) {
             carte.racine.getStyleClass().add("carte-combat-hit");
             retirerApres(carte.racine, "carte-combat-hit");
-        } else if (flashSoin) {
+            afficherNombreFlottant(carte.conteneur, "-" + (int) Math.round(-deltaVie), "#ff6b6b", critique);
+        } else if (deltaVie > 0) {
             carte.racine.getStyleClass().add("carte-combat-heal");
             retirerApres(carte.racine, "carte-combat-heal");
+            afficherNombreFlottant(carte.conteneur, "+" + (int) Math.round(deltaVie), "#6bffa0", false);
         }
+    }
+
+    /** Anime la largeur d'une barre (PV/rage) vers sa nouvelle valeur au lieu d'un saut instantane. */
+    private void animerBarre(Rectangle barre, double largeurCible) {
+        Timeline anim = new Timeline(new KeyFrame(Duration.millis(350),
+                new KeyValue(barre.widthProperty(), largeurCible, Interpolator.EASE_OUT)));
+        anim.play();
+    }
+
+    /** Fait apparaitre un nombre (degats/soin) au-dessus de la carte, qui monte et s'estompe. */
+    private void afficherNombreFlottant(StackPane conteneur, String texte, String couleurHex, boolean critique) {
+        VBox pile = new VBox(0);
+        pile.setAlignment(Pos.CENTER);
+        pile.setMouseTransparent(true);
+
+        if (critique) {
+            Label critiqueLabel = new Label("CRITIQUE !");
+            critiqueLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #f2c14e;"
+                    + " -fx-effect: dropshadow(gaussian, black, 3, 0.6, 0, 0);");
+            pile.getChildren().add(critiqueLabel);
+        }
+
+        Label nombre = new Label(texte);
+        nombre.setStyle("-fx-font-size: " + (critique ? "20px" : "16px") + "; -fx-font-weight: bold; -fx-text-fill: "
+                + couleurHex + "; -fx-effect: dropshadow(gaussian, black, 3, 0.6, 0, 0);");
+        pile.getChildren().add(nombre);
+
+        StackPane.setAlignment(pile, Pos.TOP_CENTER);
+        pile.setTranslateY(-10);
+        conteneur.getChildren().add(pile);
+
+        TranslateTransition monte = new TranslateTransition(Duration.millis(900), pile);
+        monte.setByY(-30);
+        FadeTransition disparait = new FadeTransition(Duration.millis(900), pile);
+        disparait.setFromValue(1);
+        disparait.setToValue(0);
+
+        ParallelTransition anim = new ParallelTransition(monte, disparait);
+        anim.setOnFinished(e -> conteneur.getChildren().remove(pile));
+        anim.play();
     }
 
     private void retirerApres(VBox noeud, String classe) {
@@ -380,13 +448,17 @@ public class EcranCombatController {
         index++;
 
         etapeLabel.setText(evt.titre != null ? evt.titre : "");
+        surlignerActeur(evt.titre);
 
+        boolean critique = evt.lignes.contains("Coup critique !");
         for (int i = 0; i < evt.etat.size(); i++) {
             PersonnageSnapshot avant = etatPrecedent.get(i);
             PersonnageSnapshot apres = evt.etat.get(i);
-            boolean flashDegats = apres.vie < avant.vie;
-            boolean flashSoin   = apres.vie > avant.vie;
-            appliquerEtat(cartes[i], apres, flashDegats, flashSoin);
+            appliquerEtat(cartes[i], apres, apres.vie - avant.vie, critique);
+        }
+
+        if (evt.ultimeNom != null) {
+            afficherBanniereUltime(evt.titre, evt.ultimeNom);
         }
 
         if (!evt.lignes.isEmpty()) {
@@ -401,6 +473,43 @@ public class EcranCombatController {
             terminerAffichage();
         }
         mettreAJourBoutons();
+    }
+
+    /** Met en evidence la/les carte(s) du personnage qui agit ce pas-ci (aucune correspondance
+     *  pour les evenements meta comme "Tour N" ou "Effets" : rien n'est surligne). */
+    private void surlignerActeur(String nomActeur) {
+        for (CarteCombat carte : cartes) {
+            carte.racine.getStyleClass().remove("carte-combat-active");
+        }
+        if (nomActeur == null) return;
+        for (CarteCombat carte : cartes) {
+            if (nomActeur.equals(carte.nom)) {
+                carte.racine.getStyleClass().add("carte-combat-active");
+            }
+        }
+    }
+
+    /** Grande banniere temporaire annoncant le declenchement d'un ultime. */
+    private void afficherBanniereUltime(String nomPerso, String nomUltime) {
+        ultimeLabel.setText(nomPerso + " lance " + nomUltime + " !");
+        ultimeLabel.setOpacity(0);
+        ultimeLabel.setVisible(true);
+        ultimeLabel.setManaged(true);
+
+        FadeTransition apparait = new FadeTransition(Duration.millis(200), ultimeLabel);
+        apparait.setFromValue(0);
+        apparait.setToValue(1);
+        PauseTransition maintien = new PauseTransition(Duration.millis(1400));
+        FadeTransition disparait = new FadeTransition(Duration.millis(400), ultimeLabel);
+        disparait.setFromValue(1);
+        disparait.setToValue(0);
+
+        SequentialTransition sequence = new SequentialTransition(apparait, maintien, disparait);
+        sequence.setOnFinished(e -> {
+            ultimeLabel.setVisible(false);
+            ultimeLabel.setManaged(false);
+        });
+        sequence.play();
     }
 
     private void mettreAJourBoutons() {
@@ -463,13 +572,16 @@ public class EcranCombatController {
             CombatEvent evt = evenements.get(index);
             index++;
             for (int i = 0; i < evt.etat.size(); i++) {
-                appliquerEtat(cartes[i], evt.etat.get(i), false, false);
+                appliquerEtat(cartes[i], evt.etat.get(i), 0);
             }
             if (!evt.lignes.isEmpty()) {
                 logArea.appendText(String.join("\n", evt.lignes) + "\n\n");
             }
             etatPrecedent = evt.etat;
         }
+        surlignerActeur(null);
+        ultimeLabel.setVisible(false);
+        ultimeLabel.setManaged(false);
         etapeLabel.setText("Combat termine");
         terminerAffichage();
     }

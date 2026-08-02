@@ -310,10 +310,15 @@ public class EcranMenuPrincipalController {
         Label texte = new Label(etape.texte());
         texte.getStyleClass().add("item-detail");
         texte.setWrapText(true);
-        texte.setMaxWidth(300);
+        texte.setMaxWidth(330);
 
         Button suivant = new Button(index + 1 < etapes.size() ? "Suivant" : "Terminer");
         suivant.getStyleClass().add("menu-bouton");
+        // La classe "menu-bouton" fixe une largeur de 220px pensee pour le menu principal
+        // (un bouton par ligne) ; ici deux boutons partagent une bulle de 320px, donc on
+        // laisse chaque bouton se dimensionner a son propre texte.
+        suivant.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        suivant.setMinWidth(Region.USE_PREF_SIZE);
         suivant.setOnAction(e -> avancer(etapes, index));
 
         HBox boutons;
@@ -321,6 +326,8 @@ public class EcranMenuPrincipalController {
             // Visite guidee (plusieurs etapes en chaine) : on peut l'abandonner en cours de route.
             Button passer = new Button("Passer le tutoriel");
             passer.getStyleClass().add("menu-bouton-danger");
+            passer.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            passer.setMinWidth(Region.USE_PREF_SIZE);
             passer.setOnAction(e -> abandonnerTutoriel(etapes, index));
             boutons = new HBox(8, passer, suivant);
         } else {
@@ -334,8 +341,8 @@ public class EcranMenuPrincipalController {
         bulle.setPadding(new Insets(14));
         bulle.setStyle("-fx-background-color: #2e2e42; -fx-background-radius: 10;"
                 + " -fx-border-color: #f2c14e; -fx-border-radius: 10; -fx-border-width: 2;");
-        bulle.setMaxWidth(320);
-        bulle.setPrefWidth(320);
+        bulle.setMaxWidth(360);
+        bulle.setPrefWidth(360);
 
         tutorielOverlay.getChildren().addAll(fleche, bulle);
 
@@ -343,9 +350,9 @@ public class EcranMenuPrincipalController {
         bulle.layout();
         double largeurOverlay = tutorielOverlay.getWidth();
         double hauteurOverlay = tutorielOverlay.getHeight();
-        double bulleHauteur   = bulle.prefHeight(320);
+        double bulleHauteur   = bulle.prefHeight(360);
 
-        double bulleX = clamp(centreX - 160, 10, Math.max(10, largeurOverlay - 330));
+        double bulleX = clamp(centreX - 180, 10, Math.max(10, largeurOverlay - 370));
         double bulleY = bulleEnBas
                 ? overlayBounds.getMaxY() + flecheHauteur + 4
                 : overlayBounds.getMinY() - flecheHauteur - 4 - bulleHauteur;

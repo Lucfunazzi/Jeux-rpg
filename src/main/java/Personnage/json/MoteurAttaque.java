@@ -317,7 +317,7 @@ public class MoteurAttaque {
         switch (syn.action) {
             case "RAGE_EQUIPE" -> {
                 for (PersonnageBase a : allies) {
-                    if (a.estVivant()) a.ajouterRage(syn.valeur);
+                    if (a.estVivant()) a.ajouterRageAllie(syn.valeur);
                 }
                 log.add("Toute l'equipe gagne " + (int) syn.valeur + " points de rage !");
             }
@@ -328,7 +328,7 @@ public class MoteurAttaque {
 
                 switch (syn.action) {
                     case "RAGE" -> {
-                        cibleSyn.ajouterRage(syn.valeur);
+                        cibleSyn.ajouterRageAllie(syn.valeur);
                         log.add(cibleSyn.getNom() + " gagne " + (int) syn.valeur
                                 + " points de rage (synergie) !");
                     }
