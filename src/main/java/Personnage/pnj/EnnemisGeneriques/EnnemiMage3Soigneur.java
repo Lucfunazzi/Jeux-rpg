@@ -8,18 +8,23 @@ import java.util.List;
 public class EnnemiMage3Soigneur extends PersonnageBase {
 
     public EnnemiMage3Soigneur(int niveau) {
+        this(Variante.CHAPITRE_1, niveau);
+    }
+
+    public EnnemiMage3Soigneur(Variante variante, int niveau) {
         this.nom    = "Prêtre de la révérance";
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "Support";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 250.0 * niv;
-        this.attaque =  65.0 * niv;
-        this.defense =  22.0 * niv;
-        this.vitesse =  72.0 * vit;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
+        this.vie     = 250.0 * niv * mult;
+        this.attaque =  65.0 * niv * mult;
+        this.defense =  22.0 * niv * mult;
+        this.vitesse =  72.0 * vit * mult;
 
         this.taux_critiques    = 0.12;
         this.degat_critiques   = 1.45;

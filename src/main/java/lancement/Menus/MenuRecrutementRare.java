@@ -10,6 +10,7 @@ import Personnage.FairyTail.perso_Mirajane_Halphas;
 import Personnage.FairyTail.perso_jellal;
 import Personnage.FairyTail.jellal_Arc_intermagie;
 import Personnage.FairyTail.perso_Erza;
+import Personnage.FairyTail.perso_Luxus;
 import Equipement.Inventaire;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
@@ -41,12 +42,15 @@ public class MenuRecrutementRare {
 
     public static final int COUT_ERZA = 80;  // Parchemin S -> Erza [S]
 
+    public static final int COUT_LUXUS = 160;  // Parchemin SS -> Luxus [SS] (recrutement direct, pas d'evolution)
+
     // ── Niveaux requis ────────────────────────────────────────────────────
     public static final int NIVEAU_REQUIS_NATSU_GRAY            = 30;  // Recrutement Natsu / Gray
     public static final int NIVEAU_REQUIS_EVOLUTION_NATSU       = 40;  // Evolution Natsu Etherion (evolution de Gray pas encore implementee)
     public static final int NIVEAU_REQUIS_MIRAJANE_JELLAL           = 70;  // Recrutement Mirajane / Jellal
     public static final int NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL = 80;  // Evolution Mirajane Halphas / Jellal Intermagie
     public static final int NIVEAU_REQUIS_ERZA                  = 85;  // Recrutement Erza (evolution niveau 95 pas encore implementee)
+    public static final int NIVEAU_REQUIS_LUXUS                 = 90;  // Recrutement Luxus [SS]
 
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale      joueur               = ctx.joueur;
@@ -131,6 +135,15 @@ public class MenuRecrutementRare {
                     + " : " + possedeS + "/" + COUT_ERZA
                     + (erzaRecru ? "  [DEJA RECRUTE]" : ""));
 
+            // ── Luxus ──────────────────────────────────────────────────────
+            boolean luxusRecru = dejaRecruteParNom("Luxus", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Luxus ]  (niveau " + NIVEAU_REQUIS_LUXUS + " requis)");
+            System.out.println("  9. Luxus [SS]  — " + PARCHEMIN_SS
+                    + " : " + possedeSS + "/" + COUT_LUXUS
+                    + (luxusRecru ? "  [DEJA RECRUTE]" : ""));
+
             System.out.println();
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -176,6 +189,10 @@ public class MenuRecrutementRare {
                 case 8 -> {
                     if (erzaRecru) System.out.println("Erza est deja dans vos allies !");
                     else tenterRecrutementErza(ctx, scanner);
+                }
+                case 9 -> {
+                    if (luxusRecru) System.out.println("Luxus est deja dans vos allies !");
+                    else tenterRecrutementLuxus(ctx, scanner);
                 }
                 default -> System.out.println("Choix invalide.");
             }
@@ -337,6 +354,25 @@ public class MenuRecrutementRare {
         System.out.println(">> " + recruterErza(ctx));
     }
 
+    // ── Recrutement Luxus SS ──────────────────────────────────────────────
+    private void tenterRecrutementLuxus(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_LUXUS) {
+            System.out.println("Luxus se debloque au niveau " + NIVEAU_REQUIS_LUXUS + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_LUXUS) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_LUXUS + " " + PARCHEMIN_SS);
+            return;
+        }
+        System.out.println("Recruter Luxus [SS] pour " + COUT_LUXUS
+                + " " + PARCHEMIN_SS + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterLuxus(ctx));
+    }
+
     // ── Logique pure (reutilisable par la console et l'interface graphique) ─
 
     /** Tente de recruter Natsu [A]. Retourne le message resultat (parchemins non deduits si echec). */
@@ -496,6 +532,21 @@ public class MenuRecrutementRare {
         ctx.personnagesRecruites.add(new perso_Erza());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Erza a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Luxus [SS] (recrutement direct, pas d'evolution). */
+    public String recruterLuxus(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_LUXUS) {
+            return "Luxus se debloque au niveau " + NIVEAU_REQUIS_LUXUS + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_LUXUS) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_LUXUS + " " + PARCHEMIN_SS;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_SS, COUT_LUXUS);
+        ctx.personnagesRecruites.add(new perso_Luxus());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Luxus a rejoint vos allies !";
     }
 
     // ── Utilitaire ────────────────────────────────────────────────────────

@@ -145,33 +145,33 @@ public class Chapitre2Elite implements ChapitreElite {
         // Pas de combat scripte (pas d'invite Natsu/Lucy/Gray, pas de flashback Ul vs Deliora) :
         // uniquement l'equipe du joueur contre les ennemis du Chapitre 2, en version elite.
         switch (numero) {
-            case 1  -> { ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         ennemis.add(new EnnemiMage2DPS(niveau));
+            case 1  -> { ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(1, "Prologue Chapitre 2 Elite", 3000, 30, ennemis); }
-            case 2  -> { ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
-                        ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         ennemis.add(new EnnemiMage2DPS(niveau));
+            case 2  -> { ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau));
+                        ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(2, "Arrivée a l'ile de galuna Elite", 3750, 50, ennemis); }
-            case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
+            case 3  -> { ennemis.add(new EnnemiCherry(niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau));
                          ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(3, "Cherry, l'amour d'elite", 4500, 100, ennemis); }
-            case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
-                         ennemis.add(new EnnemiMage2DPS(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage6Debuff(niveau));
+            case 4  -> { ennemis.add(new EnnemiYuka(niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(4, "Yuka, l'annuleur renforce", 5500, 150, ennemis); }
-            case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau)); ennemis.add(new EnnemiMage2DPS(niveau));
+            case 5  -> { ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_2_ELITE, niveau));
                          ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(5, "Tobi,les griffes paralysantes d'elite", 6500, 160, ennemis); }
-            case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau));
-                         ennemis.add(new EnnemiMage6Debuff(niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 6  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau));
+                         ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau));
                          ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(6, "Leon Bastia d'elite", 8000, 170, ennemis); }
             case 7  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiTobi(niveau)); ennemis.add(new EnnemiYuka(niveau));
                          ennemis.add(new EnnemiCherry(niveau));
                          return new Stage(7, "Leon et son equipes", 9750, 180, ennemis); }
-            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
-                        ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(niveau));
+            case 8  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));
+                        ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_2_ELITE, niveau));
                          return new Stage(8, "Leon Bastia — Resistance d'elite", 11500, 190, ennemis); }
             case 9  -> { ennemis.add(new EnnemiLeon(niveau)); ennemis.add(new EnnemiHomme_mysterieux(niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_2_ELITE, niveau));
                          ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_2_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_2_ELITE, niveau));

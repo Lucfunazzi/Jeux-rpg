@@ -7,18 +7,23 @@ import java.util.List;
 public class EnnemiMage2DPS extends PersonnageBase {
 
     public EnnemiMage2DPS(int niveau) {
+        this(Variante.CHAPITRE_1, niveau);
+    }
+
+    public EnnemiMage2DPS(Variante variante, int niveau) {
         this.nom    = "Mage Ombral Ancien";
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "DPS";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 220.0 * niv;
-        this.attaque =  55.0 * niv;
-        this.defense =  18.0 * niv;
-        this.vitesse =  65.0 * vit;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
+        this.vie     = 220.0 * niv * mult;
+        this.attaque =  55.0 * niv * mult;
+        this.defense =  18.0 * niv * mult;
+        this.vitesse =  65.0 * vit * mult;
 
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.40;

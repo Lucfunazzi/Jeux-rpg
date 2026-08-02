@@ -137,20 +137,20 @@ public class Chapitre3 implements Chapitre {
             // Stage 1 — Avant-garde Phantom Lord (combat generique)
             case 1 -> {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 22));
-                e.add(new EnnemiMage1DPS(22));
-                e.add(new EnnemiMage2DPS(22));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, 22));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 22));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 21));
-                e.add(new EnnemiMage3Soigneur(21));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 21));
                 return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
 
             // Stage 2 — Natsu contre Totomaru + ennemis generiques
             case 2 -> {
                 e.add(new EnnemiTotomaru(25));
-                e.add(new EnnemiMage2DPS(24));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 24));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 24));
-                e.add(new EnnemiMage1DPS(23));
-                e.add(new EnnemiMage3Soigneur(23));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, 23));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 23));
                 return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
             }
 
@@ -158,29 +158,29 @@ public class Chapitre3 implements Chapitre {
             case 3 -> {
                 e.add(new EnnemiSol(27));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 25));
-                e.add(new EnnemiMage6Debuff(25));
-                e.add(new EnnemiMage2DPS(24));
-                e.add(new EnnemiMage3Soigneur(24));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 25));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 24));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 24));
                 return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 28, e);
             }
 
             // Stage 4 — Gray contre Jubia + ennemis generiques
             case 4 -> {
                 e.add(new EnnemiJubia_4elements(29));
-                e.add(new EnnemiMage2DPS(27));
-                e.add(new EnnemiMage2DPS(26));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 27));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 26));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 25));
-                e.add(new EnnemiMage3Soigneur(25));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 25));
                 return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
             }
 
             // Stage 5 — Natsu contre Gadjeel + ennemis generiques
             case 5 -> {
                 e.add(new EnnemiGadjeel(30));
-                e.add(new EnnemiMage3Soigneur(27));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 27));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 26));
-                e.add(new EnnemiMage2DPS(26));
-                e.add(new EnnemiMage3Soigneur(25));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 26));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 25));
                 return new Stage(5, "Natsu contre Gadjeel — Le Dragon d'Acier", 675, 35, e);
             }
 
@@ -188,9 +188,9 @@ public class Chapitre3 implements Chapitre {
             case 6 -> {
                 e.add(new EnnemiAria(32));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 30));
-                e.add(new EnnemiMage3Soigneur(29));
-                e.add(new EnnemiMage2DPS(29));
-                e.add(new EnnemiMage6Debuff(28));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 29));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 29));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 28));
                 return new Stage(6, "Erza contre Aria — Magie du Ciel Vide", 800, 39, e);
             }
 
@@ -198,8 +198,8 @@ public class Chapitre3 implements Chapitre {
             case 7 -> {
                 e.add(new EnnemiJose(34));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 31));
-                e.add(new EnnemiMage3Soigneur(31));
-                e.add(new EnnemiMage2DPS(30));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 31));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 30));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 30));
                 return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 43, e);
             }

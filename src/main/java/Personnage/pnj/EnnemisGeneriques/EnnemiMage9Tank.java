@@ -14,8 +14,9 @@ public class EnnemiMage9Tank extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
         // Ecart historique entre variantes, preserve tel quel : chapitre1Elite (def 50) et
         // Chapitre2/2Elite (def 70, plus tanky) different du profil de base (def 45) utilise
         // par Chapitre1/Chapitre3/Chapitre4. Le blocage suit Chapitre1 seul a 0.10, 0.22 ailleurs.
@@ -24,10 +25,10 @@ public class EnnemiMage9Tank extends PersonnageBase {
             case CHAPITRE_2, CHAPITRE_2_ELITE -> 70.0;
             default -> 45.0;
         };
-        this.vie     = 400.0 * niv;
-        this.attaque =  52.0 * niv;
-        this.defense = defenseBase * niv;
-        this.vitesse =  40.0 * vit;
+        this.vie     = 400.0 * niv * mult;
+        this.attaque =  52.0 * niv * mult;
+        this.defense = defenseBase * niv * mult;
+        this.vitesse =  40.0 * vit * mult;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;

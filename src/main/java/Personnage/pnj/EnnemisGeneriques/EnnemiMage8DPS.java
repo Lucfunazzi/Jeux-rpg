@@ -14,15 +14,16 @@ public class EnnemiMage8DPS extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
         // Ecart historique, preserve tel quel : chapitre1Elite a une defense de base plus
         // basse (30) que toutes les autres variantes (80), y compris le Chapitre 1 normal.
         double defenseBase = (variante == Variante.CHAPITRE_1_ELITE) ? 30.0 : 80.0;
-        this.vie     = 350.0 * niv;
-        this.attaque =  45.0 * niv;
-        this.defense = defenseBase * niv;
-        this.vitesse =  40.0 * vit;
+        this.vie     = 350.0 * niv * mult;
+        this.attaque =  45.0 * niv * mult;
+        this.defense = defenseBase * niv * mult;
+        this.vitesse =  40.0 * vit * mult;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;

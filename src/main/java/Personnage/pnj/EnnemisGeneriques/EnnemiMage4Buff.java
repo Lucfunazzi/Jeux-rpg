@@ -14,15 +14,16 @@ public class EnnemiMage4Buff extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
         // Ecart historique : le Chapitre 1 avait une attaque de base plus faible (70) que
         // toutes les autres variantes (92). Preserve tel quel plutot que corrige.
         double attaqueBase = (variante == Variante.CHAPITRE_1) ? 70.0 : 92.0;
-        this.vie     = 230.0 * niv;
-        this.attaque = attaqueBase * niv;
-        this.defense =  25.0 * niv;
-        this.vitesse =  80.0 * vit;
+        this.vie     = 230.0 * niv * mult;
+        this.attaque = attaqueBase * niv * mult;
+        this.defense =  25.0 * niv * mult;
+        this.vitesse =  80.0 * vit * mult;
 
         this.taux_critiques    = 0.12;
         this.degat_critiques   = 1.50;

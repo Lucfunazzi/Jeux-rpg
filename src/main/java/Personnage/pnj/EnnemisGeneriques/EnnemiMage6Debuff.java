@@ -8,18 +8,23 @@ import java.util.List;
 public class EnnemiMage6Debuff extends PersonnageBase {
 
     public EnnemiMage6Debuff(int niveau) {
+        this(Variante.CHAPITRE_1, niveau);
+    }
+
+    public EnnemiMage6Debuff(Variante variante, int niveau) {
         this.nom    = "Invocateur cartessien";
         this.niveau = niveau;
         this.type="Invocateur";
         this.role   = "Support";
         this.rarete = "C";
 
-        double niv = Math.pow(1.05, niveau - 1);
-        double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 210.0 * niv;
-        this.attaque =  82.0 * niv;
-        this.defense =  28.0 * niv;
-        this.vitesse = 110.0 * vit;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        double mult = variante.getMultiplicateur();
+        this.vie     = 210.0 * niv * mult;
+        this.attaque =  82.0 * niv * mult;
+        this.defense =  28.0 * niv * mult;
+        this.vitesse = 110.0 * vit * mult;
 
         this.taux_critiques    = 0.20;
         this.degat_critiques   = 1.50;

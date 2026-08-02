@@ -173,6 +173,7 @@ public class SauvegardeJoueur {
             case "Jellal Intermagie" -> new jellal_Arc_intermagie();
             case "José Pora"      -> new perso_Jose();
             case "Ul Milkovich"   -> new perso_Ul();
+            case "Luxus"          -> new perso_Luxus();
             default               -> null;
         };
         // Repli sur la fabrique du Recrutement normal (Cherry, Duc Everlue, Tobi, Yuka,

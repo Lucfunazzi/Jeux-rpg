@@ -85,6 +85,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     protected ArrayList<Effet> effetsActifs = new ArrayList<>();
 
     public String getNom() { return this.nom; }
+    public void setNom(String nom) { this.nom = nom; }
     public int getNiveau() { return this.niveau; }
     public void setNiveau(int niveau) { this.niveau = niveau; }
     public String getType() { return this.type; }

@@ -165,17 +165,17 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMiliana(45));
                 e.add(new EnnemiShaw(45));
                 e.add(new EnnemiSimon(46));
-                e.add(new EnnemiMage2DPS(46));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
                 return new Stage(1, "Embuscade dans le casino", 1900, 62, e);
             }
 
             // Stage 2 — gardes generiques
             case 2 -> {
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage2DPS(45));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 45));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 45));
-                e.add(new EnnemiMage1DPS(45));
-                e.add(new EnnemiMage3Soigneur(45));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_4, 45));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 45));
                 return new Stage(2, "Infiltration dans la tour du paradis", 2150, 64, e);
             }
 
@@ -183,29 +183,29 @@ public class Chapitre4 implements Chapitre {
             case 3 -> {
                 e.add(new EnnemiMiliana(47));
                 e.add(new EnnemiWolly(46));
-                e.add(new EnnemiMage6Debuff(46));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, 46));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage3Soigneur(45));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 45));
                 return new Stage(3, "Miaou, Il faut sauver Happy", 2400, 66, e);
             }
 
             // Stage 4 — Erza contre Shaw (encore sous emprise) + gardes generiques
             case 4 -> {
                 e.add(new EnnemiShaw(47));
-                e.add(new EnnemiMage2DPS(46));
-                e.add(new EnnemiMage2DPS(46));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage3Soigneur(46));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 46));
                 return new Stage(4, "Libération d'erza", 2700, 68, e);
             }
 
             // Stage 5 —  Lucy + jubia vs Vivaldus + gardes generiques
             case 5 -> {
                 e.add(new EnnemiVivaldus(48));
-                e.add(new EnnemiMage3Soigneur(47));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 47));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage2DPS(47));
-                e.add(new EnnemiMage3Soigneur(46));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 47));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 46));
                 return new Stage(5, "Les esprits et l'eau", 3050, 70, e);
             }
 
@@ -213,9 +213,9 @@ public class Chapitre4 implements Chapitre {
             case 6 -> {
                 e.add(new EnnemiOwl(48));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage3Soigneur(47));
-                e.add(new EnnemiMage2DPS(47));
-                e.add(new EnnemiMage6Debuff(47));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 47));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 47));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, 47));
                 return new Stage(6, "Le hiboux assasin", 3450, 72, e);
             }
 
@@ -223,8 +223,8 @@ public class Chapitre4 implements Chapitre {
             case 7 -> {
                 e.add(new EnnemiIkaruga(47));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage3Soigneur(48));
-                e.add(new EnnemiMage2DPS(48));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 48));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 48));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 48));
                 return new Stage(7, "Epée contre Epée", 3900, 74, e);
             }
@@ -239,8 +239,8 @@ public class Chapitre4 implements Chapitre {
             case 9 -> {
                 e.add(new EnnemiJellal(49));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage3Soigneur(48));
-                e.add(new EnnemiMage2DPS(48));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 48));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 48));
                 return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 82, e);
             }
 
@@ -248,8 +248,8 @@ public class Chapitre4 implements Chapitre {
             case 10 -> {
                 e.add(new EnnemiJellal(52));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 50));
-                e.add(new EnnemiMage3Soigneur(50));
-                e.add(new EnnemiMage2DPS(50));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 50));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 50));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 50));
                 return new Stage(10, "Jellal — L'Effondrement de la Tour du Paradis", 6500, 84, e);
             }
