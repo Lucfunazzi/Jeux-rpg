@@ -119,7 +119,7 @@ public class EcranStagesController {
                     annoncerRecrue(recrue);
                 }
                 retourStages(stage);
-            });
+            }, ligne.numeroChapitre());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

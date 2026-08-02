@@ -46,13 +46,13 @@ public class perso_Sting extends PersonnageBase {
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         // Marque la cible + bonus dégâts critiques à Sting
-        Combat.appliquerEffet(this, cible, new Marquage(2, 0.35), log);
+        Combat.appliquerEffet(this, cible, new Fragilite(2, 0.35), log);
         Combat.appliquerEffet(this, this, new BuffTauxCritique(0.20, 2), log);
         // Synergie : si Rogue est allié vivant, le marquage dure 1 tour de plus
         for (PersonnageBase allie : equipeAlliee) {
             if (allie instanceof perso_Rogue && allie.estVivant()) {
                 log.add("Synergie Lumière & Ombre : le marquage est renforcé par la présence de Rogue !");
-                Combat.appliquerEffet(this, cible, new Marquage(1, 0.10), log);
+                Combat.appliquerEffet(this, cible, new Fragilite(1, 0.10), log);
                 break;
             }
         }
@@ -74,7 +74,7 @@ public class perso_Sting extends PersonnageBase {
         }
         double degats = (this.getAttaque() * 2.20) * multiplicateurRage;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Marquage(3, 0.40), log);
+        Combat.appliquerEffet(this, cible, new Fragilite(3, 0.40), log);
         // Buff ATK à Sting après l'ultime
         Combat.appliquerEffet(this, this, new BuffAttaque(0.20, 2), log);
     }

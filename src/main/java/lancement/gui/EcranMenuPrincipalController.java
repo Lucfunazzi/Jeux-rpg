@@ -495,9 +495,9 @@ public class EcranMenuPrincipalController {
         {"Reduction d'attaque", "Reduit l'attaque de base pendant plusieurs tours."},
         {"Reduction de defense", "Reduit la defense pendant plusieurs tours."},
         {"Reduction de vitesse", "Reduit la vitesse pendant plusieurs tours."},
-        {"Fragilite", "Augmente les degats recus pendant plusieurs tours."},
+        {"Fragilite", "Augmente les degats recus pendant plusieurs tours (pourcentage et duree variables selon la competence)."},
         {"Malediction", "Reduit les soins recus pendant plusieurs tours."},
-        {"Marquage", "Augmente les degats recus pendant plusieurs tours."},
+        {"Marquage", "Augmente les degats recus de 30% pendant 2 tours (valeurs fixes)."},
         {"Trempe", "Rend plus vulnerable au Gel et a la Paralysie."},
         {"Provocation", "Force la cible a attaquer en priorite l'auteur de la provocation."},
     };

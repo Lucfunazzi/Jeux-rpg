@@ -35,7 +35,7 @@ public class perso_Bora extends PersonnageBase {
     }
  @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Bague de charme"};
+        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Typhon de la Protubérance"};
     }
 
     @Override
@@ -60,7 +60,7 @@ public class perso_Bora extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora utilise Bague de charme  !");
+        log.add("Bora utilise Typhon de la Protubérance !");
 
         PersonnageBase cible = Combat.choisirCible(this, equipeEnnemie);
         if (cible == null) return; // sécurité : tous KO
@@ -79,6 +79,6 @@ public class perso_Bora extends PersonnageBase {
         System.out.println("Fouet de la Protubérance — Inflige 120% ATK à un ennemi, augmente sa précision de 100% pendants 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible pendant 1 tour.");
+        System.out.println("Typhon de la Protubérance — Inflige 80% ATK à un ennemi avec 30% d'endormir la cible pendant 1 tour.");
     }
 }

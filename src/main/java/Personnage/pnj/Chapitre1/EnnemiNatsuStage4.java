@@ -45,7 +45,7 @@ public class EnnemiNatsuStage4 extends PersonnageBase {
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Coup de poings", "Poings d'acier du dragon de feu",
-                "Lotus pourpre du dragon de feu"};
+                "Hurlement du dragon de feu"};
     }
 
     
@@ -73,7 +73,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Natsu utilise Lotus pourpre du dragon de feu !");
+    log.add("Natsu utilise Hurlement du dragon de feu !");
     double multiplicateurRage = 1.0;
     if (this.getRage() > 100) {
         multiplicateurRage += (this.getRage() - 100) / 100.0;
@@ -103,7 +103,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Lotus pourpre du dragon de feu — inflige 160% ATK a tous les ennemis "
+        System.out.println("Hurlement du dragon de feu — inflige 160% ATK a tous les ennemis "
                 + "et applique Brulure intense (12% PV/tour) pendant 3 tours.");
     }
 }

@@ -63,7 +63,7 @@ public class EnnemiJellal extends PersonnageBase {
                 double degats = this.getAttaque() * 1.50;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
-                Combat.appliquerEffet(ennemi, new Marquage(2, 0.25), log);
+                Combat.appliquerEffet(ennemi, new Fragilite(2, 0.25), log);
             }
         }
     }

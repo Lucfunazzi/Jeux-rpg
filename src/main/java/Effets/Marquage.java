@@ -2,17 +2,20 @@ package Effets;
 import Personnage.PersonnageBase;
 import java.util.List;
 
+/**
+ * Marquage : effet fixe (30% de degats recus en plus pendant 2 tours), contrairement a
+ * Fragilite qui a le meme mecanisme mais avec pourcentage/duree choisis par l'appelant.
+ */
 public class Marquage implements Effet {
-    private int toursRestant;
-    private double augmentationDegats;
+    private static final int TOURS_FIXES = 2;
+    private static final double AUGMENTATION_FIXE = 0.30;
 
-    /**
-     * @param toursRestant      Nombre de tours pendant lesquels la cible est marquee.
-     * @param augmentationDegats Pourcentage de degats supplementaires recus (ex: 0.30 pour +30%).
-     */
-    public Marquage(int toursRestant, double augmentationDegats) {
-        this.toursRestant = toursRestant;
-        this.augmentationDegats = augmentationDegats;
+    private int toursRestant;
+    private final double augmentationDegats;
+
+    public Marquage() {
+        this.toursRestant = TOURS_FIXES;
+        this.augmentationDegats = AUGMENTATION_FIXE;
     }
 
     @Override

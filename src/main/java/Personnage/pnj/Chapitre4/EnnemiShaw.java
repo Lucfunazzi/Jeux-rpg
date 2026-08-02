@@ -57,7 +57,7 @@ public class EnnemiShaw extends PersonnageBase {
         log.add("Shaw utilise projection de cartes avancées sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(cible, new Marquage(2, 0.20), log);
+        Combat.appliquerEffet(cible, new Fragilite(2, 0.20), log);
     }
 
     @Override

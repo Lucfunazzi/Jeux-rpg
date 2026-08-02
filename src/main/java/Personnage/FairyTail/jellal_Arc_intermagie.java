@@ -56,7 +56,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
             double degats = this.getAttaque() * 1.80;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
-            Combat.appliquerEffet(ennemi, new Marquage(2,0.30), log);
+            Combat.appliquerEffet(ennemi, new Marquage(), log);
         }
     }
     Combat.appliquerEffet(this, new BuffPrecision(0.30,2), log);

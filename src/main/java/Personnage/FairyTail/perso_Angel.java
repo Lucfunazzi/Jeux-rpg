@@ -65,7 +65,7 @@ public class perso_Angel extends PersonnageBase {
 
         // Synergie Lucy : Marquage en plus
         if (lucyAlliee) {
-            Combat.appliquerEffet(this, cible, new Marquage(2, 0.15), log);
+            Combat.appliquerEffet(this, cible, new Fragilite(2, 0.15), log);
             log.add("  Lucy cible avec precision — Marquage applique !");
         }
     }

@@ -44,7 +44,7 @@ public class EnnemiGrayStage4 extends PersonnageBase {
 
       @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Lance de glace", "Marteau de glace", "Ultra geyser de glace"};
+        return new String[]{"Lance de glace", "Marteau de glace", "Geyser de glace"};
     }
 
     
@@ -70,7 +70,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Ultra geyser de glace !");
+    log.add("Geyser de glace !");
     double multiplicateurRage = 1.0;
     if (this.getRage() > 100) {
         multiplicateurRage += (this.getRage() - 100) / 100.0;
@@ -100,7 +100,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Ultra geyser de glace — Inflige 120% ATK a tous les ennemis. "
+        System.out.println("Geyser de glace — Inflige 120% ATK a tous les ennemis. "
                 + "30% de chance de Gel sur chaque cible pendant 2 tours. "
                 + "Augmente la vitesse de Gray de 20% pendant 2 tours.");
     }

@@ -27,8 +27,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -42,12 +44,15 @@ public class EcranCombatController {
 
     private static final double LARGEUR_BARRE = 130;
     private static final double LARGEUR_CARTE = 150;
-    private static final Duration DUREE_AUTO  = Duration.millis(900);
+    private static final Duration DUREE_AUTO          = Duration.millis(900);
+    private static final Duration DUREE_AUTO_SPECIALE = Duration.millis(1400);
+    private static final Duration DUREE_AUTO_ULTIME   = Duration.millis(2200);
     private static final Duration DUREE_FLASH = Duration.millis(500);
 
     @FXML private Label etapeLabel;
     @FXML private Label banniereLabel;
     @FXML private Label ultimeLabel;
+    @FXML private HBox ordreBox;
     @FXML private GridPane equipeJoueurBox;
     @FXML private GridPane equipeAdverseBox;
     @FXML private TextArea logArea;
@@ -61,7 +66,7 @@ public class EcranCombatController {
     private List<PersonnageSnapshot> etatPrecedent;
     private int index = 0;
     private CarteCombat[] cartes;
-    private Timeline autoPlay;
+    private PauseTransition autoPause;
     private Consumer<Boolean> onTermine;
     private boolean victoire;
 
@@ -74,9 +79,10 @@ public class EcranCombatController {
         final Label pvTexte;
         final Label rageTexte;
         final FlowPane effetsBox;
+        final Label koTampon;
 
         CarteCombat(String nom, StackPane conteneur, VBox racine, Rectangle barrePV, Rectangle barreRage,
-                    Label pvTexte, Label rageTexte, FlowPane effetsBox) {
+                    Label pvTexte, Label rageTexte, FlowPane effetsBox, Label koTampon) {
             this.nom = nom;
             this.conteneur = conteneur;
             this.racine = racine;
@@ -85,6 +91,39 @@ public class EcranCombatController {
             this.pvTexte = pvTexte;
             this.rageTexte = rageTexte;
             this.effetsBox = effetsBox;
+            this.koTampon = koTampon;
+        }
+    }
+
+    /**
+     * Sons joues quand un personnage precis declenche une speciale/ultime precise (cle :
+     * "NomPersonnage|NomAttaque", voir PersonnageBase.getNomsAttaques()). Charges paresseusement
+     * (AudioClip) pour ne pas echouer si le fichier manque ou si aucun son n'est encore fourni.
+     */
+    private static final Map<String, AudioClip> SONS_ACTIONS = new HashMap<>();
+    static {
+        chargerSonAction("Bora", "Fouet de la Protubérance", "/audio/bora_fouet_protuberance.wav");
+        chargerSonAction("Bora", "Typhon de la Protubérance", "/audio/bora_typhon_protuberance.wav");
+        chargerSonAction("Lucy", "Invocation Taurus", "/audio/lucy_invocation_taurus.wav");
+        chargerSonAction("Lucy", "Invocation Aquarius", "/audio/lucy_invocation_aquarius.wav");
+        chargerSonAction("Angel", "Caelum", "/audio/angel_caelum.wav");
+        chargerSonAction("Angel", "Aries", "/audio/angel_aries.wav");
+        chargerSonAction("Gray", "Geyser de glace", "/audio/gray_geyser_glace.wav");
+        chargerSonAction("Gray", "Marteau de glace", "/audio/gray_marteau_glace.wav");
+        chargerSonAction("Erza", "Armure adamantine", "/audio/erza_armure_adamantine.wav");
+        chargerSonAction("Erza", "Ronde des épées", "/audio/erza_ronde_epees.wav");
+        chargerSonAction("Natsu", "Poings d'acier du dragon de feu", "/audio/natsu_poings_acier_dragon_feu.wav");
+        chargerSonAction("Natsu", "Hurlement du dragon de feu", "/audio/natsu_hurlement_dragon_feu.wav");
+        chargerSonAction("Leon", "Ice-Make : Aigle de Glace", "/audio/leon_aigle_glace.wav");
+        chargerSonAction("Leon", "Ice-Make : Gorille de Glace", "/audio/leon_gorille_glace.wav");
+    }
+
+    private static void chargerSonAction(String nomPerso, String nomAction, String cheminRessource) {
+        try {
+            SONS_ACTIONS.put(nomPerso + "|" + nomAction,
+                    new AudioClip(EcranCombatController.class.getResource(cheminRessource).toExternalForm()));
+        } catch (Exception e) {
+            System.err.println("[Son] Impossible de charger " + cheminRessource + " : " + e.getMessage());
         }
     }
 
@@ -127,9 +166,9 @@ public class EcranCombatController {
         INFOS_EFFETS.put("ReductionAttaque", new EffetInfo("Reduit l'attaque.", false, "#a85a3a"));
         INFOS_EFFETS.put("ReductionDefense", new EffetInfo("Reduit la defense.", false, "#5a6a9a"));
         INFOS_EFFETS.put("ReductionVitesse", new EffetInfo("Reduit la vitesse.", false, "#a8a05a"));
-        INFOS_EFFETS.put("Fragilite",        new EffetInfo("Augmente les degats recus.", false, "#d88a9a"));
+        INFOS_EFFETS.put("Fragilite",        new EffetInfo("Augmente les degats recus (pourcentage/duree variables).", false, "#d88a9a"));
         INFOS_EFFETS.put("Malediction",      new EffetInfo("Reduit les soins recus.", false, "#5a2a6a"));
-        INFOS_EFFETS.put("Marquage",         new EffetInfo("Augmente les degats recus.", false, "#d8622a"));
+        INFOS_EFFETS.put("Marquage",         new EffetInfo("Augmente les degats recus de 30% pendant 2 tours (fixe).", false, "#d8622a"));
         INFOS_EFFETS.put("Trempe",           new EffetInfo("Plus vulnerable au gel et a la paralysie.", false, "#3a7ea8"));
         INFOS_EFFETS.put("Provocation",      new EffetInfo("Force a attaquer une cible precise.", false, "#c02a2a"));
     }
@@ -147,17 +186,55 @@ public class EcranCombatController {
      */
     public void initCombat(List<PersonnageSnapshot> etatInitial, List<CombatEvent> evenements,
                             boolean victoire, Consumer<Boolean> onTermine) {
+        initCombat(etatInitial, evenements, victoire, onTermine, 0);
+    }
+
+    /** Variante avec le numero du chapitre (1 a 13), pour lancer la musique de fond associee.
+     *  Passer 0 (ou utiliser l'autre surcharge) pour un combat sans musique dediee (arene, donjon, examen S). */
+    public void initCombat(List<PersonnageSnapshot> etatInitial, List<CombatEvent> evenements,
+                            boolean victoire, Consumer<Boolean> onTermine, int numeroChapitre) {
         this.evenements    = evenements;
         this.etatPrecedent = etatInitial;
         this.victoire      = victoire;
         this.onTermine     = onTermine;
         this.index         = 0;
 
+        if (numeroChapitre > 0) {
+            GestionnaireMusique.jouerMusiqueChapitre(numeroChapitre);
+        }
+
         construireCartes(etatInitial);
         etapeLabel.setText("Debut du combat");
+        mettreAJourOrdreTours();
 
         if (evenements.isEmpty()) {
             terminerAffichage();
+        }
+    }
+
+    /** Affiche, sous forme de puces, les prochains personnages a agir dans le tour en cours
+     *  (deduit de l'ordre des evenements deja enregistres, sans logique supplementaire cote modele). */
+    private void mettreAJourOrdreTours() {
+        ordreBox.getChildren().clear();
+        List<String> prochains = new ArrayList<>();
+        for (int i = index; i < evenements.size() && prochains.size() < 6; i++) {
+            String titre = evenements.get(i).titre;
+            if (titre == null || titre.equals("Effets") || titre.equals("Fin du combat")) continue;
+            if (titre.startsWith("Tour ")) {
+                if (!prochains.isEmpty()) break;
+                continue;
+            }
+            prochains.add(titre);
+        }
+        for (int i = 0; i < prochains.size(); i++) {
+            Label chip = new Label(prochains.get(i));
+            chip.getStyleClass().add(i == 0 ? "ordre-chip-actif" : "ordre-chip");
+            ordreBox.getChildren().add(chip);
+            if (i < prochains.size() - 1) {
+                Label fleche = new Label("→");
+                fleche.getStyleClass().add("ordre-fleche");
+                ordreBox.getChildren().add(fleche);
+            }
         }
     }
 
@@ -275,13 +352,19 @@ public class EcranCombatController {
         racine.setAlignment(Pos.CENTER);
         racine.setPrefWidth(LARGEUR_CARTE);
 
-        // StackPane englobant : sert de support aux nombres de degats/soins flottants,
-        // affiches par-dessus la carte sans perturber sa mise en page.
-        StackPane conteneur = new StackPane(racine);
+        Label koTampon = new Label("K.O.");
+        koTampon.getStyleClass().add("ko-tampon");
+        koTampon.setVisible(false);
+        koTampon.setManaged(false);
+
+        // StackPane englobant : sert de support aux nombres de degats/soins flottants et au
+        // tampon K.O., affiches par-dessus la carte sans perturber sa mise en page.
+        StackPane conteneur = new StackPane(racine, koTampon);
         conteneur.setPrefWidth(LARGEUR_CARTE);
         StackPane.setAlignment(racine, Pos.CENTER);
+        StackPane.setAlignment(koTampon, Pos.CENTER);
 
-        CarteCombat carte = new CarteCombat(snap.nom, conteneur, racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox);
+        CarteCombat carte = new CarteCombat(snap.nom, conteneur, racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox, koTampon);
         appliquerEtat(carte, snap, 0);
         return carte;
     }
@@ -360,6 +443,9 @@ public class EcranCombatController {
         for (String nomEffet : snap.effets) {
             carte.effetsBox.getChildren().add(creerIconeEffet(nomEffet));
         }
+
+        carte.koTampon.setVisible(!snap.vivant);
+        carte.koTampon.setManaged(!snap.vivant);
 
         carte.racine.getStyleClass().removeAll("carte-combat-hit", "carte-combat-heal", "carte-combat-ko");
         if (!snap.vivant) {
@@ -449,6 +535,7 @@ public class EcranCombatController {
 
         etapeLabel.setText(evt.titre != null ? evt.titre : "");
         surlignerActeur(evt.titre);
+        mettreAJourOrdreTours();
 
         boolean critique = evt.lignes.contains("Coup critique !");
         for (int i = 0; i < evt.etat.size(); i++) {
@@ -457,8 +544,9 @@ public class EcranCombatController {
             appliquerEtat(cartes[i], apres, apres.vie - avant.vie, critique);
         }
 
-        if (evt.ultimeNom != null) {
-            afficherBanniereUltime(evt.titre, evt.ultimeNom);
+        if (evt.actionNom != null) {
+            afficherBanniereAction(evt.titre, evt.actionNom, evt.estUltime);
+            jouerSonAction(evt.titre, evt.actionNom, evt.estUltime);
         }
 
         if (!evt.lignes.isEmpty()) {
@@ -489,9 +577,21 @@ public class EcranCombatController {
         }
     }
 
-    /** Grande banniere temporaire annoncant le declenchement d'un ultime. */
-    private void afficherBanniereUltime(String nomPerso, String nomUltime) {
-        ultimeLabel.setText(nomPerso + " lance " + nomUltime + " !");
+    /** Banniere temporaire annoncant le declenchement d'une speciale ou d'un ultime (plus
+     *  marquee/plus longue pour un ultime, plus discrete pour une speciale). */
+    /** Joue le son associe a cette speciale/ultime, si un a ete fourni pour ce personnage, en
+     *  baissant brievement la musique de fond pour que les deux ne se superposent pas trop fort. */
+    private void jouerSonAction(String nomPerso, String nomAction, boolean estUltime) {
+        AudioClip clip = SONS_ACTIONS.get(nomPerso + "|" + nomAction);
+        if (clip == null) return;
+        clip.play();
+        GestionnaireMusique.attenuerPendant(Duration.millis(estUltime ? 1600 : 900));
+    }
+
+    private void afficherBanniereAction(String nomPerso, String nomAction, boolean estUltime) {
+        ultimeLabel.setText(nomPerso + " lance " + nomAction + " !");
+        ultimeLabel.getStyleClass().removeAll("banniere-ultime", "banniere-speciale");
+        ultimeLabel.getStyleClass().add(estUltime ? "banniere-ultime" : "banniere-speciale");
         ultimeLabel.setOpacity(0);
         ultimeLabel.setVisible(true);
         ultimeLabel.setManaged(true);
@@ -499,7 +599,7 @@ public class EcranCombatController {
         FadeTransition apparait = new FadeTransition(Duration.millis(200), ultimeLabel);
         apparait.setFromValue(0);
         apparait.setToValue(1);
-        PauseTransition maintien = new PauseTransition(Duration.millis(1400));
+        PauseTransition maintien = new PauseTransition(Duration.millis(estUltime ? 1400 : 700));
         FadeTransition disparait = new FadeTransition(Duration.millis(400), ultimeLabel);
         disparait.setFromValue(1);
         disparait.setToValue(0);
@@ -521,6 +621,7 @@ public class EcranCombatController {
 
     private void terminerAffichage() {
         arreterAuto();
+        ordreBox.getChildren().clear();
         banniereLabel.setText(victoire ? "VICTOIRE !" : "DEFAITE...");
         banniereLabel.getStyleClass().removeAll("banniere-victoire", "banniere-defaite");
         banniereLabel.getStyleClass().addAll("banniere", victoire ? "banniere-victoire" : "banniere-defaite");
@@ -534,9 +635,9 @@ public class EcranCombatController {
     }
 
     private void arreterAuto() {
-        if (autoPlay != null) {
-            autoPlay.stop();
-            autoPlay = null;
+        if (autoPause != null) {
+            autoPause.stop();
+            autoPause = null;
             autoButton.setText("Lecture auto ▶▶");
         }
     }
@@ -549,20 +650,35 @@ public class EcranCombatController {
 
     @FXML
     private void onAuto() {
-        if (autoPlay != null) {
+        if (autoPause != null) {
             arreterAuto();
             return;
         }
         autoButton.setText("Pause ⏸");
-        autoPlay = new Timeline(new KeyFrame(DUREE_AUTO, e -> {
-            if (index >= evenements.size()) {
-                arreterAuto();
-                return;
-            }
-            avancerEtape();
-        }));
-        autoPlay.setCycleCount(Timeline.INDEFINITE);
-        autoPlay.play();
+        jouerProchaineEtapeAuto();
+    }
+
+    /**
+     * Enchaine les etapes en lecture auto avec une pause adaptee a chaque etape (plus longue
+     * quand une speciale/un ultime vient de se declencher, pour laisser le temps de voir la
+     * banniere), plutot qu'un intervalle fixe qui les rendrait illisibles.
+     */
+    private void jouerProchaineEtapeAuto() {
+        if (index >= evenements.size()) {
+            arreterAuto();
+            return;
+        }
+        CombatEvent prochain = evenements.get(index);
+        Duration pause = prochain.actionNom == null ? DUREE_AUTO
+                : prochain.estUltime ? DUREE_AUTO_ULTIME : DUREE_AUTO_SPECIALE;
+        avancerEtape();
+        if (index >= evenements.size()) {
+            arreterAuto();
+            return;
+        }
+        autoPause = new PauseTransition(pause);
+        autoPause.setOnFinished(e -> jouerProchaineEtapeAuto());
+        autoPause.play();
     }
 
     @FXML
@@ -580,6 +696,7 @@ public class EcranCombatController {
             etatPrecedent = evt.etat;
         }
         surlignerActeur(null);
+        ordreBox.getChildren().clear();
         ultimeLabel.setVisible(false);
         ultimeLabel.setManaged(false);
         etapeLabel.setText("Combat termine");
@@ -588,6 +705,7 @@ public class EcranCombatController {
 
     @FXML
     private void onContinuer() {
+        GestionnaireMusique.arreter();
         if (onTermine != null) onTermine.accept(victoire);
     }
 

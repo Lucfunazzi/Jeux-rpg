@@ -47,17 +47,20 @@ public class Combat {
         public final List<String> lignes;
         public final List<PersonnageSnapshot> etat;
         public final boolean finDeCombat;
-        /** Non-null uniquement quand cet evenement est le declenchement d'un ultime : nom de l'attaque
-         *  (via PersonnageBase.getNomsAttaques()), pour l'affichage d'une banniere dediee cote UI. */
-        public final String ultimeNom;
+        /** Non-null uniquement quand cet evenement est le declenchement d'une speciale/ultime : nom de
+         *  l'attaque (via PersonnageBase.getNomsAttaques()), pour l'affichage d'une banniere cote UI. */
+        public final String actionNom;
+        /** true si actionNom designe un ultime (banniere plus marquee), false si c'est une speciale. */
+        public final boolean estUltime;
 
         CombatEvent(String titre, List<String> lignes, List<PersonnageSnapshot> etat, boolean finDeCombat,
-                    String ultimeNom) {
+                    String actionNom, boolean estUltime) {
             this.titre       = titre;
             this.lignes      = lignes;
             this.etat        = etat;
             this.finDeCombat = finDeCombat;
-            this.ultimeNom   = ultimeNom;
+            this.actionNom   = actionNom;
+            this.estUltime   = estUltime;
         }
     }
 
@@ -171,16 +174,16 @@ public class Combat {
     }
 
     private void enregistrer(String titre, List<String> lignes) {
-        enregistrer(titre, lignes, false, null);
+        enregistrer(titre, lignes, false, null, false);
     }
 
     private void enregistrer(String titre, List<String> lignes, boolean fin) {
-        enregistrer(titre, lignes, fin, null);
+        enregistrer(titre, lignes, fin, null, false);
     }
 
-    private void enregistrer(String titre, List<String> lignes, boolean fin, String ultimeNom) {
+    private void enregistrer(String titre, List<String> lignes, boolean fin, String actionNom, boolean estUltime) {
         if (evenements == null) return;
-        evenements.add(new CombatEvent(titre, new ArrayList<>(lignes), snapshotEquipes(equipeJoueur, equipeAdverse), fin, ultimeNom));
+        evenements.add(new CombatEvent(titre, new ArrayList<>(lignes), snapshotEquipes(equipeJoueur, equipeAdverse), fin, actionNom, estUltime));
     }
 
     /**
@@ -282,7 +285,8 @@ public class Combat {
 
                 // Le log est créé ici et imprimé après chaque action
                 List<String> log = new ArrayList<>();
-                String ultimeDeclenche = null;
+                String actionDeclenchee = null;
+                boolean actionEstUltime = false;
 
                 if (attaquant.getRage() >= 100) {
                     Silence silenceUltime = attaquant.getEffet(Silence.class);
@@ -297,7 +301,8 @@ public class Combat {
                         attaquant.attaqueUltime(alliesVirtuels, ennemisVirtuels, log);
                         attaquant.reinitialiserRage();
                         String[] nomsAttaques = attaquant.getNomsAttaques();
-                        ultimeDeclenche = (nomsAttaques != null && nomsAttaques.length > 2) ? nomsAttaques[2] : "Ultime";
+                        actionDeclenchee = (nomsAttaques != null && nomsAttaques.length > 2) ? nomsAttaques[2] : "Ultime";
+                        actionEstUltime = true;
                     }
 
                 } else if (attaquant.getRage() >= 50 && !attaquant.getSpecialeUtilisee()) {
@@ -312,6 +317,8 @@ public class Combat {
                         log.add("[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
                         attaquant.attaqueSpeciale(cible, alliesVirtuels, ennemisVirtuels, log);
                         attaquant.setSpecialeUtilisee(true);
+                        String[] nomsAttaques = attaquant.getNomsAttaques();
+                        actionDeclenchee = (nomsAttaques != null && nomsAttaques.length > 1) ? nomsAttaques[1] : "Speciale";
                     }
                 } else {
                     log.add(attaquant.getNom() + " lance une attaque de base sur " + cible.getNom());
@@ -330,7 +337,7 @@ public class Combat {
                 for (String ligne : log) {
                     System.out.println(ligne);
                 }
-                if (!log.isEmpty()) enregistrer(attaquant.getNom(), log, false, ultimeDeclenche);
+                if (!log.isEmpty()) enregistrer(attaquant.getNom(), log, false, actionDeclenchee, actionEstUltime);
             }
             numeroTour++;
         }

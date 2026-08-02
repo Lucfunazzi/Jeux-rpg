@@ -173,10 +173,42 @@
     -fx-opacity: 0.4;
 }
 
+.ko-tampon {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e05656;
+    -fx-border-color: #e05656;
+    -fx-border-width: 3;
+    -fx-padding: 2 10 2 10;
+    -fx-rotate: -18;
+}
+
 .carte-combat-active {
     -fx-border-color: #f2c14e;
     -fx-border-width: 3;
     -fx-effect: dropshadow(gaussian, #f2c14e88, 14, 0.5, 0, 0);
+}
+
+.ordre-chip {
+    -fx-font-size: 11px;
+    -fx-text-fill: #d8d8e8;
+    -fx-background-color: #2e2e42;
+    -fx-background-radius: 10;
+    -fx-padding: 3 10 3 10;
+}
+
+.ordre-chip-actif {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b1b28;
+    -fx-background-color: #f2c14e;
+    -fx-background-radius: 10;
+    -fx-padding: 3 10 3 10;
+}
+
+.ordre-fleche {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6a6a8a;
 }
 
 .banniere-ultime {
@@ -190,6 +222,19 @@
     -fx-border-width: 3;
     -fx-border-radius: 12;
     -fx-effect: dropshadow(gaussian, #f2c14eaa, 20, 0.4, 0, 0);
+}
+
+.banniere-speciale {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cfd8e3;
+    -fx-background-color: #2e2e42dd;
+    -fx-padding: 8 22 8 22;
+    -fx-background-radius: 10;
+    -fx-border-color: #6c8ebf;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, #6c8ebf88, 10, 0.4, 0, 0);
 }
 
 .groupe-titre {

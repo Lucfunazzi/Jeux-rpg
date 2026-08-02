@@ -1,0 +1,49 @@
+Musiques de fond jouees pendant les combats.
+
+CHAPITRES (histoire) — un fichier par chapitre, nomme exactement :
+
+  chapitre1.mp3   <- deja fourni
+  chapitre2.mp3   <- deja fourni
+  chapitre3.mp3   <- deja fourni
+  chapitre4.mp3   <- deja fourni
+  chapitre5.mp3   <- deja fourni
+  chapitre6.mp3
+  ...
+  chapitre13.mp3
+
+  Les Chapitres Elite reutilisent automatiquement la piste du chapitre normal de
+  meme numero (chapitre3.mp3 sert pour Chapitre 3 ET Chapitre 3 Elite).
+
+EXAMEN DE RANG S — une piste par tranche de 10 stages (40 stages au total) :
+
+  examenS1.mp3   (stages 1 a 10)
+  examenS2.mp3   (stages 11 a 20)
+  examenS3.mp3   (stages 21 a 30)
+  examenS4.mp3   (stages 31 a 40)
+
+DONJON — tiree au hasard a chaque lancement parmi :
+
+  donjon1.mp3
+  donjon2.mp3
+  donjon3.mp3
+  donjon4.mp3
+  donjon5.mp3
+
+ARENE — tiree au hasard a chaque lancement parmi :
+
+  arene1.mp3
+  arene2.mp3
+  arene3.mp3
+  arene4.mp3
+  arene5.mp3
+
+Notes :
+- Format : mp3 (javafx-media le lit nativement).
+- Chaque piste tourne en boucle et se coupe (fondu) en quittant l'ecran de combat.
+- Un fichier absent reste simplement silencieux (aucune erreur), donc vous pouvez
+  completer progressivement.
+- Le nombre de pistes Donjon/Arene (5 chacun) est un choix par defaut ; pour en
+  ajouter plus, changer NB_PISTES_DONJON / NB_PISTES_ARENE dans
+  lancement.gui.GestionnaireMusique.
+
+Voir lancement.gui.GestionnaireMusique pour la logique de lecture.

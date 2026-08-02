@@ -118,6 +118,7 @@ public class EcranAreneAdversairesController {
         boolean victoire = combat.equipeKO(equipeAdverse);
 
         try {
+            GestionnaireMusique.jouerMusiqueAreneAuHasard();
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(etatInitial, evenements, victoire, v -> {

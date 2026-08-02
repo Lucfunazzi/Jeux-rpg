@@ -31,7 +31,7 @@ public class perso_Erza extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup d'épée", "Armure adamantine", "Roue céleste"};
+        return new String[]{"Coup d'épée", "Armure adamantine", "Ronde des épées"};
     }
 
    
@@ -53,7 +53,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Erza déchaîne la Roue Céleste !");
+    log.add("Erza déchaîne la Ronde des Épées !");
     double multiplicateurRage = 1.0;
     if (this.getRage() > 100) {
         multiplicateurRage += (this.getRage() - 100) / 100.0;
@@ -85,7 +85,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Roue Céleste — attaque tous les ennemis à 130% ATK, "
+        System.out.println("Ronde des Épées — attaque tous les ennemis à 130% ATK, "
                 + "inflige Saignement et réduit leur attaque de 10% pendant 3 tours. "
                 + "Augmente sa propre défense de 20% pendant 3 tours. "
                 + "30% de chance de Silence sur les Supports ennemis.");

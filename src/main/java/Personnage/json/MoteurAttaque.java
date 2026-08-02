@@ -293,7 +293,7 @@ public class MoteurAttaque {
             case "Trempe"            -> new Trempe(ed.tours);
 
             // Spéciaux
-            case "Marquage"          -> new Marquage(ed.tours, ed.valeur);
+            case "Marquage"          -> new Marquage();
             case "Fragilite"         -> new Fragilite(ed.tours, ed.valeur);
             case "Malediction"       -> new Malediction(ed.tours, ed.valeur);
             case "Invincibilite"     -> new Invincibilite(ed.tours);

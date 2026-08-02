@@ -47,7 +47,7 @@ public class EnnemiLeon extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Ice-Make : Oiseau de Glace", "Ice-Make : Lion de Glace", "Ice-Make : Tigre Polaire"};
+        return new String[]{"Ice-Make : Oiseau de Glace", "Ice-Make : Aigle de Glace", "Ice-Make : Gorille de Glace"};
     }
 
     @Override
@@ -61,7 +61,7 @@ public class EnnemiLeon extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Leon invoque un lion de glace qui lacère " + cible.getNom() + " !");
+        log.add("Leon invoque un aigle de glace qui fond sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         
@@ -73,7 +73,7 @@ public class EnnemiLeon extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Leon libère un tigre polaire colossal — la créature de glace s'abat sur toute l'équipe ennemie !");
+        log.add("Leon libère un gorille de glace colossal — la créature de glace s'abat sur toute l'équipe ennemie !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 1.10;
@@ -91,9 +91,9 @@ public class EnnemiLeon extends PersonnageBase {
         System.out.println("Ice-Make : Oiseau de Glace — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Ice-Make : Lion de Glace — Inflige 150% ATK, 35% de chance de geler 1 tour.");
+        System.out.println("Ice-Make : Aigle de Glace — Inflige 150% ATK, 35% de chance de geler 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ice-Make : Tigre Polaire — Inflige 110% ATK à tous, réduit VIT de 10% pendant 2 tours, 25% de chance de geler 1 tour.");
+        System.out.println("Ice-Make : Gorille de Glace — Inflige 110% ATK à tous, réduit VIT de 10% pendant 2 tours, 25% de chance de geler 1 tour.");
     }
 }

@@ -20,6 +20,7 @@
             <padding><Insets top="14" bottom="6"/></padding>
             <Label text="COMBAT" styleClass="titre"/>
             <Label fx:id="etapeLabel" styleClass="texte"/>
+            <HBox fx:id="ordreBox" spacing="6" alignment="CENTER"/>
         </VBox>
     </top>
     <center>

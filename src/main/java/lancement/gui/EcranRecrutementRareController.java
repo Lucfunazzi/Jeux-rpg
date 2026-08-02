@@ -1,5 +1,6 @@
 package lancement.gui;
 
+import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.Optional;
 import javafx.event.ActionEvent;
@@ -9,13 +10,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
+import lancement.Gestionnaires.SauvegardeJoueur;
 import lancement.Menus.MenuRecrutementRare;
 
 public class EcranRecrutementRareController {
@@ -51,11 +55,11 @@ public class EcranRecrutementRareController {
         boolean evoNatsuVerrouille  = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU;
 
         boutonsBox.getChildren().add(titreSection("Natsu"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "A", possedeA,
+        boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "Natsu", "A", possedeA,
                 MenuRecrutementRare.COUT_RECRUTEMENT_NATSU, natsuA || natsuS,
                 natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterNatsu));
         if (natsuA) {
-            boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "S", possedeS,
+            boutonsBox.getChildren().add(carteRecrutementRare("Natsu Etherion (évolution)", "Natsu Etherion", "S", possedeS,
                     MenuRecrutementRare.COUT_EVOLUTION_NATSU, false,
                     evoNatsuVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU, this::confirmerEtEvoluerNatsu));
         }
@@ -63,7 +67,7 @@ public class EcranRecrutementRareController {
         boolean grayRecru = MenuRecrutementRare.dejaRecruteParNom("Gray", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Gray"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Gray", "A", possedeA,
+        boutonsBox.getChildren().add(carteRecrutementRare("Gray", "Gray", "A", possedeA,
                 MenuRecrutementRare.COUT_RECRUTEMENT_GRAY, grayRecru,
                 natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterGray));
 
@@ -73,11 +77,11 @@ public class EcranRecrutementRareController {
         boolean evoMiraJellalVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL;
 
         boutonsBox.getChildren().add(titreSection("Mirajane"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "S", possedeS,
+        boutonsBox.getChildren().add(carteRecrutementRare("Mirajane", "Mirajane", "S", possedeS,
                 MenuRecrutementRare.COUT_MIRAJANE_S, miraS || miraSS,
                 miraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL, this::confirmerEtRecruterMirajane));
         if (miraS) {
-            boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "SS", possedeSS,
+            boutonsBox.getChildren().add(carteRecrutementRare("Mirajane Halphas (évolution)", "Mirajane Halphas", "SS", possedeSS,
                     MenuRecrutementRare.COUT_MIRAJANE_SS, false,
                     evoMiraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL, this::confirmerEtEvoluerMirajane));
         }
@@ -86,11 +90,11 @@ public class EcranRecrutementRareController {
         boolean jellalEvolue = MenuRecrutementRare.dejaRecruteParNom("Jellal Intermagie", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Jellal"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Jellal", "S", possedeS,
+        boutonsBox.getChildren().add(carteRecrutementRare("Jellal", "Jellal", "S", possedeS,
                 MenuRecrutementRare.COUT_JELLAL, jellalRecru || jellalEvolue,
                 miraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL, this::confirmerEtRecruterJellal));
         if (jellalRecru) {
-            boutonsBox.getChildren().add(carteRecrutementRare("Jellal Intermagie (évolution)", "SS", possedeSS,
+            boutonsBox.getChildren().add(carteRecrutementRare("Jellal Intermagie (évolution)", "Jellal Intermagie", "SS", possedeSS,
                     MenuRecrutementRare.COUT_JELLAL_SS, false,
                     evoMiraJellalVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL, this::confirmerEtEvoluerJellal));
         }
@@ -99,9 +103,17 @@ public class EcranRecrutementRareController {
         boolean erzaVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_ERZA;
 
         boutonsBox.getChildren().add(titreSection("Erza"));
-        boutonsBox.getChildren().add(carteRecrutementRare("Erza", "S", possedeS,
+        boutonsBox.getChildren().add(carteRecrutementRare("Erza", "Erza", "S", possedeS,
                 MenuRecrutementRare.COUT_ERZA, erzaRecru,
                 erzaVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_ERZA, this::confirmerEtRecruterErza));
+
+        boolean luxusRecru = MenuRecrutementRare.dejaRecruteParNom("Luxus", ctx.personnagesRecruites);
+        boolean luxusVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_LUXUS;
+
+        boutonsBox.getChildren().add(titreSection("Luxus"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Luxus", "Luxus", "SS", possedeSS,
+                MenuRecrutementRare.COUT_LUXUS, luxusRecru,
+                luxusVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_LUXUS, this::confirmerEtRecruterLuxus));
     }
 
     private Label titreSection(String texte) {
@@ -110,7 +122,7 @@ public class EcranRecrutementRareController {
         return l;
     }
 
-    private Node carteRecrutementRare(String nom, String rang, int possede, int cout, boolean dejaFait,
+    private Node carteRecrutementRare(String nom, String nomTechnique, String rang, int possede, int cout, boolean dejaFait,
                                        boolean verrouille, int niveauRequis, Runnable action) {
         Label badge = GuiVisuels.creerBadgeRarete(rang);
         Label nomLabel = new Label(nom);
@@ -136,9 +148,62 @@ public class EcranRecrutementRareController {
         } else {
             carte.getStyleClass().add(possede >= cout ? "carte-item-joueur" : "carte-item");
             carte.setCursor(Cursor.HAND);
-            carte.setOnMouseClicked(e -> action.run());
+            carte.setOnMouseClicked(e -> ouvrirFiche(nomTechnique, action));
         }
         return carte;
+    }
+
+    /** Ouvre la fiche du personnage (stats de base + competences) avant confirmation, sur le
+     *  meme modele que EcranPageRecrutementController.ouvrirFiche. */
+    private void ouvrirFiche(String nomTechnique, Runnable actionRecrutement) {
+        PersonnageBase p = SauvegardeJoueur.creerPersonnageParNom(nomTechnique);
+        if (p == null) {
+            info("Recrutement Rare", "[ERREUR] Personnage introuvable : " + nomTechnique + ".");
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle(p.getNom());
+        dialog.setHeaderText(null);
+        styliser(dialog);
+
+        ButtonType recruterType = new ButtonType("Recruter", ButtonBar.ButtonData.OK_DONE);
+        ButtonType retourType   = new ButtonType("Retour", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(recruterType, retourType);
+
+        String[] noms = p.getNomsAttaques();
+
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nomLabel = new Label(p.getNom() + "  -  " + p.getRole());
+        nomLabel.getStyleClass().add("texte");
+        nomLabel.setStyle("-fx-font-weight: bold;");
+        HBox entete = new HBox(8, badge, nomLabel);
+        entete.setAlignment(Pos.CENTER_LEFT);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("ATK : ").append(String.format("%.0f", p.getAttaque())).append("\n");
+        sb.append("DEF : ").append(String.format("%.0f", p.getDefense())).append("\n");
+        sb.append("VIT : ").append(String.format("%.0f", p.getVitesse())).append("\n\n");
+        sb.append(noms[0]).append(" (base)\n   ").append(GuiVisuels.capturerDescription(p::descriptionAttaqueBase)).append("\n\n");
+        sb.append(noms[1]).append(" (speciale)\n   ").append(GuiVisuels.capturerDescription(p::descriptionAttaqueSpeciale)).append("\n\n");
+        sb.append(noms[2]).append(" (ultime)\n   ").append(GuiVisuels.capturerDescription(p::descriptionAttaqueUltime));
+
+        Label label = new Label(sb.toString());
+        label.getStyleClass().add("texte");
+        label.setWrapText(true);
+        label.setPrefWidth(380);
+
+        VBox contenu = new VBox(8, entete, GuiVisuels.creerBarrePV(380, 12, p.getVie(), p.getVieMax()), label);
+
+        ScrollPane scroll = new ScrollPane(contenu);
+        scroll.setFitToWidth(true);
+        scroll.setPrefSize(400, 340);
+        dialog.getDialogPane().setContent(scroll);
+
+        Optional<ButtonType> resultat = dialog.showAndWait();
+        if (resultat.isPresent() && resultat.get() == recruterType) {
+            actionRecrutement.run();
+        }
     }
 
     private void confirmerEtRecruterNatsu() {
@@ -189,6 +254,12 @@ public class EcranRecrutementRareController {
     private void confirmerEtRecruterErza() {
         if (!confirmer("Recruter Erza [S] pour " + MenuRecrutementRare.COUT_ERZA + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterErza(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterLuxus() {
+        if (!confirmer("Recruter Luxus [SS] pour " + MenuRecrutementRare.COUT_LUXUS + " " + MenuRecrutementRare.PARCHEMIN_SS + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterLuxus(ctx));
         rafraichir();
     }
 

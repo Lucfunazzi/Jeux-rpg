@@ -90,6 +90,7 @@ public class EcranExamenSController {
         }
 
         try {
+            GestionnaireMusique.jouerMusiqueExamenS(numero);
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(resultat.etatInitial(), resultat.evenements(), resultat.victoire(),
