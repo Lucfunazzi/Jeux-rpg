@@ -189,6 +189,7 @@ public class EcranInventaireController {
     /** Carte detaillee pour un equipement : badge de rarete, nom, slot + description, quantite. Clic -> Equiper/Vendre. */
     private Node carteEquipement(Inventaire.StackEquipement s) {
         Equipement e = s.getEquipement();
+        Node icone = GuiVisuels.creerIconeEquipement(e.getIcone(), e.getRarete().name());
         Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
 
         Label nom = new Label(e.getNomAffiche());
@@ -200,7 +201,7 @@ public class EcranInventaireController {
         detail.setMaxWidth(240);
 
         VBox texte = new VBox(2, nom, detail);
-        HBox ligne = new HBox(10, badge, texte);
+        HBox ligne = new HBox(10, icone, badge, texte);
         ligne.setAlignment(Pos.CENTER_LEFT);
 
         if (s.getQuantite() > 1) {
@@ -404,7 +405,16 @@ public class EcranInventaireController {
     /** Carte pour une pierre (jade). Clic -> Equiper/Vendre. */
     private Node cartePierre(Inventaire.StackPierre s) {
         Pierre p = new Pierre(s.getType(), s.getNiveau());
-        Node ligne = carteSimple("♦", p.toString(), "x" + s.getQuantite());
+
+        Label nomLabel = new Label(p.toString());
+        nomLabel.getStyleClass().add("item-nom");
+
+        Label suf = new Label("x" + s.getQuantite());
+        suf.getStyleClass().add("item-qte");
+
+        HBox ligne = new HBox(10, GuiVisuels.creerPastilleCouleur(p.getCouleurHex()), nomLabel, suf);
+        ligne.setAlignment(Pos.CENTER_LEFT);
+        ligne.getStyleClass().add("carte-item");
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> actionsPierre(s));
         return ligne;
@@ -557,6 +567,7 @@ public class EcranInventaireController {
         int rempli = 0;
         for (Pierre p : e.getPierres()) if (p != null) rempli++;
 
+        Node icone = GuiVisuels.creerIconeEquipement(e.getIcone(), e.getRarete().name());
         Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
         Label nom = new Label(e.getNomAffiche());
         nom.getStyleClass().add("item-nom");
@@ -564,7 +575,7 @@ public class EcranInventaireController {
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);
-        HBox carte = new HBox(10, badge, texte);
+        HBox carte = new HBox(10, icone, badge, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(260);
@@ -844,6 +855,7 @@ public class EcranInventaireController {
     }
 
     private Node carteFragmentBoutique(FragmentEquipement f) {
+        Node icone = GuiVisuels.creerIconeEquipement(f.getIcone(), f.getRarete().name());
         Label badge = GuiVisuels.creerBadgeRarete(f.getRarete().name());
         Label nom = new Label(f.getNomEquipement());
         nom.getStyleClass().add("item-nom");
@@ -853,7 +865,7 @@ public class EcranInventaireController {
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);
-        HBox carte = new HBox(10, badge, texte);
+        HBox carte = new HBox(10, icone, badge, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(320);

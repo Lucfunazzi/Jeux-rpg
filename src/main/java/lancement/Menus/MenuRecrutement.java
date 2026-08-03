@@ -33,6 +33,33 @@ import Personnage.FairyTail.perso_Miliana;
 import Personnage.FairyTail.perso_Wolly;
 import Personnage.FairyTail.perso_Simon;
 import Personnage.FairyTail.perso_Shaw;
+import Personnage.FairyTail.perso_Jura;
+import Personnage.FairyTail.perso_Ichiya;
+import Personnage.FairyTail.perso_Hibiki;
+import Personnage.FairyTail.perso_Ren;
+import Personnage.FairyTail.perso_Eve;
+import Personnage.FairyTail.perso_PantherLily;
+import Personnage.FairyTail.perso_Gildarts;
+import Personnage.FairyTail.perso_Loki;
+import Personnage.FairyTail.perso_Mest;
+import Personnage.FairyTail.perso_Meredy;
+import Personnage.FairyTail.perso_Ultear;
+import Personnage.FairyTail.perso_Cobra;
+import Personnage.FairyTail.perso_Racer;
+import Personnage.FairyTail.perso_Hoteye;
+import Personnage.FairyTail.perso_Midnight;
+import Personnage.FairyTail.perso_Sugarboy;
+import Personnage.FairyTail.perso_Hughes;
+import Personnage.FairyTail.perso_Byro;
+import Personnage.FairyTail.perso_ErzaKnightwalker;
+import Personnage.FairyTail.perso_Azuma;
+import Personnage.FairyTail.perso_Zancrow;
+import Personnage.FairyTail.perso_Rustyrose;
+import Personnage.FairyTail.perso_Capricorn;
+import Personnage.FairyTail.perso_Zero;
+import Personnage.FairyTail.perso_Bluenote;
+import Personnage.FairyTail.perso_Zeref;
+import Personnage.FairyTail.perso_Acnologia;
 import Equipement.ParcheminXP;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +72,15 @@ public class MenuRecrutement {
     private static final int PARCHEMINS_REQUIS_C  = 150;
     private static final int PARCHEMINS_REQUIS_B  = 350;
     private static final int PARCHEMINS_REQUIS_A = 1250;
+    private static final int PARCHEMINS_REQUIS_A2 = 1250;
+    private static final int PARCHEMINS_REQUIS_S  = 3000;
     private static final int COUT_PARCHEMIN_XP_C  = 3;
     private static final int COUT_PARCHEMIN_XP_B  = 8;
     private static final int NIVEAU_REQUIS_PAGE1  = 6;
     private static final int NIVEAU_REQUIS_PAGE2  = 30;
     private static final int NIVEAU_REQUIS_PAGE3 = 50;
+    private static final int NIVEAU_REQUIS_PAGE4 = 60;
+    private static final int NIVEAU_REQUIS_PAGE5 = 70;
 
     // ── Données statiques des personnages recrutables ─────────────────────
     // Évite d'instancier des objets complets juste pour afficher nom + rôle
@@ -91,18 +122,41 @@ public class MenuRecrutement {
         new InfoPerso("Vivaldus",    "Support")
     );
 
+    // Page 4 — Rang A : personnages d'Edolas et d'Oración Seis.
+    private static final List<InfoPerso> PAGE4 = List.of(
+        new InfoPerso("Cobra",     "DPS"),
+        new InfoPerso("Racer",     "DPS"),
+        new InfoPerso("Hoteye",    "Tank"),
+        new InfoPerso("Midnight",  "DPS"),
+        new InfoPerso("Sugarboy",  "Tank"),
+        new InfoPerso("Hughes",    "DPS"),
+        new InfoPerso("Byro",      "Support")
+    );
+
+    // Page 5 — Rang S : personnages de l'arc de Tenrô (Grimoire Heart) et d'Edolas.
+    private static final List<InfoPerso> PAGE5 = List.of(
+        new InfoPerso("Erza Knightwalker", "Tank"),
+        new InfoPerso("Azuma",             "Tank"),
+        new InfoPerso("Zancrow",           "DPS"),
+        new InfoPerso("Rustyrose",         "Tank"),
+        new InfoPerso("Capricorn",         "DPS")
+    );
+
     private int parcheminC = 0;
     private int parcheminB = 0;
     private int parcheminA = 0;
+    private int parcheminS = 0;
 
     private final MiniJeuPFC miniJeu = new MiniJeuPFC();
 
-    /** Accès pour l'interface graphique : {nom, role} par page (1, 2 ou 3). */
+    /** Accès pour l'interface graphique : {nom, role} par page (1 à 5). */
     public static List<String[]> getPage(int numero) {
         List<InfoPerso> liste = switch (numero) {
             case 1  -> PAGE1;
             case 2  -> PAGE2;
-            default -> PAGE3;
+            case 3  -> PAGE3;
+            case 4  -> PAGE4;
+            default -> PAGE5;
         };
         List<String[]> resultat = new ArrayList<>();
         for (InfoPerso p : liste) resultat.add(new String[]{p.nom(), p.role()});
@@ -113,7 +167,9 @@ public class MenuRecrutement {
         return switch (numero) {
             case 1  -> NIVEAU_REQUIS_PAGE1;
             case 2  -> NIVEAU_REQUIS_PAGE2;
-            default -> NIVEAU_REQUIS_PAGE3;
+            case 3  -> NIVEAU_REQUIS_PAGE3;
+            case 4  -> NIVEAU_REQUIS_PAGE4;
+            default -> NIVEAU_REQUIS_PAGE5;
         };
     }
 
@@ -121,12 +177,19 @@ public class MenuRecrutement {
         return switch (numero) {
             case 1  -> PARCHEMINS_REQUIS_C;
             case 2  -> PARCHEMINS_REQUIS_B;
-            default -> PARCHEMINS_REQUIS_A;
+            case 3  -> PARCHEMINS_REQUIS_A;
+            case 4  -> PARCHEMINS_REQUIS_A2;
+            default -> PARCHEMINS_REQUIS_S;
         };
     }
 
     public static String getRangPage(int numero) {
-        return switch (numero) { case 1 -> "C"; case 2 -> "B"; default -> "A"; };
+        return switch (numero) {
+            case 1  -> "C";
+            case 2  -> "B";
+            case 3, 4 -> "A";
+            default -> "S";
+        };
     }
 
     public int getCoutParcheminXpC() { return COUT_PARCHEMIN_XP_C; }
@@ -154,7 +217,8 @@ public class MenuRecrutement {
             System.out.println("Or : " + String.format("%.0f", joueur.getOr())
                     + "  |  Parchemins C : " + parcheminC
                     + "  |  Parchemins B : " + parcheminB
-                    + "  |  Parchemins A : " + parcheminA);
+                    + "  |  Parchemins A : " + parcheminA
+                    + "  |  Parchemins S : " + parcheminS);
             System.out.println();
 
             System.out.println((actions.size() + 1) + ". Page 1 — Rang C");
@@ -167,6 +231,14 @@ public class MenuRecrutement {
             if (niveau >= NIVEAU_REQUIS_PAGE3) {
                 System.out.println((actions.size() + 1) + ". Page 3 — Rang A");
                 actions.add(() -> afficherPage(ctx, scanner, "A", PAGE3, PARCHEMINS_REQUIS_A, NIVEAU_REQUIS_PAGE3));
+            }
+            if (niveau >= NIVEAU_REQUIS_PAGE4) {
+                System.out.println((actions.size() + 1) + ". Page 4 — Rang A (Edolas / Oración Seis)");
+                actions.add(() -> afficherPage(ctx, scanner, "A", PAGE4, PARCHEMINS_REQUIS_A2, NIVEAU_REQUIS_PAGE4));
+            }
+            if (niveau >= NIVEAU_REQUIS_PAGE5) {
+                System.out.println((actions.size() + 1) + ". Page 5 — Rang S (Tenrô)");
+                actions.add(() -> afficherPage(ctx, scanner, "S", PAGE5, PARCHEMINS_REQUIS_S, NIVEAU_REQUIS_PAGE5));
             }
 
             System.out.println((actions.size() + 1) + ". Acheter des Parchemins XP");
@@ -182,6 +254,10 @@ public class MenuRecrutement {
             if (niveau >= NIVEAU_REQUIS_PAGE3) {
                 System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang A (" + miniJeu.getCoutPartieA() + " or)");
                 actions.add(() -> menuMiniJeu(ctx, scanner, "A"));
+            }
+            if (niveau >= NIVEAU_REQUIS_PAGE5) {
+                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang S (" + miniJeu.getCoutPartieS() + " or)");
+                actions.add(() -> menuMiniJeu(ctx, scanner, "S"));
             }
 
             System.out.println("0. Retour");
@@ -205,7 +281,8 @@ public class MenuRecrutement {
         int coutPartie = switch (rang) {
             case "C" -> miniJeu.getCoutPartieC();
             case "B" -> miniJeu.getCoutPartieB();
-            default  -> miniJeu.getCoutPartieA();
+            case "A" -> miniJeu.getCoutPartieA();
+            default  -> miniJeu.getCoutPartieS();
         };
 
         System.out.println("\n1. Jouer 1 partie (" + coutPartie + " or)");
@@ -217,7 +294,8 @@ public class MenuRecrutement {
                 int gagnes = switch (rang) {
                     case "C" -> miniJeu.jouer(joueur, scanner);
                     case "B" -> miniJeu.jouerB(joueur, scanner);
-                    default  -> miniJeu.jouerA(joueur, scanner);
+                    case "A" -> miniJeu.jouerA(joueur, scanner);
+                    default  -> miniJeu.jouerS(joueur, scanner);
                 };
                 if (gagnes > 0) {
                     ajouterParchemins(rang, gagnes);
@@ -234,7 +312,8 @@ public class MenuRecrutement {
                         totalGagnes += switch (rang) {
                             case "C" -> miniJeu.jouerAutoC(joueur);
                             case "B" -> miniJeu.jouerAutoB(joueur);
-                            default  -> miniJeu.jouerAutoA(joueur);
+                            case "A" -> miniJeu.jouerAutoA(joueur);
+                            default  -> miniJeu.jouerAutoS(joueur);
                         };
                     }
                     ajouterParchemins(rang, totalGagnes);
@@ -252,7 +331,8 @@ public class MenuRecrutement {
         return switch (rang) {
             case "C" -> parcheminC;
             case "B" -> parcheminB;
-            default  -> parcheminA;
+            case "A" -> parcheminA;
+            default  -> parcheminS;
         };
     }
 
@@ -260,7 +340,8 @@ public class MenuRecrutement {
         return switch (rang) {
             case "C" -> PARCHEMINS_REQUIS_C;
             case "B" -> PARCHEMINS_REQUIS_B;
-            default  -> PARCHEMINS_REQUIS_A;
+            case "A" -> PARCHEMINS_REQUIS_A;
+            default  -> PARCHEMINS_REQUIS_S;
         };
     }
 
@@ -396,7 +477,8 @@ public class MenuRecrutement {
             switch (rang) {
                 case "C" -> parcheminC -= parcheminsRequis;
                 case "B" -> parcheminB -= parcheminsRequis;
-                default  -> parcheminA -= parcheminsRequis;
+                case "A" -> parcheminA -= parcheminsRequis;
+                default  -> parcheminS -= parcheminsRequis;
             }
 
             recrutes.add(recrute);
@@ -440,6 +522,33 @@ public class MenuRecrutement {
             case "Wolly"       -> new perso_Wolly();
             case "Simon"       -> new perso_Simon();
             case "Shaw"        -> new perso_Shaw();
+            case "Jura"        -> new perso_Jura();
+            case "Ichiya"      -> new perso_Ichiya();
+            case "Hibiki"      -> new perso_Hibiki();
+            case "Ren"         -> new perso_Ren();
+            case "Eve"         -> new perso_Eve();
+            case "Panther Lily" -> new perso_PantherLily();
+            case "Gildarts"     -> new perso_Gildarts();
+            case "Loki"         -> new perso_Loki();
+            case "Mest"         -> new perso_Mest();
+            case "Meredy"       -> new perso_Meredy();
+            case "Ultear"       -> new perso_Ultear();
+            case "Cobra"        -> new perso_Cobra();
+            case "Racer"        -> new perso_Racer();
+            case "Hoteye"       -> new perso_Hoteye();
+            case "Midnight"     -> new perso_Midnight();
+            case "Sugarboy"     -> new perso_Sugarboy();
+            case "Hughes"       -> new perso_Hughes();
+            case "Byro"         -> new perso_Byro();
+            case "Erza Knightwalker" -> new perso_ErzaKnightwalker();
+            case "Azuma"        -> new perso_Azuma();
+            case "Zancrow"      -> new perso_Zancrow();
+            case "Rustyrose"    -> new perso_Rustyrose();
+            case "Capricorn"    -> new perso_Capricorn();
+            case "Zero"         -> new perso_Zero();
+            case "Bluenote"     -> new perso_Bluenote();
+            case "Zeref"        -> new perso_Zeref();
+            case "Acnologia"    -> new perso_Acnologia();
             default            -> null;
         };
     }
@@ -449,7 +558,8 @@ public class MenuRecrutement {
         switch (rang) {
             case "C" -> parcheminC += montant;
             case "B" -> parcheminB += montant;
-            default  -> parcheminA += montant;
+            case "A" -> parcheminA += montant;
+            default  -> parcheminS += montant;
         }
         System.out.println("+ " + montant + " parchemins " + rang + " ! (Total : " + getParchemins(rang) + ")");
     }
@@ -462,11 +572,14 @@ public class MenuRecrutement {
     public int getParcheminC() { return parcheminC; }
     public int getParcheminB() { return parcheminB; }
     public int getParcheminA() { return parcheminA; }
+    public int getParcheminS() { return parcheminS; }
     public void setParcheminC(int v) { this.parcheminC = v; }
     public void setParcheminB(int v) { this.parcheminB = v; }
     public void setParcheminA(int v) { this.parcheminA = v; }
+    public void setParcheminS(int v) { this.parcheminS = v; }
 
     public void ajouterParcheminC(int montant) { ajouterParchemins("C", montant); }
     public void ajouterParcheminB(int montant) { ajouterParchemins("B", montant); }
     public void ajouterParcheminA(int montant) { ajouterParchemins("A", montant); }
+    public void ajouterParcheminS(int montant) { ajouterParchemins("S", montant); }
 }

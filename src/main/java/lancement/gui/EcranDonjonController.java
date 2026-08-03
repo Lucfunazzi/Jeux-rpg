@@ -5,8 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -38,14 +42,40 @@ public class EcranDonjonController {
 
     private Node carteDonjon(TypeDonjon type, EventHandler<MouseEvent> action) {
         GestionnaireDonjon gd = ctx.gestionnaireDonjon;
-        StringBuilder sb = new StringBuilder();
+
+        String icone = switch (type) {
+            case OR       -> "🪙";
+            case AFFINAGE -> "⚒";
+            case XP       -> "📖";
+        };
+        String couleur = switch (type) {
+            case OR       -> "#f2c14e";
+            case AFFINAGE -> "#4ea8f2";
+            case XP       -> "#56c98a";
+        };
+
+        Label titre = new Label("Donjon " + MenuDonjon.nomType(type));
+        titre.getStyleClass().add("item-nom");
+
+        HBox difficultes = new HBox(14);
+        difficultes.setAlignment(Pos.CENTER_LEFT);
         for (Difficulte diff : Difficulte.values()) {
-            if (MenuDonjon.estDebloque(diff, ctx)) {
-                if (sb.length() > 0) sb.append("   ");
-                sb.append(MenuDonjon.nomDiff(diff)).append(" ").append(gd.getRunsRestants(type, diff)).append("/3");
-            }
+            if (!MenuDonjon.estDebloque(diff, ctx)) continue;
+            Label nomDiff = new Label(MenuDonjon.nomDiff(diff).trim());
+            nomDiff.getStyleClass().add("item-detail");
+            VBox bloc = new VBox(2, nomDiff,
+                    GuiVisuels.creerBarreProgression(70, 10, gd.getRunsRestants(type, diff), 3));
+            difficultes.getChildren().add(bloc);
         }
-        return GuiVisuels.creerCarteChoix(MenuDonjon.nomType(type), sb.toString(), action);
+
+        VBox texte = new VBox(6, titre, difficultes);
+        HBox carte = new HBox(14, GuiVisuels.creerIconeCadre(icone, couleur), texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(360);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
     }
 
     private void onOr(MouseEvent event)       { ouvrirDifficulte(event, TypeDonjon.OR); }

@@ -36,6 +36,9 @@ public class FragmentEquipement {
     public Equipement.TypeArme getTypeArme() { return typeArme; }
     public Equipement.Rarete   getRarete()   { return rarete; }
 
+    /** Icone (emoji) de la piece visee, en attendant de vraies images d'equipement. */
+    public String getIcone() { return Equipement.icone(slot, typeArme); }
+
     /** Nombre de fragments necessaires pour synthetiser cette piece — augmente avec la rarete. */
     public int getQuantiteRequise() { return quantiteRequisePour(rarete); }
 

@@ -5,6 +5,8 @@ import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Personnage.pnj.EnnemisGeneriques.*;
+import Personnage.pnj.Chapitre6.*;
 
 public class Chapitre6 implements Chapitre {
 
@@ -98,43 +100,75 @@ public class Chapitre6 implements Chapitre {
         return resultatStage;
     }
 
-    // TODO : remplacer par les vrais ennemis de chaque stage, ex :
-    // e.add(new EnnemiXxx(niveau));
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
 
         return switch (numero) {
-            case 1  -> new Stage(1,  "Stage 1 — [Titre a definir]",  0, 0, e);
-            case 2  -> new Stage(2,  "Stage 2 — [Titre a definir]",  0, 0, e);
-            case 3  -> new Stage(3,  "Stage 3 — [Titre a definir]",  0, 0, e);
-            case 4  -> new Stage(4,  "Stage 4 — [Titre a definir]",  0, 0, e);
-            case 5  -> new Stage(5,  "Stage 5 — [Titre a definir]",  0, 0, e);
-            case 6  -> new Stage(6,  "Stage 6 — [Titre a definir]",  0, 0, e);
-            case 7  -> new Stage(7,  "Stage 7 — [Titre a definir]",  0, 0, e);
-            case 8  -> new Stage(8,  "Stage 8 — [Titre a definir]",  0, 0, e);
-            case 9  -> new Stage(9,  "Stage 9 — [Titre a definir]",  0, 0, e);
-            case 10 -> new Stage(10, "Stage 10 — [Titre a definir]", 0, 0, e);
+            case 1 -> {
+                e.add(new EnnemiCobra(63));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, 63));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, 63));
+                yield new Stage(1, "Prologue — L'alliance des guildes", 10200, 132, e);
+            }
+            case 2 -> {
+                e.add(new EnnemiRacer(63));
+                e.add(new EnnemiHoteye(63));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, 63));
+                yield new Stage(2, "Oracions seis vs l'alliance des guildes", 10500, 136, e);
+            }
+            case 3 -> {
+                e.add(new EnnemiRacer(64));
+                yield new Stage(3, "Gray et leon vs racer", 10800, 140, e);
+            }
+            case 4 -> {
+                e.add(new EnnemiAngel(64));
+                yield new Stage(4, "Combat de constellasioniste", 11100, 144, e);
+            }
+            case 5 -> {
+                e.add(new EnnemiHoteye(64));
+                yield new Stage(5, "Duel entre Jura et Hoy-eyes", 11400, 148, e);
+            }
+            case 6 -> {
+                e.add(new EnnemiCobra(65));
+                yield new Stage(6, "Cobras vs Natsu", 11700, 152, e);
+            }
+            case 7 -> {
+                e.add(new EnnemiMidnight(65));
+                yield new Stage(7, "Jellal et erza vs midnight", 12000, 156, e);
+            }
+            case 8 -> {
+                e.add(new EnnemiBrain(65));
+                yield new Stage(8, "Natsu vs Brain", 12300, 160, e);
+            }
+            case 9 -> {
+                e.add(new EnnemiBrain(66));
+                yield new Stage(9, "Jura vs Brain", 12700, 165, e);
+            }
+            case 10 -> {
+                e.add(new EnnemiZero(66));
+                yield new Stage(10, "Natsu vs la nouvelle forme de Brain", 13200, 172, e);
+            }
             default -> new Stage(numero, "???", 0, 0, e);
         };
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Stage 1 — [Titre a definir]";
-            case 2  -> "Stage 2 — [Titre a definir]";
-            case 3  -> "Stage 3 — [Titre a definir]";
-            case 4  -> "Stage 4 — [Titre a definir]";
-            case 5  -> "Stage 5 — [Titre a definir]";
-            case 6  -> "Stage 6 — [Titre a definir]";
-            case 7  -> "Stage 7 — [Titre a definir]";
-            case 8  -> "Stage 8 — [Titre a definir]";
-            case 9  -> "Stage 9 — [Titre a definir]";
-            case 10 -> "Stage 10 — [Titre a definir]";
+            case 1  -> "Prologue — L'alliance des guildes";
+            case 2  -> "Oracions seis vs l'alliance des guildes";
+            case 3  -> "Gray et leon vs racer";
+            case 4  -> "Combat de constellasioniste";
+            case 5  -> "Duel entre Jura et Hoy-eyes";
+            case 6  -> "Cobras vs Natsu";
+            case 7  -> "Jellal et erza vs midnight";
+            case 8  -> "Natsu vs Brain ";
+            case 9  -> "Jura vs Brain ";
+            case 10 -> "Natsu vs la nouvelle forme de Brain";
             default -> "???";
         };
     }
 
-    public String getNomChapitre() { return "[Titre a definir]"; }
+    public String getNomChapitre() { return "Oracions seis"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

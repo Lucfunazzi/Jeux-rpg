@@ -397,3 +397,56 @@
     -fx-border-radius: 8;
     -fx-padding: 6 12 6 12;
 }
+
+/* Ecran Examen de Rang S — carte "prochain defi" mise en avant (halo dore). */
+.carte-examen-spotlight {
+    -fx-background-color: #2e2e42;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-width: 3;
+    -fx-border-color: #f2c14e;
+    -fx-effect: dropshadow(gaussian, rgba(242,193,78,0.55), 20, 0.5, 0, 0);
+    -fx-padding: 18 26 18 26;
+}
+
+/* Gros bouton d'action principal (equivalent du bouton "Defier"). */
+.bouton-defier {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 220px;
+    -fx-background-color: #f2c14e;
+    -fx-text-fill: #5a1a1a;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #c98f1e;
+    -fx-border-width: 2;
+    -fx-padding: 12 30 12 30;
+}
+
+.bouton-defier:hover {
+    -fx-background-color: #f7d573;
+}
+
+.bouton-defier:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* Paliers de recompense (tous les 10 etages). */
+.carte-milestone {
+    -fx-background-color: #2e2e42;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: #5a4a2e;
+    -fx-padding: 8 14 8 14;
+}
+
+.carte-milestone-atteinte {
+    -fx-background-color: #3a3520;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: #f2c14e;
+    -fx-effect: dropshadow(gaussian, rgba(242,193,78,0.35), 10, 0.3, 0, 0);
+    -fx-padding: 8 14 8 14;
+}

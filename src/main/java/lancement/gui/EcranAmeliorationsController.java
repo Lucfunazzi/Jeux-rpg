@@ -234,7 +234,9 @@ public class EcranAmeliorationsController {
     private void construirePanneauNormal(Equipement equip) {
         labelTitreEquip = new Label(equip.getNomAffiche());
         labelTitreEquip.getStyleClass().add("section-titre");
-        HBox header = new HBox(8, GuiVisuels.creerBadgeRarete(equip.getRarete().name()), labelTitreEquip);
+        HBox header = new HBox(8,
+                GuiVisuels.creerIconeEquipement(equip.getIcone(), equip.getRarete().name()),
+                GuiVisuels.creerBadgeRarete(equip.getRarete().name()), labelTitreEquip);
         header.setAlignment(Pos.CENTER_LEFT);
 
         // ── Fortification ──
@@ -430,7 +432,12 @@ public class EcranAmeliorationsController {
         label.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         label.setMaxWidth(76);
 
-        StackPane carte = new StackPane(label);
+        VBox contenu = p != null
+                ? new VBox(4, GuiVisuels.creerPastilleCouleur(p.getCouleurHex()), label)
+                : new VBox(label);
+        contenu.setAlignment(Pos.CENTER);
+
+        StackPane carte = new StackPane(contenu);
         carte.getStyleClass().add(p != null ? "carte-item-joueur" : "carte-item");
         carte.setPrefSize(84, 64);
         carte.setCursor(Cursor.HAND);
@@ -484,10 +491,12 @@ public class EcranAmeliorationsController {
     }
 
     private Node cartePierreInventaire(Inventaire.StackPierre s, Equipement equip) {
+        Node icone = GuiVisuels.creerPastilleCouleur(new Pierre(s.getType(), s.getNiveau()).getCouleurHex());
+
         Label nom = new Label(s.toString());
         nom.getStyleClass().add("item-detail");
 
-        HBox carte = new HBox(nom);
+        HBox carte = new HBox(6, icone, nom);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setCursor(Cursor.HAND);

@@ -5,6 +5,10 @@ import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Personnage.pnj.EnnemisGeneriques.*;
+import Personnage.pnj.Chapitre8.*;
+import Personnage.pnj.Chapitre9.*;
+import Personnage.pnj.Chapitre10.*;
 
 public class Chapitre10 implements Chapitre {
 
@@ -98,43 +102,80 @@ public class Chapitre10 implements Chapitre {
         return resultatStage;
     }
 
-    // TODO : remplacer par les vrais ennemis de chaque stage, ex :
-    // e.add(new EnnemiXxx(niveau));
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
 
         return switch (numero) {
-            case 1  -> new Stage(1,  "Stage 1 — [Titre a definir]",  0, 0, e);
-            case 2  -> new Stage(2,  "Stage 2 — [Titre a definir]",  0, 0, e);
-            case 3  -> new Stage(3,  "Stage 3 — [Titre a definir]",  0, 0, e);
-            case 4  -> new Stage(4,  "Stage 4 — [Titre a definir]",  0, 0, e);
-            case 5  -> new Stage(5,  "Stage 5 — [Titre a definir]",  0, 0, e);
-            case 6  -> new Stage(6,  "Stage 6 — [Titre a definir]",  0, 0, e);
-            case 7  -> new Stage(7,  "Stage 7 — [Titre a definir]",  0, 0, e);
-            case 8  -> new Stage(8,  "Stage 8 — [Titre a definir]",  0, 0, e);
-            case 9  -> new Stage(9,  "Stage 9 — [Titre a definir]",  0, 0, e);
-            case 10 -> new Stage(10, "Stage 10 — [Titre a definir]", 0, 0, e);
+            case 1 -> {
+                e.add(new EnnemiHades(84));
+                yield new Stage(1, "Luxus vs Hades", 23800, 310, e);
+            }
+            case 2 -> {
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_10, 84));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_10, 84));
+                yield new Stage(2, "L'oeil du Démon", 24100, 314, e);
+            }
+            case 3 -> {
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_10, 85));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_10, 85));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_10, 85));
+                yield new Stage(3, "Panthère lilly vs l'armée d'hadès", 24400, 318, e);
+            }
+            case 4 -> {
+                e.add(new EnnemiHades(85));
+                yield new Stage(4, "Le coup de grâce", 24700, 322, e);
+            }
+            case 5 -> {
+                e.add(new EnnemiRustyrose(85));
+                yield new Stage(5, "Lisanna,livy,bixrow et freed vs rustyRose", 25000, 326, e);
+            }
+            case 6 -> {
+                e.add(new EnnemiZeref(86));
+                yield new Stage(6, "Le mage Noir", 25300, 330, e);
+            }
+            case 7 -> {
+                e.add(new EnnemiAcnologia(86));
+                yield new Stage(7, "L'apparation d'acnologia", 25600, 334, e);
+            }
+            case 8 -> {
+                e.add(new EnnemiAcnologia(86));
+                yield new Stage(8, "Acnologia vs Makarof", 25900, 338, e);
+            }
+            case 9 -> {
+                e.add(new EnnemiAcnologia(87));
+                yield new Stage(9, "L'assaut des fées", 26200, 341, e);
+            }
+            case 10 -> {
+                e.add(new EnnemiAcnologia(87));
+                yield new Stage(10, "Le dernier espoir : sphère féerique", 27000, 350, e);
+            }
             default -> new Stage(numero, "???", 0, 0, e);
         };
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Stage 1 — [Titre a definir]";
-            case 2  -> "Stage 2 — [Titre a definir]";
-            case 3  -> "Stage 3 — [Titre a definir]";
-            case 4  -> "Stage 4 — [Titre a definir]";
-            case 5  -> "Stage 5 — [Titre a definir]";
-            case 6  -> "Stage 6 — [Titre a definir]";
-            case 7  -> "Stage 7 — [Titre a definir]";
-            case 8  -> "Stage 8 — [Titre a definir]";
-            case 9  -> "Stage 9 — [Titre a definir]";
-            case 10 -> "Stage 10 — [Titre a definir]";
+            
+            case 1  -> "Luxus vs Hades";
+            case 2  -> "L'oeil du Démon";
+            case 3  -> "Panthère lilly vs l'armée d'hadès";
+            case 4  -> "Le coup de grâce";
+            case 5  -> "Lisanna,livy,bixrow et freed vs rustyRose";
+            case 6  -> "Le mage Noir";
+            case 7  -> "L'apparation d'acnologia";
+            case 8  -> "Acnologia vs Makarof ";
+            case 9  -> "L'assaut des fées";
+            case 10 -> "Le dernier espoir : sphère féerique";
             default -> "???";
         };
+        
+            
+            
+            
+            
     }
 
-    public String getNomChapitre() { return "[Titre a definir]"; }
+    public String getNomChapitre() { return "Arc Tenro 3"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

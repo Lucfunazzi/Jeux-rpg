@@ -64,6 +64,26 @@ public class Pierre {
         };
     }
 
+    /**
+     * Couleur associee a ce type de pierre, pour les differencier d'un coup d'oeil.
+     * Rendue comme une pastille coloree via CSS (-fx-text-fill) plutot qu'un emoji colore :
+     * le rendu des emoji "grand cercle colore" depend d'une police couleur (Segoe UI Emoji) que
+     * JavaFX ne charge pas toujours en fallback, ce qui donnait un rendu incoherent selon le type.
+     */
+    public String getCouleurHex() {
+        return switch (type) {
+            case FORCE     -> "#e0393c"; // rouge
+            case AGILITE   -> "#f2c14e"; // jaune/or
+            case VIE       -> "#56c98a"; // vert
+            case PRECISION -> "#4ea8f2"; // bleu
+            case ATTAQUE_S -> "#e08a3c"; // orange
+            case CONTRE    -> "#b565d8"; // violet
+            case CRITIQUE  -> "#f2f2f2"; // blanc
+            case BLOCAGE   -> "#a97c50"; // brun
+            case ESQUIVE   -> "#4ecdc4"; // turquoise
+        };
+    }
+
     private String formaterPourcent() {
         double v = getBonusPourcent();
         return (v == Math.floor(v)) ? String.valueOf((int) v) : String.valueOf(v);

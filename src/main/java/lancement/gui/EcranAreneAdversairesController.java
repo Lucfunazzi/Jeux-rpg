@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -59,6 +60,15 @@ public class EcranAreneAdversairesController {
         Label rang = new Label("#" + a.getRang());
         rang.getStyleClass().add("item-nom");
         rang.setMinWidth(50);
+        String couleurMedaille = switch (a.getRang()) {
+            case 1  -> "#f2c14e"; // or
+            case 2  -> "#c0c0c0"; // argent
+            case 3  -> "#cd7f32"; // bronze
+            default -> null;
+        };
+        if (couleurMedaille != null) {
+            rang.setStyle("-fx-text-fill: " + couleurMedaille + "; -fx-font-size: 16px;");
+        }
 
         Label pseudo = new Label(a.getPseudo());
         pseudo.getStyleClass().add("item-nom");
@@ -70,12 +80,15 @@ public class EcranAreneAdversairesController {
         entete.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(pseudo, Priority.ALWAYS);
 
-        Label equipe = new Label(String.join(", ", nomsEquipe));
-        equipe.getStyleClass().add("item-detail");
-        equipe.setWrapText(true);
-        equipe.setMaxWidth(340);
+        FlowPane equipe = new FlowPane(6, 4);
+        equipe.setPrefWrapLength(340);
+        for (String nom : nomsEquipe) {
+            Label chip = new Label(nom);
+            chip.getStyleClass().add("ordre-chip");
+            equipe.getChildren().add(chip);
+        }
 
-        VBox texte = new VBox(4, entete, equipe);
+        VBox texte = new VBox(6, entete, equipe);
         HBox carte = new HBox(14, texte, niveau);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");

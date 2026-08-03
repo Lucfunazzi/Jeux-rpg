@@ -56,7 +56,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
             double degats = this.getAttaque() * 1.80;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
-            Combat.appliquerEffet(ennemi, new Marquage(), log);
+            Combat.appliquerEffet(ennemi, new Fragilite(2, 0.30), log);
         }
     }
     Combat.appliquerEffet(this, new BuffPrecision(0.30,2), log);
@@ -91,7 +91,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     public void descriptionAttaqueSpeciale() {
         System.out.println("Grand chariot — inflige 180% ATK a tous les ennemis, "
                 + "applique Ralentissement (gain de rage réduit de 15%)  pendant 2 tours, "
-                + "et inflige marquage de 30% pendants 2 tours ."
+                + "et inflige fragilité de 30% pendants 2 tours ."
                 + "et à un bonus de précisions de 30%");
     }
 

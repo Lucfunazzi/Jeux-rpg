@@ -38,15 +38,32 @@ public class EcranAreneClassementController {
         Label rang = new Label("#" + a.getRang());
         rang.getStyleClass().add("item-nom");
         rang.setMinWidth(50);
+        String couleurMedaille = switch (a.getRang()) {
+            case 1  -> "#f2c14e"; // or
+            case 2  -> "#c0c0c0"; // argent
+            case 3  -> "#cd7f32"; // bronze
+            default -> null;
+        };
+        if (couleurMedaille != null) {
+            rang.setStyle("-fx-text-fill: " + couleurMedaille + "; -fx-font-size: 16px;");
+        }
 
-        Label pseudo = new Label(a.getPseudo() + (a.isEstFauxJoueur() ? "" : "  ★"));
+        Label pseudo = new Label(a.getPseudo());
         pseudo.getStyleClass().add("item-nom");
-        HBox.setHgrow(pseudo, Priority.ALWAYS);
+
+        HBox infosJoueur = new HBox(8, pseudo);
+        infosJoueur.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(infosJoueur, Priority.ALWAYS);
+        if (!a.isEstFauxJoueur()) {
+            Label tag = new Label("★ Joueur");
+            tag.getStyleClass().add("item-qte");
+            infosJoueur.getChildren().add(tag);
+        }
 
         Label points = new Label(String.format("%,d pts", a.getPointsArene()));
         points.getStyleClass().add("item-qte");
 
-        HBox ligne = new HBox(14, rang, pseudo, points);
+        HBox ligne = new HBox(14, rang, infosJoueur, points);
         ligne.setAlignment(Pos.CENTER_LEFT);
         ligne.getStyleClass().add("carte-item");
         if (estJoueur) ligne.getStyleClass().add("carte-item-joueur");

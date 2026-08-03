@@ -239,197 +239,197 @@ public class QuetesProgressionData {
                 "Jellal — L'Effondrement de la Tour du Paradis", "Terminez le stage 10 du Chapitre 4.",
                 4, 10, false, 436000, 14000, 250));
 
-        // ── Chapitre 5 normal (TODO : niveaux / XP totale a definir) ────────
+        // ── Chapitre 5 normal (niv 50 → 54 | total ~12 157 500 XP) ──────────
         liste.add(new QueteProgression("C5S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 5.",
-                5, 1, false, 0, 0, 0));
+                5, 1, false, 850000, 12500, 0));
         liste.add(new QueteProgression("C5S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 5.",
-                5, 2, false, 0, 0, 0));
+                5, 2, false, 970000, 13000, 0));
         liste.add(new QueteProgression("C5S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 5.",
-                5, 3, false, 0, 0, 0));
+                5, 3, false, 1090000, 13500, 0));
         liste.add(new QueteProgression("C5S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 5.",
-                5, 4, false, 0, 0, 0));
+                5, 4, false, 1220000, 14000, 0));
         liste.add(new QueteProgression("C5S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 5.",
-                5, 5, false, 0, 0, 0));
+                5, 5, false, 1220000, 14500, 0));
         liste.add(new QueteProgression("C5S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 5.",
-                5, 6, false, 0, 0, 0));
+                5, 6, false, 1340000, 15000, 0));
         liste.add(new QueteProgression("C5S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 5.",
-                5, 7, false, 0, 0, 0));
+                5, 7, false, 1340000, 15500, 0));
         liste.add(new QueteProgression("C5S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 5.",
-                5, 8, false, 0, 0, 0));
+                5, 8, false, 1460000, 16000, 0));
         liste.add(new QueteProgression("C5S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 5.",
-                5, 9, false, 0, 0, 0));
+                5, 9, false, 1460000, 16500, 0));
         liste.add(new QueteProgression("C5S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 5.",
-                5, 10, false, 0, 0, 0));
+                5, 10, false, 1220000, 20000, 300));
 
-        // ── Chapitre 6 normal (TODO : niveaux / XP totale a definir) ────────
+        // ── Chapitre 6 normal (niv 59 → 61 | total ~25 709 000 XP) ──────────
         liste.add(new QueteProgression("C6S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 6.",
-                6, 1, false, 0, 0, 0));
+                6, 1, false, 1800000, 18500, 0));
         liste.add(new QueteProgression("C6S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 6.",
-                6, 2, false, 0, 0, 0));
+                6, 2, false, 2060000, 19000, 0));
         liste.add(new QueteProgression("C6S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 6.",
-                6, 3, false, 0, 0, 0));
+                6, 3, false, 2310000, 19500, 0));
         liste.add(new QueteProgression("C6S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 6.",
-                6, 4, false, 0, 0, 0));
+                6, 4, false, 2570000, 20000, 0));
         liste.add(new QueteProgression("C6S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 6.",
-                6, 5, false, 0, 0, 0));
+                6, 5, false, 2570000, 20500, 0));
         liste.add(new QueteProgression("C6S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 6.",
-                6, 6, false, 0, 0, 0));
+                6, 6, false, 2830000, 21000, 0));
         liste.add(new QueteProgression("C6S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 6.",
-                6, 7, false, 0, 0, 0));
+                6, 7, false, 2830000, 21500, 0));
         liste.add(new QueteProgression("C6S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 6.",
-                6, 8, false, 0, 0, 0));
+                6, 8, false, 3090000, 22000, 0));
         liste.add(new QueteProgression("C6S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 6.",
-                6, 9, false, 0, 0, 0));
+                6, 9, false, 3090000, 22500, 0));
         liste.add(new QueteProgression("C6S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 6.",
-                6, 10, false, 0, 0, 0));
+                6, 10, false, 2570000, 26000, 350));
 
-        // ── Chapitre 7 normal (TODO : niveaux / XP totale a definir) ────────
+        // ── Chapitre 7 normal (niv 66 → 68 | total ~92 120 000 XP) ──────────
         liste.add(new QueteProgression("C7S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 7.",
-                7, 1, false, 0, 0, 0));
+                7, 1, false, 6400000, 24500, 0));
         liste.add(new QueteProgression("C7S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 7.",
-                7, 2, false, 0, 0, 0));
+                7, 2, false, 7400000, 25000, 0));
         liste.add(new QueteProgression("C7S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 7.",
-                7, 3, false, 0, 0, 0));
+                7, 3, false, 8300000, 25500, 0));
         liste.add(new QueteProgression("C7S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 7.",
-                7, 4, false, 0, 0, 0));
+                7, 4, false, 9200000, 26000, 0));
         liste.add(new QueteProgression("C7S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 7.",
-                7, 5, false, 0, 0, 0));
+                7, 5, false, 9200000, 26500, 0));
         liste.add(new QueteProgression("C7S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 7.",
-                7, 6, false, 0, 0, 0));
+                7, 6, false, 10100000, 27000, 0));
         liste.add(new QueteProgression("C7S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 7.",
-                7, 7, false, 0, 0, 0));
+                7, 7, false, 10100000, 27500, 0));
         liste.add(new QueteProgression("C7S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 7.",
-                7, 8, false, 0, 0, 0));
+                7, 8, false, 11100000, 28000, 0));
         liste.add(new QueteProgression("C7S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 7.",
-                7, 9, false, 0, 0, 0));
+                7, 9, false, 11100000, 28500, 0));
         liste.add(new QueteProgression("C7S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 7.",
-                7, 10, false, 0, 0, 0));
+                7, 10, false, 9200000, 32000, 400));
 
-        // ── Chapitre 8 normal (TODO : niveaux / XP totale a definir) ────────
+        // ── Chapitre 8 normal (niv 72 → 73 | total ~125 032 000 XP) ─────────
         liste.add(new QueteProgression("C8S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 8.",
-                8, 1, false, 0, 0, 0));
+                8, 1, false, 8800000, 30500, 0));
         liste.add(new QueteProgression("C8S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 8.",
-                8, 2, false, 0, 0, 0));
+                8, 2, false, 10000000, 31000, 0));
         liste.add(new QueteProgression("C8S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 8.",
-                8, 3, false, 0, 0, 0));
+                8, 3, false, 11300000, 31500, 0));
         liste.add(new QueteProgression("C8S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 8.",
-                8, 4, false, 0, 0, 0));
+                8, 4, false, 12500000, 32000, 0));
         liste.add(new QueteProgression("C8S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 8.",
-                8, 5, false, 0, 0, 0));
+                8, 5, false, 12500000, 32500, 0));
         liste.add(new QueteProgression("C8S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 8.",
-                8, 6, false, 0, 0, 0));
+                8, 6, false, 13800000, 33000, 0));
         liste.add(new QueteProgression("C8S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 8.",
-                8, 7, false, 0, 0, 0));
+                8, 7, false, 13800000, 33500, 0));
         liste.add(new QueteProgression("C8S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 8.",
-                8, 8, false, 0, 0, 0));
+                8, 8, false, 15000000, 34000, 0));
         liste.add(new QueteProgression("C8S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 8.",
-                8, 9, false, 0, 0, 0));
+                8, 9, false, 15000000, 34500, 0));
         liste.add(new QueteProgression("C8S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 8.",
-                8, 10, false, 0, 0, 0));
+                8, 10, false, 12500000, 38000, 450));
 
-        // ── Chapitre 9 normal (TODO : niveaux / XP totale a definir) ────────
+        // ── Chapitre 9 normal (niv 75 → 77 | total ~475 320 000 XP) ─────────
         liste.add(new QueteProgression("C9S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 9.",
-                9, 1, false, 0, 0, 0));
+                9, 1, false, 33300000, 36500, 0));
         liste.add(new QueteProgression("C9S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 9.",
-                9, 2, false, 0, 0, 0));
+                9, 2, false, 38000000, 37000, 0));
         liste.add(new QueteProgression("C9S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 9.",
-                9, 3, false, 0, 0, 0));
+                9, 3, false, 42800000, 37500, 0));
         liste.add(new QueteProgression("C9S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 9.",
-                9, 4, false, 0, 0, 0));
+                9, 4, false, 47500000, 38000, 0));
         liste.add(new QueteProgression("C9S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 9.",
-                9, 5, false, 0, 0, 0));
+                9, 5, false, 47500000, 38500, 0));
         liste.add(new QueteProgression("C9S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 9.",
-                9, 6, false, 0, 0, 0));
+                9, 6, false, 52300000, 39000, 0));
         liste.add(new QueteProgression("C9S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 9.",
-                9, 7, false, 0, 0, 0));
+                9, 7, false, 52300000, 39500, 0));
         liste.add(new QueteProgression("C9S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 9.",
-                9, 8, false, 0, 0, 0));
+                9, 8, false, 57000000, 40000, 0));
         liste.add(new QueteProgression("C9S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 9.",
-                9, 9, false, 0, 0, 0));
+                9, 9, false, 57000000, 40500, 0));
         liste.add(new QueteProgression("C9S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 9.",
-                9, 10, false, 0, 0, 0));
+                9, 10, false, 47500000, 44000, 500));
 
-        // ── Chapitre 10 normal (TODO : niveaux / XP totale a definir) ───────
+        // ── Chapitre 10 normal (niv 80 → 82 | total ~1 182 750 000 XP) ──────
         liste.add(new QueteProgression("C10S1",
                 "Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 10.",
-                10, 1, false, 0, 0, 0));
+                10, 1, false, 83000000, 42500, 0));
         liste.add(new QueteProgression("C10S2",
                 "Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 10.",
-                10, 2, false, 0, 0, 0));
+                10, 2, false, 95000000, 43000, 0));
         liste.add(new QueteProgression("C10S3",
                 "Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 10.",
-                10, 3, false, 0, 0, 0));
+                10, 3, false, 106000000, 43500, 0));
         liste.add(new QueteProgression("C10S4",
                 "Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 10.",
-                10, 4, false, 0, 0, 0));
+                10, 4, false, 118000000, 44000, 0));
         liste.add(new QueteProgression("C10S5",
                 "Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 10.",
-                10, 5, false, 0, 0, 0));
+                10, 5, false, 118000000, 44500, 0));
         liste.add(new QueteProgression("C10S6",
                 "Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 10.",
-                10, 6, false, 0, 0, 0));
+                10, 6, false, 130000000, 45000, 0));
         liste.add(new QueteProgression("C10S7",
                 "Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 10.",
-                10, 7, false, 0, 0, 0));
+                10, 7, false, 130000000, 45500, 0));
         liste.add(new QueteProgression("C10S8",
                 "Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 10.",
-                10, 8, false, 0, 0, 0));
+                10, 8, false, 142000000, 46000, 0));
         liste.add(new QueteProgression("C10S9",
                 "Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 10.",
-                10, 9, false, 0, 0, 0));
+                10, 9, false, 142000000, 46500, 0));
         liste.add(new QueteProgression("C10S10",
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 10.",
-                10, 10, false, 0, 0, 0));
+                10, 10, false, 118000000, 50000, 550));
 
         // ── Chapitre 11 normal (TODO : niveaux / XP totale a definir) ───────
         liste.add(new QueteProgression("C11S1",
@@ -527,229 +527,229 @@ public class QuetesProgressionData {
                 "Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 13.",
                 13, 10, false, 0, 0, 0));
 
-        // ── Chapitre 4 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 4 Elite (niv 47 → 49 | total ~2 883 000 XP) ──
         liste.add(new QueteProgression("C4E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 4 Elite.",
-                4, 1, true, 0, 0, 0));
+                4, 1, true, 202000, 9500, 0));
         liste.add(new QueteProgression("C4E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 4 Elite.",
-                4, 2, true, 0, 0, 0));
+                4, 2, true, 231000, 10000, 0));
         liste.add(new QueteProgression("C4E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 4 Elite.",
-                4, 3, true, 0, 0, 0));
+                4, 3, true, 260000, 10500, 0));
         liste.add(new QueteProgression("C4E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 4 Elite.",
-                4, 4, true, 0, 0, 0));
+                4, 4, true, 288000, 11000, 0));
         liste.add(new QueteProgression("C4E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 4 Elite.",
-                4, 5, true, 0, 0, 0));
+                4, 5, true, 288000, 11500, 0));
         liste.add(new QueteProgression("C4E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 4 Elite.",
-                4, 6, true, 0, 0, 0));
+                4, 6, true, 317000, 12000, 0));
         liste.add(new QueteProgression("C4E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 4 Elite.",
-                4, 7, true, 0, 0, 0));
+                4, 7, true, 317000, 12500, 0));
         liste.add(new QueteProgression("C4E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 4 Elite.",
-                4, 8, true, 0, 0, 0));
+                4, 8, true, 346000, 13000, 0));
         liste.add(new QueteProgression("C4E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 4 Elite.",
-                4, 9, true, 0, 0, 0));
+                4, 9, true, 346000, 13500, 0));
         liste.add(new QueteProgression("C4E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 4 Elite.",
-                4, 10, true, 0, 0, 0));
+                4, 10, true, 288000, 17000, 0));
 
-        // ── Chapitre 5 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 5 Elite (niv 54 → 56 | total ~10 332 000 XP) ──
         liste.add(new QueteProgression("C5E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 5 Elite.",
-                5, 1, true, 0, 0, 0));
+                5, 1, true, 720000, 15500, 0));
         liste.add(new QueteProgression("C5E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 5 Elite.",
-                5, 2, true, 0, 0, 0));
+                5, 2, true, 830000, 16000, 0));
         liste.add(new QueteProgression("C5E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 5 Elite.",
-                5, 3, true, 0, 0, 0));
+                5, 3, true, 930000, 16500, 0));
         liste.add(new QueteProgression("C5E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 5 Elite.",
-                5, 4, true, 0, 0, 0));
+                5, 4, true, 1030000, 17000, 0));
         liste.add(new QueteProgression("C5E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 5 Elite.",
-                5, 5, true, 0, 0, 0));
+                5, 5, true, 1030000, 17500, 0));
         liste.add(new QueteProgression("C5E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 5 Elite.",
-                5, 6, true, 0, 0, 0));
+                5, 6, true, 1140000, 18000, 0));
         liste.add(new QueteProgression("C5E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 5 Elite.",
-                5, 7, true, 0, 0, 0));
+                5, 7, true, 1140000, 18500, 0));
         liste.add(new QueteProgression("C5E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 5 Elite.",
-                5, 8, true, 0, 0, 0));
+                5, 8, true, 1240000, 19000, 0));
         liste.add(new QueteProgression("C5E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 5 Elite.",
-                5, 9, true, 0, 0, 0));
+                5, 9, true, 1240000, 19500, 0));
         liste.add(new QueteProgression("C5E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 5 Elite.",
-                5, 10, true, 0, 0, 0));
+                5, 10, true, 1030000, 23000, 0));
 
-        // ── Chapitre 6 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 6 Elite (niv 61 → 63 | total ~37 021 000 XP) ──
         liste.add(new QueteProgression("C6E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 6 Elite.",
-                6, 1, true, 0, 0, 0));
+                6, 1, true, 2590000, 21500, 0));
         liste.add(new QueteProgression("C6E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 6 Elite.",
-                6, 2, true, 0, 0, 0));
+                6, 2, true, 2960000, 22000, 0));
         liste.add(new QueteProgression("C6E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 6 Elite.",
-                6, 3, true, 0, 0, 0));
+                6, 3, true, 3330000, 22500, 0));
         liste.add(new QueteProgression("C6E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 6 Elite.",
-                6, 4, true, 0, 0, 0));
+                6, 4, true, 3700000, 23000, 0));
         liste.add(new QueteProgression("C6E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 6 Elite.",
-                6, 5, true, 0, 0, 0));
+                6, 5, true, 3700000, 23500, 0));
         liste.add(new QueteProgression("C6E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 6 Elite.",
-                6, 6, true, 0, 0, 0));
+                6, 6, true, 4070000, 24000, 0));
         liste.add(new QueteProgression("C6E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 6 Elite.",
-                6, 7, true, 0, 0, 0));
+                6, 7, true, 4070000, 24500, 0));
         liste.add(new QueteProgression("C6E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 6 Elite.",
-                6, 8, true, 0, 0, 0));
+                6, 8, true, 4440000, 25000, 0));
         liste.add(new QueteProgression("C6E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 6 Elite.",
-                6, 9, true, 0, 0, 0));
+                6, 9, true, 4440000, 25500, 0));
         liste.add(new QueteProgression("C6E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 6 Elite.",
-                6, 10, true, 0, 0, 0));
+                6, 10, true, 3700000, 29000, 0));
 
-        // ── Chapitre 7 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 7 Elite (niv 68 → 69 | total ~60 297 000 XP) ──
         liste.add(new QueteProgression("C7E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 7 Elite.",
-                7, 1, true, 0, 0, 0));
+                7, 1, true, 4200000, 27500, 0));
         liste.add(new QueteProgression("C7E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 7 Elite.",
-                7, 2, true, 0, 0, 0));
+                7, 2, true, 4800000, 28000, 0));
         liste.add(new QueteProgression("C7E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 7 Elite.",
-                7, 3, true, 0, 0, 0));
+                7, 3, true, 5400000, 28500, 0));
         liste.add(new QueteProgression("C7E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 7 Elite.",
-                7, 4, true, 0, 0, 0));
+                7, 4, true, 6000000, 29000, 0));
         liste.add(new QueteProgression("C7E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 7 Elite.",
-                7, 5, true, 0, 0, 0));
+                7, 5, true, 6000000, 29500, 0));
         liste.add(new QueteProgression("C7E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 7 Elite.",
-                7, 6, true, 0, 0, 0));
+                7, 6, true, 6600000, 30000, 0));
         liste.add(new QueteProgression("C7E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 7 Elite.",
-                7, 7, true, 0, 0, 0));
+                7, 7, true, 6600000, 30500, 0));
         liste.add(new QueteProgression("C7E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 7 Elite.",
-                7, 8, true, 0, 0, 0));
+                7, 8, true, 7200000, 31000, 0));
         liste.add(new QueteProgression("C7E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 7 Elite.",
-                7, 9, true, 0, 0, 0));
+                7, 9, true, 7200000, 31500, 0));
         liste.add(new QueteProgression("C7E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 7 Elite.",
-                7, 10, true, 0, 0, 0));
+                7, 10, true, 6000000, 35000, 0));
 
-        // ── Chapitre 8 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 8 Elite (moitie du niveau 73 | total ~75 019 000 XP) ──
         liste.add(new QueteProgression("C8E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 8 Elite.",
-                8, 1, true, 0, 0, 0));
+                8, 1, true, 5300000, 33500, 0));
         liste.add(new QueteProgression("C8E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 8 Elite.",
-                8, 2, true, 0, 0, 0));
+                8, 2, true, 6000000, 34000, 0));
         liste.add(new QueteProgression("C8E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 8 Elite.",
-                8, 3, true, 0, 0, 0));
+                8, 3, true, 6800000, 34500, 0));
         liste.add(new QueteProgression("C8E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 8 Elite.",
-                8, 4, true, 0, 0, 0));
+                8, 4, true, 7500000, 35000, 0));
         liste.add(new QueteProgression("C8E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 8 Elite.",
-                8, 5, true, 0, 0, 0));
+                8, 5, true, 7500000, 35500, 0));
         liste.add(new QueteProgression("C8E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 8 Elite.",
-                8, 6, true, 0, 0, 0));
+                8, 6, true, 8300000, 36000, 0));
         liste.add(new QueteProgression("C8E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 8 Elite.",
-                8, 7, true, 0, 0, 0));
+                8, 7, true, 8300000, 36500, 0));
         liste.add(new QueteProgression("C8E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 8 Elite.",
-                8, 8, true, 0, 0, 0));
+                8, 8, true, 9000000, 37000, 0));
         liste.add(new QueteProgression("C8E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 8 Elite.",
-                8, 9, true, 0, 0, 0));
+                8, 9, true, 9000000, 37500, 0));
         liste.add(new QueteProgression("C8E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 8 Elite.",
-                8, 10, true, 0, 0, 0));
+                8, 10, true, 7500000, 41000, 0));
 
-        // ── Chapitre 9 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 9 Elite (moitie du niveau 77 | total ~155 559 000 XP) ──
         liste.add(new QueteProgression("C9E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 9 Elite.",
-                9, 1, true, 0, 0, 0));
+                9, 1, true, 10900000, 39500, 0));
         liste.add(new QueteProgression("C9E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 9 Elite.",
-                9, 2, true, 0, 0, 0));
+                9, 2, true, 12400000, 40000, 0));
         liste.add(new QueteProgression("C9E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 9 Elite.",
-                9, 3, true, 0, 0, 0));
+                9, 3, true, 14000000, 40500, 0));
         liste.add(new QueteProgression("C9E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 9 Elite.",
-                9, 4, true, 0, 0, 0));
+                9, 4, true, 15600000, 41000, 0));
         liste.add(new QueteProgression("C9E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 9 Elite.",
-                9, 5, true, 0, 0, 0));
+                9, 5, true, 15600000, 41500, 0));
         liste.add(new QueteProgression("C9E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 9 Elite.",
-                9, 6, true, 0, 0, 0));
+                9, 6, true, 17100000, 42000, 0));
         liste.add(new QueteProgression("C9E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 9 Elite.",
-                9, 7, true, 0, 0, 0));
+                9, 7, true, 17100000, 42500, 0));
         liste.add(new QueteProgression("C9E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 9 Elite.",
-                9, 8, true, 0, 0, 0));
+                9, 8, true, 18700000, 43000, 0));
         liste.add(new QueteProgression("C9E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 9 Elite.",
-                9, 9, true, 0, 0, 0));
+                9, 9, true, 18700000, 43500, 0));
         liste.add(new QueteProgression("C9E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 9 Elite.",
-                9, 10, true, 0, 0, 0));
+                9, 10, true, 15600000, 47000, 0));
 
-        // ── Chapitre 10 Elite (TODO : niveaux / XP totale a definir) ──
+        // ── Chapitre 10 Elite (moitie du niveau 82 | total ~387 082 000 XP) ──
         liste.add(new QueteProgression("C10E1",
                 "[ELITE] Stage 1 — [Titre a definir]", "Terminez le stage 1 du Chapitre 10 Elite.",
-                10, 1, true, 0, 0, 0));
+                10, 1, true, 27100000, 45500, 0));
         liste.add(new QueteProgression("C10E2",
                 "[ELITE] Stage 2 — [Titre a definir]", "Terminez le stage 2 du Chapitre 10 Elite.",
-                10, 2, true, 0, 0, 0));
+                10, 2, true, 31000000, 46000, 0));
         liste.add(new QueteProgression("C10E3",
                 "[ELITE] Stage 3 — [Titre a definir]", "Terminez le stage 3 du Chapitre 10 Elite.",
-                10, 3, true, 0, 0, 0));
+                10, 3, true, 34800000, 46500, 0));
         liste.add(new QueteProgression("C10E4",
                 "[ELITE] Stage 4 — [Titre a definir]", "Terminez le stage 4 du Chapitre 10 Elite.",
-                10, 4, true, 0, 0, 0));
+                10, 4, true, 38700000, 47000, 0));
         liste.add(new QueteProgression("C10E5",
                 "[ELITE] Stage 5 — [Titre a definir]", "Terminez le stage 5 du Chapitre 10 Elite.",
-                10, 5, true, 0, 0, 0));
+                10, 5, true, 38700000, 47500, 0));
         liste.add(new QueteProgression("C10E6",
                 "[ELITE] Stage 6 — [Titre a definir]", "Terminez le stage 6 du Chapitre 10 Elite.",
-                10, 6, true, 0, 0, 0));
+                10, 6, true, 42600000, 48000, 0));
         liste.add(new QueteProgression("C10E7",
                 "[ELITE] Stage 7 — [Titre a definir]", "Terminez le stage 7 du Chapitre 10 Elite.",
-                10, 7, true, 0, 0, 0));
+                10, 7, true, 42600000, 48500, 0));
         liste.add(new QueteProgression("C10E8",
                 "[ELITE] Stage 8 — [Titre a definir]", "Terminez le stage 8 du Chapitre 10 Elite.",
-                10, 8, true, 0, 0, 0));
+                10, 8, true, 46400000, 49000, 0));
         liste.add(new QueteProgression("C10E9",
                 "[ELITE] Stage 9 — [Titre a definir]", "Terminez le stage 9 du Chapitre 10 Elite.",
-                10, 9, true, 0, 0, 0));
+                10, 9, true, 46400000, 49500, 0));
         liste.add(new QueteProgression("C10E10",
                 "[ELITE] Stage 10 — [Titre a definir]", "Terminez le stage 10 du Chapitre 10 Elite.",
-                10, 10, true, 0, 0, 0));
+                10, 10, true, 38700000, 53000, 0));
 
         // ── Chapitre 11 Elite (TODO : niveaux / XP totale a definir) ──
         liste.add(new QueteProgression("C11E1",

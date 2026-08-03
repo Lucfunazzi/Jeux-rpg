@@ -23,7 +23,9 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -640,8 +642,57 @@ public class EcranMenuPrincipalController {
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("root-menu");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        contenu.getChildren().add(new Separator());
+        if (ctx.debugDeverrouille) {
+            Button debugBouton = new Button("🛠 Debug");
+            debugBouton.getStyleClass().add("menu-bouton");
+            debugBouton.setOnAction(e -> {
+                dialog.setOnHidden(ev -> onDebug());
+                dialog.close();
+            });
+            contenu.getChildren().add(debugBouton);
+        } else {
+            TextField champCode = new TextField();
+            champCode.setPromptText("Code");
+            Button validerCode = new Button("Valider");
+            validerCode.getStyleClass().add("menu-bouton");
+            validerCode.setOnAction(e -> {
+                if ("210404".equals(champCode.getText().trim())) {
+                    ctx.debugDeverrouille = true;
+                    ctx.sauvegarde.sauvegarder(ctx);
+                    dialog.close();
+                    Alert info = new Alert(Alert.AlertType.INFORMATION, "Mode debug deverrouille !");
+                    info.setTitle("Debug");
+                    info.setHeaderText(null);
+                    styliser(info);
+                    info.showAndWait();
+                    Platform.runLater(this::onDebug);
+                } else {
+                    champCode.clear();
+                }
+            });
+            HBox ligneCode = new HBox(8, champCode, validerCode);
+            ligneCode.setAlignment(Pos.CENTER);
+            contenu.getChildren().add(ligneCode);
+        }
+
         dialog.getDialogPane().setContent(contenu);
         dialog.showAndWait();
+    }
+
+    /**
+     * Bascule vers l'ecran de debug (menu plein comme les autres, pas une fenetre a part) :
+     * accessible uniquement une fois deverrouille via le code secret dans Options.
+     */
+    private void onDebug() {
+        try {
+            Stage stage = (Stage) boutonsBox.getScene().getWindow();
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranDebug.fxml");
+            ((EcranDebugController) loader.getController()).initData(ctx);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lancement.GameContext;
@@ -41,16 +42,20 @@ public class EcranPageRecrutementController {
         String rang = MenuRecrutement.getRangPage(numero);
         int actuels = parcheminsActuels(rang);
         statsBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat("Parchemins " + rang, actuels + " / " + requis));
+                GuiVisuels.creerFicheStat("Parchemins " + rang, actuels + " / " + requis),
+                GuiVisuels.creerBarreProgression(280, 16, actuels, requis));
 
         persosBox.getChildren().clear();
+        FlowPane grille = new FlowPane(12, 12);
+        grille.setAlignment(Pos.CENTER);
         for (String[] info : MenuRecrutement.getPage(numero)) {
             String nom = info[0], role = info[1];
             boolean dejaRecrute = ctx.personnagesRecruites.stream()
                     .anyMatch(p -> p.getNom().equalsIgnoreCase(nom));
 
-            persosBox.getChildren().add(cartePerso(nom, role, rang, requis, dejaRecrute));
+            grille.getChildren().add(cartePerso(nom, role, rang, requis, dejaRecrute));
         }
+        persosBox.getChildren().add(grille);
     }
 
     private Node cartePerso(String nom, String role, String rang, int requis, boolean dejaRecrute) {
@@ -59,25 +64,41 @@ public class EcranPageRecrutementController {
 
         Label nomLabel = new Label(nom);
         nomLabel.getStyleClass().add("item-nom");
-        Label detail = new Label(role + "  ·  " + requis + " parchemins " + rang);
+        Label detail = new Label(iconeRole(role) + " " + role + "  ·  " + requis + " parchemins " + rang);
         detail.getStyleClass().add("item-detail");
 
-        VBox texte = new VBox(2, nomLabel, detail);
+        VBox texte = new VBox(4, nomLabel, detail);
         HBox carte = new HBox(10, badge, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
-        carte.getStyleClass().add("carte-item");
-        carte.setPrefWidth(320);
+        carte.getStyleClass().add(dejaRecrute ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(260);
+        carte.setStyle("-fx-border-width: 0 0 0 4; -fx-border-color: transparent transparent transparent " + couleurRole(role) + ";");
 
         if (dejaRecrute) {
-            Label tag = new Label("Déjà recruté");
-            tag.getStyleClass().add("item-vide");
-            carte.getChildren().add(tag);
-            carte.setOpacity(0.5);
+            Label tag = new Label("✔ Déjà recruté");
+            tag.getStyleClass().add("item-qte");
+            texte.getChildren().add(tag);
         } else {
             carte.setCursor(Cursor.HAND);
             carte.setOnMouseClicked(e -> ouvrirFiche(nom));
         }
         return carte;
+    }
+
+    private String iconeRole(String role) {
+        return switch (role) {
+            case "Tank"    -> "⛨";
+            case "Support" -> "✚";
+            default        -> "⚔"; // DPS
+        };
+    }
+
+    private String couleurRole(String role) {
+        return switch (role) {
+            case "Tank"    -> "#4a7ee0";
+            case "Support" -> "#56c98a";
+            default        -> "#e05656"; // DPS
+        };
     }
 
     /** Ouvre la fiche du personnage (stats de base + compétences) avant confirmation du recrutement. */
@@ -136,7 +157,8 @@ public class EcranPageRecrutementController {
         return switch (rang) {
             case "C" -> ctx.menuRecrutement.getParcheminC();
             case "B" -> ctx.menuRecrutement.getParcheminB();
-            default  -> ctx.menuRecrutement.getParcheminA();
+            case "A" -> ctx.menuRecrutement.getParcheminA();
+            default  -> ctx.menuRecrutement.getParcheminS();
         };
     }
 
@@ -159,7 +181,8 @@ public class EcranPageRecrutementController {
         switch (rang) {
             case "C" -> ctx.menuRecrutement.ajouterParcheminC(-requis);
             case "B" -> ctx.menuRecrutement.ajouterParcheminB(-requis);
-            default  -> ctx.menuRecrutement.ajouterParcheminA(-requis);
+            case "A" -> ctx.menuRecrutement.ajouterParcheminA(-requis);
+            default  -> ctx.menuRecrutement.ajouterParcheminS(-requis);
         }
         ctx.personnagesRecruites.add(recrute);
         ctx.sauvegarde.sauvegarder(ctx);

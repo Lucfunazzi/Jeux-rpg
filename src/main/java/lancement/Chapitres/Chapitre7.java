@@ -5,6 +5,8 @@ import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Personnage.pnj.EnnemisGeneriques.*;
+import Personnage.pnj.Chapitre7.*;
 
 public class Chapitre7 implements Chapitre {
 
@@ -98,43 +100,74 @@ public class Chapitre7 implements Chapitre {
         return resultatStage;
     }
 
-    // TODO : remplacer par les vrais ennemis de chaque stage, ex :
-    // e.add(new EnnemiXxx(niveau));
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
 
         return switch (numero) {
-            case 1  -> new Stage(1,  "Stage 1 — [Titre a definir]",  0, 0, e);
-            case 2  -> new Stage(2,  "Stage 2 — [Titre a definir]",  0, 0, e);
-            case 3  -> new Stage(3,  "Stage 3 — [Titre a definir]",  0, 0, e);
-            case 4  -> new Stage(4,  "Stage 4 — [Titre a definir]",  0, 0, e);
-            case 5  -> new Stage(5,  "Stage 5 — [Titre a definir]",  0, 0, e);
-            case 6  -> new Stage(6,  "Stage 6 — [Titre a definir]",  0, 0, e);
-            case 7  -> new Stage(7,  "Stage 7 — [Titre a definir]",  0, 0, e);
-            case 8  -> new Stage(8,  "Stage 8 — [Titre a definir]",  0, 0, e);
-            case 9  -> new Stage(9,  "Stage 9 — [Titre a definir]",  0, 0, e);
-            case 10 -> new Stage(10, "Stage 10 — [Titre a definir]", 0, 0, e);
+            case 1 -> {
+                e.add(new EnnemiErzaKnightwalker(70));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, 70));
+                yield new Stage(1, "Prologue Edolas", 13500, 175, e);
+            }
+            case 2 -> {
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, 70));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_7, 70));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, 70));
+                yield new Stage(2, "Magie Limité", 13800, 179, e);
+            }
+            case 3 -> {
+                e.add(new EnnemiErzaKnightwalker(71));
+                yield new Stage(3, "La chasseus de fée", 14100, 183, e);
+            }
+            case 4 -> {
+                e.add(new EnnemiSugarboy(71));
+                yield new Stage(4, "Gray contre sugarBoy", 14400, 187, e);
+            }
+            case 5 -> {
+                e.add(new EnnemiHughes(71));
+                yield new Stage(5, "Natsu et Lucy vs huges", 14700, 191, e);
+            }
+            case 6 -> {
+                e.add(new EnnemiByro(72));
+                yield new Stage(6, "Lucy contre bario", 15000, 195, e);
+            }
+            case 7 -> {
+                e.add(new EnnemiPantherLily(72));
+                yield new Stage(7, "Gadjeel vs Panthère Lilly", 15300, 199, e);
+            }
+            case 8 -> {
+                e.add(new EnnemiDormaAnim(72));
+                yield new Stage(8, "Le roi d'edolas rentre en jeu", 15600, 203, e);
+            }
+            case 9 -> {
+                e.add(new EnnemiDormaAnim(73));
+                yield new Stage(9, "Natsu et gadjeel et wendy vs Le roi d'edolas", 15900, 207, e);
+            }
+            case 10 -> {
+                e.add(new EnnemiDormaAnim(73));
+                yield new Stage(10, "Le dernier combat", 16500, 214, e);
+            }
             default -> new Stage(numero, "???", 0, 0, e);
         };
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Stage 1 — [Titre a definir]";
-            case 2  -> "Stage 2 — [Titre a definir]";
-            case 3  -> "Stage 3 — [Titre a definir]";
-            case 4  -> "Stage 4 — [Titre a definir]";
-            case 5  -> "Stage 5 — [Titre a definir]";
-            case 6  -> "Stage 6 — [Titre a definir]";
-            case 7  -> "Stage 7 — [Titre a definir]";
-            case 8  -> "Stage 8 — [Titre a definir]";
-            case 9  -> "Stage 9 — [Titre a definir]";
-            case 10 -> "Stage 10 — [Titre a definir]";
+            case 1  -> "Prologue Edolas";
+            case 2  -> "Magie Limité";
+            case 3  -> "La chasseus de fée";
+            case 4  -> "Gray contre sugarBoy";
+            case 5  -> "Natsu et Lucy vs huges";
+            case 6  -> "Lucy contre bario";
+            case 7  -> "Gadjeel vs Panthère Lilly";
+            case 8  -> "Le roi d'edolas rentre en jeu";
+            case 9  -> "Natsu et gadjeel et wendy vs Le roi d'edolas";
+            case 10 -> "Le dernier combat";
             default -> "???";
         };
     }
 
-    public String getNomChapitre() { return "[Titre a definir]"; }
+    public String getNomChapitre() { return "Arc Edolas"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

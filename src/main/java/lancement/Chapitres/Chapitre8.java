@@ -5,6 +5,9 @@ import lancement.GameContext;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import Personnage.pnj.EnnemisGeneriques.*;
+import Personnage.pnj.Chapitre5.*;
+import Personnage.pnj.Chapitre8.*;
 
 public class Chapitre8 implements Chapitre {
 
@@ -98,43 +101,79 @@ public class Chapitre8 implements Chapitre {
         return resultatStage;
     }
 
-    // TODO : remplacer par les vrais ennemis de chaque stage, ex :
-    // e.add(new EnnemiXxx(niveau));
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
 
         return switch (numero) {
-            case 1  -> new Stage(1,  "Stage 1 — [Titre a definir]",  0, 0, e);
-            case 2  -> new Stage(2,  "Stage 2 — [Titre a definir]",  0, 0, e);
-            case 3  -> new Stage(3,  "Stage 3 — [Titre a definir]",  0, 0, e);
-            case 4  -> new Stage(4,  "Stage 4 — [Titre a definir]",  0, 0, e);
-            case 5  -> new Stage(5,  "Stage 5 — [Titre a definir]",  0, 0, e);
-            case 6  -> new Stage(6,  "Stage 6 — [Titre a definir]",  0, 0, e);
-            case 7  -> new Stage(7,  "Stage 7 — [Titre a definir]",  0, 0, e);
-            case 8  -> new Stage(8,  "Stage 8 — [Titre a definir]",  0, 0, e);
-            case 9  -> new Stage(9,  "Stage 9 — [Titre a definir]",  0, 0, e);
-            case 10 -> new Stage(10, "Stage 10 — [Titre a definir]", 0, 0, e);
+            case 1 -> {
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, 76));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, 76));
+                yield new Stage(1, "Prologue examen de rang S", 16800, 218, e);
+            }
+            case 2 -> {
+                e.add(new EnnemiBixrow(76));
+                e.add(new EnnemiFreed(76));
+                yield new Stage(2, "Lucy et cana vs bixrow et freed", 17100, 222, e);
+            }
+            case 3 -> {
+                e.add(new EnnemiMirajane(76));
+                yield new Stage(3, "Elfman et evergreen vs Mirajane", 17400, 226, e);
+            }
+            case 4 -> {
+                e.add(new EnnemiGildarts(77));
+                yield new Stage(4, "Natsu vs Gildarts", 17700, 230, e);
+            }
+            case 5 -> {
+                e.add(new EnnemiJubia(77));
+                e.add(new EnnemiLisanna(77));
+                yield new Stage(5, "Erza vs jubia et lisanna", 18000, 234, e);
+            }
+            case 6 -> {
+                e.add(new EnnemiMest(77));
+                e.add(new EnnemiWendy(77));
+                yield new Stage(6, "Gray et Loki vs Mest et Wendy", 18300, 238, e);
+            }
+            case 7 -> {
+                e.add(new EnnemiKawazu(77));
+                e.add(new EnnemiYamaru(77));
+                yield new Stage(7, "Gadjeel et Levy vs kawazu et yamaru", 18600, 242, e);
+            }
+            case 8 -> {
+                e.add(new EnnemiAzuma(78));
+                yield new Stage(8, "Mest, panthere lilly et wendy vs Asuma", 19000, 247, e);
+            }
+            case 9 -> {
+                e.add(new EnnemiHades(78));
+                yield new Stage(9, "Le maître de grimoir Heart vs Makarof", 19500, 253, e);
+            }
+            case 10 -> {
+                e.add(new EnnemiZancrow(78));
+                yield new Stage(10, "Natsu vs Thuncrow", 20000, 260, e);
+            }
             default -> new Stage(numero, "???", 0, 0, e);
         };
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "Stage 1 — [Titre a definir]";
-            case 2  -> "Stage 2 — [Titre a definir]";
-            case 3  -> "Stage 3 — [Titre a definir]";
-            case 4  -> "Stage 4 — [Titre a definir]";
-            case 5  -> "Stage 5 — [Titre a definir]";
-            case 6  -> "Stage 6 — [Titre a definir]";
-            case 7  -> "Stage 7 — [Titre a definir]";
-            case 8  -> "Stage 8 — [Titre a definir]";
-            case 9  -> "Stage 9 — [Titre a definir]";
-            case 10 -> "Stage 10 — [Titre a definir]";
+            case 1  -> "Prologue examen de rang S";
+            case 2  -> "Lucy et cana vs bixrow et freed";
+            case 3  -> "Elfman et evergreen vs Mirajane";
+            case 4  -> "Natsu vs Gildarts";
+            case 5  -> "Erza vs jubia et lisanna";
+               
+            case 6  -> "Gray et Loki vs Mest et Wendy";
+            case 7  -> "Gadjeel et Levy vs kawazu et yamaru ";
+            case 8  -> "Mest , panthere lilly et wendy vs Asuma";
+            case 9  -> "Le maître de grimoir Heart vs Makarof";
+            case 10 -> "Natsu vs  Thuncrow";
+         
+            
             default -> "???";
         };
     }
 
-    public String getNomChapitre() { return "[Titre a definir]"; }
+    public String getNomChapitre() { return "Arc île de Tenro 1"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

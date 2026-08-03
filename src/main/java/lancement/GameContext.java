@@ -123,6 +123,8 @@ public class GameContext {
     // ── Divers ────────────────────────────────────────────────────────────
     public int    coupons            = 0;
     public String dernierCoffreArene = null;
+    /** Deverrouille via le code secret dans Options ; donne acces au menu de debug (test only). */
+    public boolean debugDeverrouille = false;
 
     public GameContext() {}
 
@@ -213,6 +215,7 @@ public class GameContext {
         menuRecrutement.setParcheminC(data.parcheminC);
         menuRecrutement.setParcheminB(data.parcheminB);
         menuRecrutement.setParcheminA(data.parcheminA);
+        menuRecrutement.setParcheminS(data.parcheminS);
         menuTirage.setParcheminOrdinaire(data.parcheminTirageOrdinaire);
         menuTirage.setParcheminElite(data.parcheminTirageElite);
         menuTirage.setCompteurPityA(data.tirageEliteCompteurPityA);
@@ -220,5 +223,6 @@ public class GameContext {
         menuTirage.setCompteurPityS(data.tirageEliteCompteurSansS);
         sauvegarde.restaurerEtoiles(gestionnaireEtoiles, data);
         this.coupons = data.coupons;
+        this.debugDeverrouille = data.debugDeverrouille;
     }
 }

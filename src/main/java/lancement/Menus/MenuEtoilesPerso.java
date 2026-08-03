@@ -45,13 +45,40 @@ public class MenuEtoilesPerso {
         new InfoPerso("Jubia",  "A", "Mage"),
         new InfoPerso("Lucy",   "A", "Mage"),
         new InfoPerso("Wendy",  "A", "Mage"),
+        new InfoPerso("Ichiya", "A", "Mage"),
+        new InfoPerso("Hibiki", "A", "Mage"),
+        new InfoPerso("Ren",    "A", "Mage"),
+        new InfoPerso("Eve",    "A", "Mage"),
+        new InfoPerso("Panther Lily", "A", "Guerrier"),
+        new InfoPerso("Mest",         "A", "Mage"),
+        new InfoPerso("Meredy",       "A", "Mage"),
+        new InfoPerso("Cobra",        "A", "Guerrier"),
+        new InfoPerso("Racer",        "A", "Mage"),
+        new InfoPerso("Hoteye",       "A", "Mage"),
+        new InfoPerso("Midnight",     "A", "Mage"),
+        new InfoPerso("Sugarboy",     "A", "Guerrier"),
+        new InfoPerso("Hughes",       "A", "Mage"),
+        new InfoPerso("Byro",         "A", "Mage"),
         // Rang S
         new InfoPerso("Erza",           "S", "Guerrier"),
         new InfoPerso("Rogue",          "S", "Guerrier"),
         new InfoPerso("Sting",          "S", "Guerrier"),
         new InfoPerso("Yukino",         "S", "Mage"),
+        new InfoPerso("Jura",           "S", "Guerrier"),
+        new InfoPerso("Loki",           "S", "Mage"),
+        new InfoPerso("Ultear",         "S", "Mage"),
+        new InfoPerso("Erza Knightwalker", "S", "Guerrier"),
+        new InfoPerso("Azuma",          "S", "Mage"),
+        new InfoPerso("Zancrow",        "S", "Guerrier"),
+        new InfoPerso("Rustyrose",      "S", "Mage"),
+        new InfoPerso("Capricorn",      "S", "Mage"),
         // Rang SS
-        new InfoPerso("Lucas",            "SS", "Mage")
+        new InfoPerso("Lucas",            "SS", "Mage"),
+        new InfoPerso("Gildarts",         "SS", "Mage"),
+        new InfoPerso("Zero",             "SS", "Mage"),
+        new InfoPerso("Bluenote",         "SS", "Mage"),
+        new InfoPerso("Zeref",            "SS", "Mage"),
+        new InfoPerso("Acnologia",        "SS", "Guerrier")
     );
 
     /** Catalogue accessible depuis l'exterieur (ex: interface graphique) sous forme {nom, rarete, classe}. */

@@ -87,16 +87,19 @@ public class MenuTirage_recrutement {
     private static final List<String> POOL_A_ELITE = List.of(
         "Angel", "Freed", "Gajeel",
         "Gray", "Jubia (phantom lord)", "Lucy",
-        "Wendy","Bickslow","Evergreen","Aria"
+        "Wendy","Bickslow","Evergreen","Aria",
+        "Ichiya", "Hibiki", "Ren", "Eve", "Panther Lily", "Mest", "Meredy",
+        "Cobra", "Racer", "Hoteye", "Midnight", "Sugarboy", "Hughes", "Byro"
     );
 
     private static final List<String> POOL_S = List.of(
         "Erza",
-        "Rogue", "Sting", "Yukino"
+        "Rogue", "Sting", "Yukino", "Jura", "Loki", "Ultear",
+        "Erza Knightwalker", "Azuma", "Zancrow", "Rustyrose", "Capricorn"
     );
 
     private static final List<String> POOL_SS = List.of(
-        "Lucas"
+        "Lucas", "Gildarts", "Zero", "Bluenote", "Zeref", "Acnologia"
     );
 
     // ── Rarete de chaque perso ────────────────────────────────────────────

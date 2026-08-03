@@ -114,6 +114,22 @@ public class EcranRecrutementRareController {
         boutonsBox.getChildren().add(carteRecrutementRare("Luxus", "Luxus", "SS", possedeSS,
                 MenuRecrutementRare.COUT_LUXUS, luxusRecru,
                 luxusVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_LUXUS, this::confirmerEtRecruterLuxus));
+
+        boolean brainRecru = MenuRecrutementRare.dejaRecruteParNom("Brain", ctx.personnagesRecruites);
+        boolean brainVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_BRAIN;
+
+        boutonsBox.getChildren().add(titreSection("Brain"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Brain", "Brain", "S", possedeS,
+                MenuRecrutementRare.COUT_BRAIN, brainRecru,
+                brainVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_BRAIN, this::confirmerEtRecruterBrain));
+
+        boolean hadesRecru = MenuRecrutementRare.dejaRecruteParNom("Hades", ctx.personnagesRecruites);
+        boolean hadesVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_HADES;
+
+        boutonsBox.getChildren().add(titreSection("Hades"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Hades", "Hades", "SSS", possedeSS,
+                MenuRecrutementRare.COUT_HADES, hadesRecru,
+                hadesVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_HADES, this::confirmerEtRecruterHades));
     }
 
     private Label titreSection(String texte) {
@@ -260,6 +276,18 @@ public class EcranRecrutementRareController {
     private void confirmerEtRecruterLuxus() {
         if (!confirmer("Recruter Luxus [SS] pour " + MenuRecrutementRare.COUT_LUXUS + " " + MenuRecrutementRare.PARCHEMIN_SS + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterLuxus(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterBrain() {
+        if (!confirmer("Recruter Brain [S] pour " + MenuRecrutementRare.COUT_BRAIN + " " + MenuRecrutementRare.PARCHEMIN_S + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterBrain(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterHades() {
+        if (!confirmer("Recruter Hades [SSS] pour " + MenuRecrutementRare.COUT_HADES + " " + MenuRecrutementRare.PARCHEMIN_SS + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterHades(ctx));
         rafraichir();
     }
 

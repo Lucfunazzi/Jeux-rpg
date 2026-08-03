@@ -11,6 +11,8 @@ import Personnage.FairyTail.perso_jellal;
 import Personnage.FairyTail.jellal_Arc_intermagie;
 import Personnage.FairyTail.perso_Erza;
 import Personnage.FairyTail.perso_Luxus;
+import Personnage.FairyTail.perso_Brain;
+import Personnage.FairyTail.perso_Hades;
 import Equipement.Inventaire;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class MenuRecrutementRare {
 
     public static final int COUT_LUXUS = 160;  // Parchemin SS -> Luxus [SS] (recrutement direct, pas d'evolution)
 
+    public static final int COUT_BRAIN = 90;   // Parchemin S -> Brain [S]
+    public static final int COUT_HADES = 180;  // Parchemin SS -> Hades [SSS] (recrutement direct, pas d'evolution)
+
     // ── Niveaux requis ────────────────────────────────────────────────────
     public static final int NIVEAU_REQUIS_NATSU_GRAY            = 30;  // Recrutement Natsu / Gray
     public static final int NIVEAU_REQUIS_EVOLUTION_NATSU       = 40;  // Evolution Natsu Etherion (evolution de Gray pas encore implementee)
@@ -51,6 +56,8 @@ public class MenuRecrutementRare {
     public static final int NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL = 80;  // Evolution Mirajane Halphas / Jellal Intermagie
     public static final int NIVEAU_REQUIS_ERZA                  = 85;  // Recrutement Erza (evolution niveau 95 pas encore implementee)
     public static final int NIVEAU_REQUIS_LUXUS                 = 90;  // Recrutement Luxus [SS]
+    public static final int NIVEAU_REQUIS_BRAIN                 = 70;  // Recrutement Brain [S]
+    public static final int NIVEAU_REQUIS_HADES                 = 100; // Recrutement Hades [SSS]
 
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale      joueur               = ctx.joueur;
@@ -144,6 +151,24 @@ public class MenuRecrutementRare {
                     + " : " + possedeSS + "/" + COUT_LUXUS
                     + (luxusRecru ? "  [DEJA RECRUTE]" : ""));
 
+            // ── Brain ──────────────────────────────────────────────────────
+            boolean brainRecru = dejaRecruteParNom("Brain", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Brain ]  (niveau " + NIVEAU_REQUIS_BRAIN + " requis)");
+            System.out.println(" 10. Brain [S]  — " + PARCHEMIN_S
+                    + " : " + possedeS + "/" + COUT_BRAIN
+                    + (brainRecru ? "  [DEJA RECRUTE]" : ""));
+
+            // ── Hades ──────────────────────────────────────────────────────
+            boolean hadesRecru = dejaRecruteParNom("Hades", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Hades ]  (niveau " + NIVEAU_REQUIS_HADES + " requis)");
+            System.out.println(" 11. Hades [SSS]  — " + PARCHEMIN_SS
+                    + " : " + possedeSS + "/" + COUT_HADES
+                    + (hadesRecru ? "  [DEJA RECRUTE]" : ""));
+
             System.out.println();
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -193,6 +218,14 @@ public class MenuRecrutementRare {
                 case 9 -> {
                     if (luxusRecru) System.out.println("Luxus est deja dans vos allies !");
                     else tenterRecrutementLuxus(ctx, scanner);
+                }
+                case 10 -> {
+                    if (brainRecru) System.out.println("Brain est deja dans vos allies !");
+                    else tenterRecrutementBrain(ctx, scanner);
+                }
+                case 11 -> {
+                    if (hadesRecru) System.out.println("Hades est deja dans vos allies !");
+                    else tenterRecrutementHades(ctx, scanner);
                 }
                 default -> System.out.println("Choix invalide.");
             }
@@ -373,6 +406,44 @@ public class MenuRecrutementRare {
         System.out.println(">> " + recruterLuxus(ctx));
     }
 
+    // ── Recrutement Brain S ──────────────────────────────────────────────
+    private void tenterRecrutementBrain(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_BRAIN) {
+            System.out.println("Brain se debloque au niveau " + NIVEAU_REQUIS_BRAIN + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_BRAIN) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_BRAIN + " " + PARCHEMIN_S);
+            return;
+        }
+        System.out.println("Recruter Brain [S] pour " + COUT_BRAIN
+                + " " + PARCHEMIN_S + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterBrain(ctx));
+    }
+
+    // ── Recrutement Hades SSS ────────────────────────────────────────────
+    private void tenterRecrutementHades(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_HADES) {
+            System.out.println("Hades se debloque au niveau " + NIVEAU_REQUIS_HADES + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_HADES) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_HADES + " " + PARCHEMIN_SS);
+            return;
+        }
+        System.out.println("Recruter Hades [SSS] pour " + COUT_HADES
+                + " " + PARCHEMIN_SS + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterHades(ctx));
+    }
+
     // ── Logique pure (reutilisable par la console et l'interface graphique) ─
 
     /** Tente de recruter Natsu [A]. Retourne le message resultat (parchemins non deduits si echec). */
@@ -547,6 +618,36 @@ public class MenuRecrutementRare {
         ctx.personnagesRecruites.add(new perso_Luxus());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Luxus a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Brain [S]. */
+    public String recruterBrain(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_BRAIN) {
+            return "Brain se debloque au niveau " + NIVEAU_REQUIS_BRAIN + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_BRAIN) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_BRAIN + " " + PARCHEMIN_S;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S, COUT_BRAIN);
+        ctx.personnagesRecruites.add(new perso_Brain());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Brain a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Hades [SSS] (recrutement direct, pas d'evolution). */
+    public String recruterHades(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_HADES) {
+            return "Hades se debloque au niveau " + NIVEAU_REQUIS_HADES + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_SS);
+        if (possede < COUT_HADES) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_HADES + " " + PARCHEMIN_SS;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_SS, COUT_HADES);
+        ctx.personnagesRecruites.add(new perso_Hades());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Hades a rejoint vos allies !";
     }
 
     // ── Utilitaire ────────────────────────────────────────────────────────

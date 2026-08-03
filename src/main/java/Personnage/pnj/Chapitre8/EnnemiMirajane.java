@@ -1,0 +1,95 @@
+package Personnage.pnj.Chapitre8;
+
+import Combat.Combat;
+import Effets.*;
+import Personnage.PersonnageBase;
+import java.util.List;
+
+/**
+ * Mirajane — version examinatrice (Chapitre 8, stage 3 : examen de rang S,
+ * duel contre Elfman et Evergreen). Meme identite et memes attaques que
+ * perso_Mirajane (Take Over : Satan Soul).
+ */
+public class EnnemiMirajane extends PersonnageBase {
+
+    public EnnemiMirajane() { this(91); }
+
+    public EnnemiMirajane(int niveau) {
+        this.nom    = "Mirajane";
+        this.niveau = niveau;
+        this.type   = "Elementaliste";
+        this.role   = "DPS";
+        this.rarete = "S";
+
+        double mult = 1.65;
+        double niv  = Math.pow(1.05, niveau - 1);
+        double vit  = Math.pow(1.03, niveau - 1);
+        this.vie     = 650.0 * mult * niv;
+        this.attaque = 260.0 * mult * niv;
+        this.defense = 100.0 * mult * niv;
+        this.vitesse = 140.0 * mult * vit;
+
+        this.taux_critiques    = 0.10;
+        this.degat_critiques   = 1.40;
+        this.taux_precisions   = 105.00;
+        this.taux_esquives     = 0.05;
+        this.taux_blocage      = 0.05;
+        this.reduction_blocage = 0.10;
+        this.degats_renvoi     = 0.80;
+
+        initialiserVieMax();
+    }
+
+    @Override
+    public String[] getNomsAttaques() {
+        return new String[]{"Attaque du demon", "Devoreur d'ame", "Tourbillon du mal"};
+    }
+
+    @Override
+    public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
+                            List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("Mirajane utilise Attaque du demon !");
+        boolean touche = Combat.attaquer(this, cible, log);
+        if (!touche) this.ajouterRage(50);
+    }
+
+    @Override
+    public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
+                                List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("Mirajane utilise Devoreur d'ame !");
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 1.40;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.10), log);
+            }
+        }
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.10, 2), log);
+    }
+
+    @Override
+    public void attaqueUltime(List<PersonnageBase> equipeAlliee,
+                              List<PersonnageBase> equipeEnnemie, List<String> log) {
+        log.add("Mirajane utilise Tourbillon du mal !");
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Paralysie(2, 0.40), log);
+            }
+        }
+        Combat.appliquerEffet(this, new Absorption(2, 0.15), log);
+    }
+
+    @Override public void descriptionAttaqueBase() {
+        System.out.println("Attaque du demon — inflige 100% ATK a une cible.");
+    }
+    @Override public void descriptionAttaqueSpeciale() {
+        System.out.println("Devoreur d'ame — inflige 140% ATK a tous les ennemis, applique Malediction (soins reduits de 10%) pendant 2 tours, gagne 10% de taux critique pendant 2 tours.");
+    }
+    @Override public void descriptionAttaqueUltime() {
+        System.out.println("Tourbillon du mal — inflige 160% ATK a tous les ennemis (bonus selon la Rage), paralyse pendant 2 tours (40% de liberation), applique Absorption (15% vol de vie) pendant 2 tours.");
+    }
+}

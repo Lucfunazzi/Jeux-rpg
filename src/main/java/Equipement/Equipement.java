@@ -214,6 +214,33 @@ public class Equipement {
         return sb.toString().trim();
     }
 
+    /** Icone (emoji) representant cette piece, en attendant de vraies images d'equipement. */
+    public String getIcone() {
+        return icone(slot, typeArme);
+    }
+
+    /** Icone (emoji) pour un slot/type d'arme donnes — reutilisable pour les fragments d'equipement. */
+    public static String icone(Slot slot, TypeArme typeArme) {
+        if (slot == Slot.ARME) {
+            return switch (typeArme) {
+                case EPEE  -> "🗡️";
+                case LANCE -> "🔱";
+                case BATON -> "🪄";
+                case GANTS -> "🥊";
+                case FOUET -> "🪢";
+                case AUCUN -> "⚔️";
+            };
+        }
+        return switch (slot) {
+            case COUVRE_CHEF -> "🪖";
+            case TORSE       -> "🦺";
+            case MAINS       -> "🧤";
+            case JAMBIERES   -> "👖";
+            case BOTTES      -> "👢";
+            case ARME        -> "⚔️"; // inaccessible (traite ci-dessus)
+        };
+    }
+
     /** Nom affiche du type d'arme (ex. "Lance", "Baton"). Vide si ce n'est pas une arme. */
     public String getNomTypeArme() {
         return switch (typeArme) {

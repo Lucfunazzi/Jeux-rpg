@@ -50,6 +50,7 @@ public class GestionnaireSauvegarde {
         data.parcheminC = ctx.menuRecrutement.getParcheminC();
         data.parcheminB = ctx.menuRecrutement.getParcheminB();
         data.parcheminA = ctx.menuRecrutement.getParcheminA();
+        data.parcheminS = ctx.menuRecrutement.getParcheminS();
 
         // Tirages
         if (ctx.menuTirage != null) {
@@ -74,6 +75,9 @@ public class GestionnaireSauvegarde {
 
         // Coupons
         data.coupons = ctx.coupons;
+
+        // Mode debug
+        data.debugDeverrouille = ctx.debugDeverrouille;
 
         return data;
     }

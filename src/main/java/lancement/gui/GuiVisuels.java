@@ -100,6 +100,41 @@ public final class GuiVisuels {
         return badge;
     }
 
+    /**
+     * Pastille ronde de couleur pleine (rendue via CSS, pas un emoji) — utilisee pour les pierres
+     * pour garantir un rendu identique quel que soit le type, contrairement aux emoji "cercle
+     * colore" dont l'affichage depend d'une police couleur pas toujours chargee par JavaFX.
+     */
+    public static Node creerPastilleCouleur(String hex) {
+        Label l = new Label("●");
+        l.setStyle("-fx-font-size: 16px; -fx-text-fill: " + hex + ";");
+        return l;
+    }
+
+    /**
+     * Icone d'equipement (arme/armure) dans un cadre dont la bordure change de couleur selon la
+     * rarete — repere visuel en attendant de vraies images d'equipement.
+     */
+    public static Node creerIconeEquipement(String icone, String rarete) {
+        return creerIconeCadre(icone, hex(couleurRarete(rarete)));
+    }
+
+    /** Icone dans un cadre dont la bordure prend la couleur hexadecimale donnee (usage generique,
+     *  hors systeme de rarete — ex : donjons, categories). */
+    public static Node creerIconeCadre(String icone, String hexCouleur) {
+        Label l = new Label(icone);
+        l.setStyle(
+                "-fx-font-size: 18px;"
+              + "-fx-background-color: #12121c;"
+              + "-fx-background-radius: 6;"
+              + "-fx-border-radius: 6;"
+              + "-fx-border-width: 2;"
+              + "-fx-border-color: " + hexCouleur + ";"
+              + "-fx-padding: 4 8 4 8;"
+              + "-fx-alignment: center;");
+        return l;
+    }
+
     /** Barre horizontale generique, remplie selon ratio (0-1) avec la couleur donnee. */
     public static StackPane creerBarre(double largeur, double hauteur, double ratio, Color couleur) {
         double r = Math.max(0, Math.min(1, ratio));

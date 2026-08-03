@@ -106,7 +106,7 @@ public class EcranRecompensesController {
 
     private Node cartePalier(Palier p) {
         Label iconeLabel = new Label(iconePalier(p));
-        iconeLabel.getStyleClass().add("fiche-stat-icone");
+        iconeLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: " + couleurPalier(p) + ";");
 
         Label nomLabel = new Label(p.libelle() + "  " + p.etat());
         nomLabel.getStyleClass().add("item-nom");
@@ -130,6 +130,14 @@ public class EcranRecompensesController {
         if (p.etat().contains("Verrouillé")) return "⚿";
         if (p.etat().contains("Bientôt"))    return "◔";
         return "◆";
+    }
+
+    /** Couleur de l'icone de palier selon son etat, pour la distinguer d'un coup d'oeil. */
+    private String couleurPalier(Palier p) {
+        if (p.etat().contains("Réclamé"))    return "#56c98a"; // vert, deja obtenu
+        if (p.etat().contains("Disponible")) return "#f2c14e"; // or, a reclamer
+        if (p.etat().contains("Bientôt"))    return "#4ea8f2"; // bleu, a venir
+        return "#7a7a95"; // gris, verrouille
     }
 
     // ── Récompenses de niveau ────────────────────────────────────────────

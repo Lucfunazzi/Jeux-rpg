@@ -55,6 +55,7 @@ public class SauvegardeData {
     public int parcheminC;
     public int parcheminB;
     public int parcheminA;
+    public int parcheminS;
 
     // ── Tirages ───────────────────────────────────────────────────────────
     public int parcheminTirageOrdinaire = 0;
@@ -246,6 +247,9 @@ public class SauvegardeData {
 
     // ── Coupons ───────────────────────────────────────────────────────────
     public int coupons = 0;
+
+    // ── Mode debug ───────────────────────────────────────────────────────
+    public boolean debugDeverrouille = false;
 
     // ── Materiaux ─────────────────────────────────────────────────────────
     public List<MateriauData> materiaux = new ArrayList<>();

@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -45,21 +46,35 @@ public class EcranRecrutementController {
                 GuiVisuels.creerFicheStat("Or", GuiVisuels.formaterMontant(ctx.joueur.getOr())),
                 GuiVisuels.creerFicheStat("Parchemins C", GuiVisuels.formaterMontant(mr.getParcheminC())),
                 GuiVisuels.creerFicheStat("Parchemins B", GuiVisuels.formaterMontant(mr.getParcheminB())),
-                GuiVisuels.creerFicheStat("Parchemins A", GuiVisuels.formaterMontant(mr.getParcheminA()))
+                GuiVisuels.creerFicheStat("Parchemins A", GuiVisuels.formaterMontant(mr.getParcheminA())),
+                GuiVisuels.creerFicheStat("Parchemins S", GuiVisuels.formaterMontant(mr.getParcheminS()))
         );
 
         boutonsBox.getChildren().clear();
         int niveau = ctx.joueur.getNiveau();
 
+        FlowPane pagesGrille = new FlowPane(12, 12);
+        pagesGrille.setAlignment(Pos.CENTER);
         boolean unePageAjoutee = false;
-        for (int page = 1; page <= 3; page++) {
+        for (int page = 1; page <= 5; page++) {
             int niveauRequis = MenuRecrutement.getNiveauRequisPage(page);
             if (niveau < niveauRequis) continue;
-            if (!unePageAjoutee) { boutonsBox.getChildren().add(titreSection("Pages de recrutement")); unePageAjoutee = true; }
+            unePageAjoutee = true;
             String rang = MenuRecrutement.getRangPage(page);
             int pageFinal = page;
-            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Page " + page,
-                    "Rang " + rang + " — recrutez des personnages contre parchemins.", e -> ouvrirPage(e, pageFinal)));
+
+            List<String[]> personnagesPage = MenuRecrutement.getPage(page);
+            long recrutes = personnagesPage.stream()
+                    .filter(info -> ctx.personnagesRecruites.stream()
+                            .anyMatch(p -> p.getNom().equalsIgnoreCase(info[0])))
+                    .count();
+
+            pagesGrille.getChildren().add(cartePage(page, rang, (int) recrutes, personnagesPage.size(),
+                    e -> ouvrirPage(e, pageFinal)));
+        }
+        if (unePageAjoutee) {
+            boutonsBox.getChildren().add(titreSection("Pages de recrutement"));
+            boutonsBox.getChildren().add(pagesGrille);
         }
 
         boutonsBox.getChildren().add(titreSection("Parchemins"));
@@ -67,21 +82,28 @@ public class EcranRecrutementController {
                 "Échange des parchemins de recrutement contre de l'XP pour un personnage.", e -> onAchatParchemins()));
 
         MiniJeuPFC mj = mr.getMiniJeu();
+        FlowPane mjGrille = new FlowPane(12, 12);
+        mjGrille.setAlignment(Pos.CENTER);
         boolean uneManche = false;
-        for (String rang : List.of("C", "B", "A")) {
-            int page = rang.equals("C") ? 1 : rang.equals("B") ? 2 : 3;
+        for (String rang : List.of("C", "B", "A", "S")) {
+            int page = switch (rang) { case "C" -> 1; case "B" -> 2; case "A" -> 3; default -> 5; };
             if (niveau < MenuRecrutement.getNiveauRequisPage(page)) continue;
-            if (!uneManche) { boutonsBox.getChildren().add(titreSection("Mini-jeu Pierre-Feuille-Ciseaux")); uneManche = true; }
+            uneManche = true;
 
             int cout = switch (rang) {
                 case "C" -> mj.getCoutPartieC();
                 case "B" -> mj.getCoutPartieB();
-                default  -> mj.getCoutPartieA();
+                case "A" -> mj.getCoutPartieA();
+                default  -> mj.getCoutPartieS();
             };
-            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — x10 auto",
+            mjGrille.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — x10 auto",
                     (cout * 10) + " or pour 10 parties jouées automatiquement.", e -> jouerAuto(rang)));
-            boutonsBox.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — manuel",
+            mjGrille.getChildren().add(GuiVisuels.creerCarteChoix("Rang " + rang + " — manuel",
                     cout + " or, 3 manches jouées à la main.", e -> jouerManuel(rang)));
+        }
+        if (uneManche) {
+            boutonsBox.getChildren().add(titreSection("Mini-jeu Pierre-Feuille-Ciseaux"));
+            boutonsBox.getChildren().add(mjGrille);
         }
     }
 
@@ -89,6 +111,26 @@ public class EcranRecrutementController {
         Label l = new Label(texte);
         l.getStyleClass().add("section-titre");
         return l;
+    }
+
+    /** Carte de page de recrutement : badge de rang + titre + barre de progression des recrues. */
+    private Node cartePage(int page, String rang, int recrutes, int total, javafx.event.EventHandler<MouseEvent> action) {
+        Label badge = GuiVisuels.creerBadgeRarete(rang);
+        Label titreLabel = new Label("Page " + page);
+        titreLabel.getStyleClass().add("item-nom");
+        HBox entete = new HBox(8, badge, titreLabel);
+        entete.setAlignment(Pos.CENTER_LEFT);
+
+        Label sousTitre = new Label("Recrues contre parchemins " + rang);
+        sousTitre.getStyleClass().add("item-detail");
+
+        VBox carte = new VBox(6, entete, sousTitre, GuiVisuels.creerBarreProgression(200, 12, recrutes, total));
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(recrutes >= total ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(220);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
     }
 
     private void ouvrirPage(MouseEvent event, int numero) {
@@ -117,7 +159,8 @@ public class EcranRecrutementController {
         int cout = switch (rang) {
             case "C" -> mj.getCoutPartieC();
             case "B" -> mj.getCoutPartieB();
-            default  -> mj.getCoutPartieA();
+            case "A" -> mj.getCoutPartieA();
+            default  -> mj.getCoutPartieS();
         };
         int coutTotal = cout * 10;
 
@@ -140,13 +183,15 @@ public class EcranRecrutementController {
             totalGagnes += switch (rang) {
                 case "C" -> mj.jouerAutoC(ctx.joueur);
                 case "B" -> mj.jouerAutoB(ctx.joueur);
-                default  -> mj.jouerAutoA(ctx.joueur);
+                case "A" -> mj.jouerAutoA(ctx.joueur);
+                default  -> mj.jouerAutoS(ctx.joueur);
             };
         }
         switch (rang) {
             case "C" -> mr.ajouterParcheminC(totalGagnes);
             case "B" -> mr.ajouterParcheminB(totalGagnes);
-            default  -> mr.ajouterParcheminA(totalGagnes);
+            case "A" -> mr.ajouterParcheminA(totalGagnes);
+            default  -> mr.ajouterParcheminS(totalGagnes);
         }
         ctx.sauvegarde.sauvegarder(ctx);
         // Depense reellement consommee (apres remboursements eventuels sur les manches perdues),
@@ -262,7 +307,8 @@ public class EcranRecrutementController {
             switch (rang) {
                 case "C" -> mr.ajouterParcheminC(parcheminsTotaux[0]);
                 case "B" -> mr.ajouterParcheminB(parcheminsTotaux[0]);
-                default  -> mr.ajouterParcheminA(parcheminsTotaux[0]);
+                case "A" -> mr.ajouterParcheminA(parcheminsTotaux[0]);
+                default  -> mr.ajouterParcheminS(parcheminsTotaux[0]);
             }
         }
         ctx.sauvegarde.sauvegarder(ctx);

@@ -5,13 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -38,43 +37,70 @@ public class EcranExamenSController {
         infoLabel.setText("1 tentative par stage et par jour (reset a minuit).\n"
                 + "Premiere reussite d'un stage : boite garantie. Ensuite : 30% de chance.");
 
-        FlowPane grille = new FlowPane(10, 10);
-        grille.setAlignment(Pos.CENTER);
-        for (int i = 1; i <= GestionnaireExamenS.NB_STAGES; i++) {
-            grille.getChildren().add(carteStage(g, i));
-        }
-        stagesBox.getChildren().setAll(grille);
+        int progression = 0;
+        while (progression < GestionnaireExamenS.NB_STAGES && g.estDejaReussi(progression + 1)) progression++;
+        int prochainStage = Math.min(progression + 1, GestionnaireExamenS.NB_STAGES);
+
+        stagesBox.getChildren().setAll(
+                GuiVisuels.creerFicheStat("Progression", progression + " / " + GestionnaireExamenS.NB_STAGES),
+                cartePaliers(progression),
+                carteSpotlight(g, prochainStage));
     }
 
-    private Node carteStage(GestionnaireExamenS g, int numero) {
-        boolean verrouille = !g.estDebloque(numero);
-        boolean faitAujourdhui = g.estFaitAujourdhui(numero);
-        boolean premiereFois = !verrouille && !faitAujourdhui && !g.estDejaReussi(numero);
+    /** Ligne de paliers de recompense tous les 10 etages (dore si deja atteint). */
+    private Node cartePaliers(int progression) {
+        HBox ligne = new HBox(10);
+        ligne.setAlignment(Pos.CENTER);
+        for (int m = 10; m <= GestionnaireExamenS.NB_STAGES; m += 10) {
+            boolean atteint = progression >= m;
 
-        String etat;
-        if (verrouille)          etat = "Verrouillé";
-        else if (faitAujourdhui) etat = "Fait aujourd'hui";
-        else if (premiereFois)   etat = "100% — première fois !";
-        else                     etat = "30% de chance";
+            Label icone = new Label("🎁");
+            icone.setStyle("-fx-font-size: 18px;");
+            Label label = new Label("Étage " + m);
+            label.getStyleClass().add(atteint ? "item-qte" : "item-detail");
 
-        Label nom = new Label("Stage " + numero);
-        nom.getStyleClass().add("item-nom");
-        Label statut = new Label(etat);
-        statut.getStyleClass().add(premiereFois ? "item-qte" : "item-detail");
+            VBox carte = new VBox(4, icone, label);
+            carte.setAlignment(Pos.CENTER);
+            carte.getStyleClass().add(atteint ? "carte-milestone-atteinte" : "carte-milestone");
+            ligne.getChildren().add(carte);
 
-        VBox texte = new VBox(2, nom, statut);
-        HBox carte = new HBox(texte);
-        carte.setAlignment(Pos.CENTER_LEFT);
-        carte.getStyleClass().add(premiereFois ? "carte-item-joueur" : "carte-item");
-        carte.setPrefWidth(220);
-
-        if (g.peutTenter(numero)) {
-            carte.setCursor(Cursor.HAND);
-            carte.setOnMouseClicked(e -> lancerStage(numero, (Stage) ((Node) e.getSource()).getScene().getWindow()));
-        } else {
-            carte.setOpacity(0.5);
+            if (m + 10 <= GestionnaireExamenS.NB_STAGES) {
+                Label fleche = new Label("→");
+                fleche.getStyleClass().add("ordre-fleche");
+                ligne.getChildren().add(fleche);
+            }
         }
-        return carte;
+        return ligne;
+    }
+
+    /** Carte mise en avant pour la prochaine etape a jouer, avec un gros bouton d'action. */
+    private Node carteSpotlight(GestionnaireExamenS g, int numero) {
+        boolean faitAujourdhui = g.estFaitAujourdhui(numero);
+        boolean premiereFois = !faitAujourdhui && !g.estDejaReussi(numero);
+
+        Label titre = new Label("PROCHAIN DÉFI");
+        titre.getStyleClass().add("groupe-titre");
+
+        Label nom = new Label("Étage " + numero);
+        nom.getStyleClass().add("titre");
+        nom.setStyle("-fx-font-size: 26px;");
+
+        String etatTxt = faitAujourdhui ? "Déjà tenté aujourd'hui — revenez demain"
+                : premiereFois           ? "🎁 Première tentative : récompense garantie !"
+                                          : "30% de chance d'obtenir une boîte";
+        Label etat = new Label(etatTxt);
+        etat.getStyleClass().add(premiereFois ? "item-qte" : "item-detail");
+
+        Button defier = new Button(faitAujourdhui ? "Fait aujourd'hui" : "⚔ Défier");
+        defier.getStyleClass().add("bouton-defier");
+        defier.setDisable(faitAujourdhui);
+        defier.setOnAction(e -> lancerStage(numero, (Stage) defier.getScene().getWindow()));
+
+        VBox contenu = new VBox(8, titre, nom, etat, defier);
+        contenu.setAlignment(Pos.CENTER);
+        contenu.getStyleClass().add("carte-examen-spotlight");
+        contenu.setPrefWidth(320);
+        return contenu;
     }
 
     private void lancerStage(int numero, Stage stage) {

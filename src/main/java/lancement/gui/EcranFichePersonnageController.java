@@ -285,6 +285,7 @@ public class EcranFichePersonnageController {
 
         if (equipe != null) {
             carte.getChildren().add(0, GuiVisuels.creerBadgeRarete(equipe.getRarete().name()));
+            carte.getChildren().add(0, GuiVisuels.creerIconeEquipement(equipe.getIcone(), equipe.getRarete().name()));
         } else {
             carte.setOpacity(0.7);
         }
@@ -373,6 +374,7 @@ public class EcranFichePersonnageController {
         }
 
         Equipement e = choix.equipement();
+        Node icone = GuiVisuels.creerIconeEquipement(e.getIcone(), e.getRarete().name());
         Label badge = GuiVisuels.creerBadgeRarete(e.getRarete().name());
         Label nom = new Label(e.getNomAffiche());
         nom.getStyleClass().add("item-nom");
@@ -382,7 +384,7 @@ public class EcranFichePersonnageController {
         detail.setMaxWidth(240);
 
         VBox texte = new VBox(2, nom, detail);
-        HBox carte = new HBox(10, badge, texte);
+        HBox carte = new HBox(10, icone, badge, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(320);
