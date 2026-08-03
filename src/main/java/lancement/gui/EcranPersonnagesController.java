@@ -57,7 +57,7 @@ public class EcranPersonnagesController {
         String nomClasse = GuiVisuels.nomClasseAffiche(p);
         Label detailLabel = new Label("Niv. " + p.getNiveau()
                 + (!nomClasse.isEmpty() ? "  ·  " + nomClasse : "")
-                + "  ·  " + p.getRole());
+                + "  ·  " + iconeRole(p.getRole()) + " " + p.getRole());
         detailLabel.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(4, nomLabel, detailLabel, GuiVisuels.creerBarrePV(150, 14, p.getVie(), p.getVieMax()));
@@ -68,7 +68,7 @@ public class EcranPersonnagesController {
             texte.getChildren().add(setLabel);
         }
         if (dansFormation) {
-            Label formationLabel = new Label("En formation");
+            Label formationLabel = new Label("✔ En formation");
             formationLabel.setStyle("-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #f2c14e;");
             texte.getChildren().add(formationLabel);
         }
@@ -80,6 +80,14 @@ public class EcranPersonnagesController {
         carte.setCursor(Cursor.HAND);
         carte.setOnMouseClicked(e -> ouvrirFiche(carte, p));
         return carte;
+    }
+
+    private String iconeRole(String role) {
+        return switch (role) {
+            case "Tank"    -> "⛨";
+            case "Support" -> "✚";
+            default        -> "⚔"; // DPS
+        };
     }
 
     private void ouvrirFiche(Node source, PersonnageBase p) {

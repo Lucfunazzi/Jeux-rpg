@@ -19,6 +19,8 @@ public class MainApp extends Application {
         stage.setMinWidth(1000);
         stage.setMinHeight(650);
         stage.show();
+
+        GestionnaireMusique.jouerMusiqueMenuAuHasard();
     }
 
     public static void main(String[] args) {

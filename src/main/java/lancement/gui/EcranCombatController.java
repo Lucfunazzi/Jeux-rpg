@@ -45,8 +45,8 @@ public class EcranCombatController {
     private static final double LARGEUR_BARRE = 130;
     private static final double LARGEUR_CARTE = 150;
     private static final Duration DUREE_AUTO          = Duration.millis(900);
-    private static final Duration DUREE_AUTO_SPECIALE = Duration.millis(1400);
-    private static final Duration DUREE_AUTO_ULTIME   = Duration.millis(2200);
+    private static final Duration DUREE_AUTO_SPECIALE = Duration.millis(2200);
+    private static final Duration DUREE_AUTO_ULTIME   = Duration.millis(3200);
     private static final Duration DUREE_FLASH = Duration.millis(500);
 
     @FXML private Label etapeLabel;
@@ -116,6 +116,15 @@ public class EcranCombatController {
         chargerSonAction("Natsu", "Hurlement du dragon de feu", "/audio/natsu_hurlement_dragon_feu.wav");
         chargerSonAction("Leon", "Ice-Make : Aigle de Glace", "/audio/leon_aigle_glace.wav");
         chargerSonAction("Leon", "Ice-Make : Gorille de Glace", "/audio/leon_gorille_glace.wav");
+        chargerSonAction("Duc Everlue", "Invocation de Virgo", "/audio/duc_everlue_invocation_virgo.wav");
+        chargerSonAction("Yuka", "Onde Explosive", "/audio/yuka_onde_explosive.wav");
+        chargerSonAction("Yuka", "Annulation Totale des Magies", "/audio/yuka_annulation_totale.wav");
+        chargerSonAction("Cherry", "Je Fais de Toi ma Marionnette", "/audio/cherry_je_fais_de_toi_ma_marionnette.wav");
+        chargerSonAction("Cherry", "Grand Arbre Marionnette", "/audio/cherry_grand_arbre_marionnette.wav");
+        chargerSonAction("Eligoal", "Armure des Vents", "/audio/eligoal_armure_des_vents.wav");
+        chargerSonAction("Eligoal", "Déclencheur de Tornade", "/audio/eligoal_declencheur_tornade.wav");
+        chargerSonAction("Tobi", "Super Griffe Paralysante", "/audio/tobi_super_griffe_paralysante.wav");
+        chargerSonAction("Tobi", "Super Griffe Paralysante — Méga Méduse", "/audio/tobi_super_griffe_paralysante_mega_meduse.wav");
     }
 
     private static void chargerSonAction(String nomPerso, String nomAction, String cheminRessource) {
@@ -579,13 +588,16 @@ public class EcranCombatController {
 
     /** Banniere temporaire annoncant le declenchement d'une speciale ou d'un ultime (plus
      *  marquee/plus longue pour un ultime, plus discrete pour une speciale). */
-    /** Joue le son associe a cette speciale/ultime, si un a ete fourni pour ce personnage, en
-     *  baissant brievement la musique de fond pour que les deux ne se superposent pas trop fort. */
+    /** Joue le son associe a cette speciale/ultime, si un a ete fourni pour ce personnage (et si
+     *  les effets ne sont pas coupes dans les Options), en baissant brievement la musique de
+     *  fond pour que les deux ne se superposent pas trop fort. */
     private void jouerSonAction(String nomPerso, String nomAction, boolean estUltime) {
         AudioClip clip = SONS_ACTIONS.get(nomPerso + "|" + nomAction);
         if (clip == null) return;
-        clip.play();
-        GestionnaireMusique.attenuerPendant(Duration.millis(estUltime ? 1600 : 900));
+        if (!ParametresAudio.isMuet()) {
+            clip.play(ParametresAudio.getVolumeEffets());
+        }
+        GestionnaireMusique.attenuerPendant(Duration.millis(estUltime ? 2200 : 1400));
     }
 
     private void afficherBanniereAction(String nomPerso, String nomAction, boolean estUltime) {
@@ -599,7 +611,7 @@ public class EcranCombatController {
         FadeTransition apparait = new FadeTransition(Duration.millis(200), ultimeLabel);
         apparait.setFromValue(0);
         apparait.setToValue(1);
-        PauseTransition maintien = new PauseTransition(Duration.millis(estUltime ? 1400 : 700));
+        PauseTransition maintien = new PauseTransition(Duration.millis(estUltime ? 2200 : 1400));
         FadeTransition disparait = new FadeTransition(Duration.millis(400), ultimeLabel);
         disparait.setFromValue(1);
         disparait.setToValue(0);

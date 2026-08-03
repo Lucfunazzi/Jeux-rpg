@@ -22,12 +22,13 @@ public class EnnemiDeliora extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "A";
 
+        double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 1000.0 * niv;
-        this.attaque =  150.0 * niv;
-        this.defense =  50.0 * niv;
-        this.vitesse =   110.0 * vit;
+        this.vie     = 1000.0 * multElite * niv;
+        this.attaque =  150.0 * multElite * niv;
+        this.defense =  50.0 * multElite * niv;
+        this.vitesse =   110.0 * multElite * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.40;

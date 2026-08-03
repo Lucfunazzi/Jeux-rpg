@@ -40,9 +40,9 @@ public class EcranStagesController {
     private void rafraichir() {
         FlowPane stats = new FlowPane(10, 10);
         stats.setAlignment(Pos.CENTER);
-        stats.getChildren().add(GuiVisuels.creerFicheStat("Or", String.format("%.0f", ctx.joueur.getOr())));
+        stats.getChildren().add(GuiVisuels.creerFicheStat("●", "Or", String.format("%.0f", ctx.joueur.getOr())));
         if (ligne.elite()) {
-            stats.getChildren().add(GuiVisuels.creerFicheStat("Énergie", ctx.gestionnaireEnergie.afficherEnergie()));
+            stats.getChildren().add(GuiVisuels.creerFicheStat("✳", "Énergie", ctx.gestionnaireEnergie.afficherEnergie()));
         }
         statsBox.getChildren().setAll(stats);
 
@@ -71,8 +71,11 @@ public class EcranStagesController {
         Label detail = new Label(etatTexte + runs);
         detail.getStyleClass().add("item-detail");
 
+        Label icone = new Label(iconeStage(reussi, debloque, queteAcceptee));
+        icone.getStyleClass().add("fiche-stat-icone");
+
         VBox texte = new VBox(2, nom, detail);
-        HBox carte = new HBox(texte);
+        HBox carte = new HBox(10, icone, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.setMaxWidth(Double.MAX_VALUE);
         carte.setPrefWidth(420);
@@ -85,6 +88,13 @@ public class EcranStagesController {
             carte.setOpacity(0.4);
         }
         return carte;
+    }
+
+    private String iconeStage(boolean reussi, boolean debloque, boolean queteAcceptee) {
+        if (reussi)         return "✔";
+        if (!debloque)      return "⚿";
+        if (!queteAcceptee) return "⚑";
+        return "▶";
     }
 
     private void lancerStage(int numero, Stage stage) {

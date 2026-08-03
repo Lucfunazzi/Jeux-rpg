@@ -40,8 +40,9 @@
         <bottom>
             <VBox alignment="CENTER" spacing="10">
                 <padding><Insets top="10" bottom="20"/></padding>
-                <Button text="Sauvegarder" onAction="#onSauvegarder" styleClass="menu-bouton"/>
-                <Button text="Quitter" onAction="#onQuitter" styleClass="menu-bouton"/>
+                <Button text="⚙ Options" onAction="#onOptions" styleClass="menu-bouton"/>
+                <Button text="💾 Sauvegarder" onAction="#onSauvegarder" styleClass="menu-bouton"/>
+                <Button text="🚪 Quitter" onAction="#onQuitter" styleClass="menu-bouton-danger"/>
             </VBox>
         </bottom>
     </BorderPane>

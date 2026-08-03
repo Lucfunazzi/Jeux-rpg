@@ -24,7 +24,7 @@ public class EnnemiNatsuStage4 extends PersonnageBase {
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = niveau;
-         double mult = 1.20;
+         double mult = 1.20 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 300.0 * mult * niv;

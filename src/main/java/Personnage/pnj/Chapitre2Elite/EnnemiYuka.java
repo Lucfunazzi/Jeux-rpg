@@ -22,12 +22,13 @@ public class EnnemiYuka extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "C";
 
+        double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 230.0 * niv;
-        this.attaque =  80.0 * niv;
-        this.defense =  65.0 * niv;
-        this.vitesse =  70.0 * vit;
+        this.vie     = 230.0 * multElite * niv;
+        this.attaque =  80.0 * multElite * niv;
+        this.defense =  65.0 * multElite * niv;
+        this.vitesse =  70.0 * multElite * vit;
 
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.15;

@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 
 public final class Navigation {
 
+    private static final String ECRAN_COMBAT = "/fxml/EcranCombat.fxml";
+
     private Navigation() {}
 
     public static FXMLLoader changerEcran(Stage stage, String fxmlPath) throws IOException {
@@ -16,6 +18,12 @@ public final class Navigation {
         Parent root = loader.load();
         Scene scene = stage.getScene();
         scene.setRoot(root);
+
+        // Musique d'ambiance des menus : automatique sur tout ecran qui n'est pas le combat
+        // lui-meme (celui-ci lance sa propre musique avant d'appeler changerEcran).
+        if (!ECRAN_COMBAT.equals(fxmlPath)) {
+            GestionnaireMusique.jouerMusiqueMenuAuHasard();
+        }
         return loader;
     }
 

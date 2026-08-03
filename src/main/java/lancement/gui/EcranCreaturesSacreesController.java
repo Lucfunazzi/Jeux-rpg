@@ -80,7 +80,7 @@ public class EcranCreaturesSacreesController {
         infoBox.getChildren().setAll(carte);
 
         if (!gcs.estAuNiveauMax()) {
-            ajouterCarteAction("Utiliser une Friandise de Familier",
+            ajouterCarteAction("✳", "Utiliser une Friandise de Familier",
                     "Donne de l'XP instantanee, sans attendre l'entrainement", e -> onUtiliserFriandise());
         }
 
@@ -93,10 +93,10 @@ public class EcranCreaturesSacreesController {
             long minutesRestantes = 60 - minutesEcoulees;
             if (minutesRestantes == 60) { heuresRestantes++; minutesRestantes = 0; }
             String tempsRestant = String.format("Temps restant : ~%dh%02dm", heuresRestantes, minutesRestantes);
-            ajouterCarteInerte("Entraînement (" + actif.libelle + ") en cours...", tempsRestant);
+            ajouterCarteInerte("◔", "Entraînement (" + actif.libelle + ") en cours...", tempsRestant);
 
         } else if (gcs.entrainementTermine()) {
-            ajouterCarteAction("Réclamer l'XP", "Entraînement terminé !", e -> {
+            ajouterCarteAction("✪", "Réclamer l'XP", "Entraînement terminé !", e -> {
                 String msg = gcs.reclamerEntrainement();
                 ctx.formation.appliquerBonusLiens();
                 ctx.sauvegarde.sauvegarder(ctx);
@@ -105,7 +105,7 @@ public class EcranCreaturesSacreesController {
             });
 
         } else if (gcs.estAuNiveauMax() && gcs.getType().peutEvoluer()) {
-            ajouterCarteAction("Évoluer → " + gcs.getType().suivant().nom, "Niveau max atteint", e -> {
+            ajouterCarteAction("☄", "Évoluer → " + gcs.getType().suivant().nom, "Niveau max atteint", e -> {
                 String msg = gcs.evoluer();
                 ctx.formation.appliquerBonusLiens();
                 ctx.sauvegarde.sauvegarder(ctx);
@@ -114,11 +114,11 @@ public class EcranCreaturesSacreesController {
             });
 
         } else if (gcs.estAuNiveauMax()) {
-            ajouterCarteInerte("Igneel est à son niveau maximum !", "");
+            ajouterCarteInerte("✔", "Igneel est à son niveau maximum !", "");
 
         } else {
             for (Entrainement entr : Entrainement.values()) {
-                ajouterCarteAction("Entraînement " + entr.libelle,
+                ajouterCarteAction("▶", "Entraînement " + entr.libelle,
                         "+" + entr.xpRecompense + " XP  (" + entr.dureeHeures + "h)",
                         e -> lancerEntrainement(entr));
             }
@@ -171,15 +171,38 @@ public class EcranCreaturesSacreesController {
         return carte;
     }
 
-    private void ajouterCarteAction(String titre, String description, EventHandler<javafx.scene.input.MouseEvent> action) {
-        actionsBox.getChildren().add(GuiVisuels.creerCarteChoix(titre, description, action));
+    private void ajouterCarteAction(String icone, String titre, String description, EventHandler<javafx.scene.input.MouseEvent> action) {
+        actionsBox.getChildren().add(carteAction(icone, titre, description, action));
     }
 
-    private void ajouterCarteInerte(String titre, String description) {
-        Node carte = GuiVisuels.creerCarteChoix(titre, description, e -> {});
+    private void ajouterCarteInerte(String icone, String titre, String description) {
+        Node carte = carteAction(icone, titre, description, e -> {});
         carte.setCursor(Cursor.DEFAULT);
         carte.setOnMouseClicked(null);
         actionsBox.getChildren().add(carte);
+    }
+
+    /** Variante de GuiVisuels.creerCarteChoix() avec une icone. */
+    private Node carteAction(String icone, String titre, String description, EventHandler<javafx.scene.input.MouseEvent> action) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("item-nom");
+
+        Label descLabel = new Label(description);
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(280);
+
+        VBox texte = new VBox(4, titreLabel, descLabel);
+        javafx.scene.layout.HBox carte = new javafx.scene.layout.HBox(10, iconeLabel, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(360);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
     }
 
     @FXML

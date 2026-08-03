@@ -31,7 +31,7 @@ public class perso_Cherry extends PersonnageBase {
 
      @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Arbre Marionnette", "Marionnette de l'amour ", "Forêt de l'Amour"};
+        return new String[]{"Arbre Marionnette", "Je Fais de Toi ma Marionnette", "Grand Arbre Marionnette"};
     }
 
     @Override
@@ -45,7 +45,7 @@ public class perso_Cherry extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry utilise marionnette de l'amour  ");
+        log.add("Cherry utilise Je Fais de Toi ma Marionnette ! ");
         PersonnageBase cibleSoin = Combat.cibleParRole(equipeAlliee, "Tank");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "DPS");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "Support");
@@ -58,7 +58,7 @@ public class perso_Cherry extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry libère la Forêt de l'amour — la forêt entière se dresse contre les ennemis !");
+        log.add("Cherry invoque le Grand Arbre Marionnette — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
@@ -73,9 +73,9 @@ public class perso_Cherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Marionnette de l'amour — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
+        System.out.println("Je Fais de Toi ma Marionnette — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Forêt de l'Amour — Inflige 70% ATK à tous.");
+        System.out.println("Grand Arbre Marionnette — Inflige 70% ATK à tous.");
     }
 }

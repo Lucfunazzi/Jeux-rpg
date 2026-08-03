@@ -26,7 +26,7 @@ public class EnnemiLeon extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "B";
 
-        double mult = 1.30;
+        double mult = 1.30 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 230.0 * mult * niv;

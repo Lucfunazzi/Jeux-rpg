@@ -35,7 +35,7 @@ public class perso_Eligor extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup de Faux", "Lame de Vent", "Mur de Vent — Prison de Tornades"};
+        return new String[]{"Coup de Faux", "Armure des Vents", "Déclencheur de Tornade"};
     }
 
     @Override
@@ -48,7 +48,7 @@ public class perso_Eligor extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal Lance Lame de Vent " + cible.getNom() + " !");
+        log.add("Eligoal invoque son Armure des Vents et frappe " + cible.getNom() + " !");
      
         double degats = this.getAttaque() * 1.40;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
@@ -58,7 +58,7 @@ public class perso_Eligor extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal libère Storm Bringer sur toute l'équipe ennemie !");
+        log.add("Eligoal active son Déclencheur de Tornade sur toute l'équipe ennemie !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         
@@ -76,9 +76,9 @@ public class perso_Eligor extends PersonnageBase {
         System.out.println("Coup de Faux — 100% ATK à un ennemi.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Lame de Vent —  inflige 140% ATK à un ennemi.");
+        System.out.println("Armure des Vents —  inflige 140% ATK à un ennemi.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Storm Bringer— 70% ATK à tous les ennemis, inflige saignement pendants 2 tours (5% des pv).");
+        System.out.println("Déclencheur de Tornade — 70% ATK à tous les ennemis, inflige saignement pendants 2 tours (5% des pv).");
     }
 }

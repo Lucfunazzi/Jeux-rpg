@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -57,26 +58,49 @@ public class EcranCompagnonsController {
         compagnonBox.getChildren().setAll(carte);
 
         orBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat("Or disponible", String.format("%.0f", ctx.joueur.getOr())));
+                GuiVisuels.creerFicheStat("●", "Or disponible", String.format("%.0f", ctx.joueur.getOr())));
 
         Node carteAction;
         if (!gc.estAuNiveauMax()) {
-            carteAction = GuiVisuels.creerCarteChoix(
+            carteAction = carteAction("⚒",
                     "Améliorer → Niv." + (gc.getNiveau() + 1),
                     gc.getCoutProchainNiveau() + " or",
                     e -> onAction());
         } else if (gc.peutEvoluer()) {
-            carteAction = GuiVisuels.creerCarteChoix(
+            carteAction = carteAction("☄",
                     "Évoluer → " + gc.getType().suivant().nom,
                     gc.getCoutEvolution() + " or",
                     e -> onAction());
         } else {
-            carteAction = GuiVisuels.creerCarteChoix("Compagnon au maximum actuel", "", e -> {});
+            carteAction = carteAction("✔", "Compagnon au maximum actuel", "", e -> {});
             carteAction.setOpacity(0.5);
             carteAction.setCursor(Cursor.DEFAULT);
             carteAction.setOnMouseClicked(null);
         }
         actionBox.getChildren().setAll(carteAction);
+    }
+
+    /** Variante de GuiVisuels.creerCarteChoix() avec une icone. */
+    private Node carteAction(String icone, String titre, String description, javafx.event.EventHandler<javafx.scene.input.MouseEvent> action) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("item-nom");
+
+        Label descLabel = new Label(description);
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(280);
+
+        VBox texte = new VBox(4, titreLabel, descLabel);
+        HBox carte = new HBox(10, iconeLabel, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(360);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
     }
 
     private void onAction() {

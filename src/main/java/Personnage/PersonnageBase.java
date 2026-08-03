@@ -64,8 +64,6 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     protected double degats_renvoi;
     private double rage = 0;
     private double rageMax = 100;
-    /** Vrai si la derniere attaque de base resolue via Combat.attaquer() etait un coup critique (pour le bonus de furie). */
-    private boolean dernierCoupCritique = false;
     protected boolean specialeUtilisee = false;
     private double bonusLienATK = 0.0;
     private double bonusLienDEF = 0.0;
@@ -476,9 +474,6 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     public double getTauxContre() { return taux_contre + getBonusPierrePoints(Pierre.Type.CONTRE); }
     public void setTauxContre(double contre) { this.taux_contre = contre; }
-
-    public boolean isDernierCoupCritique() { return dernierCoupCritique; }
-    public void setDernierCoupCritique(boolean v) { this.dernierCoupCritique = v; }
 
     public double getAttaqueBase() { return attaqueBase; }
     public double getDegatsRenvoi() { return degats_renvoi; }

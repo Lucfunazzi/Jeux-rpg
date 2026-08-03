@@ -105,12 +105,27 @@ public class EcranQuetesController {
         boolean reclamee   = ctx.gestionnaireQuetes.isBarreReclamee(index);
         boolean disponible = ctx.gestionnaireQuetes.estBarreDisponible(index);
 
+        Label iconeLabel = new Label(reclamee ? "✔" : disponible ? "✪" : "◔");
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
         String titre = palier + " points" + (reclamee ? " — Réclamée" : disponible ? " — Disponible !" : "");
-        Node carte = GuiVisuels.creerCarteChoix(titre,
-                ctx.gestionnaireQuetes.afficherRecompenseBarre(index),
-                e -> onReclamerBarre(index));
-        if (disponible) carte.getStyleClass().add("carte-item-joueur");
-        if (!disponible) { carte.setCursor(Cursor.DEFAULT); carte.setOnMouseClicked(null); }
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("item-nom");
+
+        Label descLabel = new Label(ctx.gestionnaireQuetes.afficherRecompenseBarre(index));
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(300);
+
+        VBox texte = new VBox(4, titreLabel, descLabel);
+        HBox carte = new HBox(10, iconeLabel, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add(disponible ? "carte-item-joueur" : "carte-item");
+        carte.setPrefWidth(360);
+        if (disponible) {
+            carte.setCursor(Cursor.HAND);
+            carte.setOnMouseClicked(e -> onReclamerBarre(index));
+        }
         return carte;
     }
 
@@ -135,6 +150,10 @@ public class EcranQuetesController {
 
     /** Carte pour une quete (journaliere ou de progression). Clic -> Reclamer si prete, sinon affiche la progression. */
     private Node carteQuete(Quete q) {
+        Label iconeLabel = new Label(iconeStatut(q));
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+        iconeLabel.setStyle("-fx-text-fill: " + couleurStatut(q) + ";");
+
         Label titre = new Label(q.getTitre());
         titre.getStyleClass().add("item-nom");
 
@@ -159,7 +178,7 @@ public class EcranQuetesController {
         statut.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: " + couleurStatut(q) + ";");
 
         VBox texte = new VBox(4, titre, description, progression, recompense);
-        HBox ligne = new HBox(14, texte, statut);
+        HBox ligne = new HBox(14, iconeLabel, texte, statut);
         ligne.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(texte, Priority.ALWAYS);
 
@@ -174,6 +193,14 @@ public class EcranQuetesController {
         if (q.isCompletee()) return "Prête !";
         if (q instanceof QueteProgression qp && !qp.isAcceptee()) return "À accepter";
         return "En cours";
+    }
+
+    /** Icone selon le meme statut que libelleStatut()/couleurStatut(). */
+    private String iconeStatut(Quete q) {
+        if (q.isReclamee())  return "✔";
+        if (q.isCompletee()) return "✪";
+        if (q instanceof QueteProgression qp && !qp.isAcceptee()) return "⚑";
+        return "◔";
     }
 
     private String couleurStatut(Quete q) {

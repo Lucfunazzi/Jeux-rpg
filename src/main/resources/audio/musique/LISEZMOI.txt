@@ -37,6 +37,16 @@ ARENE — tiree au hasard a chaque lancement parmi :
   arene4.mp3
   arene5.mp3
 
+MENUS (tous les ecrans hors combat) — tiree au hasard, nomme exactement :
+
+  menu1.mp3   <- deja fourni
+  menu2.mp3   <- deja fourni
+  menu3.mp3   <- deja fourni
+
+  La piste continue de jouer sans se relancer tant qu'on navigue entre les menus
+  (Formation, Inventaire, Quetes, etc.). Une nouvelle piste n'est tiree au sort
+  qu'au demarrage du jeu ou juste apres un combat (retour au menu).
+
 Notes :
 - Format : mp3 (javafx-media le lit nativement).
 - Chaque piste tourne en boucle et se coupe (fondu) en quittant l'ecran de combat.

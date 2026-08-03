@@ -131,7 +131,7 @@ public class EcranInventaireController {
                 } else if (trouverBoiteEquipement(m.getNom()) != null) {
                     grille.getChildren().add(carteBoiteEquipement(trouverBoiteEquipement(m.getNom()), m.getQuantite()));
                 } else {
-                    grille.getChildren().add(carteSimple(m.getNom(), "x" + m.getQuantite()));
+                    grille.getChildren().add(carteSimple("◆", m.getNom(), "x" + m.getQuantite()));
                 }
             }
             contenuBox.getChildren().add(grille);
@@ -235,7 +235,7 @@ public class EcranInventaireController {
 
     /** Carte pour une carte d'or. Clic -> Utiliser directement. */
     private Node carteCarteOr(Inventaire.StackCarteOr s) {
-        Node ligne = carteSimple(s.getCarte().nom,
+        Node ligne = carteSimple("●", s.getCarte().nom,
                 "x" + s.getQuantite() + "  (" + String.format("%,d", s.getCarte().valeurOr) + " or/carte)");
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> utiliserCarteOr(s));
@@ -249,7 +249,7 @@ public class EcranInventaireController {
         String suffixe = rarete != null
                 ? "x" + quantite + " / " + GestionnaireEtoilesPerso.coutFragmentsRecrutement(rarete)
                 : "x" + quantite;
-        Node ligne = carteSimple(nomPerso + (rarete != null ? " [" + rarete + "]" : ""), suffixe);
+        Node ligne = carteSimple("♟", nomPerso + (rarete != null ? " [" + rarete + "]" : ""), suffixe);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> actionsFragmentPerso(nomPerso, rarete));
         return ligne;
@@ -265,7 +265,7 @@ public class EcranInventaireController {
         String suffixe = fragment != null
                 ? "x" + qte + " / " + fragment.getQuantiteRequise()
                 : "x" + qte;
-        Node ligne = carteSimple(libelle, suffixe);
+        Node ligne = carteSimple("⚒", libelle, suffixe);
         if (fragment != null) {
             ligne.setCursor(Cursor.HAND);
             ligne.setOnMouseClicked(ev -> actionsFragmentEquipement(fragment));
@@ -275,7 +275,7 @@ public class EcranInventaireController {
 
     /** Carte pour une potion d'energie. Clic -> Utiliser directement. */
     private Node cartePotionEnergie(PotionEnergie p, int quantite) {
-        Node ligne = carteSimple(p.nom, "x" + quantite + "  (+" + p.energie + " énergie)");
+        Node ligne = carteSimple("✳", p.nom, "x" + quantite + "  (+" + p.energie + " énergie)");
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> utiliserPotionEnergie(p));
         return ligne;
@@ -283,7 +283,7 @@ public class EcranInventaireController {
 
     /** Carte pour une boite de pierre. Clic -> Ouvrir directement. */
     private Node carteBoitePierre(int niveauBoite, int quantite) {
-        Node ligne = carteSimple(MenuExamenS.nomBoite(niveauBoite), "x" + quantite);
+        Node ligne = carteSimple("❒", MenuExamenS.nomBoite(niveauBoite), "x" + quantite);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> ouvrirBoitesPierre(niveauBoite));
         return ligne;
@@ -291,7 +291,7 @@ public class EcranInventaireController {
 
     /** Carte pour un Sceau de Rang. Clic -> choisir un personnage recrute a qui le donner. */
     private Node carteSceau(SceauDeRang sceau, int quantite) {
-        Node ligne = carteSimple(sceau.nom, "x" + quantite + "  (+" + sceau.fragments + " fragments au choix)");
+        Node ligne = carteSimple("❖", sceau.nom, "x" + quantite + "  (+" + sceau.fragments + " fragments au choix)");
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> actionsSceau(sceau));
         return ligne;
@@ -304,7 +304,7 @@ public class EcranInventaireController {
 
     /** Carte pour une Boite d'equipement. Clic -> demande une quantite puis ouvre (donne le set complet du rang). */
     private Node carteBoiteEquipement(BoiteEquipement boite, int quantite) {
-        Node ligne = carteSimple(boite.nom, "x" + quantite);
+        Node ligne = carteSimple("❒", boite.nom, "x" + quantite);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> ouvrirBoitesEquipement(boite));
         return ligne;
@@ -370,7 +370,7 @@ public class EcranInventaireController {
 
     /** Carte pour une Boite Mysterieuse de la Guilde. Clic -> ouvrir directement (lot aleatoire). */
     private Node carteBoiteGuilde(int quantite) {
-        Node ligne = carteSimple(BoiteGuilde.NOM, "x" + quantite);
+        Node ligne = carteSimple("❒", BoiteGuilde.NOM, "x" + quantite);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> {
             String resultat = lancement.Gestionnaires.GestionnaireGuilde.ouvrirBoiteMysterieuse(ctx.inventaire, ctx.joueur);
@@ -383,7 +383,7 @@ public class EcranInventaireController {
 
     /** Carte pour les Cles de Coffre de Guilde. Clic -> ouvrir le grand coffre (selon le Rang Joueur) si assez de cles. */
     private Node carteCoffreGuilde(int quantite) {
-        Node ligne = carteSimple(CleCoffreGuilde.NOM, "x" + quantite + " / " + CleCoffreGuilde.SEUIL_OUVERTURE);
+        Node ligne = carteSimple("⚿", CleCoffreGuilde.NOM, "x" + quantite + " / " + CleCoffreGuilde.SEUIL_OUVERTURE);
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> {
             String resultat = lancement.Gestionnaires.GestionnaireGuilde.ouvrirCoffreGuilde(
@@ -404,18 +404,21 @@ public class EcranInventaireController {
     /** Carte pour une pierre (jade). Clic -> Equiper/Vendre. */
     private Node cartePierre(Inventaire.StackPierre s) {
         Pierre p = new Pierre(s.getType(), s.getNiveau());
-        Node ligne = carteSimple(p.toString(), "x" + s.getQuantite());
+        Node ligne = carteSimple("♦", p.toString(), "x" + s.getQuantite());
         ligne.setCursor(Cursor.HAND);
         ligne.setOnMouseClicked(ev -> actionsPierre(s));
         return ligne;
     }
 
-    /** Carte simple nom + quantite (materiaux divers). */
-    private Node carteSimple(String nom, String suffixe) {
+    /** Carte simple icone + nom + quantite (materiaux divers). */
+    private Node carteSimple(String icone, String nom, String suffixe) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
         Label nomLabel = new Label(nom);
         nomLabel.getStyleClass().add("item-nom");
 
-        HBox ligne = new HBox(10, nomLabel);
+        HBox ligne = new HBox(10, iconeLabel, nomLabel);
         ligne.setAlignment(Pos.CENTER_LEFT);
 
         if (!suffixe.isEmpty()) {

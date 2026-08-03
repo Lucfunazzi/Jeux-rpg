@@ -60,7 +60,7 @@ public class EcranFormationController {
         }
 
         competenceBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat("Compétence spéciale active", nomCompetenceActive()));
+                GuiVisuels.creerFicheStat("✦", "Compétence spéciale active", nomCompetenceActive()));
 
         List<GestionnaireLiens.Lien> liens = f.getLiensActifs();
         if (liens.isEmpty()) {
@@ -185,7 +185,7 @@ public class EcranFormationController {
         HBox entete = new HBox(6, badge, nom);
         entete.setAlignment(Pos.CENTER);
 
-        Label role = new Label(p.getRole());
+        Label role = new Label(iconeRole(p.getRole()) + " " + p.getRole());
         role.setStyle("-fx-font-size: 11px; -fx-text-fill: #9a9ac0;");
 
         VBox carte = new VBox(4, entete, role, GuiVisuels.creerBarrePV(110, 10, p.getVie(), p.getVieMax()));
@@ -208,6 +208,14 @@ public class EcranFormationController {
         carte.setPrefWidth(130);
         carte.setPrefHeight(74);
         return carte;
+    }
+
+    private String iconeRole(String role) {
+        return switch (role) {
+            case "Tank"    -> "⛨";
+            case "Support" -> "✚";
+            default        -> "⚔"; // DPS
+        };
     }
 
     private String nomCompetenceActive() {
@@ -255,7 +263,7 @@ public class EcranFormationController {
         Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
         Label nom = new Label(p.getNom());
         nom.getStyleClass().add("item-nom");
-        Label detail = new Label("Niv. " + p.getNiveau() + "  ·  " + p.getRole());
+        Label detail = new Label("Niv. " + p.getNiveau() + "  ·  " + iconeRole(p.getRole()) + " " + p.getRole());
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);

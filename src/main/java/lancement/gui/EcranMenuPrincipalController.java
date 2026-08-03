@@ -19,9 +19,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -57,12 +60,12 @@ public class EcranMenuPrincipalController {
         this.ctx = ctx;
 
         statsBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat(ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
-                GuiVisuels.creerFicheStat("Rang", ctx.rangJoueur.getRangNom()),
-                GuiVisuels.creerFicheStat("Or", GuiVisuels.formaterMontant(ctx.joueur.getOr())),
-                GuiVisuels.creerFicheStat("Coupons", GuiVisuels.formaterMontant(ctx.joueur.getCoupons())),
-                GuiVisuels.creerFicheStat("Combativité", String.valueOf(ctx.formation.getCombativite())),
-                GuiVisuels.creerFicheStat("Énergie", ctx.gestionnaireEnergie.afficherEnergie())
+                GuiVisuels.creerFicheStat("♚", ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
+                GuiVisuels.creerFicheStat("◆", "Rang", ctx.rangJoueur.getRangNom()),
+                GuiVisuels.creerFicheStat("●", "Or", GuiVisuels.formaterMontant(ctx.joueur.getOr())),
+                GuiVisuels.creerFicheStat("✉", "Coupons", GuiVisuels.formaterMontant(ctx.joueur.getCoupons())),
+                GuiVisuels.creerFicheStat("⚡", "Combativité", String.valueOf(ctx.formation.getCombativite())),
+                GuiVisuels.creerFicheStat("✳", "Énergie", ctx.gestionnaireEnergie.afficherEnergie())
         );
 
         xpBarBox.getChildren().setAll(
@@ -120,15 +123,51 @@ public class EcranMenuPrincipalController {
 
         FlowPane grille = new FlowPane(10, 10);
         grille.setAlignment(Pos.CENTER);
-        grille.setPrefWrapLength(460);
+        grille.setPrefWrapLength(480);
         for (BoutonDef b : boutons) {
             Button bouton = new Button(b.libelle());
-            bouton.getStyleClass().add("menu-bouton");
+            bouton.getStyleClass().add("menu-tuile");
+            Label icone = new Label(iconePour(b.libelle()));
+            icone.getStyleClass().add("menu-tuile-icone");
+            bouton.setGraphic(icone);
+            bouton.setContentDisplay(ContentDisplay.TOP);
             bouton.setOnAction(b.action());
             boutonsParLibelle.put(b.libelle(), bouton);
             grille.getChildren().add(avecBadgeNotification(bouton, aNotification(b.libelle())));
         }
         boutonsBox.getChildren().add(grille);
+    }
+
+    /**
+     * Icone affichee au-dessus du libelle de chaque tuile de navigation. Volontairement limitee
+     * aux blocs Unicode "Miscellaneous Symbols"/"Dingbats" (U+2600-U+27BF) plutot qu'aux emojis
+     * couleur modernes (U+1F300+) : ces derniers ne s'affichent pas de maniere fiable avec le
+     * rendu de texte par defaut de JavaFX sur Windows (glyphes manquants/invisibles).
+     */
+    private static final Map<String, String> ICONES_MENU = Map.ofEntries(
+            Map.entry("Histoire", "✎"),
+            Map.entry("Quetes", "☰"),
+            Map.entry("Recompenses", "✪"),
+            Map.entry("Abilites", "✦"),
+            Map.entry("Rang & Titres", "♛"),
+            Map.entry("Formation", "⚑"),
+            Map.entry("Personnages", "♟"),
+            Map.entry("Inventaire", "▣"),
+            Map.entry("Ameliorations", "⚒"),
+            Map.entry("Compagnons", "♞"),
+            Map.entry("Creatures Sacrees", "☄"),
+            Map.entry("Recrutement", "✵"),
+            Map.entry("Recrutement Rare", "✹"),
+            Map.entry("Chasse au tresor", "⚓"),
+            Map.entry("Tirages", "❉"),
+            Map.entry("Etoiles & Fragments", "★"),
+            Map.entry("Donjon de ressources", "♜"),
+            Map.entry("Arene", "⚔"),
+            Map.entry("Examen de Rang S", "✒")
+    );
+
+    private String iconePour(String libelle) {
+        return ICONES_MENU.getOrDefault(libelle, "▶");
     }
 
     /** Enveloppe le bouton d'un petit point rouge en haut a droite s'il y a quelque chose a reclamer. */
@@ -565,6 +604,43 @@ public class EcranMenuPrincipalController {
         dialog.getDialogPane().getStyleClass().add("root-menu");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().setContent(scroll);
+        dialog.showAndWait();
+    }
+
+    @FXML
+    private void onOptions(ActionEvent event) {
+        Label labelMusique = new Label("Musique");
+        labelMusique.getStyleClass().add("item-nom");
+        Slider sliderMusique = new Slider(0, 100, ParametresAudio.getVolumeMusique() * 100);
+        sliderMusique.valueProperty().addListener((obs, ancien, nouveau) ->
+                ParametresAudio.setVolumeMusique(nouveau.doubleValue() / 100.0));
+
+        Label labelEffets = new Label("Effets sonores");
+        labelEffets.getStyleClass().add("item-nom");
+        Slider sliderEffets = new Slider(0, 100, ParametresAudio.getVolumeEffets() * 100);
+        sliderEffets.valueProperty().addListener((obs, ancien, nouveau) ->
+                ParametresAudio.setVolumeEffets(nouveau.doubleValue() / 100.0));
+
+        ToggleButton muetBouton = new ToggleButton();
+        muetBouton.getStyleClass().add("menu-bouton");
+        muetBouton.setSelected(ParametresAudio.isMuet());
+        muetBouton.setText(muetBouton.isSelected() ? "🔇 Muet" : "🔊 Son actif");
+        muetBouton.setOnAction(e -> {
+            ParametresAudio.setMuet(muetBouton.isSelected());
+            muetBouton.setText(muetBouton.isSelected() ? "🔇 Muet" : "🔊 Son actif");
+        });
+
+        VBox contenu = new VBox(12, labelMusique, sliderMusique, labelEffets, sliderEffets, muetBouton);
+        contenu.setAlignment(Pos.CENTER);
+        contenu.setPadding(new Insets(16));
+        contenu.setPrefWidth(300);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Options");
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        dialog.getDialogPane().getStyleClass().add("root-menu");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().setContent(contenu);
         dialog.showAndWait();
     }
 

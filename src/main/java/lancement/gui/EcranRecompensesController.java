@@ -49,22 +49,55 @@ public class EcranRecompensesController {
     private void rafraichir() {
         GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
         List<Node> cartes = new ArrayList<>();
-        cartes.add(carteRecompense("Récompense de niveau", this::menuNiveau));
-        cartes.add(carteRecompense("Pointage du mois (" + gr.getJoursCumulesMois() + " jour(s))", this::menuMois));
+        cartes.add(carteRecompense("★", "Récompense de niveau", disponibleNiveau(), this::menuNiveau));
+        cartes.add(carteRecompense("❖", "Pointage du mois (" + gr.getJoursCumulesMois() + " jour(s))",
+                disponibleMois(), this::menuMois));
         if (!gr.estTerminee()) {
-            cartes.add(carteRecompense("Récompense des 7 jours (jour " + gr.getJourConnexion() + "/7)", this::menuConnexion));
+            cartes.add(carteRecompense("☾", "Récompense des 7 jours (jour " + gr.getJourConnexion() + "/7)",
+                    disponibleConnexion(), this::menuConnexion));
         }
-        cartes.add(carteRecompense("Récompense quotidienne", this::menuQuotidienne));
+        cartes.add(carteRecompense("⏱", "Récompense quotidienne", gr.peutReclamer30min(), this::menuQuotidienne));
         recompensesBox.getChildren().setAll(cartes);
     }
 
-    private Node carteRecompense(String nom, Runnable action) {
+    private boolean disponibleNiveau() {
+        GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+        for (int i = 0; i < GestionnaireRecompenses.PALIERS_NIVEAU.length; i++) {
+            if (gr.estNiveauDisponible(i, ctx.joueur.getNiveau())) return true;
+        }
+        return false;
+    }
+
+    private boolean disponibleMois() {
+        GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+        int[] seuils = gr.getPaliersMois();
+        for (int i = 0; i < seuils.length; i++) {
+            if (gr.estMoisDisponible(i)) return true;
+        }
+        return false;
+    }
+
+    private boolean disponibleConnexion() {
+        GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+        if (gr.estTerminee()) return false;
+        for (int jour = 1; jour <= 7; jour++) {
+            if (gr.estJourDisponible(jour)) return true;
+        }
+        return false;
+    }
+
+    /** Carte de categorie de recompense : icone + nom, mise en evidence (bordure doree) si quelque
+     *  chose y est reclamable, comme cartePalier() le fait deja pour les paliers a l'interieur. */
+    private Node carteRecompense(String icone, String nom, boolean disponible, Runnable action) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
         Label nomLabel = new Label(nom);
         nomLabel.getStyleClass().add("item-nom");
 
-        HBox carte = new HBox(nomLabel);
+        HBox carte = new HBox(10, iconeLabel, nomLabel);
         carte.setAlignment(Pos.CENTER_LEFT);
-        carte.getStyleClass().add("carte-item");
+        carte.getStyleClass().add(disponible ? "carte-item-joueur" : "carte-item");
         carte.setPrefWidth(340);
         carte.setCursor(Cursor.HAND);
         carte.setOnMouseClicked(e -> action.run());
@@ -72,18 +105,31 @@ public class EcranRecompensesController {
     }
 
     private Node cartePalier(Palier p) {
+        Label iconeLabel = new Label(iconePalier(p));
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
         Label nomLabel = new Label(p.libelle() + "  " + p.etat());
         nomLabel.getStyleClass().add("item-nom");
         Label detail = new Label(p.recompense());
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nomLabel, detail);
-        HBox carte = new HBox(texte);
+        HBox carte = new HBox(10, iconeLabel, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add(p.disponible() ? "carte-item-joueur" : "carte-item");
         carte.setPrefWidth(340);
         if (!p.disponible()) carte.setOpacity(0.6);
         return carte;
+    }
+
+    /** Icone selon l'etat du palier : distingue surtout "deja reclame" de "verrouille", qui
+     *  n'etaient jusque-la differenciables qu'en lisant le texte entre crochets. */
+    private String iconePalier(Palier p) {
+        if (p.etat().contains("Réclamé"))    return "✔";
+        if (p.etat().contains("Disponible")) return "✪";
+        if (p.etat().contains("Verrouillé")) return "⚿";
+        if (p.etat().contains("Bientôt"))    return "◔";
+        return "◆";
     }
 
     // ── Récompenses de niveau ────────────────────────────────────────────

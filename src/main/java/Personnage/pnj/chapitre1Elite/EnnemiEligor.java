@@ -20,7 +20,7 @@ public class EnnemiEligor extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "C";
 
-        double mult = 1.20;
+        double mult = 1.20 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 270.0 * mult * niv;
@@ -41,7 +41,7 @@ public class EnnemiEligor extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Lame de Vent Tranchante", "Mur Tempête", "Mur de Vent — Prison de Tornades"};
+        return new String[]{"Lame de Vent Tranchante", "Armure des Vents", "Déclencheur de Tornade"};
     }
 
     @Override
@@ -55,7 +55,7 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal déplace sa main gauche et crée un bouclier de vent dévastateur !");
+        log.add("Eligoal invoque son Armure des Vents et déchaîne un bouclier de vent dévastateur !");
        
         double degats = this.getAttaque() * 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
@@ -65,7 +65,7 @@ public class EnnemiEligor extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Eligoal érige un Mur de Vent colossal — une prison de tornades tranchantes emprisonne l'équipe ennemie !");
+        log.add("Eligoal active son Déclencheur de Tornade — une prison de tornades tranchantes emprisonne l'équipe ennemie !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.50;
@@ -82,9 +82,9 @@ public class EnnemiEligor extends PersonnageBase {
         System.out.println("Lame de Vent Tranchante — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Mur Tempête — Inflige 120% ATK et réduit l'ATK de la cible de 10% pendant 2 tours.");
+        System.out.println("Armure des Vents — Inflige 120% ATK et réduit l'ATK de la cible de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Mur de Vent — Inflige 50% ATK à tous les ennemis et augmente son esquive de 10% pendant 2 tours.");
+        System.out.println("Déclencheur de Tornade — Inflige 50% ATK à tous les ennemis et augmente son esquive de 10% pendant 2 tours.");
     }
 }

@@ -10,12 +10,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
@@ -38,11 +41,11 @@ public class EcranAreneController {
         this.gestionnaireArene = new GestionnaireArene(ctx.sauvegarde::creerPersonnageParNom);
 
         choixBox.getChildren().setAll(
-                GuiVisuels.creerCarteChoix("Voir le classement",
+                carteNav("♛", "Voir le classement",
                         "Ton rang parmi tous les joueurs de l'arene.", this::onClassement),
-                GuiVisuels.creerCarteChoix("Choisir un adversaire",
+                carteNav("⚔", "Choisir un adversaire",
                         "Affronte un adversaire proche de ton rang pour gagner des places.", this::onAdversaires),
-                GuiVisuels.creerCarteChoix("Boutique",
+                carteNav("❒", "Boutique",
                         "Echange tes points boutique contre des recompenses.", this::onBoutique)
         );
 
@@ -66,21 +69,21 @@ public class EcranAreneController {
         FlowPane stats = new FlowPane(10, 10);
         stats.setAlignment(Pos.CENTER);
         stats.getChildren().addAll(
-                GuiVisuels.creerFicheStat("Rang", "#" + joueurArene.getRang()),
-                GuiVisuels.creerFicheStat("Points classement", String.valueOf(joueurArene.getPointsArene())),
-                GuiVisuels.creerFicheStat("Points boutique", String.valueOf(joueurArene.getPointsBoutique()))
+                GuiVisuels.creerFicheStat("◆", "Rang", "#" + joueurArene.getRang()),
+                GuiVisuels.creerFicheStat("★", "Points classement", String.valueOf(joueurArene.getPointsArene())),
+                GuiVisuels.creerFicheStat("✉", "Points boutique", String.valueOf(joueurArene.getPointsBoutique()))
         );
         statsBox.getChildren().setAll(stats);
 
         boolean disponible = isCoffreDisponible();
-        Node carteCoffre = GuiVisuels.creerCarteChoix(
+        Node carteCoffre = carteNav("❒",
                 disponible ? "Coffre journalier — DISPONIBLE !" : "Coffre journalier",
                 disponible ? "Recompenses selon ton rang actuel. Clique pour recuperer !" : "Revient chaque jour a 20h.",
                 e -> onCoffre());
         if (disponible) carteCoffre.getStyleClass().add("carte-item-joueur");
 
         boolean coffreRangDisponible = ctx.rangJoueur.estCoffreRangDisponible();
-        Node carteCoffreRang = GuiVisuels.creerCarteChoix(
+        Node carteCoffreRang = carteNav("❒",
                 "Coffre d'Arène — Rang " + ctx.rangJoueur.getRangNom()
                         + (coffreRangDisponible ? " — DISPONIBLE !" : " — deja reclame"),
                 "5x Sceau de Rang " + ctx.rangJoueur.getRangNom() + ". Une fois par palier de rang atteint.",
@@ -88,6 +91,30 @@ public class EcranAreneController {
         if (coffreRangDisponible) carteCoffreRang.getStyleClass().add("carte-item-joueur");
 
         coffreBox.getChildren().setAll(carteCoffre, carteCoffreRang);
+    }
+
+    /** Variante de GuiVisuels.creerCarteChoix() avec une icone, pour les cartes de navigation
+     *  et de coffre de cet ecran. */
+    private Node carteNav(String icone, String titre, String description, javafx.event.EventHandler<MouseEvent> action) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("item-nom");
+
+        Label descLabel = new Label(description);
+        descLabel.getStyleClass().add("item-detail");
+        descLabel.setWrapText(true);
+        descLabel.setMaxWidth(280);
+
+        VBox texte = new VBox(4, titreLabel, descLabel);
+        HBox carte = new HBox(10, iconeLabel, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(360);
+        carte.setCursor(Cursor.HAND);
+        carte.setOnMouseClicked(action);
+        return carte;
     }
 
     private void onCoffreRang() {

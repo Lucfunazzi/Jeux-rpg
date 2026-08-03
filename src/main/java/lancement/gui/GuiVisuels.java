@@ -170,6 +170,34 @@ public final class GuiVisuels {
         return box;
     }
 
+    /** Variante de creerFicheStat() avec une icone (symbole Unicode BMP, voir
+     *  EcranMenuPrincipalController) affichee a gauche de la valeur/libelle. */
+    public static Node creerFicheStat(String icone, String label, String valeur) {
+        Label iconeLabel = new Label(icone);
+        iconeLabel.getStyleClass().add("fiche-stat-icone");
+
+        Label v = new Label(valeur);
+        v.getStyleClass().add("item-nom");
+        v.setWrapText(true);
+        v.setMaxWidth(140);
+        v.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+
+        Label l = new Label(label);
+        l.getStyleClass().add("item-detail");
+        l.setWrapText(true);
+        l.setMaxWidth(140);
+        l.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+
+        VBox texte = new VBox(2, v, l);
+        texte.setAlignment(Pos.CENTER);
+
+        HBox box = new HBox(8, iconeLabel, texte);
+        box.setAlignment(Pos.CENTER);
+        box.getStyleClass().add("carte-item");
+        box.setMinWidth(140);
+        return box;
+    }
+
     /** Carte cliquable "titre + description" pour un menu de navigation (ex : hub Arene/Tirages). */
     public static Node creerCarteChoix(String titre, String description, javafx.event.EventHandler<javafx.scene.input.MouseEvent> action) {
         Label titreLabel = new Label(titre);

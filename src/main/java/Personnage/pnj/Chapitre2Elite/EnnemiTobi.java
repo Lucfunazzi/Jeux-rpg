@@ -22,12 +22,13 @@ public class EnnemiTobi extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "C";
 
+        double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 220.0 * niv;
-        this.attaque =  80.0 * niv;
-        this.defense =  55.0 * niv;
-        this.vitesse =  85.0 * vit;
+        this.vie     = 220.0 * multElite * niv;
+        this.attaque =  80.0 * multElite * niv;
+        this.defense =  55.0 * multElite * niv;
+        this.vitesse =  85.0 * multElite * vit;
 
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
@@ -42,7 +43,7 @@ public class EnnemiTobi extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup de Griffe", "Griffe Paralysante ", "Assaut de Griffes"};
+        return new String[]{"Coup de Griffe", "Super Griffe Paralysante", "Super Griffe Paralysante — Méga Méduse"};
     }
 
     @Override
@@ -57,7 +58,7 @@ public class EnnemiTobi extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi  griffes et frappe " + cible.getNom() + " avec puissance!");
+        log.add("Tobi utilise Super Griffe Paralysante et frappe " + cible.getNom() + " avec puissance!");
         double degats = this.getAttaque() * 1.35;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
@@ -66,7 +67,7 @@ public class EnnemiTobi extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Tobi se lance dans un assaut frénétique et lacère toute l'équipe ennemie de ses griffes !");
+        log.add("Tobi déchaîne Super Griffe Paralysante — Méga Méduse et lacère toute l'équipe ennemie de ses griffes !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
@@ -82,9 +83,9 @@ public class EnnemiTobi extends PersonnageBase {
         System.out.println("Coup de Griffe — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Griffe Paralysante  — Inflige 135% ATK, paralyse la cible 1 tour.");
+        System.out.println("Super Griffe Paralysante — Inflige 135% ATK, paralyse la cible 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Assaut de Griffes — Inflige 70% ATK à tous, 35% de chance de paralyser chacun 1 tour.");
+        System.out.println("Super Griffe Paralysante — Méga Méduse — Inflige 70% ATK à tous, 35% de chance de paralyser chacun 1 tour.");
     }
 }

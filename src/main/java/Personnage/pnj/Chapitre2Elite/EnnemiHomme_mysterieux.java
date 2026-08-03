@@ -16,7 +16,7 @@ public class EnnemiHomme_mysterieux extends PersonnageBase {
         this.rarete = "S";
         this.niveau = niveau;
 
-        double mult = 1.50;
+        double mult = 1.50 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
         this.vie     = 200.0 * mult * niv;

@@ -37,8 +37,19 @@ public enum Variante {
         };
     }
 
-    /** Multiplicateur de stats : +5% compose par chapitre (chapitre 1 = base, x1.00). */
+    /** Bonus de stats propre aux versions Elite, en plus du palier de niveau plus eleve
+     *  (sans quoi une Elite n'est qu'un chapitre normal avec des ennemis simplement plus hauts
+     *  niveau, sans reelle difficulte supplementaire). */
+    private static final double MULT_ELITE = 1.25;
+
+    public boolean estElite() {
+        return this == CHAPITRE_1_ELITE || this == CHAPITRE_2_ELITE;
+    }
+
+    /** Multiplicateur de stats : +5% compose par chapitre (chapitre 1 = base, x1.00), plus le
+     *  bonus Elite le cas echeant. */
     public double getMultiplicateur() {
-        return Math.pow(1.05, getChapitre() - 1);
+        double base = Math.pow(1.05, getChapitre() - 1);
+        return estElite() ? base * MULT_ELITE : base;
     }
 }

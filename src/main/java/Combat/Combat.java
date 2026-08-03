@@ -294,7 +294,7 @@ public class Combat {
                         System.out.println("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         log.add("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         attaquer(attaquant, cible, log);
-                        attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 40 : 20);
+                        attaquant.ajouterRage(20);
                     } else {
                         System.out.println("\n[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
                         log.add("[ULTIME] " + attaquant.getNom() + " declenche son ultime !");
@@ -311,7 +311,7 @@ public class Combat {
                         System.out.println("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         log.add("[SILENCE] " + attaquant.getNom() + " est reduit au silence ! Attaque de base.");
                         attaquer(attaquant, cible, log);
-                        attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 40 : 20);
+                        attaquant.ajouterRage(20);
                     } else {
                         System.out.println("\n[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
                         log.add("[SPECIALE] " + attaquant.getNom() + " utilise sa competence speciale !");
@@ -323,12 +323,11 @@ public class Combat {
                 } else {
                     log.add(attaquant.getNom() + " lance une attaque de base sur " + cible.getNom());
                     boolean attaquantEstJoueur = equipeJoueur.contains(attaquant);
-                    attaquant.setDernierCoupCritique(false);
                     attaquant.attaqueBase(cible,
                             attaquantEstJoueur ? equipeJoueur  : equipeAdverse,
                             attaquantEstJoueur ? equipeAdverse : equipeJoueur,
                             log);
-                    attaquant.ajouterRage(attaquant.isDernierCoupCritique() ? 100 : 50);
+                    attaquant.ajouterRage(50);
                     log.add("[RAGE] " + attaquant.getNom() + " : "
                             + String.format("%.0f", attaquant.getRage()) + "/100");
                 }
@@ -406,7 +405,6 @@ public class Combat {
     }
 
     public static boolean attaquer(PersonnageBase attaquant, PersonnageBase cible, List<String> log) {
-        attaquant.setDernierCoupCritique(false);
         if (!attaqueTouche(attaquant, cible)) {
             log.add(cible.getNom() + " esquive !");
             return false;
@@ -416,7 +414,6 @@ public class Combat {
         if (estCritique(attaquant, cible)) {
             degats *= attaquant.getTauxDegatCritique();
             log.add("Coup critique !");
-            attaquant.setDernierCoupCritique(true);
         }
 
         double pvAvant = cible.getVie();

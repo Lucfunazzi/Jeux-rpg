@@ -26,12 +26,13 @@ public class EnnemiEvaro extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "C";
 
+        double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 280.0 * niv;
-        this.attaque =  55.0 * niv;
-        this.defense =  75.0 * niv;
-        this.vitesse =  50.0 * vit;
+        this.vie     = 280.0 * multElite * niv;
+        this.attaque =  55.0 * multElite * niv;
+        this.defense =  75.0 * multElite * niv;
+        this.vitesse =  50.0 * multElite * vit;
 
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;

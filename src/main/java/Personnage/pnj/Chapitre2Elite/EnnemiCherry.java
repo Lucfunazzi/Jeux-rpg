@@ -24,12 +24,13 @@ public class EnnemiCherry extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "C";
 
+        double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 260.0 * niv;
-        this.attaque =  70.0 * niv;
-        this.defense =  65.0 * niv;
-        this.vitesse =  65.0 * vit;
+        this.vie     = 260.0 * multElite * niv;
+        this.attaque =  70.0 * multElite * niv;
+        this.defense =  65.0 * multElite * niv;
+        this.vitesse =  65.0 * multElite * vit;
 
         this.taux_critiques    = 0.06;
         this.degat_critiques   = 1.10;
@@ -44,7 +45,7 @@ public class EnnemiCherry extends PersonnageBase {
 
      @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Arbre Marionnette", "Marionnette de l'amour ", "Forêt de l'Amour"};
+        return new String[]{"Arbre Marionnette", "Je Fais de Toi ma Marionnette", "Grand Arbre Marionnette"};
     }
 
     @Override
@@ -58,7 +59,7 @@ public class EnnemiCherry extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry utilise marionnette de l'amour  ");
+        log.add("Cherry utilise Je Fais de Toi ma Marionnette ! ");
         PersonnageBase cibleSoin = Combat.cibleParRole(equipeAlliee, "Tank");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "DPS");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "Support");
@@ -71,7 +72,7 @@ public class EnnemiCherry extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cherry libère la Forêt de l'amour — la forêt entière se dresse contre les ennemis !");
+        log.add("Cherry invoque le Grand Arbre Marionnette — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.50;
@@ -87,9 +88,9 @@ public class EnnemiCherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Marionnette de l'Amour — Soigne l'allié le plus faible de 120% ATK et le purifie d'un effet négatif.");
+        System.out.println("Je Fais de Toi ma Marionnette — Soigne l'allié le plus faible de 120% ATK et le purifie d'un effet négatif.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Marionnette de l'Amour — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");
+        System.out.println("Grand Arbre Marionnette — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");
     }
 }

@@ -20,10 +20,11 @@ import javafx.util.Duration;
  *  - /audio/musique/examenSN.mp3    (N = 1 a 4, une piste par tranche de 10 stages)
  *  - /audio/musique/donjonN.mp3     (N = 1 a 5, tiree au hasard)
  *  - /audio/musique/areneN.mp3      (N = 1 a 5, tiree au hasard)
+ *  - /audio/musique/menuN.mp3       (N = 1 a 3, tiree au hasard, jouee dans tous les menus)
  */
 public final class GestionnaireMusique {
 
-    private static final double VOLUME_CIBLE = 0.35;
+    private static final double VOLUME_CIBLE = 0.26;
     private static final double VOLUME_ATTENUEE = 0.10;
     private static final Duration DUREE_FONDU = Duration.millis(700);
     private static final Duration DUREE_FONDU_ATTENUATION = Duration.millis(150);
@@ -31,6 +32,8 @@ public final class GestionnaireMusique {
     private static final int NB_PISTES_EXAMEN_S = 4;
     private static final int NB_PISTES_DONJON = 5;
     private static final int NB_PISTES_ARENE = 5;
+    private static final int NB_PISTES_MENU = 3;
+    private static final String PREFIXE_MENU = "menu";
     private static final int STAGES_PAR_TRANCHE_EXAMEN_S = 10;
     private static final Random ALEATOIRE = new Random();
 
@@ -64,6 +67,15 @@ public final class GestionnaireMusique {
         jouer("arene" + piste, "/audio/musique/arene" + piste + ".mp3");
     }
 
+    /** Musique d'ambiance des menus (hors combat) : une piste tiree au hasard, qui continue de
+     *  jouer sans se relancer tant qu'on navigue entre les menus. Une nouvelle piste n'est tiree
+     *  que si aucun theme de menu n'est deja en cours (ex. juste apres un combat). */
+    public static void jouerMusiqueMenuAuHasard() {
+        if (cleActuelle != null && cleActuelle.startsWith(PREFIXE_MENU)) return;
+        int piste = 1 + ALEATOIRE.nextInt(NB_PISTES_MENU);
+        jouer(PREFIXE_MENU + piste, "/audio/musique/menu" + piste + ".mp3");
+    }
+
     private static void jouer(String cle, String cheminRessource) {
         if (cle.equals(cleActuelle) && lecteurActuel != null) return;
         arreter();
@@ -76,10 +88,26 @@ public final class GestionnaireMusique {
             lecteur.setVolume(0);
             lecteur.play();
             lecteurActuel = lecteur;
-            fondu(lecteur, 0, VOLUME_CIBLE, null);
+            fondu(lecteur, 0, volumeCibleEffectif(), null);
         } catch (Exception e) {
             System.err.println("[Musique] Impossible de charger " + cheminRessource + " : " + e.getMessage());
         }
+    }
+
+    /** Volume plein (hors attenuation) tenant compte du reglage utilisateur et du mute. */
+    private static double volumeCibleEffectif() {
+        return ParametresAudio.isMuet() ? 0 : VOLUME_CIBLE * ParametresAudio.getVolumeMusique();
+    }
+
+    /** Volume attenue (pendant une speciale/un ultime) tenant compte du reglage utilisateur et du mute. */
+    private static double volumeAttenueEffectif() {
+        return ParametresAudio.isMuet() ? 0 : VOLUME_ATTENUEE * ParametresAudio.getVolumeMusique();
+    }
+
+    /** Applique immediatement le volume courant (suite a un changement de reglage depuis les
+     *  Options), sans relancer la piste. Appele par ParametresAudio. */
+    public static void appliquerVolume() {
+        if (lecteurActuel != null) lecteurActuel.setVolume(volumeCibleEffectif());
     }
 
     /** Coupe la musique en cours avec un fondu de sortie. */
@@ -103,9 +131,9 @@ public final class GestionnaireMusique {
         if (attenuationEnCours != null) attenuationEnCours.stop();
 
         Timeline descente = new Timeline(new KeyFrame(DUREE_FONDU_ATTENUATION,
-                new KeyValue(lecteur.volumeProperty(), VOLUME_ATTENUEE)));
+                new KeyValue(lecteur.volumeProperty(), volumeAttenueEffectif())));
         Timeline remontee = new Timeline(new KeyFrame(DUREE_FONDU,
-                new KeyValue(lecteur.volumeProperty(), VOLUME_CIBLE)));
+                new KeyValue(lecteur.volumeProperty(), volumeCibleEffectif())));
 
         attenuationEnCours = new SequentialTransition(descente, new PauseTransition(duree), remontee);
         attenuationEnCours.play();
