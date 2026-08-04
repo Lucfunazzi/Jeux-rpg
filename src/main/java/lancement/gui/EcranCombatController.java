@@ -125,6 +125,18 @@ public class EcranCombatController {
         chargerSonAction("Eligoal", "Déclencheur de Tornade", "/audio/eligoal_declencheur_tornade.wav");
         chargerSonAction("Tobi", "Super Griffe Paralysante", "/audio/tobi_super_griffe_paralysante.wav");
         chargerSonAction("Tobi", "Super Griffe Paralysante — Méga Méduse", "/audio/tobi_super_griffe_paralysante_mega_meduse.wav");
+        chargerSonAction("Jubia", "Déferlante", "/audio/jubia_deferlante.wav");
+        chargerSonAction("Jubia", "Prison d'eau", "/audio/jubia_prison_eau.wav");
+        chargerSonAction("Jellal", "Grande Ourse", "/audio/jellal_grande_ourse.wav");
+        chargerSonAction("Ikaruga", "Flammes du Garuda", "/audio/ikaruga_flammes_garuda.wav");
+        chargerSonAction("Ikaruga", "Eclats des Esprits", "/audio/ikaruga_eclats_esprits.wav");
+        chargerSonAction("Miliana", "Kitten Blast", "/audio/miliana_kitten_blast.wav");
+        chargerSonAction("Owl", "Mise à feu", "/audio/owl_mise_a_feu.wav");
+        chargerSonAction("Owl", "Missiles HOU HOU ", "/audio/owl_missiles_hou_hou.wav");
+        chargerSonAction("Vivaldus", "Rock of Succubus", "/audio/vivaldus_rock_succubus.wav");
+        chargerSonAction("Vivaldus", "Rock and roll", "/audio/vivaldus_rock_and_roll.wav");
+        chargerSonAction("Jura", "Montagne", "/audio/jura_montagne.wav");
+        chargerSonAction("Jura", "Grondement du Mont Fuji", "/audio/jura_grondement_mont_fuji.wav");
     }
 
     private static void chargerSonAction(String nomPerso, String nomAction, String cheminRessource) {

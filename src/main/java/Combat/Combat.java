@@ -392,10 +392,10 @@ public class Combat {
         return Math.random() >= esquiveEffective;
     }
 
+    /** Degats bruts d'une attaque de base (100% ATK) : la defense n'est appliquee qu'une
+     *  seule fois, dans PersonnageBase.subirDegats(), comme pour les speciales/ultimes. */
     public static double calculerDegats(PersonnageBase attaquant, PersonnageBase cible) {
-        double degatsBase = Math.max(attaquant.getAttaque() * 0.10,
-                                     attaquant.getAttaque() - cible.getDefense());
-        return degatsBase;
+        return attaquant.getAttaque();
     }
 
     /** @param cible Fournit le taux de Contre (100 = neutre) qui reduit les chances de subir un critique. */

@@ -7,7 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Verrouille Combat.calculerDegats() : max(attaque * 0.10, attaque - defense).
+ * Verrouille Combat.calculerDegats() : degats bruts d'une attaque de base = 100% ATK.
+ * La defense n'est plus soustraite ici : elle est appliquee une seule fois, en aval,
+ * dans PersonnageBase.subirDegats() (comme pour les speciales/ultimes qui passent par
+ * Combat.appliquerDegatsAvecLog). L'appliquer aussi ici l'aurait fait compter deux fois
+ * sur l'attaque de base.
  * La rarete est fixee a "C" (multiplicateur 1.00) pour que getAttaque()/getDefense()
  * refletent exactement les valeurs de stats saisies, sans interference d'un autre systeme.
  */
@@ -26,28 +30,28 @@ class CombatFormuleDegatsTest {
     }
 
     @Test
-    void degatsBrutsQuandAttaqueDepasseLargementLaDefense() {
+    void degatsBrutsEgauxALAttaqueQuandLaDefenseEstFaible() {
         PersonnageJson attaquant = creerPersonnage(100, 30);
         PersonnageJson cible     = creerPersonnage(0, 30);
 
-        assertEquals(70.0, Combat.calculerDegats(attaquant, cible), 0.001);
+        assertEquals(100.0, Combat.calculerDegats(attaquant, cible), 0.001);
     }
 
     @Test
-    void degatsPlancherA10PourCentDeLAttaqueQuandLaDefenseEstProche() {
+    void degatsBrutsRestentEgauxALAttaqueQuandLaDefenseEstProche() {
         PersonnageJson attaquant = creerPersonnage(100, 99);
         PersonnageJson cible     = creerPersonnage(0, 99);
 
-        // attaque - defense = 1, plus petit que le plancher de 10% de l'attaque (10) : le plancher s'applique.
-        assertEquals(10.0, Combat.calculerDegats(attaquant, cible), 0.001);
+        // La defense de la cible n'intervient pas dans calculerDegats : elle sera
+        // appliquee ensuite, une seule fois, dans subirDegats().
+        assertEquals(100.0, Combat.calculerDegats(attaquant, cible), 0.001);
     }
 
     @Test
-    void degatsPlancherMemeQuandLaDefenseEgaleOuDepasseLAttaque() {
+    void degatsBrutsRestentEgauxALAttaqueMemeQuandLaDefenseDepasseLAttaque() {
         PersonnageJson attaquant = creerPersonnage(100, 200);
         PersonnageJson cible     = creerPersonnage(0, 200);
 
-        // attaque - defense est negatif : on ne descend jamais sous 10% de l'attaque (pas de degats negatifs).
-        assertEquals(10.0, Combat.calculerDegats(attaquant, cible), 0.001);
+        assertEquals(100.0, Combat.calculerDegats(attaquant, cible), 0.001);
     }
 }

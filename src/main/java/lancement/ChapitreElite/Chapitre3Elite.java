@@ -6,7 +6,7 @@ import Personnage.pnj.Chapitre3.EnnemiTotomaru;
 import Personnage.pnj.Chapitre3.EnnemiSol;
 import Personnage.pnj.Chapitre3.EnnemiAria;
 import Personnage.pnj.Chapitre3.EnnemiJose;
-import Personnage.pnj.Chapitre3.EnnemiGadjeel;
+import Personnage.pnj.Chapitre3.EnnemiGajeel;
 import Personnage.pnj.EnnemisGeneriques.*;
 import Equipement.CarteOr;
 import Equipement.Equipement;
@@ -171,7 +171,7 @@ public class Chapitre3Elite implements ChapitreElite {
     }
 
     /**
-     * Reprend exactement les combats du Chapitre 3 normal (Totomaru, Sol, Jubia, Gadjeel,
+     * Reprend exactement les combats du Chapitre 3 normal (Totomaru, Sol, Jubia, Gajeel,
      * Aria, José), mais sans aucun invité temporaire (Natsu/Elfman/Gray/Erza/Makarov) ni
      * combat scripté : c'est toujours notre propre formation qui affronte les boss, avec
      * des niveaux plus eleves. L'equipement fantome (auto-equipe par Stage a partir du
@@ -222,14 +222,14 @@ public class Chapitre3Elite implements ChapitreElite {
                 return new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
             }
 
-            // Stage 5 — Gadjeel élite + escorte
+            // Stage 5 — Gajeel élite + escorte
             case 5 -> {
-                e.add(new EnnemiGadjeel(43));
+                e.add(new EnnemiGajeel(43));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 40));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 39));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 39));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 38));
-                return new Stage(5, "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
+                return new Stage(5, "[ELITE] Gajeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
             }
 
             // Stage 6 — Aria élite + escorte d'élite
@@ -292,7 +292,7 @@ public class Chapitre3Elite implements ChapitreElite {
             case 2  -> "[ELITE] Totomaru — Sept Flammes d'Élite";
             case 3  -> "[ELITE] Sol — L'Impénétrable d'Élite";
             case 4  -> "[ELITE] Jubia — L'Eau qui Brise d'Élite";
-            case 5  -> "[ELITE] Gadjeel — Le Dragon d'Acier d'Élite";
+            case 5  -> "[ELITE] Gajeel — Le Dragon d'Acier d'Élite";
             case 6  -> "[ELITE] Aria — Magie du Ciel Vide Transcendée";
             case 7  -> "[ELITE] José — L'Ombre Transcendée";
             case 8  -> "[ELITE] José Pora — Contre-Offensive de Phantom Lord";

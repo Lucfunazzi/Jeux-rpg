@@ -135,7 +135,7 @@ public class Chapitre7 implements Chapitre {
             }
             case 7 -> {
                 e.add(new EnnemiPantherLily(CourbeChapitres.niveauEnnemiPourStage(7, 7)));
-                yield new Stage(7, "Gadjeel vs Panthère Lilly", 15300, 199, e);
+                yield new Stage(7, "Gajeel vs Panthère Lilly", 15300, 199, e);
             }
             case 8 -> {
                 e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 8)));
@@ -143,7 +143,7 @@ public class Chapitre7 implements Chapitre {
             }
             case 9 -> {
                 e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 9)));
-                yield new Stage(9, "Natsu et gadjeel et wendy vs Le roi d'edolas", 15900, 207, e);
+                yield new Stage(9, "Natsu et Gajeel et wendy vs Le roi d'edolas", 15900, 207, e);
             }
             case 10 -> {
                 e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 10)));
@@ -161,9 +161,9 @@ public class Chapitre7 implements Chapitre {
             case 4  -> "Gray contre sugarBoy";
             case 5  -> "Natsu et Lucy vs huges";
             case 6  -> "Lucy contre bario";
-            case 7  -> "Gadjeel vs Panthère Lilly";
+            case 7  -> "Gajeel vs Panthère Lilly";
             case 8  -> "Le roi d'edolas rentre en jeu";
-            case 9  -> "Natsu et gadjeel et wendy vs Le roi d'edolas";
+            case 9  -> "Natsu et Gajeel et wendy vs Le roi d'edolas";
             case 10 -> "Le dernier combat";
             default -> "???";
         };

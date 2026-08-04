@@ -229,7 +229,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
-                yield new Stage(10, "Natsu et Gadjeel vs Luxus", 10000, 130, e);
+                yield new Stage(10, "Natsu et Gajeel vs Luxus", 10000, 130, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
         };
@@ -246,7 +246,7 @@ public class Chapitre5 implements Chapitre {
             case 7  -> "Mirajane vs Freed";
             case 8  -> "Erza vs Luxus";
             case 9  -> "Mistgun vs Luxus";
-            case 10 -> "Natsu et Gadjeel vs Luxus";
+            case 10 -> "Natsu et Gajeel vs Luxus";
             default -> "???";
         };
     }

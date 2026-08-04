@@ -141,15 +141,15 @@ public class Chapitre8 implements Chapitre {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(8, 7);
                 e.add(new EnnemiKawazu(niv));
                 e.add(new EnnemiYamaru(niv));
-                yield new Stage(7, "Gadjeel et Levy vs kawazu et yamaru", 18600, 242, e);
+                yield new Stage(7, "Gajeel et Levy vs kawazu et yamaru", 18600, 242, e);
             }
             case 8 -> {
                 e.add(new EnnemiAzuma(CourbeChapitres.niveauEnnemiPourStage(8, 8)));
-                yield new Stage(8, "Mest, panthere lilly et wendy vs Asuma", 19000, 247, e);
+                yield new Stage(8, "Mest, panthere lilly et wendy vs Azuma", 19000, 247, e);
             }
             case 9 -> {
                 e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(8, 9)));
-                yield new Stage(9, "Le maître de grimoir Heart vs Makarof", 19500, 253, e);
+                yield new Stage(9, "Le maître de grimoir Heart vs Makarov", 19500, 253, e);
             }
             case 10 -> {
                 e.add(new EnnemiZancrow(CourbeChapitres.niveauEnnemiPourStage(8, 10)));
@@ -168,9 +168,9 @@ public class Chapitre8 implements Chapitre {
             case 5  -> "Erza vs jubia et lisanna";
                
             case 6  -> "Gray et Loki vs Mest et Wendy";
-            case 7  -> "Gadjeel et Levy vs kawazu et yamaru ";
-            case 8  -> "Mest , panthere lilly et wendy vs Asuma";
-            case 9  -> "Le maître de grimoir Heart vs Makarof";
+            case 7  -> "Gajeel et Levy vs kawazu et yamaru ";
+            case 8  -> "Mest , panthere lilly et wendy vs Azuma";
+            case 9  -> "Le maître de grimoir Heart vs Makarov";
             case 10 -> "Natsu vs  Thuncrow";
          
             

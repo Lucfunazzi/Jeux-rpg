@@ -14,7 +14,7 @@ import java.util.List;
  * Aria — Element 4 de Phantom Lord, Magie des Espaces Aériens (Airspace), rang A.
  * Le plus puissant des Element 4. Porte un bandeau sur les yeux pour contenir sa puissance.
  * Ses attaques sont INVISIBLES.
- * Metsu : draine complètement la magie de la cible (presque tué Makarof).
+ * Metsu : draine complètement la magie de la cible (presque tué Makarov).
  * Zetsu : jets d'air multiples.
  * Zéro : aspire l'air hors de l'ennemi — attaque ultime.
  */

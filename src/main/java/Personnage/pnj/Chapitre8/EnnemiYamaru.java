@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Yamaru — mage observateur de l'examen de rang S (Chapitre 8, stage 7,
- * duel contre Gadjeel et Levy aux côtés de Kawazu).
+ * duel contre Gajeel et Levy aux côtés de Kawazu).
  */
 public class EnnemiYamaru extends PersonnageBase {
 

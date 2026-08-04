@@ -35,7 +35,7 @@ public class perso_Jura extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Poing de Roc", "Mudra du Grondement", "Roc Suprême"};
+        return new String[]{"Poing de Roc", "Montagne", "Grondement du Mont Fuji"};
     }
 
     @Override
@@ -53,7 +53,7 @@ public class perso_Jura extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jura invoque une Mudra du Grondement sur toute l'équipe ennemie !");
+        log.add("Jura invoque la Montagne sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = this.getAttaque() * 1.25;
@@ -69,7 +69,7 @@ public class perso_Jura extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jura invoque le Roc Suprême — la montagne elle-même s'abat !");
+        log.add("Jura invoque le Grondement du Mont Fuji — la montagne elle-même s'abat !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
@@ -89,9 +89,9 @@ public class perso_Jura extends PersonnageBase {
         System.out.println("Poing de Roc — Inflige 175% ATK aux attaquants et supports .");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Mudra du Grondement — Inflige 125% ATK à tous les ennemis, 25% de chance d'étourdir chacun 1 tour et augmente sa defense de 15%.");
+        System.out.println("Montagne — Inflige 125% ATK à tous les ennemis, 25% de chance d'étourdir chacun 1 tour et augmente sa defense de 15%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Roc Suprême — Inflige 160% ATK (bonus selon la Rage) à tous les ennemis et augmente son blocage de 20% et reduit l'attaque des adversaires de 10% et s'applique regenration de 8%  pendant 2 tours.");
+        System.out.println("Grondement du Mont Fuji — Inflige 160% ATK (bonus selon la Rage) à tous les ennemis et augmente son blocage de 20% et reduit l'attaque des adversaires de 10% et s'applique regenration de 8%  pendant 2 tours.");
     }
 }

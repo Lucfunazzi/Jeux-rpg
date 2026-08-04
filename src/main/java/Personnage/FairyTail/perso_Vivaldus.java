@@ -35,7 +35,7 @@ public class perso_Vivaldus extends PersonnageBase {
        
        @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Notes de musiques", "Rock of Succubus", "Absorption"};
+        return new String[]{"Notes de musiques", "Rock of Succubus", "Rock and roll"};
     }
     
      @Override
@@ -65,7 +65,7 @@ public class perso_Vivaldus extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Vivaldus utilise Absorption !");
+        log.add("Vivaldus utilise Rock and roll !");
         String roleCible;
         if (Combat.cibleParRole(equipeEnnemie, "Support") != null) roleCible = "Support";
         else if (Combat.cibleParRole(equipeEnnemie, "DPS")  != null) roleCible = "DPS";
@@ -94,7 +94,7 @@ public class perso_Vivaldus extends PersonnageBase {
               );
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Absorption — Attaque les Supports ennemis à 80% et immunise les supports alliée aux effets négatifs pendants "
+        System.out.println("Rock and roll — Attaque les Supports ennemis à 80% et immunise les supports alliée aux effets négatifs pendants "
                 + "2 tours. ");
                  
             

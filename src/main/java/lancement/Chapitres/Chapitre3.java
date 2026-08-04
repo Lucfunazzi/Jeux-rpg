@@ -178,15 +178,15 @@ public class Chapitre3 implements Chapitre {
                 return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
             }
 
-            // Stage 5 — Natsu contre Gadjeel + ennemis generiques
+            // Stage 5 — Natsu contre Gajeel + ennemis generiques
             case 5 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(3, 5);
-                e.add(new EnnemiGadjeel(niv));
+                e.add(new EnnemiGajeel(niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(5, "Natsu contre Gadjeel — Le Dragon d'Acier", 675, 35, e);
+                return new Stage(5, "Natsu contre Gajeel — Le Dragon d'Acier", 675, 35, e);
             }
 
             // Stage 6 — Erza contre Aria + ennemis generiques
@@ -239,7 +239,7 @@ public class Chapitre3 implements Chapitre {
             case 2  -> "Natsu contre Totomaru — Sept Flammes";
             case 3  -> "Elfman contre Sol — L'Impénétrable";
             case 4  -> "Gray contre Jubia — L'Eau qui emprisonne";
-            case 5  -> "Natsu contre Gadjeel — Le Dragon d'Acier";
+            case 5  -> "Natsu contre Gajeel — Le Dragon d'Acier";
             case 6  -> "Erza contre Aria — Magie du Ciel Vide";
             case 7  -> "Erza contre José — L'Ombre s'éveille";
             case 8  -> "José Pora — Seul face à Phantom Lord";

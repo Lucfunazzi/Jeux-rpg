@@ -13,11 +13,11 @@ import java.util.List;
  *
  * @author Lucas
  */
-public class EnnemiGadjeel extends PersonnageBase {
-      public EnnemiGadjeel() { this(30); }
+public class EnnemiGajeel extends PersonnageBase {
+      public EnnemiGajeel() { this(30); }
 
-    public EnnemiGadjeel(int niveau) {
-    
+    public EnnemiGajeel(int niveau) {
+
     this.nom = "Gajeel";
         this.type = "ChasseurDeDragon";
         this.role = "DPS";

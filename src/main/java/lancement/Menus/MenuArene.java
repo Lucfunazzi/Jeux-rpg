@@ -11,9 +11,7 @@ import Joueur.Competences;
 import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
 import lancement.Gestionnaires.GestionnaireArene;
-import Personnage.json.ChargeurPersonnage;
 import Personnage.FairyTail.*;
-import Personnage.FairyTail.perso_Mirajane_Halphas;
 import java.util.*;
 import java.util.stream.Collectors;
 

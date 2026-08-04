@@ -129,7 +129,7 @@ public class Chapitre10 implements Chapitre {
             }
             case 5 -> {
                 e.add(new EnnemiRustyrose(CourbeChapitres.niveauEnnemiPourStage(10, 5)));
-                yield new Stage(5, "Lisanna,livy,bixrow et freed vs rustyRose", 25000, 326, e);
+                yield new Stage(5, "Lisanna,Levy,bixrow et freed vs rustyRose", 25000, 326, e);
             }
             case 6 -> {
                 e.add(new EnnemiZeref(CourbeChapitres.niveauEnnemiPourStage(10, 6)));
@@ -141,7 +141,7 @@ public class Chapitre10 implements Chapitre {
             }
             case 8 -> {
                 e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 8)));
-                yield new Stage(8, "Acnologia vs Makarof", 25900, 338, e);
+                yield new Stage(8, "Acnologia vs Makarov", 25900, 338, e);
             }
             case 9 -> {
                 e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 9)));
@@ -162,10 +162,10 @@ public class Chapitre10 implements Chapitre {
             case 2  -> "L'oeil du Démon";
             case 3  -> "Panthère lilly vs l'armée d'hadès";
             case 4  -> "Le coup de grâce";
-            case 5  -> "Lisanna,livy,bixrow et freed vs rustyRose";
+            case 5  -> "Lisanna,Levy,bixrow et freed vs rustyRose";
             case 6  -> "Le mage Noir";
             case 7  -> "L'apparation d'acnologia";
-            case 8  -> "Acnologia vs Makarof ";
+            case 8  -> "Acnologia vs Makarov ";
             case 9  -> "L'assaut des fées";
             case 10 -> "Le dernier espoir : sphère féerique";
             default -> "???";

@@ -29,7 +29,7 @@ import java.util.List;
 import Equipement.Equipement;
 import Equipement.Pierre;
 import Equipement.BonusSet;
-import java.util.HashMap;
+import Equipement.PiecesEquipees;
 
 public abstract class PersonnageBase implements Statistiques, Attaques {
     protected String nom;
@@ -199,7 +199,11 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
         double blocageEffectif = Math.min(this.getTauxBlocage() / (tauxAttaqueSAttaquant / 100.0), 0.90);
         boolean bloque = Math.random() < blocageEffectif;
-        double multiplicateurDefense = 100.0 / (100.0 + this.getDefense() * 0.5);
+        // Plafonne la reduction de degats de la defense a 80% (comme esquive/blocage/critique
+        // sont deja plafonnes a 90%), pour eviter que les degats ne s'effondrent a haut niveau :
+        // attaque/defense/vie montent tous de +5%/niveau, donc sans plancher la mitigation
+        // 100/(100+0.5*def) tend vers 0 alors que les PV explosent (combats interminables).
+        double multiplicateurDefense = Math.max(0.20, 100.0 / (100.0 + this.getDefense() * 0.5));
         degats *= multiplicateurDefense;
         if (bloque) {
             degats *= (1 - this.reduction_blocage);
@@ -336,22 +340,42 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public void setDefenseBase(double v) { this.defenseBase = v; this.defense = v; }
     public void setVitesseBase(double v) { this.vitesseBase = v; this.vitesse = v; }
 
+    /**
+     * Calcule une stat de combat (ATK/DEF/VIT) en cumulant, dans l'ordre : multiplicateur
+     * etoile, buff/debuff en %, bonus de titre, bonus d'equipement brut, bonus de set en %,
+     * bonus de lien en %, bonus compagnons/creature en points, bonus de pierre en %. Factorise
+     * getAttaque/getDefense/getVitesse, qui suivent exactement cette meme sequence — seules les
+     * sources de chaque bonus different. La DEF n'a pas de bonus de set ni de pierre : lui
+     * passer 0 revient exactement a sauter ces etapes (multiplier par (1+0) ou ajouter 0 est
+     * neutre), donc ce partage ne change aucun resultat par rapport aux anciennes methodes.
+     */
+    private double statCombinee(double statBase, Double buffPct, Double debuffPct,
+                                 double bonusEquipement, double bonusSetPct,
+                                 double bonusLien, double bonusCompagnon, double bonusCreature,
+                                 double bonusPierrePct) {
+        double base = statBase * getMultiplicateurEtoile();
+        if (buffPct   != null) base *= (1 + buffPct);
+        if (debuffPct != null) base *= (1 - debuffPct);
+        if (bonusTitre > 0) base *= (1 + bonusTitre);
+        base += bonusEquipement;
+        base *= (1 + bonusSetPct);
+        if (bonusLien      > 0) base *= (1 + bonusLien);
+        if (bonusCompagnon > 0) base += bonusCompagnon;
+        if (bonusCreature  > 0) base += bonusCreature;
+        if (bonusPierrePct > 0) base *= (1 + bonusPierrePct);
+        return base;
+    }
+
     @Override
     public double getAttaque() {
         BuffAttaque buff        = getEffet(BuffAttaque.class);
         ReductionAttaque debuff = getEffet(ReductionAttaque.class);
-        double base = attaqueBase * getMultiplicateurEtoile();
-        if (buff   != null) base *= (1 + buff.getPourcentage());
-        if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (bonusTitre > 0) base *= (1 + bonusTitre);
-        base += getBonusEquipementATK();
-        base *= (1 + bonusSetAttaquePct());
-        if (bonusLienATK      > 0) base *= (1 + bonusLienATK);
-        if (bonusCompagnonsATK > 0) base += bonusCompagnonsATK;
-        if (bonusCreatureATK  > 0) base += bonusCreatureATK;
-        double bonusPierreForce = getBonusPierreFraction(Pierre.Type.FORCE);
-        if (bonusPierreForce > 0) base *= (1 + bonusPierreForce);
-        return base;
+        return statCombinee(attaqueBase,
+                buff   != null ? buff.getPourcentage()   : null,
+                debuff != null ? debuff.getPourcentage() : null,
+                getBonusEquipementATK(), bonusSetAttaquePct(),
+                bonusLienATK, bonusCompagnonsATK, bonusCreatureATK,
+                getBonusPierreFraction(Pierre.Type.FORCE));
     }
 
     public void setAttaque(double attaque) {
@@ -361,17 +385,14 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     @Override
     public double getDefense() {
-        BuffDefense buff         = getEffet(BuffDefense.class);
-        ReductionDefense debuff  = getEffet(ReductionDefense.class);
-        double base = defenseBase * getMultiplicateurEtoile();
-        if (buff   != null) base *= (1 + buff.getPourcentage());
-        if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (bonusTitre > 0) base *= (1 + bonusTitre);
-        base += getBonusEquipementDEF();
-        if (bonusLienDEF      > 0) base *= (1 + bonusLienDEF);
-        if (bonusCompagnonsDEF > 0) base += bonusCompagnonsDEF;
-        if (bonusCreatureDEF  > 0) base += bonusCreatureDEF;
-        return base;
+        BuffDefense buff        = getEffet(BuffDefense.class);
+        ReductionDefense debuff = getEffet(ReductionDefense.class);
+        return statCombinee(defenseBase,
+                buff   != null ? buff.getPourcentage()   : null,
+                debuff != null ? debuff.getPourcentage() : null,
+                getBonusEquipementDEF(), 0.0,
+                bonusLienDEF, bonusCompagnonsDEF, bonusCreatureDEF,
+                0.0);
     }
 
     public void setDefense(double defense) {
@@ -381,20 +402,14 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
     @Override
     public double getVitesse() {
-        BuffVitesse buff         = getEffet(BuffVitesse.class);
-        ReductionVitesse debuff  = getEffet(ReductionVitesse.class);
-        double base = vitesseBase * getMultiplicateurEtoile();
-        if (buff   != null) base *= (1 + buff.getPourcentage());
-        if (debuff != null) base *= (1 - debuff.getPourcentage());
-        if (bonusTitre > 0) base *= (1 + bonusTitre);
-        base += getBonusEquipementVIT();
-        base *= (1 + bonusSetVitessePct());
-        if (bonusLienVIT      > 0) base *= (1 + bonusLienVIT);
-        if (bonusCompagnonsVIT > 0) base += bonusCompagnonsVIT;
-        if (bonusCreatureVIT  > 0) base += bonusCreatureVIT;
-        double bonusPierreAgilite = getBonusPierreFraction(Pierre.Type.AGILITE);
-        if (bonusPierreAgilite > 0) base *= (1 + bonusPierreAgilite);
-        return base;
+        BuffVitesse buff        = getEffet(BuffVitesse.class);
+        ReductionVitesse debuff = getEffet(ReductionVitesse.class);
+        return statCombinee(vitesseBase,
+                buff   != null ? buff.getPourcentage()   : null,
+                debuff != null ? debuff.getPourcentage() : null,
+                getBonusEquipementVIT(), bonusSetVitessePct(),
+                bonusLienVIT, bonusCompagnonsVIT, bonusCreatureVIT,
+                getBonusPierreFraction(Pierre.Type.AGILITE));
     }
 
     public void setVitesse(double vitesse) {
@@ -610,7 +625,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     }
 
     public ArrayList<Effet> getEffetsActifs() { return this.effetsActifs; }
-    private final HashMap<Equipement.Slot, Equipement> equipements = new HashMap<>();
+    private final PiecesEquipees piecesEquipees = new PiecesEquipees();
 
     public void appliquerEffets() {
         effetsActifs.removeIf(effet -> {
@@ -655,7 +670,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public void setExperienceMax(int experienceMax) { this.experienceMax = experienceMax; }
 
     public void equiper(Equipement e) {
-        equipements.put(e.getSlot(), e);
+        piecesEquipees.equiper(e);
         // getVieMax() inclut déjà getBonusEquipementPV() dynamiquement,
         // donc on ne modifie PAS this.vieMax ici pour éviter le double-comptage.
         if (e.getBonusPV() > 0) {
@@ -664,7 +679,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     }
 
     public void desequiper(Equipement.Slot slot) {
-        Equipement ancien = equipements.remove(slot);
+        Equipement ancien = piecesEquipees.desequiper(slot);
         // getVieMax() recalcule dynamiquement sans cet équipement désormais retiré.
         // On plafonne juste les PV actuels au nouveau maximum.
         if (ancien != null) {
@@ -673,97 +688,34 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     }
 
     public Equipement getEquipement(Equipement.Slot slot) {
-        return equipements.get(slot);
+        return piecesEquipees.get(slot);
     }
 
     public ArrayList<Equipement> getEquipementsPortes() {
-        return new ArrayList<>(equipements.values());
+        return piecesEquipees.versListe();
     }
 
-    public double getBonusEquipementATK() {
-        return equipements.values().stream().mapToDouble(Equipement::getBonusATK).sum();
-    }
+    public double getBonusEquipementATK() { return piecesEquipees.bonusATK(); }
+    public double getBonusEquipementDEF() { return piecesEquipees.bonusDEF(); }
+    public double getBonusEquipementPV()  { return piecesEquipees.bonusPV(); }
+    public double getBonusEquipementVIT() { return piecesEquipees.bonusVIT(); }
 
-    public double getBonusEquipementDEF() {
-        return equipements.values().stream().mapToDouble(Equipement::getBonusDEF).sum();
-    }
-
-    public double getBonusEquipementPV() {
-        return equipements.values().stream().mapToDouble(Equipement::getBonusPV).sum();
-    }
-
-    public double getBonusEquipementVIT() {
-        return equipements.values().stream().mapToDouble(Equipement::getBonusVIT).sum();
-    }
-
-    // ── Bonus des pierres inserees dans les pieces equipees ────────────────
-    /** Somme brute des pierres du type donne (ex : 1.5 pour +1.5%), pour les stats deja exprimees en points 100. */
-    private double getBonusPierrePoints(Pierre.Type type) {
-        double total = 0;
-        for (Equipement e : equipements.values()) total += e.getBonusPierre(type);
-        return total;
-    }
-
-    /** Meme somme convertie en fraction (0.015 pour +1.5%), pour les stats exprimees en 0-1. */
-    private double getBonusPierreFraction(Pierre.Type type) {
-        return getBonusPierrePoints(type) / 100.0;
-    }
+    private double getBonusPierrePoints(Pierre.Type type)   { return piecesEquipees.bonusPierrePoints(type); }
+    private double getBonusPierreFraction(Pierre.Type type) { return piecesEquipees.bonusPierreFraction(type); }
 
     /** Nombre de pieces equipees de la rarete donnee (max 6, une par emplacement). */
-    public int compterPieces(Equipement.Rarete rarete) {
-        int count = 0;
-        for (Equipement e : equipements.values()) {
-            if (e.getRarete() == rarete) count++;
-        }
-        return count;
-    }
+    public int compterPieces(Equipement.Rarete rarete) { return piecesEquipees.compterPieces(rarete); }
 
     /**
      * Rarete du set actuellement porte en plus grand nombre (pour l'affichage de la progression
      * du bonus de set), ou {@code null} si aucune piece n'est equipee.
      */
-    public Equipement.Rarete getRareteSetDominante() {
-        Equipement.Rarete dominante = null;
-        int max = 0;
-        for (Equipement.Rarete r : Equipement.Rarete.values()) {
-            int n = compterPieces(r);
-            if (n > max) { max = n; dominante = r; }
-        }
-        return dominante;
-    }
+    public Equipement.Rarete getRareteSetDominante() { return piecesEquipees.rareteSetDominante(); }
 
-    private double bonusSetPV() {
-        double total = 0;
-        for (Equipement.Rarete r : Equipement.Rarete.values()) {
-            if (compterPieces(r) >= BonusSet.SEUIL_PV) total += BonusSet.palier(r).bonusPV();
-        }
-        return total;
-    }
-
-    private double bonusSetVitessePct() {
-        double total = 0;
-        for (Equipement.Rarete r : Equipement.Rarete.values()) {
-            if (compterPieces(r) >= BonusSet.SEUIL_VIT) total += BonusSet.palier(r).bonusVitessePct();
-        }
-        return total;
-    }
-
-    private double bonusSetAttaquePct() {
-        double total = 0;
-        for (Equipement.Rarete r : Equipement.Rarete.values()) {
-            if (compterPieces(r) >= BonusSet.SEUIL_ATK) total += BonusSet.palier(r).bonusAttaquePct();
-        }
-        return total;
-    }
+    private double bonusSetPV()          { return piecesEquipees.bonusSetPV(); }
+    private double bonusSetVitessePct()  { return piecesEquipees.bonusSetVitessePct(); }
+    private double bonusSetAttaquePct()  { return piecesEquipees.bonusSetAttaquePct(); }
 
     /** Bonus special de set complet (6/6) actif, uniquement pour SSS/UR ; {@code null} sinon. */
-    private BonusSet.BonusSpecial bonusSetSpecialActif() {
-        for (Equipement.Rarete r : Equipement.Rarete.values()) {
-            if (compterPieces(r) >= BonusSet.SET_COMPLET) {
-                BonusSet.BonusSpecial special = BonusSet.special(r);
-                if (special != null) return special;
-            }
-        }
-        return null;
-    }
+    private BonusSet.BonusSpecial bonusSetSpecialActif() { return piecesEquipees.bonusSetSpecialActif(); }
 }

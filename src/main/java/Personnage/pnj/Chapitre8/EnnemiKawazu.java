@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Kawazu — mage observateur de l'examen de rang S (Chapitre 8, stage 7,
- * duel contre Gadjeel et Levy aux côtés de Yamaru).
+ * duel contre Gajeel et Levy aux côtés de Yamaru).
  */
 public class EnnemiKawazu extends PersonnageBase {
 
