@@ -19,10 +19,10 @@ public class perso_Eve extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 390 * mult;
-        this.attaque = 140 * mult;
-        this.defense = 100 * mult;
-        this.vitesse = 115 * mult;
+        this.vie     = 440 * mult;
+        this.attaque = 150 * mult;
+        this.defense = 115 * mult;
+        this.vitesse = 125 * mult;
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.15;
         this.taux_precisions   = 105.00;

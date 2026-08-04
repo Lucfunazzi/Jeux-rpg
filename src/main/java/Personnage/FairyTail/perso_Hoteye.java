@@ -18,8 +18,8 @@ public class perso_Hoteye extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 500 * mult;
-        this.attaque = 140 * mult;
+        this.vie     = 575 * mult;
+        this.attaque = 150 * mult;
         this.defense = 140 * mult;
         this.vitesse =  95 * mult;
         this.taux_critiques    = 0.08;

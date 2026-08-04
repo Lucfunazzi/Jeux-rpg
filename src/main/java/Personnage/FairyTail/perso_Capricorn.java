@@ -19,10 +19,10 @@ public class perso_Capricorn extends PersonnageBase {
         this.rarete = "S";
         this.niveau = 1;
         double mult = 1.42;
-        this.vie     = 540 * mult;
-        this.attaque = 200 * mult;
+        this.vie     = 621 * mult;
+        this.attaque = 264 * mult;
         this.defense = 120 * mult;
-        this.vitesse = 125 * mult;
+        this.vitesse = 144 * mult;
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.30;
         this.taux_precisions   = 108.00;
@@ -50,8 +50,11 @@ public class perso_Capricorn extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Capricorn enchaîne une Danse du Combattant sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.20;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerDegatsAvecLog(this, cible, degats * 0.5, log);
+        boolean touche1 = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        boolean touche2 = Combat.appliquerDegatsAvecLog(this, cible, degats * 0.5, log);
+        if (touche1 || touche2) {
+            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+        }
     }
 
     @Override
@@ -66,6 +69,7 @@ public class perso_Capricorn extends PersonnageBase {
             double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         }
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.30, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

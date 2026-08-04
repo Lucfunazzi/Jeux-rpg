@@ -21,7 +21,7 @@ public class perso_Byro extends PersonnageBase {
         this.vie     = 480 * mult;
         this.attaque = 150 * mult;
         this.defense = 110 * mult;
-        this.vitesse = 105 * mult;
+        this.vitesse = 115 * mult;
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.15;
         this.taux_precisions   = 105.00;

@@ -41,7 +41,10 @@ public class perso_Acnologia extends PersonnageBase {
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Acnologia lacère " + cible.getNom() + " d'une Griffe du Dragon Noir !");
-        Combat.attaquer(this, cible, log);
+        double degats = this.getAttaque() * 4.00;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffDegatCritique(0.20, 2), log);
     }
 
     @Override
@@ -50,10 +53,16 @@ public class perso_Acnologia extends PersonnageBase {
         log.add("Acnologia libère un Souffle Ardent du Dragon sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.05;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                double degats = this.getAttaque() * 3.50;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Marquage(), log);
+                    Combat.appliquerEffet(this, ennemi, new Poison(2, 0.06), log);
+                }
             }
         }
+        Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
+        Combat.appliquerEffet(this, new BuffVitesse(0.15, 2), log);
     }
 
     @Override
@@ -62,14 +71,23 @@ public class perso_Acnologia extends PersonnageBase {
         log.add("Acnologia déchaîne l'Extinction Draconique — l'île entière tremble !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        List<PersonnageBase> touches = new java.util.ArrayList<>();
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
+                double degats = (this.getAttaque() * 4.50) * multiplicateurRage;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.25, 2), log);
+                    touches.add(ennemi);
                 }
             }
+        }
+        java.util.Collections.shuffle(touches);
+        for (int i = 0; i < Math.min(2, touches.size()); i++) {
+            PersonnageBase adversaire = touches.get(i);
+            Combat.appliquerEffet(this, adversaire, new Brulure(2, 0.10), log);
+            Combat.appliquerEffet(this, adversaire, new Poison(2, 0.06), log);
+            Combat.appliquerEffet(this, adversaire, new Silence(2), log);
         }
     }
 

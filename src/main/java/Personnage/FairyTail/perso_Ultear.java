@@ -48,12 +48,20 @@ public class perso_Ultear extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Ultear inflige une Marche Arrière à " + cible.getNom() + " !");
+        log.add("Ultear inflige une Marche Arrière à toute l'équipe ennemie !");
         double degats = this.getAttaque() * 1.35;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) {
-            Combat.appliquerEffet(this, cible, new ReductionAttaque(0.20, 2), log);
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
         }
+        double soin = this.getAttaque() * 0.50;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                allie.recevoirSoin(soin, log);
+            }
+        }
+        Purification.purifierEquipe(equipeAlliee, Math.random() < 0.50 ? 3 : 2, log);
     }
 
     @Override
@@ -62,21 +70,34 @@ public class perso_Ultear extends PersonnageBase {
         log.add("Ultear déchaîne son interdit ultime — Last Ages !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        double soin = this.getAttaque() * 1.00;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = (this.getAttaque() * 1.05) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (ennemi.getRole().equals("Support")) {
+                    Combat.appliquerEffet(this, ennemi, new Silence(2), log);
+                }
             }
         }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                allie.recevoirSoin(soin, log);
+                if (allie.getRole().equals("DPS")) {
+                    Combat.appliquerEffet(this, allie, new ImmuniteControle(2), log);
+                }
+            }
+        }
+        Purification.purifierEquipe(equipeAlliee, Math.random() < 0.50 ? 3 : 2, log);
     }
 
     @Override public void descriptionAttaqueBase() {
         System.out.println("Flèche Temporelle — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Marche Arrière — Inflige 135% ATK à tout les ennemis et sogne l'equipe de 50% de l'attaque .");
+        System.out.println("Marche Arrière — Inflige 135% ATK à tout les ennemis et soigne l'equipe de 50% de l'attaque (purifie 2 effets negatifs, 3 avec 50% de chance, sur chaque allie).");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Last Ages — Inflige 105% ATK (bonus selon la Rage) à tous les ennemis et soigne 100 de l'attaque tout les ennemis et immunise les attaquants aux effets de controle et inflige silence aux support pendants 2 tours.");
+        System.out.println("Last Ages — Inflige 105% ATK (bonus selon la Rage) à tous les ennemis et soigne toute l'equipe de 100% de l'attaque (purifie 2 effets negatifs, 3 avec 50% de chance, sur chaque allie) et immunise les attaquants aux effets de controle et inflige silence aux support pendants 2 tours.");
     }
 }

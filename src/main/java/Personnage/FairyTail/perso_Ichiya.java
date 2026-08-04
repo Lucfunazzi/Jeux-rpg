@@ -19,10 +19,10 @@ public class perso_Ichiya extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 400 * mult;
-        this.attaque = 110 * mult;
-        this.defense = 110 * mult;
-        this.vitesse = 100 * mult;
+        this.vie     = 440 * mult;
+        this.attaque = 126 * mult;
+        this.defense = 126 * mult;
+        this.vitesse = 115 * mult;
         this.taux_critiques    = 0.05;
         this.degat_critiques   = 1.10;
         this.taux_precisions   = 100.00;
@@ -49,7 +49,14 @@ public class perso_Ichiya extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Ichiya diffuse son Parfum Max sur toute l'équipe !");
-        Combat.appliquerEffet(this, new BuffAttaque(0.15, 2), log);
+        double soin = this.getAttaque() * 0.50;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(this, allie, new BuffAttaque(0.15, 2), log);
+                allie.recevoirSoin(soin, log);
+            }
+        }
+        Purification.purifierEquipe(equipeAlliee, 2, log);
     }
 
     @Override
@@ -59,17 +66,24 @@ public class perso_Ichiya extends PersonnageBase {
         double soin = this.getAttaque() * 1.30;
         PersonnageBase cibleSoin = Combat.cibleParRole(equipeAlliee, "Tank");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "DPS");
-        if (cibleSoin != null) cibleSoin.recevoirSoin(soin, log);
-        Combat.appliquerEffet(this, new BuffVitesse(0.15, 2), log);
+        if (cibleSoin != null) {
+            cibleSoin.recevoirSoin(soin, log);
+            Purification.purifier(cibleSoin, 3, log);
+        }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(this, allie, new BuffVitesse(0.15, 2), log);
+            }
+        }
     }
 
     @Override public void descriptionAttaqueBase() {
         System.out.println("Parfum de Poing — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Parfum Max — Augmente l'ATK de toute l'équipe de 15% et soigne l'equipe de 50% de l'attaque pendant 2 tours.");
+        System.out.println("Parfum Max — Augmente l'ATK de toute l'équipe de 15% et soigne l'equipe de 50% de l'attaque pendant 2 tours (purifie 2 effets négatifs sur chacun).");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Orbe du Parfum Masculin — Soigne l'allié le plus exposé de 130% ATK et augmente la vitesse de l'équipe de 15% pendant 2 tours.");
+        System.out.println("Orbe du Parfum Masculin — Soigne l'allié le plus exposé de 130% ATK (purifie 3 effets négatifs) et augmente la vitesse de l'équipe de 15% pendant 2 tours.");
     }
 }

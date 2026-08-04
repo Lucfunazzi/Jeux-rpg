@@ -18,9 +18,9 @@ public class perso_Racer extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 360 * mult;
+        this.vie     = 400 * mult;
         this.attaque = 170 * mult;
-        this.defense =  85 * mult;
+        this.defense =  90 * mult;
         this.vitesse = 175 * mult;
         this.taux_critiques    = 0.16;
         this.degat_critiques   = 1.35;

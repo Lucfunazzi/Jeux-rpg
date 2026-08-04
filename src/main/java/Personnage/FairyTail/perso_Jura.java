@@ -41,8 +41,13 @@ public class perso_Jura extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jura écrase " + cible.getNom() + " d'un Poing de Roc !");
-        Combat.attaquer(this, cible, log);
+        log.add("Jura écrase les attaquants et supports ennemis d'un Poing de Roc !");
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && (ennemi.getRole().equals("DPS") || ennemi.getRole().equals("Support"))) {
+                double degats = this.getAttaque() * 1.75;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
+        }
     }
 
     @Override
@@ -51,13 +56,14 @@ public class perso_Jura extends PersonnageBase {
         log.add("Jura invoque une Mudra du Grondement sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.90;
+                double degats = this.getAttaque() * 1.25;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche && Math.random() < 0.25) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
                 }
             }
         }
+        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
     }
 
     @Override
@@ -69,10 +75,14 @@ public class perso_Jura extends PersonnageBase {
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.10, 2), log);
+                }
             }
         }
-        Combat.appliquerEffet(this, new BuffDefense(0.20, 2), log);
+        Combat.appliquerEffet(this, new BuffBlocage(0.20, 2), log);
+        Combat.appliquerEffet(this, new Regeneration(0.08, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

@@ -19,7 +19,7 @@ public class perso_Tobi extends PersonnageBase {
         this.rarete = "C";
         this.niveau = 1;
         double mult = 1.00;
-        this.vie     = 250 * mult;
+        this.vie     = 288 * mult;
         this.attaque = 145 * mult;
         this.defense =  70 * mult;
         this.vitesse = 115 * mult;

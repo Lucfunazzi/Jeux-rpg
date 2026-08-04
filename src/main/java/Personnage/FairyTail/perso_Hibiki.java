@@ -19,9 +19,9 @@ public class perso_Hibiki extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 360 * mult;
+        this.vie     = 414 * mult;
         this.attaque = 165 * mult;
-        this.defense =  95 * mult;
+        this.defense = 109 * mult;
         this.vitesse = 125 * mult;
         this.taux_critiques    = 0.12;
         this.degat_critiques   = 1.25;
@@ -50,9 +50,12 @@ public class perso_Hibiki extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hibiki analyse " + cible.getNom() + " et expose ses failles !");
         double degats = this.getAttaque() * 1.25;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) {
-            Combat.appliquerEffet(this, cible, new ReductionDefense(0.15, 2), log);
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant()) {
+                Combat.appliquerEffet(this, allie, new BuffDefense(0.10, 2), log);
+                Combat.appliquerEffet(this, allie, new BuffVitesse(0.10, 2), log);
+            }
         }
     }
 
@@ -66,6 +69,12 @@ public class perso_Hibiki extends PersonnageBase {
             if (ennemi.estVivant()) {
                 double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
+        }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant() && allie.getRole().equals("DPS")) {
+                Combat.appliquerEffet(this, allie, new BuffAttaque(0.15, 2), log);
+                Combat.appliquerEffet(this, allie, new BuffTauxCritique(0.10, 2), log);
             }
         }
     }

@@ -21,8 +21,8 @@ public class perso_Loki extends PersonnageBase {
         double mult = 1.55;
         this.vie     = 560 * mult;
         this.attaque = 215 * mult;
-        this.defense = 110 * mult;
-        this.vitesse = 135 * mult;
+        this.defense = 126 * mult;
+        this.vitesse = 145 * mult;
         this.taux_critiques    = 0.18;
         this.degat_critiques   = 1.35;
         this.taux_precisions   = 105.00;

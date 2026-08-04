@@ -15,9 +15,9 @@ public class perso_Yukino extends PersonnageBase {
         this.niveau = 1;
         double multiplicateurRarete = 1.50;
         this.vie     = 580 * multiplicateurRarete;
-        this.attaque = 190 * multiplicateurRarete;
+        this.attaque = 202 * multiplicateurRarete;
         this.defense = 110 * multiplicateurRarete;
-        this.vitesse = 115 * multiplicateurRarete;
+        this.vitesse = 126 * multiplicateurRarete;
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.35;
         this.taux_precisions   = 100.00;

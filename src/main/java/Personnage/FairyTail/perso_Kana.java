@@ -53,6 +53,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     if (cibleSoin == null) return;
     double soin = this.getAttaque() * 1.00;
     cibleSoin.recevoirSoin(soin, log);
+    Purification.purifier(cibleSoin, 2, log);
 }
 
 @Override
@@ -66,7 +67,9 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
         if (ennemi.estVivant()) {
             double degats = (this.getAttaque() * 0.60) * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            Combat.appliquerEffet(this, ennemi, new Paralysie(2, 0.30), log);
+            if (Math.random() < 0.30) {
+                Combat.appliquerEffet(this, ennemi, new Paralysie(2, 0.30), log);
+            }
         }
     }
 }
@@ -77,7 +80,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     }
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Carte de soin — soigne l'allie avec le moins de PV a hauteur de 100% ATK.");
+        System.out.println("Carte de soin — soigne l'allie avec le moins de PV a hauteur de 100% ATK et purifie 2 effets negatifs.");
     }
     @Override
     public void descriptionAttaqueUltime() {

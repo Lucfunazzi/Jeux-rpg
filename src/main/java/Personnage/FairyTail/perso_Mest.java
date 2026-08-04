@@ -19,9 +19,9 @@ public class perso_Mest extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double mult = 1.40;
-        this.vie     = 400 * mult;
-        this.attaque = 140 * mult;
-        this.defense =  95 * mult;
+        this.vie     = 460 * mult;
+        this.attaque = 161 * mult;
+        this.defense = 102 * mult;
         this.vitesse = 130 * mult;
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;

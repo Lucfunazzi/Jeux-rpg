@@ -61,7 +61,7 @@ public class perso_Yuka extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Yuka déploie une vague d'Ondulations qui annule toutes les magies ennemies !");
-        Purification.purifier(this, 3, log);
+        Purification.purifier(this, Integer.MAX_VALUE, log);
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 

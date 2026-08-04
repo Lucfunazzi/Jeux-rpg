@@ -18,10 +18,10 @@ public class perso_Zero extends PersonnageBase {
         this.rarete = "SS";
         this.niveau = 1;
         double mult = 1.75;
-        this.vie     = 620 * mult;
-        this.attaque = 245 * mult;
-        this.defense = 135 * mult;
-        this.vitesse = 140 * mult;
+        this.vie     = 700 * mult;
+        this.attaque = 324 * mult;
+        this.defense = 155 * mult;
+        this.vitesse = 161 * mult;
         this.taux_critiques    = 0.18;
         this.degat_critiques   = 1.40;
         this.taux_precisions   = 110.00;

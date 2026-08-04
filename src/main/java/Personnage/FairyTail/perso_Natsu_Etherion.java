@@ -16,8 +16,8 @@ public class perso_Natsu_Etherion extends PersonnageBase {
         double multiplicateurRarete = 1.50;
         this.vie = 700 * multiplicateurRarete;        // évolution de 550, cohérent
         this.attaque = 300 * multiplicateurRarete;    // nettement au-dessus de Natsu A
-        this.defense = 120 * multiplicateurRarete;    // un peu plus solide
-        this.vitesse = 115 * multiplicateurRarete;
+        this.defense = 138 * multiplicateurRarete;    // un peu plus solide
+        this.vitesse = 132 * multiplicateurRarete;
         this.taux_critiques = 0.30;
         this.degat_critiques = 1.50;
         this.taux_precisions = 110.00;
@@ -50,20 +50,13 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Ultra Poings d'acier du dragon de feu !");
-    List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
-    if (attaquants.isEmpty()) {
-        PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
-        if (repli != null) attaquants = List.of(repli);
+    double degats = this.getAttaque() * 1.60;
+    Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+    Combat.appliquerEffet(this, cible, new Brulure(3, 0.15), log);
+    if (Math.random() < 0.40) {
+        Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
     }
-    if (attaquants.isEmpty()) {
-        log.add("Aucun attaquant ennemi a cibler !");
-    } else {
-        double degats = this.getAttaque() * 1.05;
-        for (PersonnageBase ennemi : attaquants) {
-            Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.10), log);
-        }
-    }
+    Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
     // Rage bonus : avec les +50 (ou +100 critique) de l'attaque de base precedente,
     // Natsu est directement pret pour son ultime au tour suivant.
     this.ajouterRage(50);
@@ -73,17 +66,12 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
 @Override
 public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Natsu utilise Hurlement suprême du dragon de feu !");
-    List<PersonnageBase> attaquants = ciblerAttaquants(equipeEnnemie);
-    if (attaquants.isEmpty()) {
-        PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
-        if (repli != null) attaquants = List.of(repli);
-    }
-    if (attaquants.isEmpty()) {
-        log.add("Aucun attaquant ennemi a cibler !");
-    } else {
-        double degats = this.getAttaque() * 1.30;
-        for (PersonnageBase ennemi : attaquants) {
+    Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
+    double degats = this.getAttaque() * 1.80;
+    for (PersonnageBase ennemi : equipeEnnemie) {
+        if (ennemi.estVivant()) {
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            Combat.appliquerEffet(this, ennemi, new Brulure(3, 0.18), log);
         }
     }
 }

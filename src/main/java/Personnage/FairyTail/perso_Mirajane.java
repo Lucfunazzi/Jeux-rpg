@@ -14,7 +14,7 @@ public class perso_Mirajane extends PersonnageBase {
         double multiplicateurRarete = 1.50;
         this.vie = 650 * multiplicateurRarete;       
         this.attaque = 260 * multiplicateurRarete;   
-        this.defense = 100 * multiplicateurRarete;   
+        this.defense = 114 * multiplicateurRarete;   
         this.vitesse = 140 * multiplicateurRarete;
         this.taux_critiques = 0.10;
         this.degat_critiques = 1.40;

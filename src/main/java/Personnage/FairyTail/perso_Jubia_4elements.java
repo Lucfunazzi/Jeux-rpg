@@ -14,10 +14,10 @@ public class perso_Jubia_4elements extends PersonnageBase {
         this.rarete = "A";
         this.niveau = 1;
         double multiplicateurRarete = 1.40;
-        this.vie = 550 * multiplicateurRarete;
+        this.vie = 632 * multiplicateurRarete;
         this.attaque = 160 * multiplicateurRarete;
         this.defense = 110 * multiplicateurRarete;
-        this.vitesse = 130 * multiplicateurRarete;
+        this.vitesse = 150 * multiplicateurRarete;
         this.taux_critiques = 0.10;
         this.degat_critiques = 1.20;
         this.taux_precisions = 100.00;

@@ -48,11 +48,17 @@ public class perso_Hughes extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hughes déchaîne sa Légion de Poupées sur toute l'équipe ennemie !");
+        List<PersonnageBase> vivants = new java.util.ArrayList<>();
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = this.getAttaque() * 0.75;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                vivants.add(ennemi);
             }
+        }
+        java.util.Collections.shuffle(vivants);
+        for (int i = 0; i < Math.min(2, vivants.size()); i++) {
+            Combat.appliquerEffet(this, vivants.get(i), new ReductionDefense(0.10, 2), log);
         }
     }
 
@@ -65,8 +71,11 @@ public class perso_Hughes extends PersonnageBase {
         if (cible != null && cible.estVivant()) {
             double multiplicateurRage = 1.0;
             if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.10) * multiplicateurRage;
-            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+            double degats = (this.getAttaque() * 1.25) * multiplicateurRage;
+            boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+            if (touche && Math.random() < 0.20) {
+                Combat.appliquerEffet(this, cible, new Confusion(2), log);
+            }
         }
     }
 

@@ -20,7 +20,7 @@ public class perso_Vivaldus extends PersonnageBase {
         this.niveau = 1;
         double multiplicateurRarete = 1.40;
         this.vie = 575 * multiplicateurRarete;
-        this.attaque=150 *multiplicateurRarete;
+        this.attaque=160 *multiplicateurRarete;
         this.defense=125 * multiplicateurRarete;
         this.vitesse = 135 *multiplicateurRarete;
         this.taux_critiques = 0.10;
@@ -57,7 +57,6 @@ public class perso_Vivaldus extends PersonnageBase {
 
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cibleSupport, degats, log);
-        Combat.appliquerEffet(this, cibleSupport, new Ralentissement(2, 0.20), log);
         if (Math.random() < 0.30){
             Combat.appliquerEffet(this, cibleSupport, new Confusion(2), log);
         }

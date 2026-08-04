@@ -50,7 +50,10 @@ public class perso_Zancrow extends PersonnageBase {
         log.add("Zancrow dévore les flammes et se régénère !");
         double degats = this.getAttaque() * 1.30;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) this.recevoirSoin(degats * 0.25, log);
+        if (touche) {
+            this.recevoirSoin(degats * 0.25, log);
+            Combat.appliquerEffet(this, cible, new Brulure(2, 0.08), log);
+        }
     }
 
     @Override
@@ -64,10 +67,11 @@ public class perso_Zancrow extends PersonnageBase {
                 double degats = (this.getAttaque() * 1.15) * multiplicateurRage;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
-                    Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.07), log);
+                    Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.30), log);
                 }
             }
         }
+        this.recevoirSoin(this.getAttaque() * 0.25, log);
     }
 
     @Override public void descriptionAttaqueBase() {

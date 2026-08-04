@@ -40,19 +40,34 @@ public class perso_Zeref extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Zeref effleure " + cible.getNom() + " d'un Toucher de la Mort !");
-        Combat.attaquer(this, cible, log);
+        log.add("Zeref effleure toute l'équipe ennemie d'un Toucher de la Mort !");
+        List<PersonnageBase> touches = new java.util.ArrayList<>();
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 2.00;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.20), log);
+                    touches.add(ennemi);
+                }
+            }
+        }
+        if (!touches.isEmpty()) {
+            PersonnageBase cibleSilence = touches.get((int) (Math.random() * touches.size()));
+            Combat.appliquerEffet(this, cibleSilence, new Silence(2), log);
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("La Malédiction d'Ankhseram s'abat sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.45;
+        double degats = this.getAttaque() * 2.30;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new Malediction(2, 0.40), log);
         }
+        Combat.appliquerEffet(this, new Regeneration(0.15, 2), log);
     }
 
     @Override
@@ -63,10 +78,15 @@ public class perso_Zeref extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.30) * multiplicateurRage;
+                double degats = (this.getAttaque() * 2.50) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
+        Combat.appliquerEffet(this, new Immunite(2), log);
+        Purification.purifier(this, Integer.MAX_VALUE, log);
+        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffBlocage(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffTauxEsquive(0.10, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

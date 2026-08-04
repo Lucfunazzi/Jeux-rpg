@@ -18,9 +18,9 @@ public class perso_Azuma extends PersonnageBase {
         this.rarete = "S";
         this.niveau = 1;
         double mult = 1.55;
-        this.vie     = 700 * mult;
+        this.vie     = 805 * mult;
         this.attaque = 185 * mult;
-        this.defense = 160 * mult;
+        this.defense = 184 * mult;
         this.vitesse = 110 * mult;
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
@@ -40,17 +40,29 @@ public class perso_Azuma extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Azuma transperce " + cible.getNom() + " d'une Branche Perçante !");
-        Combat.attaquer(this, cible, log);
+        log.add("Azuma transperce l'équipe ennemie d'une Branche Perçante !");
+        List<PersonnageBase> vivants = new java.util.ArrayList<>();
+        for (PersonnageBase ennemi : equipeEnnemie) if (ennemi.estVivant()) vivants.add(ennemi);
+        java.util.Collections.shuffle(vivants);
+        for (int i = 0; i < Math.min(3, vivants.size()); i++) {
+            double degats = this.getAttaque() * 1.25;
+            Combat.appliquerDegatsAvecLog(this, vivants.get(i), degats, log);
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Azuma draine la vie de " + cible.getNom() + " avec l'Arc du Grand Arbre !");
-        double degats = this.getAttaque() * 1.25;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) this.recevoirSoin(degats * 0.30, log);
+        log.add("Azuma draine la vie de l'équipe ennemie avec l'Arc du Grand Arbre !");
+        double degatsTotaux = 0;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 1.25;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) degatsTotaux += degats;
+            }
+        }
+        if (degatsTotaux > 0) this.recevoirSoin(degatsTotaux * 0.30, log);
     }
 
     @Override
@@ -61,13 +73,14 @@ public class perso_Azuma extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.10) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.50) * multiplicateurRage;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
-                    Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.15, 2), log);
+                    Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
                 }
             }
         }
+        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

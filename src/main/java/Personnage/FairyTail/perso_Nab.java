@@ -37,10 +37,9 @@ public class perso_Nab extends PersonnageBase {
     }
     @Override public void attaqueUltime(List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Nab invoque sa forteresse animale et protège ses alliés !");
-        for (PersonnageBase al : a) if (al.estVivant()) Combat.appliquerEffet(this, al, new BuffDefense(0.10, 2), log);
         double soin = this.getVieMax()*0.10; this.recevoirSoin(soin, log);
     }
     @Override public void descriptionAttaqueBase() { System.out.println("Coup de poing — 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Posture de défense — 80% ATK, +15% blocage pendant 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Forteresse animale — , se soigne de 10% des PV max."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Forteresse animale — se soigne de 10% des PV max."); }
 }

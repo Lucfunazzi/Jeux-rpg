@@ -37,7 +37,7 @@ public class perso_Gray extends PersonnageBase {
   @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Gray utilise Lance de glace !");
-    double degats = this.getAttaque() * 1.10;
+    double degats = this.getAttaque() * 1.20;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
 }
 

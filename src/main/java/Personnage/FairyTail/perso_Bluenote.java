@@ -19,9 +19,9 @@ public class perso_Bluenote extends PersonnageBase {
         this.niveau = 1;
         double mult = 1.65;
         this.vie     = 760 * mult;
-        this.attaque = 195 * mult;
+        this.attaque = 258 * mult;
         this.defense = 175 * mult;
-        this.vitesse =  95 * mult;
+        this.vitesse = 109 * mult;
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 105.00;

@@ -20,7 +20,7 @@ public class perso_Miliana extends PersonnageBase{
         this.niveau = 1;
         double mult = 1.00;
         this.vie     = 360 * mult;
-        this.attaque =  80 * mult;
+        this.attaque =  90 * mult;
         this.defense =  95 * mult;
         this.vitesse =  145 * mult;
         this.taux_critiques    = 0.10;

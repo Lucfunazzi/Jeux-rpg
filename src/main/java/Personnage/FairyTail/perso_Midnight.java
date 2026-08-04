@@ -3,6 +3,8 @@ package Personnage.FairyTail;
 import Combat.Combat;
 import Effets.*;
 import Personnage.PersonnageBase;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,8 +42,9 @@ public class perso_Midnight extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Midnight dévie la lumière et frappe " + cible.getNom() + " avec Reflector !");
-        Combat.attaquer(this, cible, log);
+        log.add("Midnight dévie la lumière autour de lui avec Reflector et se régénère !");
+        double soin = this.getVieMax() * 0.06;
+        this.recevoirSoin(soin, log);
     }
 
     @Override
@@ -52,6 +55,16 @@ public class perso_Midnight extends PersonnageBase {
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new Aveuglement(0.20, 2), log);
+        }
+        Combat.appliquerEffet(this, new BuffBlocage(0.10, 2), log);
+        List<PersonnageBase> vivants = new ArrayList<>();
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) vivants.add(ennemi);
+        }
+        Collections.shuffle(vivants);
+        int nbCibles = Math.min(2, vivants.size());
+        for (int i = 0; i < nbCibles; i++) {
+            Combat.appliquerEffet(this, vivants.get(i), new Aveuglement(0.30, 2), log);
         }
     }
 
@@ -68,6 +81,7 @@ public class perso_Midnight extends PersonnageBase {
                 }
             }
         }
+        Combat.appliquerEffet(this, new BuffTauxEsquive(0.10, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

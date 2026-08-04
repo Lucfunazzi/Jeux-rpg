@@ -40,8 +40,14 @@ public class perso_Sugarboy extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Sugarboy percute " + cible.getNom() + " d'un Coup de Bouclier !");
-        Combat.attaquer(this, cible, log);
+        log.add("Sugarboy percute l'équipe ennemie d'un Coup de Bouclier !");
+        List<PersonnageBase> vivants = new java.util.ArrayList<>();
+        for (PersonnageBase ennemi : equipeEnnemie) if (ennemi.estVivant()) vivants.add(ennemi);
+        java.util.Collections.shuffle(vivants);
+        for (int i = 0; i < Math.min(2, vivants.size()); i++) {
+            double degats = this.getAttaque() * 1.50;
+            Combat.appliquerDegatsAvecLog(this, vivants.get(i), degats, log);
+        }
     }
 
     @Override
@@ -51,6 +57,11 @@ public class perso_Sugarboy extends PersonnageBase {
         Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.12), log);
         double degats = this.getAttaque() * 1.05;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals("DPS")) {
+                Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.15, 2), log);
+            }
+        }
     }
 
     @Override

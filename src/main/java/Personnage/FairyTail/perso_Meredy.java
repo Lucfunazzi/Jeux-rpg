@@ -19,9 +19,9 @@ public class perso_Meredy extends PersonnageBase {
         this.rarete = "S";
         this.niveau = 1;
         double mult = 1.42;
-        this.vie     = 440 * mult;
-        this.attaque = 165 * mult;
-        this.defense = 100 * mult;
+        this.vie     = 506 * mult;
+        this.attaque = 186 * mult;
+        this.defense = 115 * mult;
         this.vitesse = 125 * mult;
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
@@ -64,6 +64,9 @@ public class perso_Meredy extends PersonnageBase {
             if (ennemi.estVivant()) {
                 double degats = this.getAttaque() * 0.85;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Marquage(), log);
+                Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.10, 2), log);
+                Combat.appliquerEffet(this, ennemi, new BuffBlocage(-0.10, 2), log);
             }
         }
     }

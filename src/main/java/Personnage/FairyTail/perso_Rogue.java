@@ -14,9 +14,9 @@ public class perso_Rogue extends PersonnageBase {
         this.rarete = "S";
         this.niveau = 1;
         double multiplicateurRarete = 1.50;
-        this.vie = 640 * multiplicateurRarete;
+        this.vie = 736 * multiplicateurRarete;
         this.attaque = 200 * multiplicateurRarete;
-        this.defense = 150 * multiplicateurRarete;
+        this.defense = 172 * multiplicateurRarete;
         this.vitesse = 125 * multiplicateurRarete;
         this.taux_critiques = 0.20;
         this.degat_critiques = 1.40;

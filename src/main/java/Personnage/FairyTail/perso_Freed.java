@@ -15,7 +15,7 @@ public class perso_Freed extends PersonnageBase {
         this.role = "Support";
         this.rarete = "A";
         double multiplicateurRarete = 1.40;
-        this.vie = 500 * multiplicateurRarete;
+        this.vie = 575 * multiplicateurRarete;
         this.attaque = 160 * multiplicateurRarete;
         this.defense = 160 * multiplicateurRarete;
         this.vitesse = 140 * multiplicateurRarete;

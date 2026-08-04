@@ -24,22 +24,27 @@ public class GestionnaireArene {
     // package Personnage.FairyTail. Seuls les personnages déjà branchés
     // dans creerPersonnageConnu() sont utilisés ici.
 
-    private static final List<String> TANKS_C = List.of("Nab", "Duc Everlue", "Yuka");
-    private static final List<String> TANKS_B = List.of("Elfman", "Sol", "Simon");
-    private static final List<String> TANKS_A = List.of("Ikaruga");
-    private static final List<String> TANKS_S = List.of("Erza", "Rogue");
+    private static final List<String> TANKS_C  = List.of("Nab", "Duc Everlue", "Yuka");
+    private static final List<String> TANKS_B  = List.of("Elfman", "Sol", "Simon");
+    private static final List<String> TANKS_A  = List.of("Ikaruga", "Hoteye", "Sugarboy");
+    private static final List<String> TANKS_S  = List.of("Erza", "Rogue", "Erza Knightwalker", "Azuma", "Rustyrose");
+    private static final List<String> TANKS_SS = List.of("Jura", "Zeref");
 
     private static final List<String> SUPPORTS_C  = List.of("Cherry", "Miliana");
     private static final List<String> SUPPORTS_B  = List.of("Kana", "Levy", "Lisanna", "Shaw");
-    private static final List<String> SUPPORTS_A  = List.of("Evergreen", "Freed", "Jubia", "Lucy", "Wendy", "Vivaldus");
-    private static final List<String> SUPPORTS_S  = List.of("Yukino");
+    private static final List<String> SUPPORTS_A  = List.of("Evergreen", "Freed", "Jubia", "Lucy", "Wendy", "Vivaldus",
+            "Ichiya", "Hibiki", "Mest", "Byro", "Eve");
+    private static final List<String> SUPPORTS_S  = List.of("Yukino", "Meredy", "Ultear", "Brain");
     private static final List<String> SUPPORTS_SS = List.of("Lucas");
 
     private static final List<String> DPS_C  = List.of("Alzack", "Bisca", "Bora", "Eligoal", "Tobi", "Wolly");
     private static final List<String> DPS_B  = List.of("Leon", "Totomaru");
-    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria", "Bickslow", "Owl");
-    private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora", "Jellal");
-    private static final List<String> DPS_SS = List.of("Mirajane Halphas", "Ul Milkovich");
+    private static final List<String> DPS_A  = List.of("Angel", "Gajeel", "Gray", "Natsu", "Aria", "Bickslow", "Owl",
+            "Panther Lily", "Ren", "Cobra", "Racer", "Midnight");
+    private static final List<String> DPS_S  = List.of("Mirajane", "Sting", "Natsu Etherion", "José Pora", "Jellal",
+            "Loki", "Zancrow", "Capricorn");
+    private static final List<String> DPS_SS = List.of("Mirajane Halphas", "Ul Milkovich", "Jellal Intermagie", "Luxus",
+            "Zero", "Bluenote", "Gildarts", "Acnologia", "Hades");
 
     private static final String[] CLASSES_IA = {"Chevalier", "Chasseur de Dragon", "Mage", "Constellationniste"};
 
@@ -100,7 +105,7 @@ public class GestionnaireArene {
                 poolTanks = TANKS_S; poolSupports = SUPPORTS_S; poolDPS = DPS_S;
             } else {
                 niveau = 90 + rng.nextInt(11);
-                poolTanks    = TANKS_S;
+                poolTanks    = mix(rng, TANKS_S,     TANKS_SS,    0.4);
                 poolSupports = mix(rng, SUPPORTS_S,  SUPPORTS_SS, 0.4);
                 poolDPS      = mix(rng, DPS_S,        DPS_SS,      0.4);
             }

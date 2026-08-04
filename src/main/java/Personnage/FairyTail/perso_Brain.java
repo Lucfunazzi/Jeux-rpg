@@ -40,8 +40,14 @@ public class perso_Brain extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Brain projette des Particules Magiques sur " + cible.getNom() + " !");
-        Combat.attaquer(this, cible, log);
+        log.add("Brain projette des Particules Magiques sur l'équipe ennemie !");
+        List<PersonnageBase> vivants = new java.util.ArrayList<>();
+        for (PersonnageBase ennemi : equipeEnnemie) if (ennemi.estVivant()) vivants.add(ennemi);
+        java.util.Collections.shuffle(vivants);
+        for (int i = 0; i < Math.min(3, vivants.size()); i++) {
+            double degats = this.getAttaque() * 1.35;
+            Combat.appliquerDegatsAvecLog(this, vivants.get(i), degats, log);
+        }
     }
 
     @Override
@@ -60,16 +66,27 @@ public class perso_Brain extends PersonnageBase {
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Brain draine la magie de toute l'équipe ennemie !");
         double degatsTotaux = 0;
+        List<PersonnageBase> touches = new java.util.ArrayList<>();
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.85;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-                degatsTotaux += degats;
+                double degats = this.getAttaque() * 2.00;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    degatsTotaux += degats;
+                    Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.10, 2), log);
+                    touches.add(ennemi);
+                }
             }
         }
         double soin = degatsTotaux * 0.20;
         if (soin > 0) {
             this.recevoirSoin(soin, log);
+        }
+        if (!touches.isEmpty()) {
+            PersonnageBase cibleSilence = touches.get((int) (Math.random() * touches.size()));
+            Combat.appliquerEffet(this, cibleSilence, new Silence(2), log);
+            PersonnageBase cibleMalediction = touches.get((int) (Math.random() * touches.size()));
+            Combat.appliquerEffet(this, cibleMalediction, new Malediction(2, 0.30), log);
         }
     }
 

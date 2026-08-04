@@ -22,7 +22,7 @@ public class perso_PantherLily extends PersonnageBase {
         this.vie     = 450 * mult;
         this.attaque = 175 * mult;
         this.defense = 110 * mult;
-        this.vitesse = 115 * mult;
+        this.vitesse = 132 * mult;
         this.taux_critiques    = 0.14;
         this.degat_critiques   = 1.28;
         this.taux_precisions   = 105.00;
@@ -62,10 +62,11 @@ public class perso_PantherLily extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 0.70) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.00) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
+        Combat.appliquerEffet(this, new BuffVitesse(0.10, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

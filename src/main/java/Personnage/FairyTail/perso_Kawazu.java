@@ -16,9 +16,9 @@ public class perso_Kawazu extends PersonnageBase {
         this.niveau = 1;
         double mult = 1.30;
         this.vie     = 430 * mult;
-        this.attaque = 150 * mult;
-        this.defense =  95 * mult;
-        this.vitesse = 110 * mult;
+        this.attaque = 165 * mult;
+        this.defense = 109 * mult;
+        this.vitesse = 120 * mult;
         this.taux_critiques    = 0.10;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 105.00;

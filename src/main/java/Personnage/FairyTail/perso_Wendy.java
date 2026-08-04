@@ -17,7 +17,7 @@ public class perso_Wendy extends PersonnageBase {
         this.niveau = 1;
         double multiplicateurRarete = 1.40;
         this.vie = 520 * multiplicateurRarete;
-        this.attaque = 140 * multiplicateurRarete;
+        this.attaque = 161 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;
         this.vitesse = 135 * multiplicateurRarete;
         this.taux_critiques = 0.10;
@@ -46,6 +46,7 @@ public class perso_Wendy extends PersonnageBase {
         if (cibleSoin == null) return;
         double montantSoin = this.getAttaque() * 0.40;
         cibleSoin.recevoirSoin(montantSoin, log);
+        Purification.purifier(cibleSoin, 3, log);
     }
 
     @Override
@@ -75,14 +76,14 @@ public class perso_Wendy extends PersonnageBase {
             if (allie.estVivant()) {
                 double montantSoin = this.getAttaque() * 0.50;
                 allie.recevoirSoin(montantSoin, log);
-                Purification.purifier(allie, 1, log);
+                Purification.purifier(allie, 2, log);
             }
         }
     }
 
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Brise de soin — Soigne un allie de 40% ATK.");
+        System.out.println("Brise de soin — Soigne un allie de 40% ATK. Purifie 3 etats negatifs sur lui.");
     }
 
     @Override
@@ -94,6 +95,6 @@ public class perso_Wendy extends PersonnageBase {
     @Override
     public void descriptionAttaqueUltime() {
         System.out.println("Tempete celeste — Soigne toute l'equipe de 50% ATK. "
-                + "Purifie 1 etat negatif sur chaque allie.");
+                + "Purifie 2 etats negatifs sur chaque allie.");
     }
 }

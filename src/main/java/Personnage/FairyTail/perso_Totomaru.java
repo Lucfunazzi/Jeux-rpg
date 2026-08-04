@@ -23,7 +23,7 @@ public class perso_Totomaru extends PersonnageBase {
         this.vie     = 370 * mult;
         this.attaque = 165 * mult;
         this.defense = 110 * mult;
-        this.vitesse = 120 * mult;
+        this.vitesse = 130 * mult;
         this.taux_critiques    = 0.20;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 105.00;

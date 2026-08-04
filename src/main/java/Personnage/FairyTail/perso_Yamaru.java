@@ -16,9 +16,9 @@ public class perso_Yamaru extends PersonnageBase {
         this.niveau = 1;
         double mult = 1.30;
         this.vie     = 450 * mult;
-        this.attaque = 120 * mult;
+        this.attaque = 150 * mult;
         this.defense = 110 * mult;
-        this.vitesse = 105 * mult;
+        this.vitesse = 121 * mult;
         this.taux_critiques    = 0.06;
         this.degat_critiques   = 1.15;
         this.taux_precisions   = 105.00;

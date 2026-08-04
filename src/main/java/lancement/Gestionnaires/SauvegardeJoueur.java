@@ -174,6 +174,7 @@ public class SauvegardeJoueur {
             case "José Pora"      -> new perso_Jose();
             case "Ul Milkovich"   -> new perso_Ul();
             case "Luxus"          -> new perso_Luxus();
+            case "Hades"          -> new perso_Hades();
             default               -> null;
         };
         // Repli sur la fabrique du Recrutement normal (Cherry, Duc Everlue, Tobi, Yuka,

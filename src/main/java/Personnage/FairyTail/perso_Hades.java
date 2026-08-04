@@ -40,18 +40,32 @@ public class perso_Hades extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Hades frappe " + cible.getNom() + " d'un Choc des Ténèbres !");
-        Combat.attaquer(this, cible, log);
+        log.add("Hades frappe toute l'équipe ennemie d'un Choc des Ténèbres !");
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 2.00;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
+                }
+            }
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Hades embrase " + cible.getNom() + " d'un Amaterasu implacable !");
-        double degats = this.getAttaque() * 1.50;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) {
-            Combat.appliquerEffet(this, cible, new Brulure(2, 0.08), log);
+        log.add("Hades embrase les supports ennemis d'un Amaterasu implacable !");
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals("Support")) {
+                double degats = this.getAttaque() * 2.20;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.10), log);
+                    Combat.appliquerEffet(this, ennemi, new Silence(2), log);
+                    Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.30), log);
+                }
+            }
         }
     }
 
@@ -59,13 +73,17 @@ public class perso_Hades extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hades ouvre la Genèse Zéro — le néant absorbe tout !");
+        PersonnageBase cible = equipeEnnemie.stream()
+                .filter(PersonnageBase::estVivant)
+                .max(java.util.Comparator.comparingDouble(PersonnageBase::getDefense))
+                .orElse(null);
+        if (cible == null) return;
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.25) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            }
+        double degats = (this.getAttaque() * 4.00) * multiplicateurRage;
+        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        if (touche) {
+            Combat.appliquerEffet(this, cible, new Fragilite(1, 0.50), log);
         }
     }
 

@@ -19,7 +19,7 @@ public class perso_Shaw extends PersonnageBase {
         this.rarete = "B";
         this.niveau = 1;
         double mult = 1.30;
-        this.vie     = 350 * mult;
+        this.vie     = 370 * mult;
         this.attaque = 150 * mult;
         this.defense = 110 * mult;
         this.vitesse = 150 * mult;

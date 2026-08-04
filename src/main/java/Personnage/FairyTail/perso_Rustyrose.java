@@ -21,7 +21,7 @@ public class perso_Rustyrose extends PersonnageBase {
         this.vie     = 720 * mult;
         this.attaque = 180 * mult;
         this.defense = 165 * mult;
-        this.vitesse = 100 * mult;
+        this.vitesse = 108 * mult;
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 105.00;
@@ -49,8 +49,12 @@ public class perso_Rustyrose extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Rustyrose matérialise un Golem de Création Vivante !");
         Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.10), log);
-        double degats = this.getAttaque() * 1.20;
-        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 1.20;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
+        }
     }
 
     @Override
@@ -62,9 +66,13 @@ public class perso_Rustyrose extends PersonnageBase {
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = (this.getAttaque() * 1.15) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.08), log);
+                }
             }
         }
+        Combat.appliquerEffet(this, new Regeneration(0.05, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {

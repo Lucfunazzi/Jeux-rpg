@@ -12,9 +12,9 @@ public class perso_Lisanna extends PersonnageBase {
         this.rarete = "B";
         double m = 1.20;
         this.vie=420*m;
-        this.attaque=110*m;
-        this.defense=105*m;
-        this.vitesse=150*m;
+        this.attaque=145*m;
+        this.defense=119*m;
+        this.vitesse=162*m;
         this.taux_critiques=0.08;
         this.degat_critiques=1.15;
         this.taux_precisions=100;
@@ -34,13 +34,13 @@ public class perso_Lisanna extends PersonnageBase {
         for (PersonnageBase al : a) if (al.estVivant()) {
             double soin = this.getAttaque()*0.80; al.recevoirSoin(soin, log);
         }
-        
+        Purification.purifierEquipe(a, 1, log);
     }
     @Override public void attaqueUltime(List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Lisanna prend sa forme de colombe et régénère l'équipe !");
         for (PersonnageBase al : a) if (al.estVivant()) Combat.appliquerEffet(this, al, new Regeneration(0.08,2), log);
     }
     @Override public void descriptionAttaqueBase() { System.out.println("Griffe animale — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Soin du coeur — soigne toute l'équipe de 80% ATK."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Soin du coeur — soigne toute l'équipe de 80% ATK et purifie 1 effet negatif sur chacun."); }
     @Override public void descriptionAttaqueUltime() { System.out.println("Forme de colombe — régénère toute l'équipe 2 tours (8% PV max/tour)."); }
 }

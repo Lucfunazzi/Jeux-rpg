@@ -223,28 +223,28 @@ public class MenuDonjon {
             case DIFFICILE -> {
                 switch (type) {
                     case OR -> {
-                        // DPS: Loke (B), Gajeel (A), Angel (A) | Support: Levy (B)
-                       ennemis.add(niv(new perso_Elfman(), niv));
+                        // Tank: Sugarboy (A) | DPS: Gajeel (A), Racer (A) | Support: Levy (B), Hibiki (A)
+                        ennemis.add(niv(new perso_Sugarboy(),   niv));
                         ennemis.add(niv(new perso_Gajeel(),     niv));
-                        ennemis.add(niv(new perso_Angel(),      niv));
+                        ennemis.add(niv(new perso_Racer(),      niv));
                         ennemis.add(niv(new perso_Levy(),       niv));
-                        ennemis.add(niv(new perso_Lisanna(), niv));
+                        ennemis.add(niv(new perso_Hibiki(),     niv));
                     }
                     case AFFINAGE -> {
-                        // Tank: Rogue (S) | DPS: Bickslow (A), Evergee, (A), Gray (A) | Support: Freed (A)
-                        ennemis.add(niv(new perso_Rogue(),     niv));
-                        ennemis.add(niv(new perso_Totomaru(),  niv));
-                        ennemis.add(niv(new perso_Leon(),      niv));
-                        ennemis.add(niv(new perso_Gray(),      niv));
+                        // Tank: Hoteye (A) | DPS: Bixrow (A), Cobra (A) | Support: Freed (A), Byro (A)
+                        ennemis.add(niv(new perso_Hoteye(),    niv));
+                        ennemis.add(niv(new perso_Bixrow(),    niv));
+                        ennemis.add(niv(new perso_Cobra(),     niv));
                         ennemis.add(niv(new perso_Freed(),     niv));
+                        ennemis.add(niv(new perso_Byro(),      niv));
                     }
                     case XP -> {
-                        // 
-                        ennemis.add(niv(new perso_Sol(),     niv));
-                        ennemis.add(niv(new perso_Bixrow(),    niv));
-                        ennemis.add(niv(new perso_Lucy(),      niv));
-                        ennemis.add(niv(new perso_Wendy(),     niv));
-                        ennemis.add(niv(new perso_Jubia_4elements(),     niv));
+                        // Tank: Ikaruga (A) | DPS: Panther Lily (A), Midnight (A) | Support: Wendy (A), Mest (A)
+                        ennemis.add(niv(new perso_Ikaruga(),     niv));
+                        ennemis.add(niv(new perso_PantherLily(), niv));
+                        ennemis.add(niv(new perso_Midnight(),    niv));
+                        ennemis.add(niv(new perso_Wendy(),       niv));
+                        ennemis.add(niv(new perso_Mest(),        niv));
                     }
                 }
             }
@@ -253,28 +253,28 @@ public class MenuDonjon {
             case EXTREME -> {
                 switch (type) {
                     case OR -> {
-                        // Tank: Erza (S) | DPS: Sting (S), Natsu (A), Angel (A) | Support: Yukino (S)
-                        ennemis.add(niv(new perso_Erza(),      niv));
-                        ennemis.add(niv(new perso_Sting(),   niv));
-                        ennemis.add(niv(new perso_Natsu(),     niv));
-                        ennemis.add(niv(new perso_Angel(),     niv));
+                        // Tank: Azuma (S) | DPS: Zancrow (S), Sting (S) | Support: Ultear (S), Yukino (S)
+                        ennemis.add(niv(new perso_Azuma(),     niv));
+                        ennemis.add(niv(new perso_Zancrow(),   niv));
+                        ennemis.add(niv(new perso_Sting(),     niv));
+                        ennemis.add(niv(new perso_Ultear(),    niv));
                         ennemis.add(niv(new perso_Yukino(),    niv));
                     }
                     case AFFINAGE -> {
-                        // Tank: Rogue (S) | DPS: Mirajane Halphas (SS), Jellal (S) | Support: Jubia (A), Freed (A)
-                        ennemis.add(niv(new perso_Mirajane_Halphas(),           niv));
-                        ennemis.add(niv(new perso_Rogue(),        niv));
+                        // Tank: Erza Knightwalker (S) | DPS: Capricorn (S), Jellal (S) | Support: Meredy (S), Freed (A)
+                        ennemis.add(niv(new perso_ErzaKnightwalker(), niv));
+                        ennemis.add(niv(new perso_Capricorn(),        niv));
                         ennemis.add(niv(new perso_jellal(),           niv));
-                        ennemis.add(niv(new perso_Jubia_4elements(),         niv));
-                        ennemis.add(niv(new perso_Freed(),     niv));
+                        ennemis.add(niv(new perso_Meredy(),           niv));
+                        ennemis.add(niv(new perso_Freed(),            niv));
                     }
                     case XP -> {
-                        // Tank: Ikaruga (A) | DPS: Natsu Etherion (S), Owl (A) | Support: Lucas (SS), Yukino (S)
-                        ennemis.add(niv(new perso_Lucas(),           niv));
-                        ennemis.add(niv(new perso_Yukino(),    niv));
+                        // Tank: Rustyrose (S) | DPS: Loki (S), Natsu Etherion (S), Mirajane (S) | Support: Brain (S)
+                        ennemis.add(niv(new perso_Rustyrose(),      niv));
+                        ennemis.add(niv(new perso_Loki(),           niv));
                         ennemis.add(niv(new perso_Natsu_Etherion(), niv));
-                        ennemis.add(niv(new perso_Owl(),     niv));
-                        ennemis.add(niv(new perso_Ikaruga(),         niv));
+                        ennemis.add(niv(new perso_Mirajane(),       niv));
+                        ennemis.add(niv(new perso_Brain(),          niv));
                     }
                 }
             }

@@ -20,9 +20,9 @@ public class perso_Wolly extends PersonnageBase{
         this.rarete = "C";
         double multiplicateurRarete = 1.00;
         this.vie = 290 * multiplicateurRarete;
-        this.attaque = 130 * multiplicateurRarete;
-        this.defense = 65 * multiplicateurRarete;
-        this.vitesse = 100 * multiplicateurRarete;
+        this.attaque = 145 * multiplicateurRarete;
+        this.defense = 70 * multiplicateurRarete;
+        this.vitesse = 115 * multiplicateurRarete;
         this.taux_critiques = 0.15;
         this.degat_critiques = 1.30;
         this.taux_precisions = 110.00;

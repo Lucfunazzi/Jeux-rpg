@@ -41,19 +41,28 @@ public class perso_Gildarts extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Gildarts fracasse " + cible.getNom() + " d'un Poing Fracassant !");
-        Combat.attaquer(this, cible, log);
+        log.add("Gildarts fracasse toute l'équipe ennemie d'un Poing Fracassant !");
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant()) {
+                double degats = this.getAttaque() * 1.70;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.05, 1), log);
+                }
+            }
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Gildarts désintègre tout sur son passage — Crash !");
-        double degats = this.getAttaque() * 1.60;
+        double degats = this.getAttaque() * 4.00;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
-            Combat.appliquerEffet(this, cible, new ReductionDefense(0.20, 2), log);
+            Combat.appliquerEffet(this, cible, new ReductionDefense(0.50, 2), log);
         }
+        Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
     }
 
     @Override
@@ -64,8 +73,12 @@ public class perso_Gildarts extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.00) * multiplicateurRage;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                double degats = (this.getAttaque() * 3.00) * multiplicateurRage;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
+                    Combat.appliquerEffet(this, ennemi, new Silence(2), log);
+                }
             }
         }
     }

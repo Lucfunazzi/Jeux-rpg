@@ -57,6 +57,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
             log.add(allie.getNom() + " récupère " + String.format("%.0f", soin) + " PV !");
         }
     }
+    Purification.purifierEquipe(equipeAlliee, 3, log);
 
     PersonnageBase ennemiPlusFort = null;
     for (PersonnageBase ennemi : equipeEnnemie) {
@@ -117,7 +118,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     
     @Override
     public void descriptionAttaqueSpeciale() { 
-        System.out.println("Livre des peches capitaux — Attaque une cible à 150% ATK. Soigne l'équipe à hauteur de 20% de leurs PV. "
+        System.out.println("Livre des peches capitaux — Attaque une cible à 150% ATK. Soigne l'équipe à hauteur de 20% de leurs PV (purifie 3 effets negatifs sur chacun). "
                 + "Réduit l'ATK de l'ennemi le plus fort de 10% et la vitesse de tous les ennemis de 10% pendant 3 tours. "
                 + "Augmente l'ATK et la DEF de l'allié le plus faible de 10% pendant 2 tours et s'octroie une Régénération."); 
     }
