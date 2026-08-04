@@ -17,7 +17,7 @@ public class perso_Azuma extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.55;
+        double mult = 1.72;
         this.vie     = 805 * mult;
         this.attaque = 185 * mult;
         this.defense = 184 * mult;

@@ -18,7 +18,7 @@ public class perso_Ultear extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.55;
+        double mult = 1.72;
         this.vie     = 580 * mult;
         this.attaque = 220 * mult;
         this.defense = 120 * mult;

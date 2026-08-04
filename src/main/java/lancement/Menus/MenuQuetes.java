@@ -2,7 +2,6 @@ package lancement.Menus;
 
 import Equipement.PotionEnergie;
 import Joueur.Personnage_principale;
-import Personnage.PersonnageBase;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Quetes.Quete;
@@ -236,27 +235,14 @@ public class MenuQuetes {
         }
 
         Quete q = reclamables.get(choix - 1);
-        q.setReclamee(true);
+        GestionnaireQuetes.ResultatRecompense recompense = ctx.gestionnaireQuetes.reclamerRecompense(ctx, q);
 
         System.out.println("\n>> Recompenses recues pour : " + q.getTitre());
-        if (q.getRecompenseXP() > 0)
-            for (PersonnageBase p : ctx.formation.getEquipe())
-                p.gagnerExperience(q.getRecompenseXP());
-        if (q.getRecompenseOr() > 0)
-            ctx.joueur.ajouterOr(q.getRecompenseOr());
-        if (q.getRecompenseParcheminC() > 0) {
-            ctx.menuRecrutement.ajouterParcheminC(q.getRecompenseParcheminC());
-            System.out.println("  + " + q.getRecompenseParcheminC() + " parchemins C !");
-        }
-        if (q instanceof QueteJournaliere) {
-            ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+        if (recompense.parcheminC() > 0)
+            System.out.println("  + " + recompense.parcheminC() + " parchemins C !");
+        if (recompense.potionEnergie())
             System.out.println("  + 1x " + PotionEnergie.MOYENNE.nom + " !");
-        }
-        for (Quete.RecompenseItem item : q.getRecompensesItems()) {
-            ctx.inventaire.ajouterMateriau(item.nom(), item.quantite());
+        for (Quete.RecompenseItem item : recompense.items())
             System.out.println("  + " + item.quantite() + "x " + item.nom() + " !");
-        }
-
-        ctx.sauvegarde.sauvegarder(ctx);
     }
 }

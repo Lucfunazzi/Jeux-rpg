@@ -17,7 +17,7 @@ public class perso_ErzaKnightwalker extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.55;
+        double mult = 1.66;
         this.vie     = 1161 * mult;
         this.attaque =  185 * mult;
         this.defense =  242 * mult;

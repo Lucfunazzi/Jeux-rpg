@@ -1,6 +1,7 @@
 package lancement.Menus;
 
 import lancement.Chapitres.Chapitre;
+import lancement.Chapitres.CourbeChapitres;
 import lancement.ChapitreElite.ChapitreElite;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireEtoiles;
@@ -39,7 +40,7 @@ public class MenuHistoire {
             System.out.println("            CHAPITRES");
             System.out.println("========================================");
 
-            for (int i = 1; i <= ctx.chapitres.size(); i++) {
+            for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_VISIBLES; i++) {
                 if (chapitreNormalDebloque(ctx, i)) {
                     Chapitre c = ctx.chapitres.get(i - 1);
                     afficherLigneChapitreAvecCoffres(ctx, i, false,
@@ -57,7 +58,7 @@ public class MenuHistoire {
             boolean coffres  = choix.endsWith("c");
             Integer numero   = parseNumeroChapitre(coffres ? choix.substring(0, choix.length() - 1) : choix);
 
-            if (numero == null || numero < 1 || numero > ctx.chapitres.size() || !chapitreNormalDebloque(ctx, numero)) {
+            if (numero == null || numero < 1 || numero > CourbeChapitres.NB_CHAPITRES_VISIBLES || !chapitreNormalDebloque(ctx, numero)) {
                 System.out.println("Choix invalide.");
                 continue;
             }
@@ -67,9 +68,13 @@ public class MenuHistoire {
         }
     }
 
-    /** Vrai si le chapitre normal `numero` est accessible (chapitre 1, ou chapitre precedent termine). */
+    /**
+     * Vrai si le chapitre normal `numero` est accessible : chapitre precedent termine
+     * (ou chapitre 1) ET niveau joueur suffisant (voir CourbeChapitres).
+     */
     private boolean chapitreNormalDebloque(GameContext ctx, int numero) {
-        return numero == 1 || ctx.chapitres.get(numero - 2).getStagesReussis()[10];
+        boolean sequentiel = numero == 1 || ctx.chapitres.get(numero - 2).getStagesReussis()[10];
+        return sequentiel && ctx.joueur.getNiveau() >= CourbeChapitres.niveauRequis(numero);
     }
 
     // ── Onglet Chapitres Elite ────────────────────────────────────────────
@@ -81,7 +86,7 @@ public class MenuHistoire {
             System.out.println("          CHAPITRES ELITE");
             System.out.println("========================================");
 
-            for (int i = 1; i <= ctx.chapitresElite.size(); i++) {
+            for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_ELITE_VISIBLES; i++) {
                 ChapitreElite ce = ctx.chapitresElite.get(i - 1);
                 if (ce.estDebloque()) {
                     afficherLigneChapitreAvecCoffres(ctx, i, true, i + ". Chapitre " + i + " Elite", true);
@@ -100,7 +105,7 @@ public class MenuHistoire {
             boolean coffres = choix.endsWith("c");
             Integer numero  = parseNumeroChapitre(coffres ? choix.substring(0, choix.length() - 1) : choix);
 
-            if (numero == null || numero < 1 || numero > ctx.chapitresElite.size()) {
+            if (numero == null || numero < 1 || numero > CourbeChapitres.NB_CHAPITRES_ELITE_VISIBLES) {
                 System.out.println("Choix invalide.");
                 continue;
             }

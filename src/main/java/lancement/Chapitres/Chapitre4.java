@@ -94,43 +94,46 @@ public class Chapitre4 implements Chapitre {
             case 1 -> lancerStage1AvecEquipeHeros(ctx, stage, estNouveau);
             // Stage 2 : pas d'invite, l'equipe du joueur affronte seule les gardes generiques.
             case 3 -> {
-                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 47, 3600, 1050, 480, 210);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, CourbeChapitres.niveauEnnemiPourStage(4, 3), 3600, 1050, 480, 210);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4 -> {
-                perso_Erza invite = Formation.creerInvite(perso_Erza::new, 47, 4200, 950, 650, 190);
+                perso_Erza invite = Formation.creerInvite(perso_Erza::new, CourbeChapitres.niveauEnnemiPourStage(4, 4), 4200, 950, 650, 190);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 5 -> {
-                perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, 48, 3300, 650, 420, 200);
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 5);
+                perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, niv, 3300, 650, 420, 200);
 
-                perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, 48, 3500, 750, 500, 198);
+                perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, niv, 3500, 750, 500, 198);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, lucy, jubia);
             }
             case 6 -> {
-                perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, 48, 3600, 1050, 480, 210);
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 6);
+                perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, niv, 3600, 1050, 480, 210);
 
                 // Simon vient de devoiler sa veritable allegeance : il combat desormais a nos cotes.
-                perso_Simon simon = Formation.creerInvite(perso_Simon::new, 48, 4000, 700, 900, 170);
+                perso_Simon simon = Formation.creerInvite(perso_Simon::new, niv, 4000, 700, 900, 170);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, natsu, simon);
             }
             case 7 -> {
-                perso_Erza erza = Formation.creerInvite(perso_Erza::new, 49, 4200, 950, 650, 190);
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 7);
+                perso_Erza erza = Formation.creerInvite(perso_Erza::new, niv, 4200, 950, 650, 190);
 
-                perso_Shaw shaw = Formation.creerInvite(perso_Shaw::new, 49, 3600, 800, 550, 200);
+                perso_Shaw shaw = Formation.creerInvite(perso_Shaw::new, niv, 3600, 800, 550, 200);
 
                 yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, erza, shaw);
             }
             case 8 -> lancerStage8AvecErza(ctx, stage, estNouveau);
             case 9 -> {
                 // Simon (desormais alliee) prete main forte a l'equipe pour l'assaut sur Jellal.
-                perso_Simon invite = Formation.creerInvite(perso_Simon::new, 49, 4000, 700, 900, 170);
+                perso_Simon invite = Formation.creerInvite(perso_Simon::new, CourbeChapitres.niveauEnnemiPourStage(4, 9), 4000, 700, 900, 170);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 10 -> {
-                perso_Natsu_Etherion invite = Formation.creerInvite(perso_Natsu_Etherion::new, 51, 4800, 1400, 650, 230);
+                perso_Natsu_Etherion invite = Formation.creerInvite(perso_Natsu_Etherion::new, CourbeChapitres.niveauEnnemiPourStage(4, 10), 4800, 1400, 650, 230);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
@@ -161,96 +164,105 @@ public class Chapitre4 implements Chapitre {
 
             // Stage 1 — Infiltration de la Tour du Paradis (combat natsu,gray,jubia,lucy et erza contre wolly miliana shaw et simon)
             case 1 -> {
-                e.add(new EnnemiWolly(45));
-                e.add(new EnnemiMiliana(45));
-                e.add(new EnnemiShaw(45));
-                e.add(new EnnemiSimon(46));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 1);
+                e.add(new EnnemiWolly(niv));
+                e.add(new EnnemiMiliana(niv));
+                e.add(new EnnemiShaw(niv));
+                e.add(new EnnemiSimon(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 return new Stage(1, "Embuscade dans le casino", 1900, 62, e);
             }
 
             // Stage 2 — gardes generiques
             case 2 -> {
-                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 45));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 45));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_4, 45));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 45));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 2);
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 return new Stage(2, "Infiltration dans la tour du paradis", 2150, 64, e);
             }
 
             // Stage 3 — Natsu vs Wolly + Miliana + gardes generiques
             case 3 -> {
-                e.add(new EnnemiMiliana(47));
-                e.add(new EnnemiWolly(46));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 45));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 3);
+                e.add(new EnnemiMiliana(niv));
+                e.add(new EnnemiWolly(niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 return new Stage(3, "Miaou, Il faut sauver Happy", 2400, 66, e);
             }
 
             // Stage 4 — Erza contre Shaw (encore sous emprise) + gardes generiques
             case 4 -> {
-                e.add(new EnnemiShaw(47));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 46));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 46));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 4);
+                e.add(new EnnemiShaw(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 return new Stage(4, "Libération d'erza", 2700, 68, e);
             }
 
             // Stage 5 —  Lucy + jubia vs Vivaldus + gardes generiques
             case 5 -> {
-                e.add(new EnnemiVivaldus(48));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 46));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 5);
+                e.add(new EnnemiVivaldus(niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 return new Stage(5, "Les esprits et l'eau", 3050, 70, e);
             }
 
             // Stage 6 — Natsu et Simon contre Owl + gardes generiques
             case 6 -> {
-                e.add(new EnnemiOwl(48));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 47));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, 47));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 6);
+                e.add(new EnnemiOwl(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
                 return new Stage(6, "Le hiboux assasin", 3450, 72, e);
             }
 
             // Stage 7 — Erza + Shaw vs Ikaruga + gardes generiques
             case 7 -> {
-                e.add(new EnnemiIkaruga(47));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 48));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 7);
+                e.add(new EnnemiIkaruga(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
                 return new Stage(7, "Epée contre Epée", 3900, 74, e);
             }
 
             // Stage 8 — Combat scripte : Erza seule contre Jellal
             case 8 -> {
-                e.add(new EnnemiJellal(51));
+                e.add(new EnnemiJellal(CourbeChapitres.niveauEnnemiPourStage(4, 8)));
                 return new Stage(8, "Erza contre Jellal — Le Passe Ressurgit", 4950, 80, e);
             }
 
             // Stage 9 — Simon (alliee) + equipe contre Jellal + gardes generiques
             case 9 -> {
-                e.add(new EnnemiJellal(49));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 48));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 48));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 9);
+                e.add(new EnnemiJellal(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 82, e);
             }
 
             // Stage 10 — Natsu Etherion vs Jellal + gardes generiques
             case 10 -> {
-                e.add(new EnnemiJellal(52));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, 50));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, 50));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, 50));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, 50));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(4, 10);
+                e.add(new EnnemiJellal(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
                 return new Stage(10, "Jellal — L'Effondrement de la Tour du Paradis", 6500, 84, e);
             }
 
@@ -320,19 +332,20 @@ public class Chapitre4 implements Chapitre {
     private Stage.ResultatStage lancerStage1AvecEquipeHeros(GameContext ctx, Stage stage, boolean estNouveau) {
         // Combat scripte : notre formation n'intervient pas, l'embuscade oppose l'equipe
         // partie en mission (Erza, Jubia, Lucy, Gray, Natsu) a Wolly, Miliana, Shaw et Simon.
-        perso_Erza erza = Formation.creerInvite(perso_Erza::new, 45, 4200, 950, 650, 190);
+        int niv = CourbeChapitres.niveauEnnemiPourStage(4, 1);
+        perso_Erza erza = Formation.creerInvite(perso_Erza::new, niv, 4200, 950, 650, 190);
         EquipementFactory.equiperSetStandard(erza, EquipementFactory.rareteEnnemiPourNiveau(erza.getNiveau()));
 
-        perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, 45, 3500, 750, 500, 198);
+        perso_Jubia_4elements jubia = Formation.creerInvite(perso_Jubia_4elements::new, niv, 3500, 750, 500, 198);
         EquipementFactory.equiperSetStandard(jubia, EquipementFactory.rareteEnnemiPourNiveau(jubia.getNiveau()));
 
-        perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, 45, 3300, 650, 420, 200);
+        perso_Lucy lucy = Formation.creerInvite(perso_Lucy::new, niv, 3300, 650, 420, 200);
         EquipementFactory.equiperSetStandard(lucy, EquipementFactory.rareteEnnemiPourNiveau(lucy.getNiveau()));
 
-        perso_Gray gray = Formation.creerInvite(perso_Gray::new, 45, 3700, 1000, 550, 195);
+        perso_Gray gray = Formation.creerInvite(perso_Gray::new, niv, 3700, 1000, 550, 195);
         EquipementFactory.equiperSetStandard(gray, EquipementFactory.rareteEnnemiPourNiveau(gray.getNiveau()));
 
-        perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, 45, 3600, 1050, 480, 210);
+        perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, niv, 3600, 1050, 480, 210);
         EquipementFactory.equiperSetStandard(natsu, EquipementFactory.rareteEnnemiPourNiveau(natsu.getNiveau()));
 
         ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();
@@ -353,8 +366,8 @@ public class Chapitre4 implements Chapitre {
 
     private Stage.ResultatStage lancerStage8AvecErza(GameContext ctx, Stage stage, boolean estNouveau) {
         // Combat scripte : notre formation n'intervient pas, seule Erza affronte Jellal.
-        // Stats relevees pour rester competitives face a Jellal(51) (~6200 PV / 2580 ATK avec la formule).
-        perso_Erza erza = Formation.creerInvite(perso_Erza::new, 51, 6800, 2300, 1500, 210);
+        // Stats relevees pour rester competitives face a Jellal (~6200 PV / 2580 ATK avec la formule).
+        perso_Erza erza = Formation.creerInvite(perso_Erza::new, CourbeChapitres.niveauEnnemiPourStage(4, 8), 6800, 2300, 1500, 210);
         EquipementFactory.equiperSetStandard(erza, EquipementFactory.rareteEnnemiPourNiveau(erza.getNiveau()));
 
         ArrayList<PersonnageBase> equipeFixe = new ArrayList<>();

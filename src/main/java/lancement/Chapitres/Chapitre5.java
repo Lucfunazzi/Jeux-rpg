@@ -85,39 +85,40 @@ public class Chapitre5 implements Chapitre {
         boolean estNouveau = !stagesReussis[numero];
        Stage.ResultatStage resultatStage = switch (numero) {
            case 3 ->{
-               perso_Elfman invite = Formation.creerInvite(perso_Elfman::new,55,5000,800,600,200);
+               perso_Elfman invite = Formation.creerInvite(perso_Elfman::new,CourbeChapitres.niveauEnnemiPourStage(5, 3),5000,800,600,200);
                yield lancerStageAvecInvite(ctx,stage,estNouveau,invite);
            }
            case 4 -> {
-               perso_Gray invite = Formation.creerInvite(perso_Gray::new, 56, 4500, 950, 450, 220);
+               perso_Gray invite = Formation.creerInvite(perso_Gray::new, CourbeChapitres.niveauEnnemiPourStage(5, 4), 4500, 950, 450, 220);
                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
            }
            case 5 -> {
-               perso_Lucy invite = Formation.creerInvite(perso_Lucy::new, 56, 4800, 750, 400, 240);
+               perso_Lucy invite = Formation.creerInvite(perso_Lucy::new, CourbeChapitres.niveauEnnemiPourStage(5, 5), 4800, 750, 400, 240);
                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
            }
            case 6 -> {
-               perso_Erza invite = Formation.creerInvite(perso_Erza::new, 57, 5500, 850, 750, 210);
+               perso_Erza invite = Formation.creerInvite(perso_Erza::new, CourbeChapitres.niveauEnnemiPourStage(5, 6), 5500, 850, 750, 210);
                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
            }
            case 7 -> {
                // Combat scripte : Mirajane affronte seule Freed (et ses mobs), l'equipe du joueur n'intervient pas.
-               perso_Mirajane mirajane = Formation.creerInvite(perso_Mirajane::new, 57, 7000, 1300, 550, 240);
+               perso_Mirajane mirajane = Formation.creerInvite(perso_Mirajane::new, CourbeChapitres.niveauEnnemiPourStage(5, 7), 25000, 15000, 1800, 800);
                yield lancerStageSolo(ctx, stage, estNouveau, mirajane);
            }
            case 8 -> {
-               perso_Erza invite = Formation.creerInvite(perso_Erza::new, 58, 5800, 900, 800, 220);
+               perso_Erza invite = Formation.creerInvite(perso_Erza::new, CourbeChapitres.niveauEnnemiPourStage(5, 8), 5800, 900, 800, 220);
                yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
            }
            case 9 -> {
                // Combat scripte 1 vs 1 : Mistgun (Jellal infiltre sous un autre nom) affronte seul Luxus.
-               perso_jellal mistgun = Formation.creerInvite(perso_jellal::new, 58, 6500, 1400, 500, 270);
+               perso_jellal mistgun = Formation.creerInvite(perso_jellal::new, CourbeChapitres.niveauEnnemiPourStage(5, 9), 6500, 1400, 500, 270);
                mistgun.setNom("Mistgun");
                yield lancerStageSolo(ctx, stage, estNouveau, mistgun);
            }
            case 10 -> {
-               perso_Natsu natsu     = Formation.creerInvite(perso_Natsu::new, 59, 5000, 1050, 480, 230);
-               perso_Gajeel gadjeel  = Formation.creerInvite(perso_Gajeel::new, 59, 5200, 1000, 520, 200);
+               int niv = CourbeChapitres.niveauEnnemiPourStage(5, 10);
+               perso_Natsu natsu     = Formation.creerInvite(perso_Natsu::new, niv, 5000, 1050, 480, 230);
+               perso_Gajeel gadjeel  = Formation.creerInvite(perso_Gajeel::new, niv, 5200, 1000, 520, 200);
                yield lancerStageAvecDeuxInvites(ctx, stage, estNouveau, natsu, gadjeel);
            }
             default -> stage.lancer(ctx,ctx.formation.getEquipe(),estNouveau);
@@ -148,77 +149,86 @@ public class Chapitre5 implements Chapitre {
 
         return switch (numero) {
             case 1  -> {
-                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5,54));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, 54));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, 54));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, 54));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, 54));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 1);
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5,niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 yield new Stage(1,  "Le début de la bataille de Fairy Tail",  7200, 90, e);
               }
 
             case 2  ->{
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5,55));
-                e.add (new EnnemiMage1DPS(Variante.CHAPITRE_5,55));
-                e.add (new EnnemiMage2DPS(Variante.CHAPITRE_5,55));
-                e.add (new EnnemiMage8DPS(Variante.CHAPITRE_5,55));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5,55));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 2);
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5,niv));
+                e.add (new EnnemiMage1DPS(Variante.CHAPITRE_5,niv));
+                e.add (new EnnemiMage2DPS(Variante.CHAPITRE_5,niv));
+                e.add (new EnnemiMage8DPS(Variante.CHAPITRE_5,niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5,niv));
 
 
               yield new Stage(2,  "En route pour sauver les femmes de Fairy Tail",  7500, 94, e);
 
             }
             case 3  -> {
-                e.add(new EnnemiEvergreen(55));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, 55));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, 55));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, 55));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 3);
+                e.add(new EnnemiEvergreen(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 yield new Stage(3, "Elfman vs Evergreen", 7800, 98, e);
             }
             case 4  -> {
-                e.add(new EnnemiBixrow(56));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, 56));
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, 56));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, 56));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 4);
+                e.add(new EnnemiBixrow(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
                 yield new Stage(4, "Gray vs Bixrow", 8100, 102, e);
             }
             case 5  -> {
-                e.add(new EnnemiBixrow(56));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, 56));
-                e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, 56));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, 56));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 5);
+                e.add(new EnnemiBixrow(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 yield new Stage(5, "Lucy vs Bixrow", 8400, 106, e);
             }
             case 6  -> {
-                e.add(new EnnemiEvergreen(57));
-                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5, 57));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, 57));
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, 57));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 6);
+                e.add(new EnnemiEvergreen(niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
                 yield new Stage(6, "Erza contre Evergreen", 8700, 110, e);
             }
             case 7  -> {
-                e.add(new EnnemiFreed(57));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_5, 57));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, 57));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 7);
+                e.add(new EnnemiFreed(niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 yield new Stage(7, "Mirajane vs Freed", 9000, 114, e);
             }
             case 8  -> {
-                e.add(new EnnemiLuxus(58));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, 58));
-                e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, 58));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, 58));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 8);
+                e.add(new EnnemiLuxus(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
                 yield new Stage(8, "Erza vs Luxus", 9300, 118, e);
             }
             case 9  -> {
                 // Combat scripte 1 vs 1 : pas de mobs generiques.
-                e.add(new EnnemiLuxus(58));
+                e.add(new EnnemiLuxus(CourbeChapitres.niveauEnnemiPourStage(5, 9)));
                 yield new Stage(9, "Mistgun vs Luxus", 9600, 122, e);
             }
             case 10 -> {
-                e.add(new EnnemiLuxus(59));
-                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5, 59));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, 59));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, 59));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, 59));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(5, 10);
+                e.add(new EnnemiLuxus(niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
                 yield new Stage(10, "Natsu et Gadjeel vs Luxus", 10000, 130, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);

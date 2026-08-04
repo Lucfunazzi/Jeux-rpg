@@ -226,6 +226,59 @@ public class GestionnaireArene {
         }
     }
 
+    // ── Coffre journalier ──────────────────────────────────────────────────
+    // Le coffre s'ouvre a partir de 20h et une seule fois par "jour d'arene" (qui commence a
+    // 20h, pas a minuit) : avant 20h, le jour courant compte encore comme la veille.
+
+    /** Vrai si le coffre journalier n'a pas encore ete reclame pour le jour d'arene en cours. */
+    public boolean coffreJournalierDisponible(lancement.GameContext ctx) {
+        if (java.time.LocalDateTime.now().getHour() < 20) return false;
+        String derniereCle = ctx.dernierCoffreArene != null ? ctx.dernierCoffreArene : "";
+        return !cleJourCoffre().equals(derniereCle);
+    }
+
+    private String cleJourCoffre() {
+        java.time.LocalDate aujourd = java.time.LocalDate.now();
+        if (java.time.LocalDateTime.now().getHour() < 20) aujourd = aujourd.minusDays(1);
+        return aujourd.toString();
+    }
+
+    /** Recompense du coffre journalier d'Arene pour un rang donne, avant application. */
+    public record RecompenseCoffreJournalier(int pointsBoutique, int or, int coupons, String tranche) {}
+
+    private RecompenseCoffreJournalier calculerRecompenseCoffre(int rang) {
+        if (rang == 1)   return new RecompenseCoffreJournalier(15_000, 110_000, 50, "Rang #1 — Légendaire");
+        if (rang <= 4)   return new RecompenseCoffreJournalier(11_000, 100_000, 0, "Rang #2–4 — Élite");
+        if (rang <= 9)   return new RecompenseCoffreJournalier(10_000, 90_000, 0, "Rang #5–9 — Maître");
+        if (rang <= 24)  return new RecompenseCoffreJournalier(7_000, 60_000, 0, "Rang #10–24 — Expert");
+        if (rang <= 49)  return new RecompenseCoffreJournalier(5_000, 40_000, 0, "Rang #25–49 — Avancé");
+        if (rang <= 74)  return new RecompenseCoffreJournalier(2_500, 20_000, 0, "Rang #50–74 — Intermédiaire");
+        return new RecompenseCoffreJournalier(1_500, 10_000, 0, "Rang #75–100 — Débutant");
+    }
+
+    /**
+     * Reclame le coffre journalier d'Arene pour {@code joueurArene} : calcule la recompense
+     * selon son rang, l'applique (points boutique, or, coupons), marque le coffre reclame pour
+     * aujourd'hui, uploade le nouveau rang et sauvegarde. Retourne {@code null} si le coffre
+     * n'est pas encore disponible (a verifier au prealable avec {@link #coffreJournalierDisponible}).
+     * Logique partagee entre MenuArene (console) et EcranAreneController (GUI).
+     */
+    public RecompenseCoffreJournalier reclamerCoffreJournalier(AreneData joueurArene, lancement.GameContext ctx) {
+        if (!coffreJournalierDisponible(ctx)) return null;
+
+        RecompenseCoffreJournalier recompense = calculerRecompenseCoffre(joueurArene.getRang());
+
+        joueurArene.ajouterPointsBoutique(recompense.pointsBoutique());
+        ctx.joueur.ajouterOr(recompense.or());
+        if (recompense.coupons() > 0) ctx.joueur.setCoupons(ctx.joueur.getCoupons() + recompense.coupons());
+
+        ctx.dernierCoffreArene = cleJourCoffre();
+        uploaderRangJoueur(joueurArene);
+        ctx.sauvegarde.sauvegarder(ctx);
+
+        return recompense;
+    }
+
     // ── Logique de rang ───────────────────────────────────────────────────
 
     public List<AreneData> getAdversairesVisibles(int rangJoueur) {

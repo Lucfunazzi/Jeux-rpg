@@ -19,7 +19,7 @@ public class perso_Midnight extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.42;
+        double mult = 1.44;
         this.vie     = 440 * mult;
         this.attaque = 190 * mult;
         this.defense = 100 * mult;

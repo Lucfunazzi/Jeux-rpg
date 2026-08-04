@@ -17,7 +17,7 @@ public class perso_Sugarboy extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.48;
         this.vie     = 580 * mult;
         this.attaque = 140 * mult;
         this.defense = 160 * mult;

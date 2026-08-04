@@ -18,7 +18,7 @@ public class perso_Ren extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.44;
         this.vie     = 400 * mult;
         this.attaque = 175 * mult;
         this.defense =  90 * mult;

@@ -134,10 +134,9 @@ public class Chapitre2Elite implements ChapitreElite {
         return resultatStage;
     }
 
-    // Palier de niveau du chapitre 2 Elite : les ennemis vont de niveau 21 (stage 1) a 30 (stage 10).
-    private static final int PALIER_NIVEAU = 20;
-
-    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
+    private int niveauPourStage(int numero) {
+        return lancement.Chapitres.CourbeChapitres.niveauEnnemiEliteLineairePourStage(2, numero);
+    }
 
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();

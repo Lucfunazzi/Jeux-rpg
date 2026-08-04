@@ -14,7 +14,7 @@ public class perso_Kawazu extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "B";
         this.niveau = 1;
-        double mult = 1.30;
+        double mult = 1.52;
         this.vie     = 430 * mult;
         this.attaque = 165 * mult;
         this.defense = 109 * mult;

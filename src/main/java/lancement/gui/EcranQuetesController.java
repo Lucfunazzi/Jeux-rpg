@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import Personnage.PersonnageBase;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Quetes.Quete;
@@ -228,31 +227,20 @@ public class EcranQuetesController {
     }
 
     private void reclamer(Quete q) {
-        q.setReclamee(true);
+        GestionnaireQuetes.ResultatRecompense recompense = ctx.gestionnaireQuetes.reclamerRecompense(ctx, q);
 
         StringBuilder message = new StringBuilder("Récompenses reçues pour : " + q.getTitre() + "\n");
-        if (q.getRecompenseXP() > 0) {
-            for (PersonnageBase p : ctx.formation.getEquipe()) p.gagnerExperience(q.getRecompenseXP());
-            message.append("+ ").append(q.getRecompenseXP()).append(" XP a toute la formation\n");
-        }
-        if (q.getRecompenseOr() > 0) {
-            ctx.joueur.ajouterOr(q.getRecompenseOr());
-            message.append("+ ").append(q.getRecompenseOr()).append(" or\n");
-        }
-        if (q.getRecompenseParcheminC() > 0) {
-            ctx.menuRecrutement.ajouterParcheminC(q.getRecompenseParcheminC());
-            message.append("+ ").append(q.getRecompenseParcheminC()).append(" parchemins C\n");
-        }
-        if (q instanceof QueteJournaliere) {
-            ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+        if (recompense.xp() > 0)
+            message.append("+ ").append(recompense.xp()).append(" XP a toute la formation\n");
+        if (recompense.or() > 0)
+            message.append("+ ").append(recompense.or()).append(" or\n");
+        if (recompense.parcheminC() > 0)
+            message.append("+ ").append(recompense.parcheminC()).append(" parchemins C\n");
+        if (recompense.potionEnergie())
             message.append("+ 1x ").append(PotionEnergie.MOYENNE.nom).append("\n");
-        }
-        for (Quete.RecompenseItem item : q.getRecompensesItems()) {
-            ctx.inventaire.ajouterMateriau(item.nom(), item.quantite());
+        for (Quete.RecompenseItem item : recompense.items())
             message.append("+ ").append(item.quantite()).append("x ").append(item.nom()).append("\n");
-        }
 
-        ctx.sauvegarde.sauvegarder(ctx);
         info("Quêtes", message.toString().trim());
         rafraichir();
     }

@@ -55,25 +55,23 @@ public class EcranRecrutementController {
 
         FlowPane pagesGrille = new FlowPane(12, 12);
         pagesGrille.setAlignment(Pos.CENTER);
-        boolean unePageAjoutee = false;
-        for (int page = 1; page <= 5; page++) {
-            int niveauRequis = MenuRecrutement.getNiveauRequisPage(page);
-            if (niveau < niveauRequis) continue;
-            unePageAjoutee = true;
-            String rang = MenuRecrutement.getRangPage(page);
-            int pageFinal = page;
+        boolean unRangAjoute = false;
+        for (String rang : List.of("C", "B", "A", "S")) {
+            if (niveau < MenuRecrutement.getNiveauRequisRang(rang)) continue;
+            unRangAjoute = true;
 
-            List<String[]> personnagesPage = MenuRecrutement.getPage(page);
-            long recrutes = personnagesPage.stream()
+            List<String[]> personnagesRang = MenuRecrutement.getPersonnagesDuRang(rang);
+            long recrutes = personnagesRang.stream()
                     .filter(info -> ctx.personnagesRecruites.stream()
                             .anyMatch(p -> p.getNom().equalsIgnoreCase(info[0])))
                     .count();
 
-            pagesGrille.getChildren().add(cartePage(page, rang, (int) recrutes, personnagesPage.size(),
-                    e -> ouvrirPage(e, pageFinal)));
+            int premierePage = MenuRecrutement.getPremierePageDuRang(rang);
+            pagesGrille.getChildren().add(carteRang(rang, (int) recrutes, personnagesRang.size(),
+                    e -> ouvrirPage(e, premierePage)));
         }
-        if (unePageAjoutee) {
-            boutonsBox.getChildren().add(titreSection("Pages de recrutement"));
+        if (unRangAjoute) {
+            boutonsBox.getChildren().add(titreSection("Recrutement"));
             boutonsBox.getChildren().add(pagesGrille);
         }
 
@@ -86,8 +84,7 @@ public class EcranRecrutementController {
         mjGrille.setAlignment(Pos.CENTER);
         boolean uneManche = false;
         for (String rang : List.of("C", "B", "A", "S")) {
-            int page = switch (rang) { case "C" -> 1; case "B" -> 2; case "A" -> 3; default -> 5; };
-            if (niveau < MenuRecrutement.getNiveauRequisPage(page)) continue;
+            if (niveau < MenuRecrutement.getNiveauRequisRang(rang)) continue;
             uneManche = true;
 
             int cout = switch (rang) {
@@ -113,10 +110,10 @@ public class EcranRecrutementController {
         return l;
     }
 
-    /** Carte de page de recrutement : badge de rang + titre + barre de progression des recrues. */
-    private Node cartePage(int page, String rang, int recrutes, int total, javafx.event.EventHandler<MouseEvent> action) {
+    /** Carte de recrutement d'un rang : badge de rang + titre + barre de progression des recrues (toutes pages confondues). */
+    private Node carteRang(String rang, int recrutes, int total, javafx.event.EventHandler<MouseEvent> action) {
         Label badge = GuiVisuels.creerBadgeRarete(rang);
-        Label titreLabel = new Label("Page " + page);
+        Label titreLabel = new Label("Recrutement " + rang);
         titreLabel.getStyleClass().add("item-nom");
         HBox entete = new HBox(8, badge, titreLabel);
         entete.setAlignment(Pos.CENTER_LEFT);

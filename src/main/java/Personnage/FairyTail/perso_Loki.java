@@ -18,7 +18,7 @@ public class perso_Loki extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.55;
+        double mult = 1.60;
         this.vie     = 560 * mult;
         this.attaque = 215 * mult;
         this.defense = 126 * mult;

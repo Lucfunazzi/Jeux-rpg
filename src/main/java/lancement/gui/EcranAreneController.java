@@ -2,8 +2,6 @@ package lancement.gui;
 
 import Personnage.PersonnageBase;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
@@ -143,69 +141,22 @@ public class EcranAreneController {
     }
 
     private void onCoffre() {
-        if (!isCoffreDisponible()) {
+        GestionnaireArene.RecompenseCoffreJournalier recompense = gestionnaireArene.reclamerCoffreJournalier(joueurArene, ctx);
+        if (recompense == null) {
             info("Coffre journalier", "Le coffre sera disponible a 20h !");
             return;
         }
 
-        int rang = joueurArene.getRang();
-        int pointsBoutique;
-        int or;
-        int coupons = 0;
-        String tranche;
-
-        if (rang == 1) {
-            pointsBoutique = 15_000; or = 110_000; coupons = 50;
-            tranche = "Rang #1 - Legendaire";
-        } else if (rang <= 4) {
-            pointsBoutique = 11_000; or = 100_000;
-            tranche = "Rang #2-4 - Elite";
-        } else if (rang <= 9) {
-            pointsBoutique = 10_000; or = 90_000;
-            tranche = "Rang #5-9 - Maitre";
-        } else if (rang <= 24) {
-            pointsBoutique = 7_000; or = 60_000;
-            tranche = "Rang #10-24 - Expert";
-        } else if (rang <= 49) {
-            pointsBoutique = 5_000; or = 40_000;
-            tranche = "Rang #25-49 - Avance";
-        } else if (rang <= 74) {
-            pointsBoutique = 2_500; or = 20_000;
-            tranche = "Rang #50-74 - Intermediaire";
-        } else {
-            pointsBoutique = 1_500; or = 10_000;
-            tranche = "Rang #75-100 - Debutant";
-        }
-
-        joueurArene.ajouterPointsBoutique(pointsBoutique);
-        ctx.joueur.ajouterOr(or);
-        if (coupons > 0) ctx.joueur.setCoupons(ctx.joueur.getCoupons() + coupons);
-
-        ctx.dernierCoffreArene = getCleJour();
-        gestionnaireArene.uploaderRangJoueur(joueurArene);
-        ctx.sauvegarde.sauvegarder(ctx);
-
-        String message = "Coffre journalier - " + tranche + "\n"
-                + "+ " + String.format("%,d", pointsBoutique) + " points boutique\n"
-                + "+ " + String.format("%,d", or) + " or"
-                + (coupons > 0 ? "\n+ " + coupons + " coupons !" : "");
+        String message = "Coffre journalier - " + recompense.tranche() + "\n"
+                + "+ " + String.format("%,d", recompense.pointsBoutique()) + " points boutique\n"
+                + "+ " + String.format("%,d", recompense.or()) + " or"
+                + (recompense.coupons() > 0 ? "\n+ " + recompense.coupons() + " coupons !" : "");
         info("Coffre journalier", message);
         rafraichir();
     }
 
     private boolean isCoffreDisponible() {
-        if (LocalDateTime.now().getHour() < 20) return false;
-        return !getCleJour().equals(getDerniereCleCoffre());
-    }
-
-    private String getCleJour() {
-        LocalDate aujourd = LocalDate.now();
-        if (LocalDateTime.now().getHour() < 20) aujourd = aujourd.minusDays(1);
-        return aujourd.toString();
-    }
-
-    private String getDerniereCleCoffre() {
-        return ctx.dernierCoffreArene != null ? ctx.dernierCoffreArene : "";
+        return gestionnaireArene.coffreJournalierDisponible(ctx);
     }
 
     private Runnable retourVers(Stage stage) {

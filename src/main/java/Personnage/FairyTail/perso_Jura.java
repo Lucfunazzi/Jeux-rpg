@@ -18,7 +18,7 @@ public class perso_Jura extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "SS";
         this.niveau = 1;
-        double mult = 1.50;
+        double mult = 1.60;
         this.vie     = 1500 * mult;
         this.attaque =  450 * mult;
         this.defense =  350 * mult;

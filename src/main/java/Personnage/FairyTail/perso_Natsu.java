@@ -12,7 +12,7 @@ public class perso_Natsu extends PersonnageBase {
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.40;
+        double multiplicateurRarete = 1.56;
         this.vie = 550 * multiplicateurRarete;
         this.attaque = 200 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;

@@ -71,6 +71,27 @@ public class EcranRecrutementRareController {
                 MenuRecrutementRare.COUT_RECRUTEMENT_GRAY, grayRecru,
                 natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterGray));
 
+        boolean lucyRecru = MenuRecrutementRare.dejaRecruteParNom("Lucy", ctx.personnagesRecruites);
+
+        boutonsBox.getChildren().add(titreSection("Lucy"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Lucy", "Lucy", "A", possedeA,
+                MenuRecrutementRare.COUT_RECRUTEMENT_LUCY, lucyRecru,
+                natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterLucy));
+
+        boolean jubiaRecru = MenuRecrutementRare.dejaRecruteParNom("Jubia", ctx.personnagesRecruites);
+
+        boutonsBox.getChildren().add(titreSection("Jubia"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Jubia", "Jubia", "A", possedeA,
+                MenuRecrutementRare.COUT_RECRUTEMENT_JUBIA, jubiaRecru,
+                natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterJubia));
+
+        boolean wendyRecru = MenuRecrutementRare.dejaRecruteParNom("Wendy", ctx.personnagesRecruites);
+
+        boutonsBox.getChildren().add(titreSection("Wendy"));
+        boutonsBox.getChildren().add(carteRecrutementRare("Wendy", "Wendy", "A", possedeA,
+                MenuRecrutementRare.COUT_RECRUTEMENT_WENDY, wendyRecru,
+                natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterWendy));
+
         boolean miraS  = MenuRecrutementRare.dejaRecruteParNom("Mirajane", ctx.personnagesRecruites);
         boolean miraSS = MenuRecrutementRare.dejaRecruteParNom("Mirajane Halphas", ctx.personnagesRecruites);
         boolean miraJellalVerrouille   = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_MIRAJANE_JELLAL;
@@ -238,6 +259,24 @@ public class EcranRecrutementRareController {
     private void confirmerEtRecruterGray() {
         if (!confirmer("Recruter Gray [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_GRAY + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterGray(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterLucy() {
+        if (!confirmer("Recruter Lucy [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_LUCY + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterLucy(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterJubia() {
+        if (!confirmer("Recruter Jubia [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_JUBIA + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterJubia(ctx));
+        rafraichir();
+    }
+
+    private void confirmerEtRecruterWendy() {
+        if (!confirmer("Recruter Wendy [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_WENDY + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
+        info("Recrutement Rare", menuRecrutementRare.recruterWendy(ctx));
         rafraichir();
     }
 

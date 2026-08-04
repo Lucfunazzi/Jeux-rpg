@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 import lancement.GameContext;
 import lancement.Menus.MenuRecrutement;
 
@@ -28,16 +29,21 @@ public class EcranPageRecrutementController {
     @FXML private Label titreLabel;
     @FXML private VBox statsBox;
     @FXML private VBox persosBox;
+    @FXML private HBox navigationBox;
 
     public void initData(GameContext ctx, int numero, Runnable onRetour) {
         this.ctx = ctx;
         this.numero = numero;
         this.onRetour = onRetour;
-        titreLabel.setText("PAGE " + numero + " - RANG " + MenuRecrutement.getRangPage(numero));
         rafraichir();
     }
 
     private void rafraichir() {
+        String rangPage = MenuRecrutement.getRangPage(numero);
+        int indexDansRang = MenuRecrutement.getIndexPageDansRang(numero);
+        int totalPagesRang = MenuRecrutement.getNombrePagesPourRang(rangPage);
+        titreLabel.setText("RANG " + rangPage + " - PAGE " + indexDansRang + "/" + totalPagesRang);
+
         int requis = MenuRecrutement.getParcheminsRequisPage(numero);
         String rang = MenuRecrutement.getRangPage(numero);
         int actuels = parcheminsActuels(rang);
@@ -56,6 +62,34 @@ public class EcranPageRecrutementController {
             grille.getChildren().add(cartePerso(nom, role, rang, requis, dejaRecrute));
         }
         persosBox.getChildren().add(grille);
+
+        construireNavigation(rangPage, indexDansRang, totalPagesRang);
+    }
+
+    /** Boutons Page precedente / Page suivante : navigation en place, sans recharger l'ecran. */
+    private void construireNavigation(String rang, int indexDansRang, int totalPagesRang) {
+        navigationBox.getChildren().clear();
+
+        if (indexDansRang > 1) {
+            Button precedent = new Button("◀ Page precedente");
+            precedent.getStyleClass().add("menu-bouton");
+            precedent.setOnAction(e -> { numero--; rafraichir(); });
+            navigationBox.getChildren().add(precedent);
+        }
+
+        if (indexDansRang < totalPagesRang) {
+            int numeroSuivant = numero + 1;
+            int niveauRequisSuivant = MenuRecrutement.getNiveauRequisPage(numeroSuivant);
+            boolean debloquee = ctx.joueur.getNiveau() >= niveauRequisSuivant;
+
+            Button suivant = new Button(debloquee
+                    ? "Page suivante ▶"
+                    : "Page suivante (niveau " + niveauRequisSuivant + " requis) 🔒");
+            suivant.getStyleClass().add("menu-bouton");
+            suivant.setDisable(!debloquee);
+            suivant.setOnAction(e -> { numero = numeroSuivant; rafraichir(); });
+            navigationBox.getChildren().add(suivant);
+        }
     }
 
     private Node cartePerso(String nom, String role, String rang, int requis, boolean dejaRecrute) {
@@ -165,29 +199,10 @@ public class EcranPageRecrutementController {
     private void recruter(String nom) {
         int requis = MenuRecrutement.getParcheminsRequisPage(numero);
         String rang = MenuRecrutement.getRangPage(numero);
-        int actuels = parcheminsActuels(rang);
 
-        if (actuels < requis) {
-            info("Recrutement", "Pas assez de parchemins " + rang + " ! (" + actuels + "/" + requis + ")");
-            return;
-        }
-
-        PersonnageBase recrute = ctx.menuRecrutement.creerPersonnage(nom);
-        if (recrute == null) {
-            info("Recrutement", "[ERREUR] Personnage introuvable : " + nom + ". Aucun parchemin deduit.");
-            return;
-        }
-
-        switch (rang) {
-            case "C" -> ctx.menuRecrutement.ajouterParcheminC(-requis);
-            case "B" -> ctx.menuRecrutement.ajouterParcheminB(-requis);
-            case "A" -> ctx.menuRecrutement.ajouterParcheminA(-requis);
-            default  -> ctx.menuRecrutement.ajouterParcheminS(-requis);
-        }
-        ctx.personnagesRecruites.add(recrute);
-        ctx.sauvegarde.sauvegarder(ctx);
-        info("Recrutement", recrute.getNom() + " a rejoint vos allies !");
-        rafraichir();
+        MenuRecrutement.ResultatRecrutement resultat = ctx.menuRecrutement.tenterRecruter(ctx, rang, requis, nom);
+        info("Recrutement", resultat.message());
+        if (resultat.succes()) rafraichir();
     }
 
     @FXML

@@ -18,7 +18,7 @@ public class perso_Hibiki extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.44;
         this.vie     = 414 * mult;
         this.attaque = 165 * mult;
         this.defense = 109 * mult;

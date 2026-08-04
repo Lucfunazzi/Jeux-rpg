@@ -17,7 +17,7 @@ public class perso_Hughes extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.48;
         this.vie     = 460 * mult;
         this.attaque = 185 * mult;
         this.defense =  95 * mult;

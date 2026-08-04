@@ -18,7 +18,7 @@ public class perso_Leon extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "B";
         this.niveau = 1;
-        double mult = 1.30;
+        double mult = 1.18;
         this.vie     = 380 * mult;
         this.attaque = 170 * mult;
         this.defense = 105 * mult;

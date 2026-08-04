@@ -18,7 +18,7 @@ public class perso_Capricorn extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.42;
+        double mult = 1.66;
         this.vie     = 621 * mult;
         this.attaque = 264 * mult;
         this.defense = 120 * mult;

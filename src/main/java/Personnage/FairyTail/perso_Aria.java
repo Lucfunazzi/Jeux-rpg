@@ -19,7 +19,7 @@ public class perso_Aria extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.36;
         this.vie     = 420 * mult;
         this.attaque = 190 * mult;
         this.defense = 110 * mult;

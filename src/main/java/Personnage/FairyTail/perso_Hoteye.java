@@ -17,7 +17,7 @@ public class perso_Hoteye extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.44;
         this.vie     = 575 * mult;
         this.attaque = 150 * mult;
         this.defense = 140 * mult;

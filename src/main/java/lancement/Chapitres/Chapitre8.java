@@ -106,48 +106,53 @@ public class Chapitre8 implements Chapitre {
 
         return switch (numero) {
             case 1 -> {
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, 76));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, 76));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(8, 1);
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, niv));
                 yield new Stage(1, "Prologue examen de rang S", 16800, 218, e);
             }
             case 2 -> {
-                e.add(new EnnemiBixrow(76));
-                e.add(new EnnemiFreed(76));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(8, 2);
+                e.add(new EnnemiBixrow(niv));
+                e.add(new EnnemiFreed(niv));
                 yield new Stage(2, "Lucy et cana vs bixrow et freed", 17100, 222, e);
             }
             case 3 -> {
-                e.add(new EnnemiMirajane(76));
+                e.add(new EnnemiMirajane(CourbeChapitres.niveauEnnemiPourStage(8, 3)));
                 yield new Stage(3, "Elfman et evergreen vs Mirajane", 17400, 226, e);
             }
             case 4 -> {
-                e.add(new EnnemiGildarts(77));
+                e.add(new EnnemiGildarts(CourbeChapitres.niveauEnnemiPourStage(8, 4)));
                 yield new Stage(4, "Natsu vs Gildarts", 17700, 230, e);
             }
             case 5 -> {
-                e.add(new EnnemiJubia(77));
-                e.add(new EnnemiLisanna(77));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(8, 5);
+                e.add(new EnnemiJubia(niv));
+                e.add(new EnnemiLisanna(niv));
                 yield new Stage(5, "Erza vs jubia et lisanna", 18000, 234, e);
             }
             case 6 -> {
-                e.add(new EnnemiMest(77));
-                e.add(new EnnemiWendy(77));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(8, 6);
+                e.add(new EnnemiMest(niv));
+                e.add(new EnnemiWendy(niv));
                 yield new Stage(6, "Gray et Loki vs Mest et Wendy", 18300, 238, e);
             }
             case 7 -> {
-                e.add(new EnnemiKawazu(77));
-                e.add(new EnnemiYamaru(77));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(8, 7);
+                e.add(new EnnemiKawazu(niv));
+                e.add(new EnnemiYamaru(niv));
                 yield new Stage(7, "Gadjeel et Levy vs kawazu et yamaru", 18600, 242, e);
             }
             case 8 -> {
-                e.add(new EnnemiAzuma(78));
+                e.add(new EnnemiAzuma(CourbeChapitres.niveauEnnemiPourStage(8, 8)));
                 yield new Stage(8, "Mest, panthere lilly et wendy vs Asuma", 19000, 247, e);
             }
             case 9 -> {
-                e.add(new EnnemiHades(78));
+                e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(8, 9)));
                 yield new Stage(9, "Le maître de grimoir Heart vs Makarof", 19500, 253, e);
             }
             case 10 -> {
-                e.add(new EnnemiZancrow(78));
+                e.add(new EnnemiZancrow(CourbeChapitres.niveauEnnemiPourStage(8, 10)));
                 yield new Stage(10, "Natsu vs Thuncrow", 20000, 260, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);

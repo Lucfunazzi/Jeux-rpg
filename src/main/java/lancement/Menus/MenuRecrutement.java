@@ -60,6 +60,11 @@ import Personnage.FairyTail.perso_Zero;
 import Personnage.FairyTail.perso_Bluenote;
 import Personnage.FairyTail.perso_Zeref;
 import Personnage.FairyTail.perso_Acnologia;
+import Personnage.FairyTail.perso_Freed;
+import Personnage.FairyTail.perso_Angel;
+import Personnage.FairyTail.perso_Yamaru;
+import Personnage.FairyTail.perso_Kawazu;
+import Personnage.FairyTail.perso_Yukino;
 import Equipement.ParcheminXP;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,77 +74,108 @@ import lancement.GameContext;
 
 public class MenuRecrutement {
 
-    private static final int PARCHEMINS_REQUIS_C  = 150;
-    private static final int PARCHEMINS_REQUIS_B  = 350;
-    private static final int PARCHEMINS_REQUIS_A = 1250;
-    private static final int PARCHEMINS_REQUIS_A2 = 1250;
-    private static final int PARCHEMINS_REQUIS_S  = 3000;
     private static final int COUT_PARCHEMIN_XP_C  = 3;
     private static final int COUT_PARCHEMIN_XP_B  = 8;
-    private static final int NIVEAU_REQUIS_PAGE1  = 6;
-    private static final int NIVEAU_REQUIS_PAGE2  = 30;
-    private static final int NIVEAU_REQUIS_PAGE3 = 50;
-    private static final int NIVEAU_REQUIS_PAGE4 = 60;
-    private static final int NIVEAU_REQUIS_PAGE5 = 70;
 
     // ── Données statiques des personnages recrutables ─────────────────────
     // Évite d'instancier des objets complets juste pour afficher nom + rôle
     private record InfoPerso(String nom, String role) {}
 
-    private static final List<InfoPerso> PAGE1 = List.of(
-        
-        
-      
-       
+    /** Une page de recrutement : un rang, un niveau de déblocage, un coût unitaire, une liste de persos. */
+    private record PageRecrutement(String rang, int niveauRequis, int parcheminsRequis, List<InfoPerso> personnages) {}
+
+    // ── Rang C : 3 pages ────────────────────────────────────────────────────
+    private static final PageRecrutement PAGE_C1 = new PageRecrutement("C", 5, 150, List.of(
+        new InfoPerso("Alzack",      "DPS"),
+        new InfoPerso("Bisca",       "DPS"),
         new InfoPerso("Duc Everlue", "Tank"),
-        new InfoPerso("Eligoal",     "DPS"),
-        new InfoPerso("Cherry",      "Support"),
-        new InfoPerso("Tobi",        "DPS"),
-        new InfoPerso("Yuka",        "Tank"),
-        new InfoPerso("Miliana",     "Support"),
-        new InfoPerso("Wolly",       "DPS")
-    );
+        new InfoPerso("Eligoal",     "DPS")
+    ));
+    private static final PageRecrutement PAGE_C2 = new PageRecrutement("C", 15, 200, List.of(
+        new InfoPerso("Cherry", "Support"),
+        new InfoPerso("Tobi",   "DPS"),
+        new InfoPerso("Yuka",   "Tank")
+    ));
+    private static final PageRecrutement PAGE_C3 = new PageRecrutement("C", 20, 250, List.of(
+        new InfoPerso("Miliana", "Support"),
+        new InfoPerso("Wolly",   "DPS")
+    ));
 
-    private static final List<InfoPerso> PAGE2 = List.of(
+    // ── Rang B : 3 pages ────────────────────────────────────────────────────
+    private static final PageRecrutement PAGE_B1 = new PageRecrutement("B", 30, 250, List.of(
+        new InfoPerso("Leon",     "DPS"),
+        new InfoPerso("Sol",      "Tank"),
+        new InfoPerso("Totomaru", "DPS")
+    ));
+    private static final PageRecrutement PAGE_B2 = new PageRecrutement("B", 35, 300, List.of(
+        new InfoPerso("Levy",    "Support"),
+        new InfoPerso("Elfman",  "Tank"),
+        new InfoPerso("Lisanna", "Support"),
+        new InfoPerso("Kana",    "Support")
+    ));
+    private static final PageRecrutement PAGE_B3 = new PageRecrutement("B", 40, 400, List.of(
+        new InfoPerso("Simon", "Tank"),
+        new InfoPerso("Shaw",  "Support")
+    ));
 
-        new InfoPerso("Kana",        "Support"),
-        new InfoPerso("Levy",        "Support"),
-        new InfoPerso("Lisanna",     "Support"),
-        new InfoPerso("Elfman", "Tank"),
-        new InfoPerso("Leon",        "DPS"),
-        new InfoPerso("Totomaru",    "DPS"),
-        new InfoPerso("Sol",         "Tank"),
-        new InfoPerso("Simon",       "Tank"),
-        new InfoPerso("Shaw",        "Support")
-    );
+    // ── Rang A : 5 pages ────────────────────────────────────────────────────
+    private static final PageRecrutement PAGE_A1 = new PageRecrutement("A", 40, 300, List.of(
+        new InfoPerso("Aria",      "DPS"),
+        new InfoPerso("Ikaruga",   "Tank"),
+        new InfoPerso("Owl",       "DPS"),
+        new InfoPerso("Vivaldus",  "Support")
+    ));
+    private static final PageRecrutement PAGE_A2 = new PageRecrutement("A", 45, 450, List.of(
+        new InfoPerso("Bickslow",  "DPS"),
+        new InfoPerso("Evergreen", "Support"),
+        new InfoPerso("Freed",     "Support")
+    ));
+    private static final PageRecrutement PAGE_A3 = new PageRecrutement("A", 55, 600, List.of(
+        new InfoPerso("Angel",   "DPS"),
+        new InfoPerso("Cobra",   "DPS"),
+        new InfoPerso("Hoteye",  "Tank"),
+        new InfoPerso("Racer",   "DPS"),
+        new InfoPerso("Midnight","DPS"),
+        new InfoPerso("Ren",     "DPS"),
+        new InfoPerso("Eve",     "Support"),
+        new InfoPerso("Hibiki",  "Support")
+    ));
+    private static final PageRecrutement PAGE_A4 = new PageRecrutement("A", 65, 800, List.of(
+        new InfoPerso("Panther Lily", "DPS"),
+        new InfoPerso("Byro",         "Support"),
+        new InfoPerso("Hughes",       "Support"),
+        new InfoPerso("Sugarboy",     "Tank")
+    ));
+    private static final PageRecrutement PAGE_A5 = new PageRecrutement("A", 70, 1000, List.of(
+        new InfoPerso("Meredy", "Support"),
+        new InfoPerso("Mest",   "Support"),
+        new InfoPerso("Yamaru", "Support"),
+        new InfoPerso("Kawazu", "DPS")
+    ));
 
-    private static final List<InfoPerso> PAGE3 = List.of(
-        new InfoPerso("Aria",        "DPS"),
-        new InfoPerso("Lucy", "Support"),
-        new InfoPerso("Jubia (phantom Lord)", "Support"),
-        new InfoPerso("Ikaruga",     "Tank"),
-        new InfoPerso("Owl",         "DPS"),
-        new InfoPerso("Vivaldus",    "Support")
-    );
-
-    // Page 4 — Rang A : personnages d'Edolas et d'Oración Seis.
-    private static final List<InfoPerso> PAGE4 = List.of(
-        new InfoPerso("Cobra",     "DPS"),
-        new InfoPerso("Racer",     "DPS"),
-        new InfoPerso("Hoteye",    "Tank"),
-        new InfoPerso("Midnight",  "DPS"),
-        new InfoPerso("Sugarboy",  "Tank"),
-        new InfoPerso("Hughes",    "DPS"),
-        new InfoPerso("Byro",      "Support")
-    );
-
-    // Page 5 — Rang S : personnages de l'arc de Tenrô (Grimoire Heart) et d'Edolas.
-    private static final List<InfoPerso> PAGE5 = List.of(
+    // ── Rang S : 3 pages ────────────────────────────────────────────────────
+    private static final PageRecrutement PAGE_S1 = new PageRecrutement("S", 70, 1000, List.of(
+        new InfoPerso("Jura", "Tank"),
+        new InfoPerso("Loki", "DPS")
+    ));
+    private static final PageRecrutement PAGE_S2 = new PageRecrutement("S", 75, 1200, List.of(
         new InfoPerso("Erza Knightwalker", "Tank"),
-        new InfoPerso("Azuma",             "Tank"),
         new InfoPerso("Zancrow",           "DPS"),
-        new InfoPerso("Rustyrose",         "Tank"),
-        new InfoPerso("Capricorn",         "DPS")
+        new InfoPerso("Capricorn",         "DPS"),
+        new InfoPerso("Rustyrose",         "Tank")
+    ));
+    private static final PageRecrutement PAGE_S3 = new PageRecrutement("S", 80, 1500, List.of(
+        new InfoPerso("Azuma",  "Tank"),
+        new InfoPerso("Ultear", "Support"),
+        new InfoPerso("Yukino", "Support")
+    ));
+
+    /** Toutes les pages de recrutement, dans l'ordre d'affichage (numéro de page = index + 1). */
+    private static final List<PageRecrutement> PAGES = List.of(
+        PAGE_C1, PAGE_C2, PAGE_C3,
+        PAGE_B1, PAGE_B2, PAGE_B3,
+        PAGE_A1, PAGE_A2, PAGE_A3, PAGE_A4, PAGE_A5,
+        PAGE_S1, PAGE_S2, PAGE_S3
     );
 
     private int parcheminC = 0;
@@ -149,47 +185,62 @@ public class MenuRecrutement {
 
     private final MiniJeuPFC miniJeu = new MiniJeuPFC();
 
-    /** Accès pour l'interface graphique : {nom, role} par page (1 à 5). */
+    /** Nombre total de pages de recrutement (tous rangs confondus). */
+    public static int getNombrePages() { return PAGES.size(); }
+
+    /** Accès pour l'interface graphique : {nom, role} pour la page donnée (1 à getNombrePages()). */
     public static List<String[]> getPage(int numero) {
-        List<InfoPerso> liste = switch (numero) {
-            case 1  -> PAGE1;
-            case 2  -> PAGE2;
-            case 3  -> PAGE3;
-            case 4  -> PAGE4;
-            default -> PAGE5;
-        };
         List<String[]> resultat = new ArrayList<>();
-        for (InfoPerso p : liste) resultat.add(new String[]{p.nom(), p.role()});
+        for (InfoPerso p : PAGES.get(numero - 1).personnages()) resultat.add(new String[]{p.nom(), p.role()});
         return resultat;
     }
 
-    public static int getNiveauRequisPage(int numero) {
-        return switch (numero) {
-            case 1  -> NIVEAU_REQUIS_PAGE1;
-            case 2  -> NIVEAU_REQUIS_PAGE2;
-            case 3  -> NIVEAU_REQUIS_PAGE3;
-            case 4  -> NIVEAU_REQUIS_PAGE4;
-            default -> NIVEAU_REQUIS_PAGE5;
-        };
+    public static int getNiveauRequisPage(int numero) { return PAGES.get(numero - 1).niveauRequis(); }
+
+    public static int getParcheminsRequisPage(int numero) { return PAGES.get(numero - 1).parcheminsRequis(); }
+
+    public static String getRangPage(int numero) { return PAGES.get(numero - 1).rang(); }
+
+    /** Niveau de déblocage de la première page d'un rang donné (C/B/A/S) — utilisé pour le mini-jeu. */
+    public static int getNiveauRequisRang(String rang) {
+        return PAGES.stream()
+                .filter(p -> p.rang().equals(rang))
+                .mapToInt(PageRecrutement::niveauRequis)
+                .min()
+                .orElse(Integer.MAX_VALUE);
     }
 
-    public static int getParcheminsRequisPage(int numero) {
-        return switch (numero) {
-            case 1  -> PARCHEMINS_REQUIS_C;
-            case 2  -> PARCHEMINS_REQUIS_B;
-            case 3  -> PARCHEMINS_REQUIS_A;
-            case 4  -> PARCHEMINS_REQUIS_A2;
-            default -> PARCHEMINS_REQUIS_S;
-        };
+    /** Index de cette page au sein de son rang (1-based) — ex : 2e page de rang C → 2. */
+    public static int getIndexPageDansRang(int numero) {
+        String rang = getRangPage(numero);
+        int index = 0;
+        for (int i = 0; i < numero; i++) {
+            if (PAGES.get(i).rang().equals(rang)) index++;
+        }
+        return index;
     }
 
-    public static String getRangPage(int numero) {
-        return switch (numero) {
-            case 1  -> "C";
-            case 2  -> "B";
-            case 3, 4 -> "A";
-            default -> "S";
-        };
+    /** Nombre total de pages pour un rang donné. */
+    public static int getNombrePagesPourRang(String rang) {
+        return (int) PAGES.stream().filter(p -> p.rang().equals(rang)).count();
+    }
+
+    /** Numéro de la première page (1-based, global) d'un rang donné. */
+    public static int getPremierePageDuRang(String rang) {
+        for (int i = 0; i < PAGES.size(); i++) {
+            if (PAGES.get(i).rang().equals(rang)) return i + 1;
+        }
+        throw new IllegalArgumentException("Rang inconnu : " + rang);
+    }
+
+    /** Tous les personnages {nom, role} de toutes les pages d'un rang donné, dans l'ordre. */
+    public static List<String[]> getPersonnagesDuRang(String rang) {
+        List<String[]> resultat = new ArrayList<>();
+        for (PageRecrutement page : PAGES) {
+            if (!page.rang().equals(rang)) continue;
+            for (InfoPerso p : page.personnages()) resultat.add(new String[]{p.nom(), p.role()});
+        }
+        return resultat;
     }
 
     public int getCoutParcheminXpC() { return COUT_PARCHEMIN_XP_C; }
@@ -201,8 +252,9 @@ public class MenuRecrutement {
     public void afficher(GameContext ctx, Scanner scanner) {
         Personnage_principale joueur = ctx.joueur;
 
-        if (joueur.getNiveau() < NIVEAU_REQUIS_PAGE1) {
-            System.out.println("Le recrutement se debloque au niveau " + NIVEAU_REQUIS_PAGE1 + " !");
+        int niveauRequisPremierePage = getNiveauRequisPage(1);
+        if (joueur.getNiveau() < niveauRequisPremierePage) {
+            System.out.println("Le recrutement se debloque au niveau " + niveauRequisPremierePage + " !");
             return;
         }
 
@@ -221,43 +273,33 @@ public class MenuRecrutement {
                     + "  |  Parchemins S : " + parcheminS);
             System.out.println();
 
-            System.out.println((actions.size() + 1) + ". Page 1 — Rang C");
-            actions.add(() -> afficherPage(ctx, scanner, "C", PAGE1, PARCHEMINS_REQUIS_C, NIVEAU_REQUIS_PAGE1));
+            for (int numero = 1; numero <= getNombrePages(); numero++) {
+                int niveauRequisPage = getNiveauRequisPage(numero);
+                if (niveau < niveauRequisPage) continue;
+                String rang = getRangPage(numero);
+                int indexDansRang = getIndexPageDansRang(numero);
+                int totalPagesRang = getNombrePagesPourRang(rang);
+                List<InfoPerso> personnages = PAGES.get(numero - 1).personnages();
+                int parcheminsRequis = getParcheminsRequisPage(numero);
 
-            if (niveau >= NIVEAU_REQUIS_PAGE2) {
-                System.out.println((actions.size() + 1) + ". Page 2 — Rang B");
-                actions.add(() -> afficherPage(ctx, scanner, "B", PAGE2, PARCHEMINS_REQUIS_B, NIVEAU_REQUIS_PAGE2));
-            }
-            if (niveau >= NIVEAU_REQUIS_PAGE3) {
-                System.out.println((actions.size() + 1) + ". Page 3 — Rang A");
-                actions.add(() -> afficherPage(ctx, scanner, "A", PAGE3, PARCHEMINS_REQUIS_A, NIVEAU_REQUIS_PAGE3));
-            }
-            if (niveau >= NIVEAU_REQUIS_PAGE4) {
-                System.out.println((actions.size() + 1) + ". Page 4 — Rang A (Edolas / Oración Seis)");
-                actions.add(() -> afficherPage(ctx, scanner, "A", PAGE4, PARCHEMINS_REQUIS_A2, NIVEAU_REQUIS_PAGE4));
-            }
-            if (niveau >= NIVEAU_REQUIS_PAGE5) {
-                System.out.println((actions.size() + 1) + ". Page 5 — Rang S (Tenrô)");
-                actions.add(() -> afficherPage(ctx, scanner, "S", PAGE5, PARCHEMINS_REQUIS_S, NIVEAU_REQUIS_PAGE5));
+                System.out.println((actions.size() + 1) + ". Rang " + rang + " — Page " + indexDansRang + "/" + totalPagesRang);
+                actions.add(() -> afficherPage(ctx, scanner, rang, personnages, parcheminsRequis, niveauRequisPage,
+                        indexDansRang, totalPagesRang));
             }
 
             System.out.println((actions.size() + 1) + ". Acheter des Parchemins XP");
             actions.add(() -> menuAchatParcheminXP(ctx, scanner));
 
-            System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang C (" + miniJeu.getCoutPartieC() + " or)");
-            actions.add(() -> menuMiniJeu(ctx, scanner, "C"));
-
-            if (niveau >= NIVEAU_REQUIS_PAGE2) {
-                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang B (" + miniJeu.getCoutPartieB() + " or)");
-                actions.add(() -> menuMiniJeu(ctx, scanner, "B"));
-            }
-            if (niveau >= NIVEAU_REQUIS_PAGE3) {
-                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang A (" + miniJeu.getCoutPartieA() + " or)");
-                actions.add(() -> menuMiniJeu(ctx, scanner, "A"));
-            }
-            if (niveau >= NIVEAU_REQUIS_PAGE5) {
-                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang S (" + miniJeu.getCoutPartieS() + " or)");
-                actions.add(() -> menuMiniJeu(ctx, scanner, "S"));
+            for (String rang : List.of("C", "B", "A", "S")) {
+                if (niveau < getNiveauRequisRang(rang)) continue;
+                int coutMinijeu = switch (rang) {
+                    case "C" -> miniJeu.getCoutPartieC();
+                    case "B" -> miniJeu.getCoutPartieB();
+                    case "A" -> miniJeu.getCoutPartieA();
+                    default  -> miniJeu.getCoutPartieS();
+                };
+                System.out.println((actions.size() + 1) + ". Mini-jeu PFC — Rang " + rang + " (" + coutMinijeu + " or)");
+                actions.add(() -> menuMiniJeu(ctx, scanner, rang));
             }
 
             System.out.println("0. Retour");
@@ -336,13 +378,13 @@ public class MenuRecrutement {
         };
     }
 
+    /** Coût de la moins chère des pages d'un rang (repere affiche apres le mini-jeu). */
     private int getParcheminsRequis(String rang) {
-        return switch (rang) {
-            case "C" -> PARCHEMINS_REQUIS_C;
-            case "B" -> PARCHEMINS_REQUIS_B;
-            case "A" -> PARCHEMINS_REQUIS_A;
-            default  -> PARCHEMINS_REQUIS_S;
-        };
+        return PAGES.stream()
+                .filter(p -> p.rang().equals(rang))
+                .mapToInt(PageRecrutement::parcheminsRequis)
+                .min()
+                .orElse(0);
     }
 
     // ── Achat de Parchemins XP ────────────────────────────────────────────
@@ -409,10 +451,11 @@ public class MenuRecrutement {
         ctx.sauvegarde.sauvegarder(ctx);
     }
 
-    // ── Page de recrutement générique (C et B fusionnées) ─────────────────
+    // ── Page de recrutement générique (toutes pages, tous rangs) ───────────
     private void afficherPage(GameContext ctx, Scanner scanner,
                                String rang, List<InfoPerso> liste,
-                               int parcheminsRequis, int niveauRequis) {
+                               int parcheminsRequis, int niveauRequis,
+                               int indexDansRang, int totalPagesRang) {
         Personnage_principale joueur             = ctx.joueur;
         ArrayList<PersonnageBase> recrutes       = ctx.personnagesRecruites;
 
@@ -424,14 +467,9 @@ public class MenuRecrutement {
         boolean retour = false;
         while (!retour) {
             int parcheminsActuels = getParchemins(rang);
-            String numeroPage = switch (rang) {
-                case "C" -> "1";
-                case "B" -> "2";
-                default  -> "3";
-            };
 
             System.out.println("\n========================================");
-            System.out.println("       PAGE " + numeroPage + " — RANG " + rang);
+            System.out.println("       RANG " + rang + " — PAGE " + indexDansRang + "/" + totalPagesRang);
             System.out.println("========================================");
             System.out.println("Parchemins " + rang + " : " + parcheminsActuels + "/" + parcheminsRequis);
             System.out.println();
@@ -456,36 +494,51 @@ public class MenuRecrutement {
             if (choix < 1 || choix > liste.size()) { System.out.println("Choix invalide."); continue; }
 
             InfoPerso cible = liste.get(choix - 1);
-            if (dejaRecruteParNom(cible.nom(), recrutes)) {
-                System.out.println(cible.nom() + " est deja dans vos allies !");
-                continue;
+            ResultatRecrutement resultat = tenterRecruter(ctx, rang, parcheminsRequis, cible.nom());
+            System.out.println(resultat.message());
+            if (resultat.succes()) {
+                System.out.println("Parchemins " + rang + " restants : " + getParchemins(rang));
             }
-            if (parcheminsActuels < parcheminsRequis) {
-                System.out.println("Pas assez de parchemins " + rang
-                        + " ! (" + parcheminsActuels + "/" + parcheminsRequis + ")");
-                continue;
-            }
-
-            // Vérification de cohérence : creerPersonnage ne doit jamais retourner null
-            PersonnageBase recrute = creerPersonnage(cible.nom());
-            if (recrute == null) {
-                System.out.println("[ERREUR] Personnage introuvable : " + cible.nom()
-                        + ". Aucun parchemin deduit.");
-                continue;
-            }
-
-            switch (rang) {
-                case "C" -> parcheminC -= parcheminsRequis;
-                case "B" -> parcheminB -= parcheminsRequis;
-                case "A" -> parcheminA -= parcheminsRequis;
-                default  -> parcheminS -= parcheminsRequis;
-            }
-
-            recrutes.add(recrute);
-            System.out.println(">> " + recrute.getNom() + " a rejoint vos allies !");
-            System.out.println("Parchemins " + rang + " restants : " + getParchemins(rang));
-            ctx.sauvegarde.sauvegarder(ctx);
         }
+    }
+
+    /** Resultat d'une tentative de recrutement, pour affichage console/GUI. */
+    public record ResultatRecrutement(boolean succes, String message) {}
+
+    /**
+     * Tente de recruter {@code nomPerso} au rang donne : verifie qu'il n'est pas deja recrute et
+     * que le stock de parchemins suffit, cree le personnage, debite les parchemins, l'ajoute a
+     * l'equipe et sauvegarde. Logique partagee entre afficherPage (console) et
+     * EcranPageRecrutementController (GUI), qui ne different que par la mise en forme du message.
+     */
+    public ResultatRecrutement tenterRecruter(GameContext ctx, String rang, int parcheminsRequis, String nomPerso) {
+        if (dejaRecruteParNom(nomPerso, ctx.personnagesRecruites)) {
+            return new ResultatRecrutement(false, nomPerso + " est deja dans vos allies !");
+        }
+
+        int parcheminsActuels = getParchemins(rang);
+        if (parcheminsActuels < parcheminsRequis) {
+            return new ResultatRecrutement(false, "Pas assez de parchemins " + rang
+                    + " ! (" + parcheminsActuels + "/" + parcheminsRequis + ")");
+        }
+
+        // Vérification de cohérence : creerPersonnage ne doit jamais retourner null
+        PersonnageBase recrute = creerPersonnage(nomPerso);
+        if (recrute == null) {
+            return new ResultatRecrutement(false, "[ERREUR] Personnage introuvable : " + nomPerso
+                    + ". Aucun parchemin deduit.");
+        }
+
+        switch (rang) {
+            case "C" -> parcheminC -= parcheminsRequis;
+            case "B" -> parcheminB -= parcheminsRequis;
+            case "A" -> parcheminA -= parcheminsRequis;
+            default  -> parcheminS -= parcheminsRequis;
+        }
+
+        ctx.personnagesRecruites.add(recrute);
+        ctx.sauvegarde.sauvegarder(ctx);
+        return new ResultatRecrutement(true, ">> " + recrute.getNom() + " a rejoint vos allies !");
     }
 
     // ── Factory ───────────────────────────────────────────────────────────
@@ -540,11 +593,16 @@ public class MenuRecrutement {
             case "Sugarboy"     -> new perso_Sugarboy();
             case "Hughes"       -> new perso_Hughes();
             case "Byro"         -> new perso_Byro();
+            case "Freed"        -> new perso_Freed();
+            case "Angel"        -> new perso_Angel();
+            case "Yamaru"       -> new perso_Yamaru();
+            case "Kawazu"       -> new perso_Kawazu();
             case "Erza Knightwalker" -> new perso_ErzaKnightwalker();
             case "Azuma"        -> new perso_Azuma();
             case "Zancrow"      -> new perso_Zancrow();
             case "Rustyrose"    -> new perso_Rustyrose();
             case "Capricorn"    -> new perso_Capricorn();
+            case "Yukino"       -> new perso_Yukino();
             case "Zero"         -> new perso_Zero();
             case "Bluenote"     -> new perso_Bluenote();
             case "Zeref"        -> new perso_Zeref();

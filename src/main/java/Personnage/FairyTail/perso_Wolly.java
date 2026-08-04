@@ -18,7 +18,7 @@ public class perso_Wolly extends PersonnageBase{
         this.type="Elementaliste";
         this.role = "DPS";
         this.rarete = "C";
-        double multiplicateurRarete = 1.00;
+        double multiplicateurRarete = 1.12;
         this.vie = 290 * multiplicateurRarete;
         this.attaque = 145 * multiplicateurRarete;
         this.defense = 70 * multiplicateurRarete;

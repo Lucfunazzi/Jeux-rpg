@@ -256,6 +256,38 @@ private void initialiserRecompensesPersonnages() {
                 + " du Chapitre " + q.getChapitreRequis() + (q.isElite() ? " Elite" : "") + " debloque.";
     }
 
+    /** Recompenses effectivement accordees par {@link #reclamerRecompense}, pour affichage console/GUI. */
+    public record ResultatRecompense(int xp, int or, int parcheminC, boolean potionEnergie,
+                                      List<Quete.RecompenseItem> items) {}
+
+    /**
+     * Accorde les recompenses d'une quete completee (XP, or, parchemins, potion journaliere,
+     * items) et sauvegarde. Logique partagee entre MenuQuetes (console) et EcranQuetesController
+     * (GUI), qui ne different que par la mise en forme du message renvoye au joueur.
+     */
+    public ResultatRecompense reclamerRecompense(lancement.GameContext ctx, Quete q) {
+        q.setReclamee(true);
+
+        int xp = q.getRecompenseXP();
+        if (xp > 0)
+            for (PersonnageBase p : ctx.formation.getEquipe()) p.gagnerExperience(xp);
+
+        int or = q.getRecompenseOr();
+        if (or > 0) ctx.joueur.ajouterOr(or);
+
+        int parcheminC = q.getRecompenseParcheminC();
+        if (parcheminC > 0) ctx.menuRecrutement.ajouterParcheminC(parcheminC);
+
+        boolean potionEnergie = q instanceof QueteJournaliere;
+        if (potionEnergie) ctx.inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+
+        for (Quete.RecompenseItem item : q.getRecompensesItems())
+            ctx.inventaire.ajouterMateriau(item.nom(), item.quantite());
+
+        ctx.sauvegarde.sauvegarder(ctx);
+        return new ResultatRecompense(xp, or, parcheminC, potionEnergie, q.getRecompensesItems());
+    }
+
     // ── Barre de points quotidienne ────────────────────────────────────────
     public int getPointsJournaliers() { return pointsJournaliers; }
 

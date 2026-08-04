@@ -18,7 +18,7 @@ public class perso_Meredy extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.42;
+        double mult = 1.52;
         this.vie     = 506 * mult;
         this.attaque = 186 * mult;
         this.defense = 115 * mult;

@@ -19,7 +19,7 @@ public class perso_Yuka extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "C";
         this.niveau = 1;
-        double mult = 1.00;
+        double mult = 1.06;
         this.vie     = 420 * mult;
         this.attaque = 100 * mult;
         this.defense =  90 * mult;

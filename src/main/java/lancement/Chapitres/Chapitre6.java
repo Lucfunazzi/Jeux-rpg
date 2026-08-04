@@ -105,47 +105,49 @@ public class Chapitre6 implements Chapitre {
 
         return switch (numero) {
             case 1 -> {
-                e.add(new EnnemiCobra(63));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, 63));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, 63));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(6, 1);
+                e.add(new EnnemiCobra(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, niv));
                 yield new Stage(1, "Prologue — L'alliance des guildes", 10200, 132, e);
             }
             case 2 -> {
-                e.add(new EnnemiRacer(63));
-                e.add(new EnnemiHoteye(63));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, 63));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(6, 2);
+                e.add(new EnnemiRacer(niv));
+                e.add(new EnnemiHoteye(niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
                 yield new Stage(2, "Oracions seis vs l'alliance des guildes", 10500, 136, e);
             }
             case 3 -> {
-                e.add(new EnnemiRacer(64));
+                e.add(new EnnemiRacer(CourbeChapitres.niveauEnnemiPourStage(6, 3)));
                 yield new Stage(3, "Gray et leon vs racer", 10800, 140, e);
             }
             case 4 -> {
-                e.add(new EnnemiAngel(64));
+                e.add(new EnnemiAngel(CourbeChapitres.niveauEnnemiPourStage(6, 4)));
                 yield new Stage(4, "Combat de constellasioniste", 11100, 144, e);
             }
             case 5 -> {
-                e.add(new EnnemiHoteye(64));
+                e.add(new EnnemiHoteye(CourbeChapitres.niveauEnnemiPourStage(6, 5)));
                 yield new Stage(5, "Duel entre Jura et Hoy-eyes", 11400, 148, e);
             }
             case 6 -> {
-                e.add(new EnnemiCobra(65));
+                e.add(new EnnemiCobra(CourbeChapitres.niveauEnnemiPourStage(6, 6)));
                 yield new Stage(6, "Cobras vs Natsu", 11700, 152, e);
             }
             case 7 -> {
-                e.add(new EnnemiMidnight(65));
+                e.add(new EnnemiMidnight(CourbeChapitres.niveauEnnemiPourStage(6, 7)));
                 yield new Stage(7, "Jellal et erza vs midnight", 12000, 156, e);
             }
             case 8 -> {
-                e.add(new EnnemiBrain(65));
+                e.add(new EnnemiBrain(CourbeChapitres.niveauEnnemiPourStage(6, 8)));
                 yield new Stage(8, "Natsu vs Brain", 12300, 160, e);
             }
             case 9 -> {
-                e.add(new EnnemiBrain(66));
+                e.add(new EnnemiBrain(CourbeChapitres.niveauEnnemiPourStage(6, 9)));
                 yield new Stage(9, "Jura vs Brain", 12700, 165, e);
             }
             case 10 -> {
-                e.add(new EnnemiZero(66));
+                e.add(new EnnemiZero(CourbeChapitres.niveauEnnemiPourStage(6, 10)));
                 yield new Stage(10, "Natsu vs la nouvelle forme de Brain", 13200, 172, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);

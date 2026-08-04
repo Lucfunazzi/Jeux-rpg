@@ -14,7 +14,7 @@ public class perso_Yamaru extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "B";
         this.niveau = 1;
-        double mult = 1.30;
+        double mult = 1.52;
         this.vie     = 450 * mult;
         this.attaque = 150 * mult;
         this.defense = 110 * mult;

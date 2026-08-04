@@ -685,9 +685,12 @@ public static boolean lancerCombatArene(
             }
         }
 
+        // XP de combat volontairement faible (~5% d'un palier de niveau par ennemi) : avec la
+        // courbe d'XP lineaire, la montee de niveau doit rester portee par les quetes, pas par
+        // le grind repete d'un meme stage (25/niveau donnait un bonus bien trop consequent).
         int experienceGagnee = 0;
         for (PersonnageBase ennemi : equipeAdverse)
-            experienceGagnee += ennemi.getNiveau() * 25;
+            experienceGagnee += ennemi.getNiveau() * 5;
 
         System.out.println("Experience totale gagnee : " + experienceGagnee + " pts\n");
 

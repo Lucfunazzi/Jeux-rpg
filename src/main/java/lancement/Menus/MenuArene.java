@@ -252,70 +252,22 @@ public class MenuArene {
     // ── Coffre journalier ─────────────────────────────────────────────────
 
     private boolean isCoffreDisponible() {
-        if (java.time.LocalDateTime.now().getHour() < 20) return false;
-        return !getCleJour().equals(getDerniereCleCoffre());
-    }
-
-    private String getCleJour() {
-        java.time.LocalDate aujourd = java.time.LocalDate.now();
-        if (java.time.LocalDateTime.now().getHour() < 20)
-            aujourd = aujourd.minusDays(1);
-        return aujourd.toString();
-    }
-
-    private String getDerniereCleCoffre() {
-        return ctx.dernierCoffreArene != null ? ctx.dernierCoffreArene : "";
+        return gestionnaireArene.coffreJournalierDisponible(ctx);
     }
 
     private void ouvrirCoffre() {
-        if (!isCoffreDisponible()) {
+        GestionnaireArene.RecompenseCoffreJournalier recompense = gestionnaireArene.reclamerCoffreJournalier(joueurArene, ctx);
+        if (recompense == null) {
             System.out.println("\n  Le coffre sera disponible à 20h !");
             return;
         }
 
-        int rang = joueurArene.getRang();
-        int pointsBoutique;
-        int or;
-        int coupons = 0;
-        String tranche;
-
-        if (rang == 1) {
-            pointsBoutique = 15_000; or = 110_000; coupons = 50;
-            tranche = "Rang #1 — Légendaire";
-        } else if (rang <= 4) {
-            pointsBoutique = 11_000; or = 100_000;
-            tranche = "Rang #2–4 — Élite";
-        } else if (rang <= 9) {
-            pointsBoutique = 10_000; or = 90_000;
-            tranche = "Rang #5–9 — Maître";
-        } else if (rang <= 24) {
-            pointsBoutique = 7_000; or = 60_000;
-            tranche = "Rang #10–24 — Expert";
-        } else if (rang <= 49) {
-            pointsBoutique = 5_000; or = 40_000;
-            tranche = "Rang #25–49 — Avancé";
-        } else if (rang <= 74) {
-            pointsBoutique = 2_500; or = 20_000;
-            tranche = "Rang #50–74 — Intermédiaire";
-        } else {
-            pointsBoutique = 1_500; or = 10_000;
-            tranche = "Rang #75–100 — Débutant";
-        }
-
-        System.out.println("\n  🎁 COFFRE JOURNALIER — " + tranche);
+        System.out.println("\n  🎁 COFFRE JOURNALIER — " + recompense.tranche());
         System.out.println("  ─────────────────────────────────────");
-        System.out.printf ("  + %,d points boutique%n", pointsBoutique);
-        System.out.printf ("  + %,d or%n", or);
-        if (coupons > 0) System.out.println("  + " + coupons + " coupons !");
+        System.out.printf ("  + %,d points boutique%n", recompense.pointsBoutique());
+        System.out.printf ("  + %,d or%n", recompense.or());
+        if (recompense.coupons() > 0) System.out.println("  + " + recompense.coupons() + " coupons !");
         System.out.println("  ─────────────────────────────────────");
-
-        joueurArene.ajouterPointsBoutique(pointsBoutique);
-        ctx.joueur.ajouterOr(or);
-        if (coupons > 0) ctx.joueur.setCoupons(ctx.joueur.getCoupons() + coupons);
-
-        ctx.dernierCoffreArene = getCleJour();
-        gestionnaireArene.uploaderRangJoueur(joueurArene);
-        ctx.sauvegarde.sauvegarder(ctx);
 
         System.out.print("\n  Appuie sur Entrée pour continuer...");
         scanner.nextLine();

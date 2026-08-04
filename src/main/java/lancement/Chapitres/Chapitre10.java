@@ -107,46 +107,48 @@ public class Chapitre10 implements Chapitre {
 
         return switch (numero) {
             case 1 -> {
-                e.add(new EnnemiHades(84));
+                e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(10, 1)));
                 yield new Stage(1, "Luxus vs Hades", 23800, 310, e);
             }
             case 2 -> {
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_10, 84));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_10, 84));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(10, 2);
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_10, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_10, niv));
                 yield new Stage(2, "L'oeil du Démon", 24100, 314, e);
             }
             case 3 -> {
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_10, 85));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_10, 85));
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_10, 85));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(10, 3);
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_10, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_10, niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_10, niv));
                 yield new Stage(3, "Panthère lilly vs l'armée d'hadès", 24400, 318, e);
             }
             case 4 -> {
-                e.add(new EnnemiHades(85));
+                e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(10, 4)));
                 yield new Stage(4, "Le coup de grâce", 24700, 322, e);
             }
             case 5 -> {
-                e.add(new EnnemiRustyrose(85));
+                e.add(new EnnemiRustyrose(CourbeChapitres.niveauEnnemiPourStage(10, 5)));
                 yield new Stage(5, "Lisanna,livy,bixrow et freed vs rustyRose", 25000, 326, e);
             }
             case 6 -> {
-                e.add(new EnnemiZeref(86));
+                e.add(new EnnemiZeref(CourbeChapitres.niveauEnnemiPourStage(10, 6)));
                 yield new Stage(6, "Le mage Noir", 25300, 330, e);
             }
             case 7 -> {
-                e.add(new EnnemiAcnologia(86));
+                e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 7)));
                 yield new Stage(7, "L'apparation d'acnologia", 25600, 334, e);
             }
             case 8 -> {
-                e.add(new EnnemiAcnologia(86));
+                e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 8)));
                 yield new Stage(8, "Acnologia vs Makarof", 25900, 338, e);
             }
             case 9 -> {
-                e.add(new EnnemiAcnologia(87));
+                e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 9)));
                 yield new Stage(9, "L'assaut des fées", 26200, 341, e);
             }
             case 10 -> {
-                e.add(new EnnemiAcnologia(87));
+                e.add(new EnnemiAcnologia(CourbeChapitres.niveauEnnemiPourStage(10, 10)));
                 yield new Stage(10, "Le dernier espoir : sphère féerique", 27000, 350, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);

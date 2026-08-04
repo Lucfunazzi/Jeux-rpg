@@ -13,7 +13,7 @@ public class perso_Yukino extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "S";
         this.niveau = 1;
-        double multiplicateurRarete = 1.50;
+        double multiplicateurRarete = 1.72;
         this.vie     = 580 * multiplicateurRarete;
         this.attaque = 202 * multiplicateurRarete;
         this.defense = 110 * multiplicateurRarete;
@@ -73,7 +73,7 @@ public class perso_Yukino extends PersonnageBase {
             }
         }
 
-        if (angelAlliee) log.add("  Angel renforce l'invocation — Saignement inflige !");
+      
     }
 
     @Override
@@ -139,13 +139,13 @@ public class perso_Yukino extends PersonnageBase {
     public void descriptionAttaqueSpeciale() {
         System.out.println("Pisces & Libra — Pisces inflige 100% ATK AoE a tous les ennemis,"
                 + " Libra reduit leur DEF de 15% pendant 2 tours."
-                + " Si Lucy alliee : +20% degats. Si Angel alliee : applique aussi Saignement.");
+                );
     }
 
     @Override
     public void descriptionAttaqueUltime() {
         System.out.println("Ophiuchus — inflige 180% ATK a l'ennemi avec le plus de PV"
                 + " + AoE 80% ATK sur le reste, avec debuff aleatoire."
-                + " Si Lucy ET Angel alliees : frappe toute l'equipe ennemie a 180% ATK.");
+               );
     }
 }

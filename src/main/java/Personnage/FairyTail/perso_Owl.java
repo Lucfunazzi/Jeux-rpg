@@ -18,7 +18,7 @@ public class perso_Owl extends PersonnageBase {
         this.role = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.40;
+        double multiplicateurRarete = 1.36;
         this.vie = 550 * multiplicateurRarete;
         this.attaque = 205 * multiplicateurRarete;
         this.defense = 90 * multiplicateurRarete;

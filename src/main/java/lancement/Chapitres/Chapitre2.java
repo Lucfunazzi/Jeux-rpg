@@ -87,15 +87,15 @@ public class Chapitre2 implements Chapitre {
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = switch (numero) {
             case 3 -> {
-                perso_Lucy invite = Formation.creerInvite(perso_Lucy::new, 15, 900, 140, 95, 160);
+                perso_Lucy invite = Formation.creerInvite(perso_Lucy::new, CourbeChapitres.niveauEnnemiPourStage(2, 3), 900, 140, 95, 160);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4, 5 -> {
-                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 18, 1100, 220, 130, 140);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, CourbeChapitres.niveauEnnemiPourStage(2, 4), 1100, 220, 130, 140);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 6, 8 -> {
-                perso_Gray invite = Formation.creerInvite(perso_Gray::new, 19, 950, 210, 140, 120);
+                perso_Gray invite = Formation.creerInvite(perso_Gray::new, CourbeChapitres.niveauEnnemiPourStage(2, 6), 950, 210, 140, 120);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 9  -> lancerStage9AvecUl(ctx, stage, estNouveau);
@@ -120,14 +120,9 @@ public class Chapitre2 implements Chapitre {
         return resultatStage;
     }
 
-    // Palier de niveau du chapitre 2 : les ennemis vont de niveau 11 (stage 1) a 20 (stage 10).
-    private static final int PALIER_NIVEAU = 10;
-
-    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
-
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
-        int niveau = niveauPourStage(numero);
+        int niveau = CourbeChapitres.niveauEnnemiPourStage(2, numero);
         // Recompenses tres faibles : la montee de niveau passe surtout par les quetes,
         // mais un peu plus d'XP qu'au Chapitre 1 pour suivre la progression des chapitres.
         switch (numero) {

@@ -13,7 +13,7 @@ public class perso_Kana extends PersonnageBase {
         this.role = "Support";
         this.rarete = "B";
         
-        double multiplicateurRarete = 1.30;
+        double multiplicateurRarete = 1.24;
         this.vie = 350 * multiplicateurRarete;
         this.attaque = 120 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;

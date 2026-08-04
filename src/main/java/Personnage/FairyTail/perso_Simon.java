@@ -19,7 +19,7 @@ public class perso_Simon extends PersonnageBase{
         this.type="Chevalier";
         this.role = "Tank";
         this.rarete = "B";
-        double multiplicateurRarete = 1.20;
+        double multiplicateurRarete = 1.30;
         this.vie = 542 * multiplicateurRarete;
         this.attaque = 128 * multiplicateurRarete;
         this.defense = 130 * multiplicateurRarete;

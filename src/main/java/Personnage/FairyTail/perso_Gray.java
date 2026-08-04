@@ -13,7 +13,7 @@ public class perso_Gray extends PersonnageBase {
         this.role = "DPS"; // ✅
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.40;
+        double multiplicateurRarete = 1.56;
         this.vie = 500 * multiplicateurRarete;
         this.attaque = 200 * multiplicateurRarete;
         this.defense = 120 * multiplicateurRarete;

@@ -18,7 +18,7 @@ public class perso_PantherLily extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.48;
         this.vie     = 450 * mult;
         this.attaque = 175 * mult;
         this.defense = 110 * mult;

@@ -105,43 +105,43 @@ public class Chapitre9 implements Chapitre {
 
         return switch (numero) {
             case 1 -> {
-                e.add(new EnnemiZancrow(79));
+                e.add(new EnnemiZancrow(CourbeChapitres.niveauEnnemiPourStage(9, 1)));
                 yield new Stage(1, "Natsu et makarof vs Thuncrow", 20300, 264, e);
             }
             case 2 -> {
-                e.add(new EnnemiAzuma(79));
+                e.add(new EnnemiAzuma(CourbeChapitres.niveauEnnemiPourStage(9, 2)));
                 yield new Stage(2, "Mirajane vs Azuma", 20600, 268, e);
             }
             case 3 -> {
-                e.add(new EnnemiRustyrose(80));
+                e.add(new EnnemiRustyrose(CourbeChapitres.niveauEnnemiPourStage(9, 3)));
                 yield new Stage(3, "Elfman et evergreen vs Rustyrose", 20900, 272, e);
             }
             case 4 -> {
-                e.add(new EnnemiCapricorn(80));
+                e.add(new EnnemiCapricorn(CourbeChapitres.niveauEnnemiPourStage(9, 4)));
                 yield new Stage(4, "Leo le lion vs Caprico", 21200, 276, e);
             }
             case 5 -> {
-                e.add(new EnnemiMeredy(80));
+                e.add(new EnnemiMeredy(CourbeChapitres.niveauEnnemiPourStage(9, 5)));
                 yield new Stage(5, "Erza et jubia vs Meldy", 21500, 280, e);
             }
             case 6 -> {
-                e.add(new EnnemiMeredy(81));
+                e.add(new EnnemiMeredy(CourbeChapitres.niveauEnnemiPourStage(9, 6)));
                 yield new Stage(6, "Jubia contre Meldy", 21800, 284, e);
             }
             case 7 -> {
-                e.add(new EnnemiBluenote(81));
+                e.add(new EnnemiBluenote(CourbeChapitres.niveauEnnemiPourStage(9, 7)));
                 yield new Stage(7, "BlueNotes vs Gildarts", 22100, 288, e);
             }
             case 8 -> {
-                e.add(new EnnemiAzuma(81));
+                e.add(new EnnemiAzuma(CourbeChapitres.niveauEnnemiPourStage(9, 8)));
                 yield new Stage(8, "Erza contre Azuma", 22400, 292, e);
             }
             case 9 -> {
-                e.add(new EnnemiUltear(82));
+                e.add(new EnnemiUltear(CourbeChapitres.niveauEnnemiPourStage(9, 9)));
                 yield new Stage(9, "Grey conte Ultia", 22700, 296, e);
             }
             case 10 -> {
-                e.add(new EnnemiHades(82));
+                e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(9, 10)));
                 yield new Stage(10, "Fée contre Hades", 23500, 306, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);

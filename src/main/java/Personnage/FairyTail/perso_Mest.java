@@ -18,7 +18,7 @@ public class perso_Mest extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.52;
         this.vie     = 460 * mult;
         this.attaque = 161 * mult;
         this.defense = 102 * mult;

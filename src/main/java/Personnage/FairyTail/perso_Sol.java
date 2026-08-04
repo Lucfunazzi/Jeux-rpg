@@ -19,7 +19,7 @@ public class perso_Sol extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "B";
         this.niveau = 1;
-        double mult = 1.30;
+        double mult = 1.18;
         this.vie     = 500 * mult;
         this.attaque = 118 * mult;
         this.defense = 120 * mult;

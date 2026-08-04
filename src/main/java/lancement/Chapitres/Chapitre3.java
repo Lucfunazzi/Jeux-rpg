@@ -87,23 +87,23 @@ public class Chapitre3 implements Chapitre {
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = switch (numero) {
             case 2 -> {
-                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 24, 1300, 260, 150, 150);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, CourbeChapitres.niveauEnnemiPourStage(3, 2), 1300, 260, 150, 150);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 3 -> {
-                perso_Elfman invite = Formation.creerInvite(perso_Elfman::new, 26, 1900, 180, 260, 110);
+                perso_Elfman invite = Formation.creerInvite(perso_Elfman::new, CourbeChapitres.niveauEnnemiPourStage(3, 3), 1900, 180, 260, 110);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 4 -> {
-                perso_Gray invite = Formation.creerInvite(perso_Gray::new, 28, 1450, 270, 170, 140);
+                perso_Gray invite = Formation.creerInvite(perso_Gray::new, CourbeChapitres.niveauEnnemiPourStage(3, 4), 1450, 270, 170, 140);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 5 -> {
-                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, 30, 1600, 300, 180, 160);
+                perso_Natsu invite = Formation.creerInvite(perso_Natsu::new, CourbeChapitres.niveauEnnemiPourStage(3, 5), 1600, 300, 180, 160);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 6, 7 -> {
-                perso_Erza invite = Formation.creerInvite(perso_Erza::new, 32, 2100, 320, 280, 150);
+                perso_Erza invite = Formation.creerInvite(perso_Erza::new, CourbeChapitres.niveauEnnemiPourStage(3, 6), 2100, 320, 280, 150);
                 yield lancerStageAvecInvite(ctx, stage, estNouveau, invite);
             }
             case 9 -> lancerStage9AvecMakarov(ctx, stage, estNouveau);
@@ -136,89 +136,96 @@ public class Chapitre3 implements Chapitre {
 
             // Stage 1 — Avant-garde Phantom Lord (combat generique)
             case 1 -> {
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 22));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, 22));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 22));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 21));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 21));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 1);
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
             }
 
             // Stage 2 — Natsu contre Totomaru + ennemis generiques
             case 2 -> {
-                e.add(new EnnemiTotomaru(25));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 24));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 24));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, 23));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 23));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 2);
+                e.add(new EnnemiTotomaru(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
             }
 
             // Stage 3 — Elfman contre Sol + ennemis generiques
             case 3 -> {
-                e.add(new EnnemiSol(27));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 25));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 25));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 24));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 24));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 3);
+                e.add(new EnnemiSol(niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 28, e);
             }
 
             // Stage 4 — Gray contre Jubia + ennemis generiques
             case 4 -> {
-                e.add(new EnnemiJubia_4elements(29));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 27));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 26));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 25));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 25));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 4);
+                e.add(new EnnemiJubia_4elements(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
             }
 
             // Stage 5 — Natsu contre Gadjeel + ennemis generiques
             case 5 -> {
-                e.add(new EnnemiGadjeel(30));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 27));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 26));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 26));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 25));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 5);
+                e.add(new EnnemiGadjeel(niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 return new Stage(5, "Natsu contre Gadjeel — Le Dragon d'Acier", 675, 35, e);
             }
 
             // Stage 6 — Erza contre Aria + ennemis generiques
             case 6 -> {
-                e.add(new EnnemiAria(32));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 30));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 29));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 29));
-                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 28));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 6);
+                e.add(new EnnemiAria(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, niv));
                 return new Stage(6, "Erza contre Aria — Magie du Ciel Vide", 800, 39, e);
             }
 
             // Stage 7 — Erza contre José + ennemis generiques
             case 7 -> {
-                e.add(new EnnemiJose(34));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 31));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 31));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 30));
-                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, 30));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(3, 7);
+                e.add(new EnnemiJose(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, niv));
                 return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 43, e);
             }
 
             // Stage 8 — Notre equipe seule contre José (sans invite, plus fort)
             case 8 -> {
-                e.add(new EnnemiJose(38));
+                e.add(new EnnemiJose(CourbeChapitres.niveauEnnemiPourStage(3, 8)));
                 return new Stage(8, "José Pora — Seul face à Phantom Lord", 1125, 48, e);
             }
 
             // Stage 9 — Combat scripte : Makarov contre José, notre formation n'intervient pas
             case 9 -> {
-                e.add(new EnnemiJose(55));
+                e.add(new EnnemiJose(CourbeChapitres.niveauEnnemiPourStage(3, 9)));
                 return new Stage(9, "Makarov contre José — La Loi des Fées", 1350, 54, e);
             }
 
             // Stage 10 — Notre equipe seule contre Aria (sans invite, dernier rempart)
             case 10 -> {
-                e.add(new EnnemiAria(40));
+                e.add(new EnnemiAria(CourbeChapitres.niveauEnnemiPourStage(3, 10)));
                 return new Stage(10, "Aria — Le Dernier Rempart", 1700, 60, e);
             }
 

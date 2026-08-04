@@ -14,7 +14,7 @@ public class perso_Cherry extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "C";
         this.niveau = 1;
-        double mult = 1.00;
+        double mult = 1.06;
         this.vie     = 330 * mult;
         this.attaque =  90 * mult;
         this.defense =  100 * mult;

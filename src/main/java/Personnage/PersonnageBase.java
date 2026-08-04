@@ -488,9 +488,51 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         }
     }
 
+    /** Courbe d'XP lineaire : chaque niveau requiert 100 XP de plus que le precedent (base 300 au niveau 1). */
+    private static final int PALIER_EXPERIENCE_MAX = 100;
+
+    /**
+     * Palier de fin de contenu (niveau 59+, avant/pendant le Chapitre 13) : mur d'XP volontaire
+     * d'environ 1-2 semaines de farm annexe (quetes journalieres, arene...) avant de pouvoir
+     * debloquer la suite, comme dans les jeux de reference (Unlimited Ninja, Naruto Online).
+     */
+    private static final int NIVEAU_PALIER_ENDGAME       = 59;
+    private static final int PALIER_EXPERIENCE_ENDGAME   = 20000;
+
+    /**
+     * XP cumulee necessaire pour atteindre {@code niveauCible} en partant du niveau 1 (0 XP),
+     * en simulant exactement la meme sequence que {@link #monterDeNiveau()}. Pure, sans effet
+     * de bord — reutilisable par le calcul des paliers de chapitre (voir CourbeChapitres).
+     */
+    public static long experienceCumuleePourNiveau(int niveauCible) {
+        long total = 0;
+        long experienceMaxCourant = 300;
+        int niveau = 1;
+        while (niveau < niveauCible) {
+            total += experienceMaxCourant;
+            niveau++;
+            experienceMaxCourant = (niveau >= NIVEAU_PALIER_ENDGAME)
+                    ? PALIER_EXPERIENCE_ENDGAME
+                    : experienceMaxCourant + PALIER_EXPERIENCE_MAX;
+        }
+        return total;
+    }
+
+    /**
+     * Applique le palier courant a experienceMax. Palier normal : +100 sur la valeur precedente.
+     * Palier endgame (niveau >= 59) : cout plat de PALIER_EXPERIENCE_ENDGAME a chaque niveau,
+     * sans s'additionner sur l'ancienne valeur (sinon le mur de fin de contenu grossirait sans
+     * fin au lieu de rester un cout fixe par niveau).
+     */
+    private void appliquerPalierExperienceMax() {
+        this.experienceMax = (this.niveau >= NIVEAU_PALIER_ENDGAME)
+                ? PALIER_EXPERIENCE_ENDGAME
+                : this.experienceMax + PALIER_EXPERIENCE_MAX;
+    }
+
     public void monterDeNiveau() {
         this.niveau++;
-        this.experienceMax = (int)(this.experienceMax * 1.20);
+        appliquerPalierExperienceMax();
         this.vieMax += this.vieMax * 0.05;
         this.vie = getVieMax();
         this.attaque   += this.attaque   * 0.05;
@@ -513,7 +555,7 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     /** Même chose sans log console — utilisé pour les adversaires arène. */
     public void monterDeNiveauSilencieux() {
         this.niveau++;
-        this.experienceMax = (int)(this.experienceMax * 1.20);
+        appliquerPalierExperienceMax();
         this.vieMax   += this.vieMax   * 0.05;
         this.vie       = getVieMax();
         this.attaque  += this.attaque  * 0.05;

@@ -20,7 +20,7 @@ public class EnnemiUlFlashback extends PersonnageBase {
         this.niveau = 1;
 
         double multiplicateurRarete = 1.75;
-        this.vie     = 700 * multiplicateurRarete;
+        this.vie     = 35000 * multiplicateurRarete;
         this.attaque = 240 * multiplicateurRarete;
         this.defense = 140 * multiplicateurRarete;
         this.vitesse = 130 * multiplicateurRarete;
@@ -49,7 +49,7 @@ public class EnnemiUlFlashback extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add(this.nom + " emprisonne " + cible.getNom() + " dans une Prison de Glace, mais sa resistance en annule presque tout l'effet !");
-        double degats = this.getAttaque() * 0.25;
+        double degats = this.getAttaque() * 3.0;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
 
@@ -68,7 +68,7 @@ public class EnnemiUlFlashback extends PersonnageBase {
         System.out.println("Ice-Make : Lance — inflige 100% ATK a la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Ice-Make : Prison de Glace — inflige seulement 25% ATK, quasi sans effet face a une resistance extreme.");
+        System.out.println("Ice-Make : Prison de Glace — inflige seulement 300% ATK, quasi sans effet face a une resistance extreme.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Glace Absolue (Iced Shell) — scelle instantanement tous les ennemis, quels que soient leurs PV ou leur defense.");

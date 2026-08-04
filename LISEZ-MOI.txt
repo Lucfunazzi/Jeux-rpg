@@ -1,22 +1,7 @@
-========================================
-   FAIRY TAIL RPG - Comment jouer
-========================================
-
-Pour jouer :
-
-    1. Ouvrez le dossier "Fairy Tail RPG"
-    2. Double-cliquez sur "Fairy Tail RPG.exe"
-
-(Si Windows affiche un avertissement "Windows a protege votre
-ordinateur", cliquez sur "Informations complementaires" puis
-"Executer quand meme" - c'est normal pour un programme qui n'est
-pas signe numeriquement, ce n'est pas un virus.)
+On va créer plusieurs pages de recrutement, par exemple si on est dans le menu recrutement C il existe un bouton suivant qui ramene à une deuxième pages qui seras disponibles à un niveau précis.
+Le recrutement C page 1 disponible niveau 5 contient les personnages C suivants : Arzack,Biska,ducEverlue,Eligor chaque personnage coutent 150 parchemins de recrutement C. La page 2 de recrutement C disponible niveau 15 contient : Cherry,Tobi,Yuka qui coutent 200 parchemins de recrutement C. Et la troisième page disponible niveau 20 contient : Miliana et Wolly qui coutent 250 parchemin de Rang C.
 
 
-----------------------------------------
-Pour les developpeurs
-----------------------------------------
-Le dossier "Jeu" contient le jeu deja construit (pret a etre copie
-sur un autre ordinateur, sans rien installer). Il est regenere par
-build-exe.bat a partir du code source (dossier "src"), qui necessite
-Maven et le JDK.
+Pour le recrutement B page 1 disponible niveau 30 on auras les personnages suivants : Leon,Sol et totomaru qui coutent 250 parchemin de Rang B. Pour la page 2 du recrutement B disponible niveau 35 : il y auras les personnages suivants ,Levy,Elfman,Lisanna,Kana qui coutent 300 parchemin de rang B. Et la page 3 disponibles niveau 40 : Simon,Shaw disponible a 400 parchemin B.
+
+Pour le recrutement A page 1 disponible niveau 40 aussi : contient Aria, ikaruga,Owl,Vivaldus disponible a 300 parchemin rang A. La page 2 disponible niveau 45 contient : Bixrow,evergreen, et freed qui coutent 450 parchemin rang A , La page 3 disponible niveau 55 contient : angel,cobra,hot eyes,racer,midnight,Ren,eve,Hibiki qui coutent 600 parchement de rang A ,la page 4 disponible niveau 65 il ya : panthere lilly, ,Byro,Hughes,SugarBoy

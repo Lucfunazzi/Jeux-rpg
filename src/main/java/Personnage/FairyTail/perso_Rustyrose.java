@@ -17,7 +17,7 @@ public class perso_Rustyrose extends PersonnageBase {
         this.role   = "Tank";
         this.rarete = "S";
         this.niveau = 1;
-        double mult = 1.58;
+        double mult = 1.66;
         this.vie     = 720 * mult;
         this.attaque = 180 * mult;
         this.defense = 165 * mult;

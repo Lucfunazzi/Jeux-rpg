@@ -19,7 +19,7 @@ public class perso_Totomaru extends PersonnageBase {
         this.role   = "DPS";
         this.rarete = "B";
         this.niveau = 1;
-        double mult = 1.30;
+        double mult = 1.18;
         this.vie     = 370 * mult;
         this.attaque = 165 * mult;
         this.defense = 110 * mult;

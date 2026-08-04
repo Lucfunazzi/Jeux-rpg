@@ -10,7 +10,7 @@ public class perso_Lisanna extends PersonnageBase {
         this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "B";
-        double m = 1.20;
+        double m = 1.24;
         this.vie=420*m;
         this.attaque=145*m;
         this.defense=119*m;

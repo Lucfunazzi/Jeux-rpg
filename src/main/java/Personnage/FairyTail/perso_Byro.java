@@ -17,7 +17,7 @@ public class perso_Byro extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.48;
         this.vie     = 480 * mult;
         this.attaque = 150 * mult;
         this.defense = 110 * mult;

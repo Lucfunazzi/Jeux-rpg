@@ -18,7 +18,7 @@ public class perso_Eve extends PersonnageBase {
         this.role   = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double mult = 1.40;
+        double mult = 1.44;
         this.vie     = 440 * mult;
         this.attaque = 150 * mult;
         this.defense = 115 * mult;

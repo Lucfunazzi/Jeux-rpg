@@ -10,7 +10,7 @@ public class perso_Levy extends PersonnageBase {
         this.type="Elementaliste";
         this.role = "Support";
         this.rarete = "B";
-        double m = 1.30;
+        double m = 1.24;
         this.vie=390*m; 
         this.attaque=130*m; 
         this.defense=100*m; this.vitesse=105*m;

@@ -15,7 +15,7 @@ public class perso_Wendy extends PersonnageBase {
         this.role = "Support";
         this.rarete = "A";
         this.niveau = 1;
-        double multiplicateurRarete = 1.40;
+        double multiplicateurRarete = 1.56;
         this.vie = 520 * multiplicateurRarete;
         this.attaque = 161 * multiplicateurRarete;
         this.defense = 100 * multiplicateurRarete;

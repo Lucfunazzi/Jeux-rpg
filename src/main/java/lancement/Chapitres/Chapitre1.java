@@ -110,14 +110,9 @@ public class Chapitre1 implements Chapitre {
         return resultatStage;
     }
 
-    // Palier de niveau du chapitre 1 : les ennemis vont de niveau 1 (stage 1) a 10 (stage 10).
-    private static final int PALIER_NIVEAU = 0;
-
-    private int niveauPourStage(int numero) { return numero + PALIER_NIVEAU; }
-
     private Stage construireStage(int numero) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
-        int niveau = niveauPourStage(numero);
+        int niveau = CourbeChapitres.niveauEnnemiPourStage(1, numero);
 
         // Recompenses tres faibles : la montee de niveau passe exclusivement par les quetes.
         switch (numero) {

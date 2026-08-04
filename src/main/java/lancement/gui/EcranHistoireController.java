@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.Chapitres.Chapitre;
+import lancement.Chapitres.CourbeChapitres;
 import lancement.ChapitreElite.ChapitreElite;
 import lancement.GameContext;
 
@@ -34,10 +35,17 @@ public class EcranHistoireController {
 
     private void onChapitres(MouseEvent event) {
         List<LigneChapitre> lignes = new ArrayList<>();
-        for (int i = 1; i <= ctx.chapitres.size(); i++) {
+        for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_VISIBLES; i++) {
             Chapitre c = ctx.chapitres.get(i - 1);
-            boolean deverrouille = (i == 1) || ctx.chapitres.get(i - 2).getStagesReussis()[10];
-            String messageVerrouille = (i == 1) ? null : "Terminez le Chapitre " + (i - 1) + " pour debloquer.";
+            boolean sequentiel = (i == 1) || ctx.chapitres.get(i - 2).getStagesReussis()[10];
+            int niveauRequis = CourbeChapitres.niveauRequis(i);
+            boolean niveauSuffisant = ctx.joueur.getNiveau() >= niveauRequis;
+            boolean deverrouille = sequentiel && niveauSuffisant;
+            String messageVerrouille = !sequentiel
+                    ? "Terminez le Chapitre " + (i - 1) + " pour debloquer."
+                    : !niveauSuffisant
+                        ? "Necessite le niveau " + niveauRequis + "."
+                        : null;
             lignes.add(new LigneChapitre("Chapitre " + i + " - " + c.getNomChapitre(), deverrouille, messageVerrouille,
                     i, false, c::getStagesReussis, c::getStagesDebloques, c::getTitreStage, c::lancerStage));
         }
@@ -47,7 +55,7 @@ public class EcranHistoireController {
 
     private void onChapitresElite(MouseEvent event) {
         List<LigneChapitre> lignes = new ArrayList<>();
-        for (int i = 1; i <= ctx.chapitresElite.size(); i++) {
+        for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_ELITE_VISIBLES; i++) {
             ChapitreElite c = ctx.chapitresElite.get(i - 1);
             String messageVerrouille = (i == 1)
                     ? "Terminez le Chapitre 1 pour debloquer."

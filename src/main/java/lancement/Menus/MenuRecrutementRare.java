@@ -13,6 +13,9 @@ import Personnage.FairyTail.perso_Erza;
 import Personnage.FairyTail.perso_Luxus;
 import Personnage.FairyTail.perso_Brain;
 import Personnage.FairyTail.perso_Hades;
+import Personnage.FairyTail.perso_Lucy;
+import Personnage.FairyTail.perso_Jubia_4elements;
+import Personnage.FairyTail.perso_Wendy;
 import Equipement.Inventaire;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
@@ -35,6 +38,10 @@ public class MenuRecrutementRare {
     public static final int COUT_EVOLUTION_NATSU    = 65;  // Parchemin S -> Natsu Etherion [S]
 
     public static final int COUT_RECRUTEMENT_GRAY = 30;  // Parchemin A -> Gray [A] (memes valeurs que Natsu, rang A)
+
+    public static final int COUT_RECRUTEMENT_LUCY  = 30;  // Parchemin A -> Lucy [A] (memes valeurs que Natsu/Gray, pas d'evolution)
+    public static final int COUT_RECRUTEMENT_JUBIA  = 30;  // Parchemin A -> Jubia [A] (memes valeurs que Natsu/Gray, pas d'evolution)
+    public static final int COUT_RECRUTEMENT_WENDY  = 30;  // Parchemin A -> Wendy [A] (memes valeurs que Natsu/Gray, pas d'evolution)
 
     public static final int COUT_MIRAJANE_S  = 60;  // Parchemin S  -> Mirajane [S]
     public static final int COUT_MIRAJANE_SS = 125;  // Parchemin SS -> Mirajane Halphas [SS]
@@ -169,6 +176,33 @@ public class MenuRecrutementRare {
                     + " : " + possedeSS + "/" + COUT_HADES
                     + (hadesRecru ? "  [DEJA RECRUTE]" : ""));
 
+            // ── Lucy ───────────────────────────────────────────────────────
+            boolean lucyRecru = dejaRecruteParNom("Lucy", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Lucy ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
+            System.out.println(" 12. Lucy [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_LUCY
+                    + (lucyRecru ? "  [DEJA RECRUTE]" : ""));
+
+            // ── Jubia ──────────────────────────────────────────────────────
+            boolean jubiaRecru = dejaRecruteParNom("Jubia", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Jubia ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
+            System.out.println(" 13. Jubia [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_JUBIA
+                    + (jubiaRecru ? "  [DEJA RECRUTE]" : ""));
+
+            // ── Wendy ──────────────────────────────────────────────────────
+            boolean wendyRecru = dejaRecruteParNom("Wendy", personnagesRecruites);
+
+            System.out.println();
+            System.out.println("[ Wendy ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
+            System.out.println(" 14. Wendy [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_WENDY
+                    + (wendyRecru ? "  [DEJA RECRUTE]" : ""));
+
             System.out.println();
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -226,6 +260,18 @@ public class MenuRecrutementRare {
                 case 11 -> {
                     if (hadesRecru) System.out.println("Hades est deja dans vos allies !");
                     else tenterRecrutementHades(ctx, scanner);
+                }
+                case 12 -> {
+                    if (lucyRecru) System.out.println("Lucy est deja dans vos allies !");
+                    else tenterRecrutementLucy(ctx, scanner);
+                }
+                case 13 -> {
+                    if (jubiaRecru) System.out.println("Jubia est deja dans vos allies !");
+                    else tenterRecrutementJubia(ctx, scanner);
+                }
+                case 14 -> {
+                    if (wendyRecru) System.out.println("Wendy est deja dans vos allies !");
+                    else tenterRecrutementWendy(ctx, scanner);
                 }
                 default -> System.out.println("Choix invalide.");
             }
@@ -288,6 +334,63 @@ public class MenuRecrutementRare {
         if (!scanner.nextLine().trim().equals("1")) return;
 
         System.out.println(">> " + recruterGray(ctx));
+    }
+
+    // ── Recrutement Lucy A ────────────────────────────────────────────────
+    private void tenterRecrutementLucy(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            System.out.println("Lucy se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_LUCY) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_RECRUTEMENT_LUCY + " " + PARCHEMIN_A);
+            return;
+        }
+        System.out.println("Recruter Lucy [A] pour " + COUT_RECRUTEMENT_LUCY
+                + " " + PARCHEMIN_A + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterLucy(ctx));
+    }
+
+    // ── Recrutement Jubia A ───────────────────────────────────────────────
+    private void tenterRecrutementJubia(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            System.out.println("Jubia se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_JUBIA) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_RECRUTEMENT_JUBIA + " " + PARCHEMIN_A);
+            return;
+        }
+        System.out.println("Recruter Jubia [A] pour " + COUT_RECRUTEMENT_JUBIA
+                + " " + PARCHEMIN_A + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterJubia(ctx));
+    }
+
+    // ── Recrutement Wendy A ───────────────────────────────────────────────
+    private void tenterRecrutementWendy(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            System.out.println("Wendy se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_WENDY) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_RECRUTEMENT_WENDY + " " + PARCHEMIN_A);
+            return;
+        }
+        System.out.println("Recruter Wendy [A] pour " + COUT_RECRUTEMENT_WENDY
+                + " " + PARCHEMIN_A + " ? (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(">> " + recruterWendy(ctx));
     }
 
     // ── Recrutement Mirajane S ────────────────────────────────────────────
@@ -474,6 +577,51 @@ public class MenuRecrutementRare {
         ctx.personnagesRecruites.add(new perso_Gray());
         ctx.sauvegarde.sauvegarder(ctx);
         return "Gray a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Lucy [A] (memes valeurs que Natsu/Gray, pas d'evolution). */
+    public String recruterLucy(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            return "Lucy se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_LUCY) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_LUCY + " " + PARCHEMIN_A;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_A, COUT_RECRUTEMENT_LUCY);
+        ctx.personnagesRecruites.add(new perso_Lucy());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Lucy a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Jubia [A] (memes valeurs que Natsu/Gray, pas d'evolution). */
+    public String recruterJubia(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            return "Jubia se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_JUBIA) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_JUBIA + " " + PARCHEMIN_A;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_A, COUT_RECRUTEMENT_JUBIA);
+        ctx.personnagesRecruites.add(new perso_Jubia_4elements());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Jubia a rejoint vos allies !";
+    }
+
+    /** Tente de recruter Wendy [A] (memes valeurs que Natsu/Gray, pas d'evolution). */
+    public String recruterWendy(GameContext ctx) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_NATSU_GRAY) {
+            return "Wendy se debloque au niveau " + NIVEAU_REQUIS_NATSU_GRAY + " !";
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_A);
+        if (possede < COUT_RECRUTEMENT_WENDY) {
+            return "Parchemins insuffisants : " + possede + "/" + COUT_RECRUTEMENT_WENDY + " " + PARCHEMIN_A;
+        }
+        ctx.inventaire.retirerMateriau(PARCHEMIN_A, COUT_RECRUTEMENT_WENDY);
+        ctx.personnagesRecruites.add(new perso_Wendy());
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Wendy a rejoint vos allies !";
     }
 
     /** Tente de faire evoluer Natsu [A] en Natsu Etherion [S]. */
