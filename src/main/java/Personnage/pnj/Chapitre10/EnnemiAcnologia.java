@@ -20,7 +20,7 @@ public class EnnemiAcnologia extends PersonnageBase {
         this.niveau = niveau;
         this.type   = "ChasseurDeDragon";
         this.role   = "DPS";
-        this.rarete = "SS";
+        this.rarete = "UR";
 
         double mult = 2.10;
         double niv  = Math.pow(1.05, niveau - 1);

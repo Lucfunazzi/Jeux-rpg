@@ -14,69 +14,60 @@ public class ArbreCompetences {
     private int pointsDisponibles = 0;
 
     public ArbreCompetences() {
-        // ── Arbre 1 — budget 91 pts (Chapitre 1 + Chapitre 2) ───────────
-        // Coûts : 3/5/7/8/10/12/13/15/7/11 = 91 pts
-        // Chaque noeud doit rester strictement moins cher que le meme noeud de l'Arbre 2,
-        // lui-meme moins cher que l'Arbre 3, pour une difficulte reellement progressive.
-        noeuds1[0] = new NoeudArbre(1,  "+2% ATK de base",          3,  NoeudArbre.TypeBonus.ATK, 0.02);
-        noeuds1[1] = new NoeudArbre(2,  "+2% DEF de base",          5,  NoeudArbre.TypeBonus.DEF, 0.02);
-        noeuds1[2] = new NoeudArbre(3,  "+3% PV de base",           7,  NoeudArbre.TypeBonus.PV,  0.03);
-        noeuds1[3] = new NoeudArbre(4,  "+2% VIT de base",          8,  NoeudArbre.TypeBonus.VIT, 0.02);
-        noeuds1[4] = new NoeudArbre(5,  "+3% ATK de base",          10, NoeudArbre.TypeBonus.ATK, 0.03);
-        noeuds1[5] = new NoeudArbre(6,  "+3% DEF de base",          12, NoeudArbre.TypeBonus.DEF, 0.03);
-        noeuds1[6] = new NoeudArbre(7,  "+4% PV de base",           13, NoeudArbre.TypeBonus.PV,  0.04);
-        noeuds1[7] = new NoeudArbre(8,  "+3% VIT de base",          15, NoeudArbre.TypeBonus.VIT, 0.03);
-        noeuds1[8] = new NoeudArbre(9,  "+5% ATK de base",          7,  NoeudArbre.TypeBonus.ATK, 0.05);
-        noeuds1[9] = new NoeudArbre(10, "Nouvelle attaque speciale", 11, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
-
-        // ── Arbre 2 — budget 110 pts ──────────────────────────────────────
-        // Bonus supérieurs à l'arbre 1, coûts : 5/8/10/11/12/13/14/16/8/13 = 110 pts
-        noeuds2[0] = new NoeudArbre(1,  "+3% ATK de base",          5,  NoeudArbre.TypeBonus.ATK, 0.03);
-        noeuds2[1] = new NoeudArbre(2,  "+3% DEF de base",          8,  NoeudArbre.TypeBonus.DEF, 0.03);
-        noeuds2[2] = new NoeudArbre(3,  "+5% PV de base",           10, NoeudArbre.TypeBonus.PV,  0.05);
-        noeuds2[3] = new NoeudArbre(4,  "+3% VIT de base",          11, NoeudArbre.TypeBonus.VIT, 0.03);
-        noeuds2[4] = new NoeudArbre(5,  "+4% ATK de base",          12, NoeudArbre.TypeBonus.ATK, 0.04);
-        noeuds2[5] = new NoeudArbre(6,  "+4% DEF de base",          13, NoeudArbre.TypeBonus.DEF, 0.04);
-        noeuds2[6] = new NoeudArbre(7,  "+6% PV de base",           14, NoeudArbre.TypeBonus.PV,  0.06);
-        noeuds2[7] = new NoeudArbre(8,  "+4% VIT de base",          16, NoeudArbre.TypeBonus.VIT, 0.04);
-        noeuds2[8] = new NoeudArbre(9,  "+6% ATK de base",          8,  NoeudArbre.TypeBonus.ATK, 0.06);
-        noeuds2[9] = new NoeudArbre(10, "Deuxieme attaque speciale", 13, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
-
-        // ── Arbre 3 — budget 120 pts ─────────────────────────────────────
-        // Débloqué automatiquement une fois l'Arbre 2 complété (nœud 10)
-        // Coûts : 6/9/11/12/13/14/15/17/9/14 = 120 pts
-        noeuds3[0] = new NoeudArbre(1,  "+4% ATK de base",          6,  NoeudArbre.TypeBonus.ATK, 0.04);
-        noeuds3[1] = new NoeudArbre(2,  "+4% DEF de base",          9,  NoeudArbre.TypeBonus.DEF, 0.04);
-        noeuds3[2] = new NoeudArbre(3,  "+6% PV de base",           11, NoeudArbre.TypeBonus.PV,  0.06);
-        noeuds3[3] = new NoeudArbre(4,  "+4% VIT de base",          12, NoeudArbre.TypeBonus.VIT, 0.04);
-        noeuds3[4] = new NoeudArbre(5,  "+5% ATK de base",          13, NoeudArbre.TypeBonus.ATK, 0.05);
-        noeuds3[5] = new NoeudArbre(6,  "+5% DEF de base",          14, NoeudArbre.TypeBonus.DEF, 0.05);
-        noeuds3[6] = new NoeudArbre(7,  "+7% PV de base",           15, NoeudArbre.TypeBonus.PV,  0.07);
-        noeuds3[7] = new NoeudArbre(8,  "+5% VIT de base",          17, NoeudArbre.TypeBonus.VIT, 0.05);
-        noeuds3[8] = new NoeudArbre(9,  "+7% ATK de base",          9,  NoeudArbre.TypeBonus.ATK, 0.07);
-        noeuds3[9] = new NoeudArbre(10, "Troisieme attaque speciale", 14, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
-
-        // ── Arbres 4 a 8 — a completer ────────────────────────────────────
-        // Structure/plomberie posee (deblocage, cout a definir, sauvegarde), mais le contenu
-        // des noeuds 1-9 (bonus stats) et les noms/effets des noeuds 10 restent a definir.
+        // ── Bonus stats des noeuds 1-9 : plat, +1% par arbre (Arbre 1 = 1%, Arbre 2 = 2%,
+        // ... Arbre 8 = 8%), meme noeud = meme type de stat dans tous les arbres (cycle
+        // ATK/DEF/PV/VIT/ATK/DEF/PV/VIT/ATK). Seul le cout en points differe par arbre/noeud.
+        remplirArbreStats(noeuds1, COUTS_ARBRE_1, 0.01, "Nouvelle attaque speciale",   NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds2, COUTS_ARBRE_2, 0.02, "Deuxieme attaque speciale",   NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds3, COUTS_ARBRE_3, 0.03, "Troisieme attaque speciale",  NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds4, COUTS_ARBRE_4, 0.04, "Deuxieme attaque ultime",     NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
+        remplirArbreStats(noeuds5, COUTS_ARBRE_5, 0.05, "Quatrieme attaque speciale",  NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds6, COUTS_ARBRE_6, 0.06, "Cinquieme attaque speciale",  NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds7, COUTS_ARBRE_7, 0.07, "Sixieme attaque speciale",    NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbreStats(noeuds8, COUTS_ARBRE_8, 0.08, "Troisieme attaque ultime",    NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
         // Arbre 4 et Arbre 8 debloquent une attaque ULTIME alternative (pas une speciale).
         // Arbres 5, 6 et 7 debloquent chacun une attaque speciale alternative de plus.
-        remplirArbrePlaceholder(noeuds4, "Nouvelle attaque ultime",   NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
-        remplirArbrePlaceholder(noeuds5, "Quatrieme attaque speciale", NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
-        remplirArbrePlaceholder(noeuds6, "Cinquieme attaque speciale", NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
-        remplirArbrePlaceholder(noeuds7, "Sixieme attaque speciale",   NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
-        remplirArbrePlaceholder(noeuds8, "Deuxieme attaque ultime",   NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
+        // Aucune condition scenaristique (chapitre termine, objet en stock...) : le seul
+        // prerequis est le total de points, accumule via les recompenses de stage et les
+        // Parchemins d'Aptitude consommes (10 pts chacun, voir ParcheminAptitude.POINTS et
+        // Personnage_principale.utiliserParcheminAptitude).
     }
 
+    // Couts par noeud (1 a 10), croissants a l'interieur de chaque arbre et d'un arbre a l'autre.
+    private static final int[] COUTS_ARBRE_1 = {3,   5,   7,   8,   10,  12,  13,  15,  18,  22};
+    private static final int[] COUTS_ARBRE_2 = {5,   8,   10,  11,  12,  13,  14,  16,  18,  20};
+    private static final int[] COUTS_ARBRE_3 = {6,   9,   11,  12,  13,  14,  15,  17,  19,  21};
+    private static final int[] COUTS_ARBRE_4 = {50,  55,  60,  65,  70,  75,  80,  85,  90,  100};
+    private static final int[] COUTS_ARBRE_5 = {100, 110, 120, 130, 140, 150, 160, 170, 180, 200};
+    private static final int[] COUTS_ARBRE_6 = {200, 220, 240, 260, 280, 300, 320, 340, 360, 400};
+    private static final int[] COUTS_ARBRE_7 = {400, 440, 480, 520, 560, 600, 640, 680, 720, 800};
+    private static final int[] COUTS_ARBRE_8 = {800, 880, 960, 1040, 1120, 1200, 1280, 1360, 1440, 1600};
+
+    // Type de stat par noeud 1-9, identique dans tous les arbres.
+    private static final NoeudArbre.TypeBonus[] CYCLE_STATS = {
+        NoeudArbre.TypeBonus.ATK, NoeudArbre.TypeBonus.DEF, NoeudArbre.TypeBonus.PV, NoeudArbre.TypeBonus.VIT,
+        NoeudArbre.TypeBonus.ATK, NoeudArbre.TypeBonus.DEF, NoeudArbre.TypeBonus.PV, NoeudArbre.TypeBonus.VIT,
+        NoeudArbre.TypeBonus.ATK
+    };
+
     /**
-     * Remplit un arbre 4-8 avec des noeuds 1-9 vides (0 pt, aucun bonus — a definir plus tard)
-     * et un noeud 10 du type demande (cout place a 1 pt en attendant l'equilibrage definitif).
+     * Remplit un arbre avec ses 9 noeuds de stats (bonus plat {@code valeurStat}, type selon
+     * CYCLE_STATS) et son noeud 10 (competence speciale/ultime), en appliquant le cout fourni
+     * pour chacun des 10 noeuds.
      */
-    private static void remplirArbrePlaceholder(NoeudArbre[] noeuds, String nomNoeud10, NoeudArbre.TypeBonus typeNoeud10) {
+    private static void remplirArbreStats(NoeudArbre[] noeuds, int[] couts, double valeurStat,
+            String nomNoeud10, NoeudArbre.TypeBonus typeNoeud10) {
         for (int i = 0; i < 9; i++) {
-            noeuds[i] = new NoeudArbre(i + 1, "A definir", 0, NoeudArbre.TypeBonus.ATK, 0);
+            String nomStat = switch (CYCLE_STATS[i]) {
+                case ATK -> "ATK";
+                case DEF -> "DEF";
+                case PV  -> "PV";
+                default  -> "VIT";
+            };
+            noeuds[i] = new NoeudArbre(i + 1, "+" + Math.round(valeurStat * 100) + "% " + nomStat + " de base",
+                    couts[i], CYCLE_STATS[i], valeurStat);
         }
-        noeuds[9] = new NoeudArbre(10, nomNoeud10, 1, typeNoeud10, 0);
+        noeuds[9] = new NoeudArbre(10, nomNoeud10, couts[9], typeNoeud10, 0);
     }
 
     // ── Débloquer un nœud ─────────────────────────────────────────────────

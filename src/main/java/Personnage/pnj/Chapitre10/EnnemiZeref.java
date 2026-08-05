@@ -19,7 +19,7 @@ public class EnnemiZeref extends PersonnageBase {
         this.niveau = niveau;
         this.type   = "Elementaliste";
         this.role   = "DPS";
-        this.rarete = "SS";
+        this.rarete = "UR";
 
         double mult = 1.95;
         double niv  = Math.pow(1.05, niveau - 1);

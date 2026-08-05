@@ -136,8 +136,7 @@ public class Personnage_principale extends PersonnageBase {
 
     /**
      * Noms des spéciales débloquées par les arbres 1/2/3/5/6/7 — dupliqué de MenuAbilite pour
-     * éviter la dépendance circulaire. Arbres 5/6/7 : contenu pas encore défini par classe,
-     * renvoie un nom générique en attendant.
+     * éviter la dépendance circulaire.
      */
     public static String getNomCompetenceArbre(String classe, int arbre) {
         if (classe == null) return "Compétence spéciale (Arbre " + arbre + ")";
@@ -146,36 +145,68 @@ public class Personnage_principale extends PersonnageBase {
                 case 1  -> "Rayon sacré";
                 case 2  -> "Décharge de foudre";
                 case 3  -> "Epines fleuries";
+                case 5  -> "Les 5 Flèches Sacrées";
+                case 6  -> "Dogme de la Flamme Éternelle";
+                case 7  -> "Floraisons Électriques";
                 default -> "Compétence spéciale (Arbre " + arbre + ")";
             };
             case "Chasseur de Dragon" -> switch (arbre) {
                 case 1  -> "Fouet du Dragon d'Eau";
                 case 2  -> "Tir à haute pression du dragon d'eau";
                 case 3  -> "Triples Tir du Dragon de l'eau";
+                case 5  -> "Canon du Dragon de l'Eau";
+                case 6  -> "Tourbillon du Dragon d'Eau";
+                case 7  -> "Pluie de la Nuit Nocturne du Dragon d'Eau et de la Neige";
                 default -> "Compétence spéciale (Arbre " + arbre + ")";
             };
             case "Chevalier" -> switch (arbre) {
                 case 1  -> "Lance de Feu";
                 case 2  -> "Marteau vengeur";
                 case 3  -> "Lance du Tyran céleste";
+                case 5  -> "Lance Étoilée";
+                case 6  -> "Lance Émeraude de la Revendication";
+                case 7  -> "Lance de la Grâce Purificatrice";
                 default -> "Compétence spéciale (Arbre " + arbre + ")";
             };
             case "Constellationniste" -> switch (arbre) {
                 case 1  -> "Invocation : Cancer";
                 case 2  -> "Invocation : Virgo";
                 case 3  -> "Invocation Aries";
+                case 5  -> "Invocation Libra : Gravity Changes";
+                case 6  -> "Invocation Taurus + Scorpion : Haches Sablées";
+                case 7  -> "Invocation Ophiuchus le Serpentaire";
                 default -> "Compétence spéciale (Arbre " + arbre + ")";
             };
             default -> "Compétence spéciale (Arbre " + arbre + ")";
         };
     }
 
-    /**
-     * Noms des ultimes débloqués par les arbres 4/8 — contenu pas encore défini par classe,
-     * renvoie un nom générique en attendant (voir Competences.ultimeArbre4/ultimeArbre8).
-     */
+    /** Noms des ultimes débloqués par les arbres 4/8 — dupliqué de MenuAbilite pour éviter la dépendance circulaire. */
     public static String getNomUltimeArbre(String classe, int arbre) {
-        return "Attaque ultime (Arbre " + arbre + ")";
+        if (classe == null) return "Attaque ultime (Arbre " + arbre + ")";
+        return switch (classe) {
+            case "Mage" -> switch (arbre) {
+                case 4  -> "Cataclysme d'Elipse";
+                case 8  -> "Nature Volcanique du Purgatoire";
+                default -> "Attaque ultime (Arbre " + arbre + ")";
+            };
+            case "Chasseur de Dragon" -> switch (arbre) {
+                case 4  -> "Tsunamie du Dragon d'Eau";
+                case 8  -> "Tsunamie et Blizzard du Dragon de l'Eau et de la Neige";
+                default -> "Attaque ultime (Arbre " + arbre + ")";
+            };
+            case "Chevalier" -> switch (arbre) {
+                case 4  -> "Danse des Lances Anémisthe";
+                case 8  -> "Lance Explosive Chasseuse de Démons";
+                default -> "Attaque ultime (Arbre " + arbre + ")";
+            };
+            case "Constellationniste" -> switch (arbre) {
+                case 4  -> "Invocation Leo : Regulus Punch";
+                case 8  -> "Urano Metria";
+                default -> "Attaque ultime (Arbre " + arbre + ")";
+            };
+            default -> "Attaque ultime (Arbre " + arbre + ")";
+        };
     }
 
     // ── Attaque de base ───────────────────────────────────────────────────
