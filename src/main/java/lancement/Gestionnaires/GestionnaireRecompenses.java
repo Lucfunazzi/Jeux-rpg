@@ -7,6 +7,7 @@ import Equipement.FriandiseFamilier;
 import Equipement.Inventaire;
 import Equipement.JetonIncursion;
 import Equipement.ParcheminAptitude;
+import Equipement.ParcheminXP;
 import Equipement.PotionEnergie;
 import Equipement.SceauDeRang;
 import Joueur.Personnage_principale;
@@ -14,7 +15,6 @@ import Personnage.FairyTail.perso_Rogue;
 import Personnage.FairyTail.perso_Sting;
 import Personnage.FairyTail.perso_Yukino;
 import Personnage.PersonnageBase;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -40,10 +40,11 @@ public class GestionnaireRecompenses {
 
     public boolean isNiveauReclame(int index) { return niveauReclame[index]; }
 
-    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau / boites d'equipement (facultatifs). */
+    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau / boites d'equipement / parchemins XP (facultatifs). */
     private record RecompenseNiveau(int or, int cartesOrLv1, int boitesPierreLv1,
                                      int parcheminsAptitude, SceauDeRang sceau,
-                                     int boitesEquipement, BoiteEquipement boiteEquipement) {}
+                                     int boitesEquipement, BoiteEquipement boiteEquipement,
+                                     int parcheminsXPB) {}
 
     private RecompenseNiveau calculerRecompenseNiveau(int index) {
         int or       = PALIERS_NIVEAU[index] * 500;
@@ -68,7 +69,10 @@ public class GestionnaireRecompenses {
             case 3  -> BoiteEquipement.B; // niveau 40
             default -> null;
         };
-        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau, boitesEquipement, boiteEquipement);
+        // Rattrapage XP pour les personnages recrutes en retard sur le joueur principal :
+        // 200x Parchemin XP [B] au niveau 30.
+        int parcheminsXPB = index == 2 ? 200 : 0;
+        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau, boitesEquipement, boiteEquipement, parcheminsXPB);
     }
 
     public String afficherRecompenseNiveau(int index) {
@@ -78,6 +82,7 @@ public class GestionnaireRecompenses {
         if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.NOM);
         if (r.sceau() != null)           sb.append(", 1x ").append(r.sceau().nom);
         if (r.boitesEquipement() > 0)    sb.append(", ").append(r.boitesEquipement()).append("x ").append(r.boiteEquipement().nom);
+        if (r.parcheminsXPB() > 0)       sb.append(", ").append(r.parcheminsXPB()).append("x ").append(new ParcheminXP(ParcheminXP.Rarete.B).getNom());
         return sb.toString();
     }
 
@@ -89,6 +94,7 @@ public class GestionnaireRecompenses {
         if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.NOM, r.parcheminsAptitude());
         if (r.sceau() != null)          inventaire.ajouterMateriau(r.sceau().nom, 1);
         if (r.boitesEquipement() > 0)   inventaire.ajouterMateriau(r.boiteEquipement().nom, r.boitesEquipement());
+        if (r.parcheminsXPB() > 0)      inventaire.ajouterParcheminXP(ParcheminXP.Rarete.B, r.parcheminsXPB());
         niveauReclame[index] = true;
         return "Niveau " + PALIERS_NIVEAU[index] + " reclame ! " + afficherRecompenseNiveau(index);
     }
@@ -231,19 +237,25 @@ public class GestionnaireRecompenses {
 
     /** Coup de pouce jour 2 : Parchemins de Chasse A, utilisables au Recrutement Rare. */
     public static final String MATERIAU_PARCHEMIN_JOUR2 = GestionnaireChasseTresor.PARCHEMIN_A;
-    public static final int    QUANTITE_PARCHEMIN_JOUR2 = 10;
+    public static final int    QUANTITE_PARCHEMIN_JOUR2 = 30;
 
     /** Personnages proposes dans le coffre de rang S du jour 7 (l'utilisateur en choisit un). */
     public static final String[] CHOIX_COFFRE_RANG_S = {"Yukino", "Sting", "Rogue"};
 
+    /** Boite de pierre Lv.4 : voir {@link lancement.Menus.MenuExamenS#nomBoite(int)}. */
+    private static final String BOITE_PIERRE_LV4 = lancement.Menus.MenuExamenS.nomBoite(4);
+
+    /** Pierre d'affinage : voir {@link lancement.Menus.MenuAmeliorations#MATERIAU_AFFINAGE}. */
+    private static final String MATERIAU_AFFINAGE = lancement.Menus.MenuAmeliorations.MATERIAU_AFFINAGE;
+
     public String afficherRecompenseJour(int jour) {
         return switch (jour) {
             case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie, 2x " + JetonIncursion.NOM;
-            case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 5x " + JetonIncursion.NOM;
-            case 3 -> "2 Petite(s) Potion(s) d'Energie, 8x " + JetonIncursion.NOM;
-            case 4 -> "3 000 or";
-            case 5 -> "1 Boite de pierre Lv.1";
-            case 6 -> "5 Carte(s) d'Or Lv.1, 2x " + FriandiseFamilier.MOYENNE.nom;
+            case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 100 Cartes d'or Lv.1, 2x Petite Potion d'Energie, 5x " + JetonIncursion.NOM;
+            case 3 -> "3 Potion d'Energie simple, 100 carte d'or lv.2, 5x " + GestionnaireChasseTresor.PARCHEMIN_S + ", 8x " + JetonIncursion.NOM;
+            case 4 -> "1 " + BoiteEquipement.A.nom + ", 20 cartes d'or lv.3, 2 grandes potions d'energies";
+            case 5 -> "4x " + BOITE_PIERRE_LV4 + ", 100 carte d'or lv3, 3x " + MATERIAU_AFFINAGE;
+            case 6 -> "30 carte d'or lv.5, 10x " + GestionnaireChasseTresor.PARCHEMIN_S + ", 10x " + FriandiseFamilier.MOYENNE.nom;
             default -> "Coffre de personnage [S] au choix : " + String.join(" / ", CHOIX_COFFRE_RANG_S);
         };
     }
@@ -258,17 +270,30 @@ public class GestionnaireRecompenses {
             }
             case 2 -> {
                 inventaire.ajouterMateriau(MATERIAU_PARCHEMIN_JOUR2, QUANTITE_PARCHEMIN_JOUR2);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
                 inventaire.ajouterMateriau(JetonIncursion.NOM, 5);
             }
             case 3 -> {
-                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 3);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 100);
+                inventaire.ajouterMateriau(GestionnaireChasseTresor.PARCHEMIN_S, 5);
                 inventaire.ajouterMateriau(JetonIncursion.NOM, 8);
             }
-            case 4 -> joueur.ajouterOr(3000);
-            case 5 -> inventaire.ajouterMateriau(BOITE_PIERRE_LV1, 1);
+            case 4 -> {
+                inventaire.ajouterMateriau(BoiteEquipement.A.nom, 1);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_3, 20);
+                inventaire.ajouterMateriau(PotionEnergie.GRANDE.nom, 2);
+            }
+            case 5 -> {
+                inventaire.ajouterMateriau(BOITE_PIERRE_LV4, 4);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_3, 100);
+                inventaire.ajouterMateriau(MATERIAU_AFFINAGE, 3);
+            }
             case 6 -> {
-                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 5);
-                inventaire.ajouterMateriau(FriandiseFamilier.MOYENNE.nom, 2);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_5, 30);
+                inventaire.ajouterMateriau(GestionnaireChasseTresor.PARCHEMIN_S, 10);
+                inventaire.ajouterMateriau(FriandiseFamilier.MOYENNE.nom, 10);
             }
             default -> throw new IllegalArgumentException("Le jour 7 necessite un choix, voir reclamerJour7().");
         }
@@ -302,17 +327,17 @@ public class GestionnaireRecompenses {
     public void setTerminee(boolean t)                    { this.terminee = t; }
 
     // ── Récompense quotidienne (paliers de temps) ───────────────────────────
+    // Reclamable une seule fois par jour calendaire (pas un simple cooldown de 30 min,
+    // sinon elle est repetable indefiniment dans la meme journee).
     private LocalDateTime derniereReclamation30min;
 
     public boolean peutReclamer30min() {
         return derniereReclamation30min == null
-                || Duration.between(derniereReclamation30min, LocalDateTime.now()).toMinutes() >= 30;
+                || !derniereReclamation30min.toLocalDate().equals(LocalDate.now());
     }
 
     public String getTempsRestant30min() {
-        if (peutReclamer30min()) return "Disponible";
-        long restant = 30 - Duration.between(derniereReclamation30min, LocalDateTime.now()).toMinutes();
-        return restant + " min restantes";
+        return peutReclamer30min() ? "Disponible" : "Revient demain";
     }
 
     public String reclamer30min(Inventaire inventaire) {

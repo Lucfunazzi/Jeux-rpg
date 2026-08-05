@@ -1,6 +1,7 @@
 package lancement.Chapitres;
 
 import Equipement.EquipementFactory;
+import Effets.ImmuniteControle;
 import Personnage.PersonnageBase;
 import lancement.GameContext;
 import lancement.Stage;
@@ -102,7 +103,15 @@ public class Chapitre5 implements Chapitre {
            }
            case 7 -> {
                // Combat scripte : Mirajane affronte seule Freed (et ses mobs), l'equipe du joueur n'intervient pas.
-               perso_Mirajane mirajane = Formation.creerInvite(perso_Mirajane::new, CourbeChapitres.niveauEnnemiPourStage(5, 7), 25000, 15000, 1800, 800);
+               // Stats reduites (par rapport a l'ancien 25000/15000) pour un combat plus court, et
+               // immunisee aux effets de controle pendant tout le combat : sans equipiers pour
+               // compenser, un seul Etourdissement/Paralysie/Sommeil suffirait a faire trainer le duel.
+               perso_Mirajane mirajane = Formation.creerInvite(() -> new perso_Mirajane() {
+                   @Override public void reinitialiserPourCombat() {
+                       super.reinitialiserPourCombat();
+                       this.ajouterEffet(new ImmuniteControle(20));
+                   }
+               }, CourbeChapitres.niveauEnnemiPourStage(5, 7), 12000, 6000, 1200, 400);
                yield lancerStageSolo(ctx, stage, estNouveau, mirajane);
            }
            case 8 -> {
@@ -111,7 +120,14 @@ public class Chapitre5 implements Chapitre {
            }
            case 9 -> {
                // Combat scripte 1 vs 1 : Mistgun (Jellal infiltre sous un autre nom) affronte seul Luxus.
-               perso_jellal mistgun = Formation.creerInvite(perso_jellal::new, CourbeChapitres.niveauEnnemiPourStage(5, 9), 6500, 1400, 500, 270);
+               // Immunise a la Paralysie de Luxus pendant tout le combat : seul face a lui, se faire
+               // paralyser gacherait des tours sans aucun equipier pour prendre le relais.
+               perso_jellal mistgun = Formation.creerInvite(() -> new perso_jellal() {
+                   @Override public void reinitialiserPourCombat() {
+                       super.reinitialiserPourCombat();
+                       this.ajouterEffet(new ImmuniteControle(20));
+                   }
+               }, CourbeChapitres.niveauEnnemiPourStage(5, 9), 6500, 1400, 500, 270);
                mistgun.setNom("Mistgun");
                yield lancerStageSolo(ctx, stage, estNouveau, mistgun);
            }
@@ -174,6 +190,7 @@ public class Chapitre5 implements Chapitre {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 3);
                 e.add(new EnnemiEvergreen(niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 yield new Stage(3, "Elfman vs Evergreen", 7800, 98, e);
@@ -184,6 +201,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 yield new Stage(4, "Gray vs Bixrow", 8100, 102, e);
             }
             case 5  -> {
@@ -192,12 +210,14 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 yield new Stage(5, "Lucy vs Bixrow", 8400, 106, e);
             }
             case 6  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 6);
                 e.add(new EnnemiEvergreen(niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
                 yield new Stage(6, "Erza contre Evergreen", 8700, 110, e);
@@ -213,6 +233,7 @@ public class Chapitre5 implements Chapitre {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 8);
                 e.add(new EnnemiLuxus(niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
                 yield new Stage(8, "Erza vs Luxus", 9300, 118, e);

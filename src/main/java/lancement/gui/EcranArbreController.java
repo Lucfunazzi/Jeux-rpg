@@ -34,7 +34,10 @@ public class EcranArbreController {
         String nomArbre = switch (numArbre) {
             case 1  -> "Voie du Combattant";
             case 2  -> "Voie du Maitre";
-            default -> "Voie de l'Ascension";
+            case 3  -> "Voie de l'Ascension";
+            case 4  -> "Voie de l'Ultime (a definir)";
+            case 8  -> "Voie de l'Ultime supreme (a definir)";
+            default -> "Voie de la Maitrise (a definir)";
         };
         titreLabel.setText("ARBRE " + numArbre + " - " + nomArbre);
         rafraichir();
@@ -85,7 +88,8 @@ public class EcranArbreController {
     private void debloquer(int index, NoeudArbre n) {
         ArbreCompetences arbre = ctx.joueur.getArbreCompetences();
         String message;
-        if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE) {
+        if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE
+                || n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_ULTIME) {
             message = MenuAbilite.debloquerNoeudCompetence(ctx, arbre, numArbre, index);
         } else {
             String resultat = arbre.tenterDebloquer(numArbre, index);

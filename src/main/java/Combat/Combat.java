@@ -24,6 +24,7 @@ public class Combat {
         public final boolean vivant;
         public final boolean coteJoueur;
         public final List<String> effets;
+        public final double pointsBouclier;
 
         PersonnageSnapshot(PersonnageBase p, boolean coteJoueur) {
             this.nom        = p.getNom();
@@ -38,6 +39,8 @@ public class Combat {
             for (Effet e : p.getEffetsActifs()) {
                 if (!e.estTermine()) this.effets.add(e.getNom());
             }
+            Bouclier bouclier = p.getEffet(Bouclier.class);
+            this.pointsBouclier = bouclier != null ? bouclier.getPointsBouclier() : 0;
         }
     }
 

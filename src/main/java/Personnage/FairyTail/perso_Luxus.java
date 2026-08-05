@@ -56,12 +56,24 @@ public class perso_Luxus extends PersonnageBase {
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Luxus utilise Poing Destructeur du Dragon de Foudre !");
+        boolean frappe = false;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && (ennemi.getRole().equals("Tank") || ennemi.getRole().equals("Support"))) {
+                frappe = true;
                 double degats = this.getAttaque() * 2.50;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
+                }
+            }
+        }
+        if (!frappe) {
+            PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+            if (repli != null) {
+                double degats = this.getAttaque() * 2.50;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, repli, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, repli, new Etourdissement(1), log);
                 }
             }
         }

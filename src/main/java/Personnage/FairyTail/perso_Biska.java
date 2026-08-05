@@ -58,7 +58,6 @@ public class perso_Biska extends PersonnageBase {
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Alzack") && allie.estVivant()) {
                 Combat.appliquerEffet(this, new BuffAttaque(0.05, 2), log);
-                log.add("Synergie Duo de tireurs : Alzack couvre Bisca ! +5% ATK.");
                 break;
             }
         }
@@ -95,8 +94,7 @@ public class perso_Biska extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Stinger Shot — inflige 80% ATK a une cible, "
-                + "applique Saignement (3% PV/tour) pendant 2 tours. "
-                + "[Synergie Duo de tireurs] Alzack vivant : +5% ATK pendant 2 tours.");
+                + "applique Saignement (3% PV/tour) pendant 2 tours.");
     }
 
     @Override

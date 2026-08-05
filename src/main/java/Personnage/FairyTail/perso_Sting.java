@@ -48,10 +48,9 @@ public class perso_Sting extends PersonnageBase {
         // Marque la cible + bonus dégâts critiques à Sting
         Combat.appliquerEffet(this, cible, new Fragilite(2, 0.35), log);
         Combat.appliquerEffet(this, this, new BuffTauxCritique(0.20, 2), log);
-        // Synergie : si Rogue est allié vivant, le marquage dure 1 tour de plus
+        // Si Rogue est allié vivant, le marquage dure 1 tour de plus
         for (PersonnageBase allie : equipeAlliee) {
             if (allie instanceof perso_Rogue && allie.estVivant()) {
-                log.add("Synergie Lumière & Ombre : le marquage est renforcé par la présence de Rogue !");
                 Combat.appliquerEffet(this, cible, new Fragilite(1, 0.10), log);
                 break;
             }
@@ -88,8 +87,7 @@ public class perso_Sting extends PersonnageBase {
     public void descriptionAttaqueSpeciale() {
         System.out.println("Rugissement du dragon sacre — Inflige 160% ATK a la cible. "
                 + "Applique Marquage (+35% degats recus) pendant 2 tours. "
-                + "Sting gagne +20% taux critique pendant 2 tours. "
-                + "Si Rogue est allie : marquage renforce.");
+                + "Sting gagne +20% taux critique pendant 2 tours.");
     }
 
     @Override

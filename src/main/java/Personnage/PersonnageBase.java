@@ -491,6 +491,9 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public void setTauxContre(double contre) { this.taux_contre = contre; }
 
     public double getAttaqueBase() { return attaqueBase; }
+    public double getDefenseBase() { return defenseBase; }
+    public double getVitesseBase() { return vitesseBase; }
+    public double getVieMaxBase() { return vieMax; }
     public double getDegatsRenvoi() { return degats_renvoi; }
 
     public void gagnerExperience(int montant) {
@@ -545,14 +548,26 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
                 : this.experienceMax + PALIER_EXPERIENCE_MAX;
     }
 
+    /**
+     * Multiplicateur applique au taux de croissance par niveau (1.0 = neutre, +5%/+5%/+3%
+     * inchanges). Permet a un personnage dont le coefficient peut changer en cours de partie
+     * (ex: rang du personnage principal) de ne repercuter un nouveau coefficient que sur les
+     * niveaux gagnes APRES le changement, sans reappliquer retroactivement tout l'historique
+     * de croissance deja acquis (ce qui provoquerait un boost instantane et disproportionne).
+     */
+    protected double multiplicateurCroissanceNiveau() {
+        return 1.0;
+    }
+
     public void monterDeNiveau() {
         this.niveau++;
         appliquerPalierExperienceMax();
-        this.vieMax += this.vieMax * 0.05;
+        double croissance = multiplicateurCroissanceNiveau();
+        this.vieMax += this.vieMax * 0.05 * croissance;
         this.vie = getVieMax();
-        this.attaque   += this.attaque   * 0.05;
-        this.defense   += this.defense   * 0.05;
-        this.vitesse   += this.vitesse   * 0.03;
+        this.attaque   += this.attaque   * 0.05 * croissance;
+        this.defense   += this.defense   * 0.05 * croissance;
+        this.vitesse   += this.vitesse   * 0.03 * croissance;
         this.attaqueBase        = this.attaque;
         this.defenseBase        = this.defense;
         this.vitesseBase        = this.vitesse;
@@ -571,11 +586,12 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     public void monterDeNiveauSilencieux() {
         this.niveau++;
         appliquerPalierExperienceMax();
-        this.vieMax   += this.vieMax   * 0.05;
+        double croissance = multiplicateurCroissanceNiveau();
+        this.vieMax   += this.vieMax   * 0.05 * croissance;
         this.vie       = getVieMax();
-        this.attaque  += this.attaque  * 0.05;
-        this.defense  += this.defense  * 0.05;
-        this.vitesse  += this.vitesse  * 0.03;
+        this.attaque  += this.attaque  * 0.05 * croissance;
+        this.defense  += this.defense  * 0.05 * croissance;
+        this.vitesse  += this.vitesse  * 0.03 * croissance;
         this.attaqueBase        = this.attaque;
         this.defenseBase        = this.defense;
         this.vitesseBase        = this.vitesse;

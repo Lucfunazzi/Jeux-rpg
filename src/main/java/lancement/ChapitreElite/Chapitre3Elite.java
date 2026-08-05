@@ -10,6 +10,7 @@ import Personnage.pnj.Chapitre3.EnnemiGajeel;
 import Personnage.pnj.EnnemisGeneriques.*;
 import Equipement.CarteOr;
 import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import lancement.GameContext;
@@ -174,13 +175,14 @@ public class Chapitre3Elite implements ChapitreElite {
      * Reprend exactement les combats du Chapitre 3 normal (Totomaru, Sol, Jubia, Gajeel,
      * Aria, José), mais sans aucun invité temporaire (Natsu/Elfman/Gray/Erza/Makarov) ni
      * combat scripté : c'est toujours notre propre formation qui affronte les boss, avec
-     * des niveaux plus eleves. L'equipement fantome (auto-equipe par Stage a partir du
-     * niveau) est deja au rang A pour tous ces niveaux (>= 35), au-dessus du rang B —
-     * voir EquipementFactory.rareteEnnemiPourNiveau.
+     * des niveaux plus eleves. Ces niveaux (>= 25) declenchent normalement l'equipement
+     * fantome automatique de Stage au rang A (voir EquipementFactory.rareteEnnemiPourNiveau),
+     * mais on l'ecrase volontairement ci-dessous par un set rang C tres upgrade (fortification/
+     * affinage/pierres) — voir EquipementFactory.equiperGearElite.
      */
     private Stage construireStage(int numero, GameContext ctx) {
         ArrayList<PersonnageBase> e = new ArrayList<>();
-        switch (numero) {
+        Stage stage = switch (numero) {
 
             // Stage 1 — Avant-garde renforcée (+12 niveaux vs normal)
             case 1 -> {
@@ -189,7 +191,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 33));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 33));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 32));
-                return new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 4500, 0, e);
+                yield new Stage(1, "[ELITE] L'assaut de Phantom Lord Renforcé", 4500, 0, e);
             }
 
             // Stage 2 — Totomaru élite + escorte
@@ -199,7 +201,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 35));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 34));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 34));
-                return new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 5500, 0, e);
+                yield new Stage(2, "[ELITE] Totomaru — Sept Flammes d'Élite", 5500, 0, e);
             }
 
             // Stage 3 — Sol élite + troupe lourde
@@ -209,7 +211,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 36));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 35));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, 35));
-                return new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 6750, 0, e);
+                yield new Stage(3, "[ELITE] Sol — L'Impénétrable d'Élite", 6750, 0, e);
             }
 
             // Stage 4 — Jubia élite + garde rapprochée
@@ -219,7 +221,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 37));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 37));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 36));
-                return new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
+                yield new Stage(4, "[ELITE] Jubia — L'Eau qui Brise d'Élite", 8000, 0, e);
             }
 
             // Stage 5 — Gajeel élite + escorte
@@ -229,7 +231,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 39));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 39));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 38));
-                return new Stage(5, "[ELITE] Gajeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
+                yield new Stage(5, "[ELITE] Gajeel — Le Dragon d'Acier d'Élite", 9500, 0, e);
             }
 
             // Stage 6 — Aria élite + escorte d'élite
@@ -239,7 +241,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 41));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 40));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 40));
-                return new Stage(6, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 11000, 0, e);
+                yield new Stage(6, "[ELITE] Aria — Magie du Ciel Vide Transcendée", 11000, 0, e);
             }
 
             // Stage 7 — José élite + escorte d'élite
@@ -249,7 +251,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 42));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 42));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 41));
-                return new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
+                yield new Stage(7, "[ELITE] José — L'Ombre Transcendée", 13000, 0, e);
             }
 
             // Stage 8 — José élite + escorte d'élite (contre-offensive)
@@ -259,7 +261,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 45));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 45));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 44));
-                return new Stage(8, "[ELITE] José Pora — Contre-Offensive de Phantom Lord", 15000, 0, e);
+                yield new Stage(8, "[ELITE] José Pora — Contre-Offensive de Phantom Lord", 15000, 0, e);
             }
 
             // Stage 9 — José élite + escorte d'élite (puissance maximale)
@@ -269,7 +271,7 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 49));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 49));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 48));
-                return new Stage(9, "[ELITE] José Pora — Puissance Maximale", 17500, 0, e);
+                yield new Stage(9, "[ELITE] José Pora — Puissance Maximale", 17500, 0, e);
             }
 
             // Stage 10 — Aria élite + escorte d'élite (dernier rempart)
@@ -279,11 +281,18 @@ public class Chapitre3Elite implements ChapitreElite {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, 53));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, 53));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, 52));
-                return new Stage(10, "[ELITE] Aria — Le Dernier Rempart d'Élite", 21000, 0, e);
+                yield new Stage(10, "[ELITE] Aria — Le Dernier Rempart d'Élite", 21000, 0, e);
             }
 
-            default -> { return new Stage(numero, "???", 0, 0, e); }
+            default -> new Stage(numero, "???", 0, 0, e);
+        };
+
+        // Equipement fantome d'Elite : ecrase volontairement le rang A auto-applique par le
+        // seuil niveau 25 de Stage (voir EquipementFactory.equiperGearElite).
+        for (PersonnageBase ennemi : e) {
+            EquipementFactory.equiperGearElite(ennemi, Equipement.Rarete.C, 6, 20, 30, 10, 10, 5, 5);
         }
+        return stage;
     }
 
     public String getTitreStage(int numero) {

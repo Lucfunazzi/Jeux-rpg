@@ -40,7 +40,9 @@ public class GestionnaireEquipement {
             if (meilleur != null) {
                 inventaire.retirerEquipement(meilleur);
                 if (actuel != null) inventaire.ajouterEquipement(actuel);
-                cible.equiper(meilleur);
+                // Copie independante : sinon plusieurs personnages equipant "le meme type" depuis
+                // l'inventaire partageraient le meme objet, et fortifier l'un affecterait tous les autres.
+                cible.equiper(meilleur.copier());
                 detail.append("  ").append(meilleur.getNomSlot()).append(" : ")
                         .append(actuel != null ? actuel.getNomAffiche() + " -> " : "(vide) -> ")
                         .append(meilleur.getNomAffiche()).append("\n");

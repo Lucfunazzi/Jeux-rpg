@@ -51,6 +51,7 @@ public class perso_Totomaru extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Totomaru génère un feu orange nauséabond — " + cible.getNom() + " est submergé par l'odeur répugnante !");
         double degats = this.getAttaque() * 1.20;
+        if (cible.aEffet(Trempe.class)) degats *= 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Poison(2, 0.06), log);
         
@@ -66,6 +67,7 @@ public class perso_Totomaru extends PersonnageBase {
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = (this.getAttaque() * 1.00) * multiplicateurRage;
+                if (cible.aEffet(Trempe.class)) degats *= 1.20;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 Combat.appliquerEffet(this, cible, new Brulure(2, 0.07), log);
                

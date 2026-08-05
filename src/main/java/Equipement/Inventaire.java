@@ -403,7 +403,22 @@ public class Inventaire {
         }
     }
 
+    /**
+     * Deux pieces ne partagent un stack que si elles sont rigoureusement identiques (nom, rarete,
+     * fortification, affinage, pierres) : une piece fortifiee/affinee/incrustee ne doit jamais
+     * fusionner avec une piece "neuve" du meme type, sous peine de melanger leurs etats.
+     */
     private boolean memeStack(Equipement a, Equipement b) {
-        return a.getNom().equals(b.getNom()) && a.getRarete() == b.getRarete();
+        if (!a.getNom().equals(b.getNom()) || a.getRarete() != b.getRarete()) return false;
+        if (a.getNiveauFortification() != b.getNiveauFortification()) return false;
+        if (a.getNiveauAffinage() != b.getNiveauAffinage()) return false;
+        for (int i = 0; i < Equipement.NB_EMPLACEMENTS_PIERRES; i++) {
+            Pierre pa = a.getPierre(i);
+            Pierre pb = b.getPierre(i);
+            if (pa == null && pb == null) continue;
+            if (pa == null || pb == null) return false;
+            if (pa.getType() != pb.getType() || pa.getNiveau() != pb.getNiveau()) return false;
+        }
+        return true;
     }
 }

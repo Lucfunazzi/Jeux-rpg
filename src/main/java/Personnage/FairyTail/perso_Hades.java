@@ -56,14 +56,28 @@ public class perso_Hades extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hades embrase les supports ennemis d'un Amaterasu implacable !");
+        boolean frappe = false;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals("Support")) {
+                frappe = true;
                 double degats = this.getAttaque() * 2.20;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.10), log);
                     Combat.appliquerEffet(this, ennemi, new Silence(2), log);
                     Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.30), log);
+                }
+            }
+        }
+        if (!frappe) {
+            PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
+            if (repli != null) {
+                double degats = this.getAttaque() * 2.20;
+                boolean touche = Combat.appliquerDegatsAvecLog(this, repli, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, repli, new Brulure(2, 0.10), log);
+                    Combat.appliquerEffet(this, repli, new Silence(2), log);
+                    Combat.appliquerEffet(this, repli, new Malediction(2, 0.30), log);
                 }
             }
         }

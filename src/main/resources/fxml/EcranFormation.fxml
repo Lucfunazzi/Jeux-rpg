@@ -38,6 +38,7 @@
                 <Button text="Ajouter un personnage" onAction="#onAjouter" styleClass="menu-bouton"/>
                 <Button text="Retirer un personnage" onAction="#onRetirer" styleClass="menu-bouton-danger"/>
                 <Button text="Changer la competence speciale" onAction="#onChangerCompetence" styleClass="menu-bouton"/>
+                <Button text="Changer l'attaque ultime" onAction="#onChangerUltime" styleClass="menu-bouton"/>
             </VBox>
         </VBox>
     </center>

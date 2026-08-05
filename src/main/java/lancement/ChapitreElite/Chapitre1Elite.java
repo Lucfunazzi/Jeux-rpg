@@ -130,7 +130,7 @@ public class Chapitre1Elite implements ChapitreElite {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();
         int niveau = niveauPourStage(numero);
         // recompenseXP = 0 : la montée de niveau passe exclusivement par les quêtes
-        switch (numero) {
+        Stage stage = switch (numero) {
             case 1 -> {
                 ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_1_ELITE, niveau));ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau));
                 ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
@@ -140,48 +140,55 @@ public class Chapitre1Elite implements ChapitreElite {
                 else if (roll == 1) arme = EquipementFactory.batonC();
                 else if (roll == 2) arme = EquipementFactory.gantsArmeC();
                 else                arme = EquipementFactory.fouetC();
-                return new Stage(1, "Prologue Elite", 100, 0, ennemis, arme);
+                yield new Stage(1, "Prologue Elite", 100, 0, ennemis, arme);
             }
             case 2  -> { ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau));
                          ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(2, "Bora le charmeur Elite", 1500, 300, ennemis, EquipementFactory.couvreCheC()); }
+                         yield new Stage(2, "Bora le charmeur Elite", 1500, 0, ennemis, EquipementFactory.couvreCheC()); }
 
             case 3  -> { ennemis.add(new EnnemiBora(niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau));
                         ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(3, "Chemin vers fairy tail Elite", 2000, 310, ennemis, EquipementFactory.bottesC()); }
+                         yield new Stage(3, "Chemin vers fairy tail Elite", 2000, 0, ennemis, EquipementFactory.bottesC()); }
 
             case 4  -> { ennemis.add(new EnnemiNatsuStage4(niveau)); ennemis.add(new EnnemiGrayStage4(niveau)); ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(4, "L'arrivée de la reine des fées Elite", 2800, 320, ennemis, EquipementFactory.jambieresC()); }
+                         yield new Stage(4, "L'arrivée de la reine des fées Elite", 2800, 0, ennemis, EquipementFactory.jambieresC()); }
 
             case 5  -> { ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
                         ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(5, "Premier mission pour Lucy Elite", 3400, 330, ennemis, EquipementFactory.mainsC()); }
+                         yield new Stage(5, "Premier mission pour Lucy Elite", 3400, 0, ennemis, EquipementFactory.mainsC()); }
 
             case 6  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau));
                         ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage1DPS(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(6, "Le duc evarlo Elite", 3800, 340, ennemis, EquipementFactory.torseC()); }
+                         yield new Stage(6, "Le duc evarlo Elite", 3800, 0, ennemis, EquipementFactory.torseC()); }
 
 
             case 7  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiBora(niveau));
                          ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau));
                          ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(7, "Retour a fairy tail Elite ", 4400, 350, ennemis); }
+                         yield new Stage(7, "Retour a fairy tail Elite ", 4400, 0, ennemis); }
 
 
             case 8  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1_ELITE, niveau));
                          ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(8, "Eisen Wald Elite", 5200, 360, ennemis); }
+                         yield new Stage(8, "Eisen Wald Elite", 5200, 0, ennemis); }
 
 
             case 9  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiEligor(niveau));
                          ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_1_ELITE, niveau));
-                         return new Stage(9, "Eligor le mage de vent Elite", 6200, 370, ennemis); }
+                         yield new Stage(9, "Eligor le mage de vent Elite", 6200, 0, ennemis); }
 
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
 
-                         return new Stage(10, "La flute maudite Elite", 8000, 380, ennemis); }
-            default -> { return new Stage(numero, "???", 0, 0, ennemis); }
+                         yield new Stage(10, "La flute maudite Elite", 8000, 0, ennemis); }
+            default -> new Stage(numero, "???", 0, 0, ennemis);
+        };
+
+        // Equipement fantome d'Elite : contourne volontairement le seuil de niveau 25 de Stage
+        // (voir EquipementFactory.equiperGearElite) car le mode Elite est optionnel et delibere.
+        for (PersonnageBase e : ennemis) {
+            EquipementFactory.equiperGearElite(e, Equipement.Rarete.C, 3, 1, 10, 1, 3, 1, 2);
         }
+        return stage;
     }
 
     public String getTitreStage(int numero) {

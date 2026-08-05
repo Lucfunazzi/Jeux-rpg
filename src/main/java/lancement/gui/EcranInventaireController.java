@@ -61,6 +61,9 @@ public class EcranInventaireController {
 
     private GameContext ctx;
 
+    /** Onglet de rareté actif dans la section Équipements (premier onglet = C par défaut). */
+    private Equipement.Rarete ongletEquipementActif = Equipement.Rarete.C;
+
     @FXML private VBox contenuBox;
 
     public void initData(GameContext ctx) {
@@ -74,11 +77,16 @@ public class EcranInventaireController {
         contenuBox.getChildren().clear();
 
         contenuBox.getChildren().add(titreSection("Équipements (" + inv.getStacks().size() + ")"));
-        if (inv.getStacks().isEmpty()) {
-            contenuBox.getChildren().add(texteVide("Aucun équipement."));
+        contenuBox.getChildren().add(ongletsRarete());
+        List<Inventaire.StackEquipement> stacksFiltres = new ArrayList<>();
+        for (Inventaire.StackEquipement s : inv.getStacks()) {
+            if (s.getEquipement().getRarete() == ongletEquipementActif) stacksFiltres.add(s);
+        }
+        if (stacksFiltres.isEmpty()) {
+            contenuBox.getChildren().add(texteVide("Aucun équipement de rareté " + ongletEquipementActif + "."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
-            for (Inventaire.StackEquipement s : inv.getStacks()) {
+            for (Inventaire.StackEquipement s : stacksFiltres) {
                 grille.getChildren().add(carteEquipement(s));
             }
             contenuBox.getChildren().add(grille);
@@ -184,6 +192,26 @@ public class EcranInventaireController {
         return l;
     }
 
+    /** Rangée d'onglets pour naviguer entre les raretés d'équipement (C, B, A, S, SS, SSS, UR)
+     *  au lieu d'un unique scroll avec tout mélangé. */
+    private Node ongletsRarete() {
+        HBox onglets = new HBox(6);
+        onglets.setAlignment(Pos.CENTER_LEFT);
+        for (Equipement.Rarete r : Equipement.Rarete.values()) {
+            Label onglet = new Label(r.name());
+            onglet.getStyleClass().add(r == ongletEquipementActif ? "carte-item-joueur" : "carte-item");
+            onglet.setCursor(Cursor.HAND);
+            onglet.setPrefWidth(50);
+            onglet.setAlignment(Pos.CENTER);
+            onglet.setOnMouseClicked(ev -> {
+                ongletEquipementActif = r;
+                rafraichir();
+            });
+            onglets.getChildren().add(onglet);
+        }
+        return onglets;
+    }
+
     // ── Cartes ────────────────────────────────────────────────────────────
 
     /** Carte detaillee pour un equipement : badge de rarete, nom, slot + description, quantite. Clic -> Equiper/Vendre. */
@@ -213,7 +241,7 @@ public class EcranInventaireController {
         ligne.getStyleClass().add("carte-item");
         ligne.setPrefWidth(320);
         ligne.setCursor(Cursor.HAND);
-        ligne.setOnMouseClicked(ev -> actionsEquipement(e));
+        ligne.setOnMouseClicked(ev -> actionsEquipement(s));
         return ligne;
     }
 
@@ -443,15 +471,17 @@ public class EcranInventaireController {
 
     // ── Actions equipement (Equiper / Vendre) ───────────────────────────────
 
-    private void actionsEquipement(Equipement e) {
+    private void actionsEquipement(Inventaire.StackEquipement s) {
+        Equipement e = s.getEquipement();
         ButtonType equiperBtn  = new ButtonType("Équiper");
         ButtonType vendreBtn   = new ButtonType("Vendre (" + prixVenteEquipement(e.getRarete()) + " or)");
-        ButtonType recyclerBtn = new ButtonType("Recycler (" + EquipementFactory.valeurRecyclage(e.getRarete()) + " pièces)");
+        ButtonType recyclerBtn = new ButtonType("Recycler (" + EquipementFactory.valeurRecyclage(e.getRarete())
+                + " pièces" + (s.getQuantite() > 1 ? "/pièce)" : ")"));
         Optional<ButtonType> choix = choisirAction(e.getNomAffiche(), e.toString(), equiperBtn, vendreBtn, recyclerBtn);
         if (choix.isEmpty()) return;
         if (choix.get() == equiperBtn) equiperEquipement(e);
         else if (choix.get() == vendreBtn) vendreEquipement(e);
-        else if (choix.get() == recyclerBtn) recyclerEquipement(e);
+        else if (choix.get() == recyclerBtn) recyclerEquipement(s);
     }
 
     private void equiperEquipement(Equipement e) {
@@ -494,14 +524,42 @@ public class EcranInventaireController {
         rafraichir();
     }
 
-    private void recyclerEquipement(Equipement e) {
+    private void recyclerEquipement(Inventaire.StackEquipement s) {
+        Equipement e = s.getEquipement();
         int valeur = EquipementFactory.valeurRecyclage(e.getRarete());
-        if (!confirmer("Recycler " + e.getNomAffiche() + " contre " + valeur + " Pièces d'équipement ?")) return;
+        int dispo = s.getQuantite();
 
-        ctx.inventaire.retirerEquipement(e);
-        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, valeur);
+        int quantite;
+        if (dispo > 1) {
+            TextInputDialog dialog = new TextInputDialog(String.valueOf(dispo));
+            dialog.setTitle("Recycler " + e.getNomAffiche());
+            dialog.setHeaderText(null);
+            dialog.setContentText("Vous en avez " + dispo + ".\nCombien recycler (" + valeur + " Pièces d'équipement chacune) ?");
+            styliser(dialog);
+            Optional<String> reponse = dialog.showAndWait();
+            if (reponse.isEmpty()) return;
+            try {
+                quantite = Integer.parseInt(reponse.get().trim());
+            } catch (NumberFormatException ex) {
+                info("Recycler", "Entree invalide.");
+                return;
+            }
+            if (quantite <= 0 || quantite > dispo) {
+                info("Recycler", "Quantite invalide. Vous en avez " + dispo + ".");
+                return;
+            }
+        } else {
+            quantite = 1;
+            if (!confirmer("Recycler " + e.getNomAffiche() + " contre " + valeur + " Pièces d'équipement ?")) return;
+        }
+
+        for (int i = 0; i < quantite; i++) {
+            ctx.inventaire.retirerEquipement(e);
+        }
+        int total = valeur * quantite;
+        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, total);
         ctx.sauvegarde.sauvegarder(ctx);
-        info("Recycler", e.getNomAffiche() + " recyclé pour " + valeur + " Pièces d'équipement.");
+        info("Recycler", quantite + "x " + e.getNomAffiche() + " recyclé(s) pour " + total + " Pièces d'équipement.");
         rafraichir();
     }
 
@@ -840,6 +898,13 @@ public class EcranInventaireController {
                 gestionnaireFragments.getCatalogue(), this::carteFragmentBoutique);
         if (choisi == null) return;
 
+        int niveauRequis = EquipementFactory.niveauRequisAchatFragmentBoutiqueEquipement(choisi.getRarete());
+        if (ctx.joueur.getNiveau() < niveauRequis) {
+            info("Boutique d'équipement", choisi.getNomFragment() + " nécessite le niveau "
+                    + niveauRequis + " (actuel : " + ctx.joueur.getNiveau() + ").");
+            return;
+        }
+
         int prix = EquipementFactory.prixFragmentBoutiqueEquipement(choisi.getRarete());
         if (solde < prix) {
             info("Boutique d'équipement", "Pièces insuffisantes : " + solde + " / " + prix + ".");
@@ -861,7 +926,11 @@ public class EcranInventaireController {
         nom.getStyleClass().add("item-nom");
         int prix = EquipementFactory.prixFragmentBoutiqueEquipement(f.getRarete());
         int possede = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
-        Label detail = new Label(prix + " pièces / fragment  ·  possédé : " + possede + "/" + f.getQuantiteRequise());
+        int niveauRequis = EquipementFactory.niveauRequisAchatFragmentBoutiqueEquipement(f.getRarete());
+        boolean verrouille = ctx.joueur.getNiveau() < niveauRequis;
+        String infoLigne = prix + " pièces / fragment  ·  possédé : " + possede + "/" + f.getQuantiteRequise()
+                + (verrouille ? "  ·  🔒 Niveau " + niveauRequis + " requis" : "");
+        Label detail = new Label(infoLigne);
         detail.getStyleClass().add("item-detail");
 
         VBox texte = new VBox(2, nom, detail);
@@ -869,6 +938,7 @@ public class EcranInventaireController {
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(320);
+        if (verrouille) carte.setOpacity(0.6);
         return carte;
     }
 

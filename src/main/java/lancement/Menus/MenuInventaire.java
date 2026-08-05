@@ -711,17 +711,20 @@ public class MenuInventaire {
 
     // ── Recyclage d'equipement (contre des Pieces d'equipement) ────────────
     private void menuRecyclerEquipement(GameContext ctx, Scanner scanner) {
-        List<Equipement> equipements = ctx.inventaire.getEquipements();
-        if (equipements.isEmpty()) {
+        List<Inventaire.StackEquipement> stacks = ctx.inventaire.getStacks();
+        if (stacks.isEmpty()) {
             System.out.println("L'inventaire ne contient aucun equipement.");
             return;
         }
 
         System.out.println("\n--- Recycler un equipement ---");
-        for (int i = 0; i < equipements.size(); i++) {
-            Equipement e = equipements.get(i);
-            System.out.println("  " + (i + 1) + ". " + e
-                    + "  -> " + EquipementFactory.valeurRecyclage(e.getRarete()) + " Pieces d'equipement");
+        for (int i = 0; i < stacks.size(); i++) {
+            Inventaire.StackEquipement s = stacks.get(i);
+            Equipement e = s.getEquipement();
+            String ligne = "  " + (i + 1) + ". " + e
+                    + "  -> " + EquipementFactory.valeurRecyclage(e.getRarete()) + " Pieces d'equipement/piece";
+            if (s.getQuantite() > 1) ligne += "  (x" + s.getQuantite() + " en stock)";
+            System.out.println(ligne);
         }
         System.out.println("  0. Annuler");
         System.out.print("Votre choix : ");
@@ -734,25 +737,45 @@ public class MenuInventaire {
             return;
         }
         if (choix == 0) return;
-        if (choix < 1 || choix > equipements.size()) {
+        if (choix < 1 || choix > stacks.size()) {
             System.out.println("Choix invalide.");
             return;
         }
 
-        Equipement choisi = equipements.get(choix - 1);
+        Inventaire.StackEquipement stackChoisi = stacks.get(choix - 1);
+        Equipement choisi = stackChoisi.getEquipement();
         int valeur = EquipementFactory.valeurRecyclage(choisi.getRarete());
+        int dispo  = stackChoisi.getQuantite();
 
-        System.out.print("Recycler " + choisi.getNomAffiche() + " [" + choisi.getRarete() + "] contre "
-                + valeur + " Pieces d'equipement ? Cette action est definitive. (1 : Oui / 0 : Non) : ");
+        int quantite = 1;
+        if (dispo > 1) {
+            System.out.print("Vous en avez " + dispo + ". Combien en recycler (1-" + dispo + ") ? ");
+            try {
+                quantite = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Entree invalide.");
+                return;
+            }
+            if (quantite < 1 || quantite > dispo) {
+                System.out.println("Quantite invalide.");
+                return;
+            }
+        }
+
+        int total = valeur * quantite;
+        System.out.print("Recycler " + quantite + "x " + choisi.getNomAffiche() + " [" + choisi.getRarete() + "] contre "
+                + total + " Pieces d'equipement ? Cette action est definitive. (1 : Oui / 0 : Non) : ");
         if (!scanner.nextLine().trim().equals("1")) {
             System.out.println("Recyclage annule.");
             return;
         }
 
-        ctx.inventaire.retirerEquipement(choisi);
-        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, valeur);
+        for (int i = 0; i < quantite; i++) {
+            ctx.inventaire.retirerEquipement(choisi);
+        }
+        ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, total);
         ctx.sauvegarde.sauvegarder(ctx);
-        System.out.println(choisi.getNomAffiche() + " recycle pour " + valeur + " Pieces d'equipement.");
+        System.out.println(quantite + "x " + choisi.getNomAffiche() + " recycle(s) pour " + total + " Pieces d'equipement.");
     }
 
     // ── Boutique d'equipement (fragments contre Pieces d'equipement) ───────
@@ -765,8 +788,10 @@ public class MenuInventaire {
             FragmentEquipement f = catalogue.get(i);
             int prix = EquipementFactory.prixFragmentBoutiqueEquipement(f.getRarete());
             int possede = ctx.inventaire.getQuantiteMateriau(f.getNomFragment());
+            int niveauRequis = EquipementFactory.niveauRequisAchatFragmentBoutiqueEquipement(f.getRarete());
+            String verrou = ctx.joueur.getNiveau() < niveauRequis ? "  [VERROUILLE - niveau " + niveauRequis + " requis]" : "";
             System.out.println("  " + (i + 1) + ". " + f.getNomEquipement() + " [" + f.getRarete() + "] — "
-                    + prix + " pieces/fragment  (possede : " + possede + "/" + f.getQuantiteRequise() + ")");
+                    + prix + " pieces/fragment  (possede : " + possede + "/" + f.getQuantiteRequise() + ")" + verrou);
         }
         System.out.println("  0. Annuler");
         System.out.print("Acheter 1 fragment de quoi ? ");
@@ -785,6 +810,12 @@ public class MenuInventaire {
         }
 
         FragmentEquipement fragment = catalogue.get(choix - 1);
+        int niveauRequis = EquipementFactory.niveauRequisAchatFragmentBoutiqueEquipement(fragment.getRarete());
+        if (ctx.joueur.getNiveau() < niveauRequis) {
+            System.out.println(fragment.getNomFragment() + " necessite le niveau " + niveauRequis
+                    + " (actuel : " + ctx.joueur.getNiveau() + ").");
+            return;
+        }
         int prix = EquipementFactory.prixFragmentBoutiqueEquipement(fragment.getRarete());
         if (solde < prix) {
             System.out.println("Pieces insuffisantes : " + solde + " / " + prix + ".");

@@ -236,6 +236,8 @@ public class Formation {
      * Ajoute un invite (Erza, Natsu, Gray, Elfman, ...) a une copie d'equipe pour la duree
      * d'un seul combat, en respectant les regles de formation (1 Tank max, 3 DPS max joueur
      * compris, 3 Support max, 5 membres max au total) :
+     *   - si l'equipe alliee possede deja ce personnage dans sa formation, l'invite ne rejoint
+     *     pas l'equipe (regle valable pour tous les chapitres) ;
      *   - si le role de l'invite est deja au complet, remplace son membre le plus faible
      *     (le personnage principal n'est jamais retire) ;
      *   - sinon, si l'equipe est deja a 5, retire le membre le plus faible de toute l'equipe
@@ -243,6 +245,11 @@ public class Formation {
      *   - sinon, l'invite s'ajoute simplement.
      */
     public static void ajouterInviteTemporaire(ArrayList<PersonnageBase> equipe, PersonnageBase invite) {
+        boolean dejaPresent = equipe.stream().anyMatch(p -> p.getClass().equals(invite.getClass()));
+        if (dejaPresent) return;
+
+        alignerNiveauSurPrincipal(equipe, invite);
+
         String role = invite.getRole();
         long nbDuRole = equipe.stream().filter(p -> p.getRole().equals(role)).count();
 
@@ -252,6 +259,39 @@ public class Formation {
             retirerPlusFaible(equipe, p -> true);
         }
         equipe.add(invite);
+    }
+
+    /**
+     * Recalibre les stats de l'invite (tunees pour le niveau "narratif" du stage, via
+     * CourbeChapitres) sur le niveau reel du personnage principal : sans ca, un joueur en
+     * avance sur la courbe (farm de quetes) affronte un invite reste cale sur le niveau
+     * d'origine de l'histoire, ce qui le rend inutile et rend le combat trivial. Reutilise
+     * la meme formule de croissance que les ennemis (+5%/niveau sur PV/ATK/DEF, +3%/niveau
+     * en vitesse, voir PersonnageBase.monterDeNiveau) pour rester coherent avec le reste du jeu.
+     */
+    private static void alignerNiveauSurPrincipal(ArrayList<PersonnageBase> equipe, PersonnageBase invite) {
+        PersonnageBase principal = equipe.stream()
+                .filter(PersonnageBase::estPersonnagePrincipal)
+                .findFirst().orElse(null);
+        if (principal == null) return;
+
+        int niveauCible = principal.getNiveau();
+        int ecart = niveauCible - invite.getNiveau();
+        if (ecart == 0) return;
+
+        double ratioStat = Math.pow(1.05, ecart);
+        double ratioVit  = Math.pow(1.03, ecart);
+        double vieRecalibree      = invite.getVieMaxBase() * ratioStat;
+        double attaqueRecalibree  = invite.getAttaqueBase() * ratioStat;
+        double defenseRecalibree  = invite.getDefenseBase() * ratioStat;
+        double vitesseRecalibree  = invite.getVitesseBase() * ratioVit;
+
+        invite.setNiveau(niveauCible);
+        invite.setVieMax(vieRecalibree);
+        invite.setVie(vieRecalibree);
+        invite.setAttaque(attaqueRecalibree);
+        invite.setDefense(defenseRecalibree);
+        invite.setVitesse(vitesseRecalibree);
     }
 
     private static void retirerPlusFaible(ArrayList<PersonnageBase> equipe,

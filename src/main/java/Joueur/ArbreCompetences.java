@@ -2,10 +2,15 @@ package Joueur;
 
 public class ArbreCompetences {
 
-    // Trois arbres de 10 noeuds chacun
+    // Huit arbres de 10 noeuds chacun
     private final NoeudArbre[] noeuds1 = new NoeudArbre[10];
     private final NoeudArbre[] noeuds2 = new NoeudArbre[10];
     private final NoeudArbre[] noeuds3 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds4 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds5 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds6 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds7 = new NoeudArbre[10];
+    private final NoeudArbre[] noeuds8 = new NoeudArbre[10];
     private int pointsDisponibles = 0;
 
     public ArbreCompetences() {
@@ -50,25 +55,41 @@ public class ArbreCompetences {
         noeuds3[7] = new NoeudArbre(8,  "+5% VIT de base",          17, NoeudArbre.TypeBonus.VIT, 0.05);
         noeuds3[8] = new NoeudArbre(9,  "+7% ATK de base",          9,  NoeudArbre.TypeBonus.ATK, 0.07);
         noeuds3[9] = new NoeudArbre(10, "Troisieme attaque speciale", 14, NoeudArbre.TypeBonus.COMPETENCE_SPECIALE, 0);
+
+        // ── Arbres 4 a 8 — a completer ────────────────────────────────────
+        // Structure/plomberie posee (deblocage, cout a definir, sauvegarde), mais le contenu
+        // des noeuds 1-9 (bonus stats) et les noms/effets des noeuds 10 restent a definir.
+        // Arbre 4 et Arbre 8 debloquent une attaque ULTIME alternative (pas une speciale).
+        // Arbres 5, 6 et 7 debloquent chacun une attaque speciale alternative de plus.
+        remplirArbrePlaceholder(noeuds4, "Nouvelle attaque ultime",   NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
+        remplirArbrePlaceholder(noeuds5, "Quatrieme attaque speciale", NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbrePlaceholder(noeuds6, "Cinquieme attaque speciale", NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbrePlaceholder(noeuds7, "Sixieme attaque speciale",   NoeudArbre.TypeBonus.COMPETENCE_SPECIALE);
+        remplirArbrePlaceholder(noeuds8, "Deuxieme attaque ultime",   NoeudArbre.TypeBonus.COMPETENCE_ULTIME);
+    }
+
+    /**
+     * Remplit un arbre 4-8 avec des noeuds 1-9 vides (0 pt, aucun bonus — a definir plus tard)
+     * et un noeud 10 du type demande (cout place a 1 pt en attendant l'equilibrage definitif).
+     */
+    private static void remplirArbrePlaceholder(NoeudArbre[] noeuds, String nomNoeud10, NoeudArbre.TypeBonus typeNoeud10) {
+        for (int i = 0; i < 9; i++) {
+            noeuds[i] = new NoeudArbre(i + 1, "A definir", 0, NoeudArbre.TypeBonus.ATK, 0);
+        }
+        noeuds[9] = new NoeudArbre(10, nomNoeud10, 1, typeNoeud10, 0);
     }
 
     // ── Débloquer un nœud ─────────────────────────────────────────────────
     /**
-     * @param arbre  1, 2 ou 3
+     * @param arbre  1 a 8
      * @param index  1–10
      */
     public String tenterDebloquer(int arbre, int index) {
-        NoeudArbre[] noeuds = switch (arbre) {
-            case 1 -> noeuds1;
-            case 2 -> noeuds2;
-            default -> noeuds3;
-        };
+        NoeudArbre[] noeuds = noeudsDe(arbre);
         int i = index - 1;
 
-        if (arbre == 2 && !isArbre2Debloque())
-            return "L'arbre 2 est verrouille. Terminez l'arbre 1 pour le debloquer.";
-        if (arbre == 3 && !isArbre3Debloque())
-            return "L'arbre 3 est verrouille. Terminez l'arbre 2 pour le debloquer.";
+        if (arbre >= 2 && arbre <= 8 && !arbreDebloque(arbre))
+            return "L'arbre " + arbre + " est verrouille. Terminez l'arbre " + (arbre - 1) + " pour le debloquer.";
         if (i < 0 || i >= 10) return "Noeud invalide.";
         if (noeuds[i].isDebloque()) return "Noeud deja debloque.";
         if (i > 0 && !noeuds[i - 1].isDebloque())
@@ -96,20 +117,50 @@ public class ArbreCompetences {
 
     private double bonusPar(NoeudArbre.TypeBonus type) {
         double total = 0;
-        for (NoeudArbre n : noeuds1)
-            if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
-        for (NoeudArbre n : noeuds2)
-            if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
-        for (NoeudArbre n : noeuds3)
-            if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
+        for (NoeudArbre[] noeuds : tousLesArbres())
+            for (NoeudArbre n : noeuds)
+                if (n.isDebloque() && n.getTypeBonus() == type) total += n.getValeurBonus();
         return total;
+    }
+
+    private NoeudArbre[][] tousLesArbres() {
+        return new NoeudArbre[][]{ noeuds1, noeuds2, noeuds3, noeuds4, noeuds5, noeuds6, noeuds7, noeuds8 };
+    }
+
+    /** @param arbre 1 a 8 */
+    private NoeudArbre[] noeudsDe(int arbre) {
+        return switch (arbre) {
+            case 1 -> noeuds1;
+            case 2 -> noeuds2;
+            case 3 -> noeuds3;
+            case 4 -> noeuds4;
+            case 5 -> noeuds5;
+            case 6 -> noeuds6;
+            case 7 -> noeuds7;
+            default -> noeuds8;
+        };
+    }
+
+    /** Un arbre (2 a 8) est debloque quand le noeud 10 de l'arbre precedent est debloque. */
+    private boolean arbreDebloque(int arbre) {
+        return arbre <= 1 || noeudsDe(arbre - 1)[9].isDebloque();
     }
 
     public boolean isNoeud10Debloque()  { return noeuds1[9].isDebloque(); }
     public boolean isNoeud10Arbre2Debloque() { return noeuds2[9].isDebloque(); }
     public boolean isNoeud10Arbre3Debloque() { return noeuds3[9].isDebloque(); }
+    public boolean isNoeud10Arbre4Debloque() { return noeuds4[9].isDebloque(); }
+    public boolean isNoeud10Arbre5Debloque() { return noeuds5[9].isDebloque(); }
+    public boolean isNoeud10Arbre6Debloque() { return noeuds6[9].isDebloque(); }
+    public boolean isNoeud10Arbre7Debloque() { return noeuds7[9].isDebloque(); }
+    public boolean isNoeud10Arbre8Debloque() { return noeuds8[9].isDebloque(); }
     public boolean isArbre2Debloque()   { return isNoeud10Debloque(); }
     public boolean isArbre3Debloque()   { return isNoeud10Arbre2Debloque(); }
+    public boolean isArbre4Debloque()   { return isNoeud10Arbre3Debloque(); }
+    public boolean isArbre5Debloque()   { return isNoeud10Arbre4Debloque(); }
+    public boolean isArbre6Debloque()   { return isNoeud10Arbre5Debloque(); }
+    public boolean isArbre7Debloque()   { return isNoeud10Arbre6Debloque(); }
+    public boolean isArbre8Debloque()   { return isNoeud10Arbre7Debloque(); }
 
     // ── Points ────────────────────────────────────────────────────────────
     public void ajouterPoints(int pts)      { this.pointsDisponibles += pts; }
@@ -120,42 +171,43 @@ public class ArbreCompetences {
     public NoeudArbre getNoeud(int index)           { return noeuds1[index - 1]; }
     public NoeudArbre getNoeudArbre2(int index)     { return noeuds2[index - 1]; }
     public NoeudArbre getNoeudArbre3(int index)     { return noeuds3[index - 1]; }
+    public NoeudArbre getNoeudArbre4(int index)     { return noeuds4[index - 1]; }
+    public NoeudArbre getNoeudArbre5(int index)     { return noeuds5[index - 1]; }
+    public NoeudArbre getNoeudArbre6(int index)     { return noeuds6[index - 1]; }
+    public NoeudArbre getNoeudArbre7(int index)     { return noeuds7[index - 1]; }
+    public NoeudArbre getNoeudArbre8(int index)     { return noeuds8[index - 1]; }
+
+    /** @param arbre 1 a 8, @param index 1-10 — accesseur generique equivalent a getNoeud/getNoeudArbreN. */
+    public NoeudArbre getNoeud(int arbre, int index) { return noeudsDe(arbre)[index - 1]; }
 
     // ── Sérialisation ─────────────────────────────────────────────────────
-    public boolean[] getEtatNoeuds() {
+    private boolean[] etatDe(NoeudArbre[] noeuds) {
         boolean[] etat = new boolean[10];
-        for (int i = 0; i < 10; i++) etat[i] = noeuds1[i].isDebloque();
+        for (int i = 0; i < 10; i++) etat[i] = noeuds[i].isDebloque();
         return etat;
     }
 
-    public void setEtatNoeuds(boolean[] etat) {
-        if (etat == null) return;
-        for (int i = 0; i < Math.min(etat.length, 10); i++) {
-            if (etat[i]) noeuds1[i].debloquer();
-        }
-    }
-
-    public boolean[] getEtatNoeuds2() {
-        boolean[] etat = new boolean[10];
-        for (int i = 0; i < 10; i++) etat[i] = noeuds2[i].isDebloque();
-        return etat;
-    }
-
-    public void setEtatNoeuds2(boolean[] etat) {
+    private void appliquerEtat(NoeudArbre[] noeuds, boolean[] etat) {
         if (etat == null) return;
         for (int i = 0; i < Math.min(etat.length, 10); i++)
-            if (etat[i]) noeuds2[i].debloquer();
+            if (etat[i]) noeuds[i].debloquer();
     }
 
-    public boolean[] getEtatNoeuds3() {
-        boolean[] etat = new boolean[10];
-        for (int i = 0; i < 10; i++) etat[i] = noeuds3[i].isDebloque();
-        return etat;
-    }
+    public boolean[] getEtatNoeuds()  { return etatDe(noeuds1); }
+    public boolean[] getEtatNoeuds2() { return etatDe(noeuds2); }
+    public boolean[] getEtatNoeuds3() { return etatDe(noeuds3); }
+    public boolean[] getEtatNoeuds4() { return etatDe(noeuds4); }
+    public boolean[] getEtatNoeuds5() { return etatDe(noeuds5); }
+    public boolean[] getEtatNoeuds6() { return etatDe(noeuds6); }
+    public boolean[] getEtatNoeuds7() { return etatDe(noeuds7); }
+    public boolean[] getEtatNoeuds8() { return etatDe(noeuds8); }
 
-    public void setEtatNoeuds3(boolean[] etat) {
-        if (etat == null) return;
-        for (int i = 0; i < Math.min(etat.length, 10); i++)
-            if (etat[i]) noeuds3[i].debloquer();
-    }
+    public void setEtatNoeuds(boolean[] etat)  { appliquerEtat(noeuds1, etat); }
+    public void setEtatNoeuds2(boolean[] etat) { appliquerEtat(noeuds2, etat); }
+    public void setEtatNoeuds3(boolean[] etat) { appliquerEtat(noeuds3, etat); }
+    public void setEtatNoeuds4(boolean[] etat) { appliquerEtat(noeuds4, etat); }
+    public void setEtatNoeuds5(boolean[] etat) { appliquerEtat(noeuds5, etat); }
+    public void setEtatNoeuds6(boolean[] etat) { appliquerEtat(noeuds6, etat); }
+    public void setEtatNoeuds7(boolean[] etat) { appliquerEtat(noeuds7, etat); }
+    public void setEtatNoeuds8(boolean[] etat) { appliquerEtat(noeuds8, etat); }
 }

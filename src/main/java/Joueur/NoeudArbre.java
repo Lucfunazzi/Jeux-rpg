@@ -2,7 +2,7 @@ package Joueur;
 
 public class NoeudArbre {
 
-    public enum TypeBonus { ATK, DEF, PV, VIT, COMPETENCE_SPECIALE }
+    public enum TypeBonus { ATK, DEF, PV, VIT, COMPETENCE_SPECIALE, COMPETENCE_ULTIME }
 
     private final int    index;
     private final String description;

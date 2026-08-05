@@ -48,7 +48,13 @@ public class perso_Rustyrose extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Rustyrose matérialise un Golem de Création Vivante !");
-        Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.10), log);
+        double ratioBouclier = 0.10;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.getNom().equals("Azuma") && allie.estVivant()) {
+                ratioBouclier = 0.15;
+            }
+        }
+        Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * ratioBouclier), log);
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = this.getAttaque() * 1.20;

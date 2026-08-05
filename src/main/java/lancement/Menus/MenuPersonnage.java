@@ -228,6 +228,7 @@ public class MenuPersonnage {
             if (!estJoueurPrincipal) {
                 System.out.println("P. Utiliser un Parchemin XP");
                 System.out.println("T. Transferer les niveaux vers un autre personnage");
+                System.out.println("E. Transferer l'equipement vers un autre personnage");
             }
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
@@ -240,6 +241,8 @@ public class MenuPersonnage {
                 utiliserParcheminXP(perso, ctx, scanner);
             } else if (!estJoueurPrincipal && input.equalsIgnoreCase("T")) {
                 transfererNiveauxConsole(perso, ctx, scanner);
+            } else if (!estJoueurPrincipal && input.equalsIgnoreCase("E")) {
+                transfererEquipementConsole(perso, ctx, scanner);
             } else {
                 int choixSlot;
                 try {
@@ -482,6 +485,104 @@ public class MenuPersonnage {
                 + donneur.getNom() + " retombe au niveau 1 (etait Niv." + niveauDonneurAvant + ").";
     }
 
+    // ── Transfert d'equipement entre personnages (console) ─────────────────
+    private void transfererEquipementConsole(PersonnageBase donneur, GameContext ctx, Scanner scanner) {
+        if (donneur.getEquipementsPortes().isEmpty()) {
+            System.out.println("  " + donneur.getNom() + " n'a aucun equipement equipe, rien a transferer.");
+            return;
+        }
+
+        List<PersonnageBase> cibles = new ArrayList<>();
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p != donneur) cibles.add(p);
+        }
+        if (cibles.isEmpty()) {
+            System.out.println("  Aucun autre personnage recrute pour recevoir le transfert.");
+            return;
+        }
+
+        System.out.println("\n[ Transferer l'equipement de " + donneur.getNom() + " vers... ]");
+        for (int i = 0; i < cibles.size(); i++) {
+            PersonnageBase p = cibles.get(i);
+            System.out.println("  " + (i + 1) + ". " + p.getNom() + "  Niv." + p.getNiveau() + "  [" + p.getRarete() + "]");
+        }
+        System.out.println("  0. Annuler");
+        System.out.print("Votre choix : ");
+
+        int choix;
+        try {
+            choix = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+            return;
+        }
+        if (choix == 0) return;
+        if (choix < 1 || choix > cibles.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+        PersonnageBase receveur = cibles.get(choix - 1);
+
+        System.out.println("  " + receveur.getNom() + " recevra tout l'equipement compatible de " + donneur.getNom() + ".");
+        System.out.println("  L'equipement deja porte par " + receveur.getNom() + " sur les memes emplacements repart en inventaire.");
+        System.out.print("  Confirmer ? (O/N) : ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("O")) {
+            System.out.println("  Transfert annule.");
+            return;
+        }
+
+        System.out.println("\n>> " + transfererEquipement(donneur, receveur, ctx.inventaire));
+        ctx.sauvegarde.sauvegarder(ctx);
+    }
+
+    // ── Transfert d'equipement entre personnages ────────────────────────────
+
+    /**
+     * Transfere vers {@code receveur} chaque piece equipee de {@code donneur} qui lui est
+     * compatible (seule l'Arme est restreinte par classe, voir {@link #estCompatible}). La
+     * piece deja portee par le receveur sur le meme emplacement, s'il y en a une, repart en
+     * inventaire (meme logique que {@link #gererSlot}). Les pieces incompatibles restent chez
+     * le donneur. Retourne le message resultat.
+     */
+    public String transfererEquipement(PersonnageBase donneur, PersonnageBase receveur, Inventaire inventaire) {
+        List<String> deplacees = new ArrayList<>();
+        List<String> ignorees = new ArrayList<>();
+
+        for (Equipement.Slot slot : Equipement.Slot.values()) {
+            Equipement piece = donneur.getEquipement(slot);
+            if (piece == null) continue;
+
+            if (!estCompatible(receveur, piece)) {
+                ignorees.add(piece.getNomAffiche());
+                continue;
+            }
+
+            donneur.desequiper(slot);
+            Equipement ancienneChezReceveur = receveur.getEquipement(slot);
+            if (ancienneChezReceveur != null) {
+                receveur.desequiper(slot);
+                inventaire.ajouterEquipement(ancienneChezReceveur);
+            }
+            receveur.equiper(piece);
+            deplacees.add(piece.getNomAffiche());
+        }
+
+        if (deplacees.isEmpty()) {
+            return ignorees.isEmpty()
+                    ? "Aucun equipement a transferer."
+                    : "Aucune piece compatible avec " + receveur.getNom() + " (incompatible : " + String.join(", ", ignorees) + ").";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(deplacees.size()).append(" piece(s) transferee(s) vers ").append(receveur.getNom())
+          .append(" : ").append(String.join(", ", deplacees)).append(".");
+        if (!ignorees.isEmpty()) {
+            sb.append("\n").append(ignorees.size()).append(" piece(s) restee(s) chez ").append(donneur.getNom())
+              .append(" (incompatibles) : ").append(String.join(", ", ignorees)).append(".");
+        }
+        return sb.toString();
+    }
+
     // ── Affichage stock parchemins ─────────────────────────────────────────
     private void afficherStockParchemins(Inventaire inventaire) {
         int stockC = inventaire.getQuantiteParcheminXP(ParcheminXP.Rarete.C);
@@ -554,8 +655,10 @@ public class MenuPersonnage {
             inventaire.ajouterEquipement(actuel);
             System.out.println("  " + actuel.getNom() + " remis en inventaire.");
         }
-        perso.equiper(nouvel);
         inventaire.retirerEquipement(nouvel);
+        // Copie independante : sinon plusieurs personnages equipant "le meme type" depuis
+        // l'inventaire partageraient le meme objet, et fortifier l'un affecterait tous les autres.
+        perso.equiper(nouvel.copier());
         System.out.println("  " + nouvel.getNomAffiche() + " equipe sur " + perso.getNom() + " !");
     }
 

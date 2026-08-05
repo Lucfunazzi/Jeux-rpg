@@ -75,11 +75,10 @@ public class perso_Bixrow extends PersonnageBase {
             ciblesAttaquees++;
         }
 
-        // Synergie Equipe du Tonnerre : Freed vivant → +5% ATK pour Freed
+        // Freed vivant → +5% ATK pour Freed
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Freed") && allie.estVivant()) {
                 Combat.appliquerEffet(this, allie, new BuffAttaque(0.05, 1), log);
-                log.add("Synergie Equipe du Tonnerre : les poupees de Bickslow inspirent Freed ! +5% ATK.");
                 break;
             }
         }
@@ -117,15 +116,12 @@ public class perso_Bixrow extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Invasion des poupees — inflige 100% ATK aux 2 ennemis ayant le moins de PV, "
-                + "25% de chance de Paralysie (30%) pendant 1 tour sur chaque cible. "
-                + "[Synergie Evergreen] Cible petrifiee : degats +20%. "
-                + "[Synergie Equipe du Tonnerre] Freed vivant : +5% ATK pour Freed.");
+                + "25% de chance de Paralysie (30%) pendant 1 tour sur chaque cible.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
         System.out.println("Danse macabre — inflige 120% ATK a tous les ennemis (bonus selon la Rage), "
-                + "30% de chance de Paralysie (30%) pendant 2 tours sur chaque cible. "
-                + "[Synergie Evergreen] Cible petrifiee : degats +20%.");
+                + "30% de chance de Paralysie (30%) pendant 2 tours sur chaque cible.");
     }
 }

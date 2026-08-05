@@ -51,7 +51,6 @@ public class perso_Yukino extends PersonnageBase {
         double mult = 1.00;
         if (lucyAlliee) {
             mult += 0.20;
-            log.add("  Lucy amplifie l'invocation ! +20% degats.");
         }
 
         // Pisces : AoE léger
@@ -59,7 +58,6 @@ public class perso_Yukino extends PersonnageBase {
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (!ennemi.estVivant()) continue;
             Combat.appliquerDegatsAvecLog(this, ennemi, this.getAttaque() * 1.00 * mult, log);
-            // Synergie Angel : Saignement sur chaque ennemi
             if (angelAlliee) {
                 Combat.appliquerEffet(this, ennemi, new Saignement(2, 0.05), log);
             }
@@ -91,7 +89,7 @@ public class perso_Yukino extends PersonnageBase {
 
         if (lucyAlliee && angelAlliee) {
             // Frappe TOUTE l'équipe ennemie à 180%
-            log.add("  Lucy & Angel ouvrent les portes ensemble — Ophiuchus frappe tous les ennemis !");
+            log.add("  Ophiuchus se dechaine sur toute l'equipe ennemie !");
             for (PersonnageBase ennemi : equipeEnnemie) {
                 if (!ennemi.estVivant()) continue;
                 double degats = this.getAttaque() * 1.80 * multiplicateurRage;

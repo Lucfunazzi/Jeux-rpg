@@ -50,6 +50,7 @@ public class EcranFichePersonnageController {
     @FXML private VBox slotsBox;
     @FXML private Button parcheminButton;
     @FXML private Button transfertButton;
+    @FXML private Button transfertEquipementButton;
 
     public void initData(GameContext ctx, PersonnageBase perso, Runnable onRetour) {
         this.ctx = ctx;
@@ -152,6 +153,12 @@ public class EcranFichePersonnageController {
         transfertButton.setManaged(!estPrincipal);
         if (!estPrincipal) {
             transfertButton.setText("Transferer les niveaux vers un autre personnage");
+        }
+
+        transfertEquipementButton.setVisible(!estPrincipal);
+        transfertEquipementButton.setManaged(!estPrincipal);
+        if (!estPrincipal) {
+            transfertEquipementButton.setText("Transferer l'equipement vers un autre personnage");
         }
     }
 
@@ -307,10 +314,10 @@ public class EcranFichePersonnageController {
         Inventaire inv = ctx.inventaire;
         Equipement actuel = perso.getEquipement(slot);
 
-        List<Equipement> compatibles = new ArrayList<>();
-        for (Equipement e : inv.getEquipements()) {
-            if (e.getSlot() == slot && EquipementFactory.estCompatibleArme(perso.getType(), e)) {
-                compatibles.add(e);
+        List<Inventaire.StackEquipement> compatibles = new ArrayList<>();
+        for (Inventaire.StackEquipement s : inv.getStacks()) {
+            if (s.getEquipement().getSlot() == slot && EquipementFactory.estCompatibleArme(perso.getType(), s.getEquipement())) {
+                compatibles.add(s);
             }
         }
 
@@ -320,8 +327,8 @@ public class EcranFichePersonnageController {
         }
 
         List<ChoixEquipement> options = new ArrayList<>();
-        if (actuel != null) options.add(new ChoixEquipement(null));
-        for (Equipement e : compatibles) options.add(new ChoixEquipement(e));
+        if (actuel != null) options.add(new ChoixEquipement(null, 0));
+        for (Inventaire.StackEquipement s : compatibles) options.add(new ChoixEquipement(s.getEquipement(), s.getQuantite()));
 
         ChoixEquipement choix = GuiVisuels.choisirParmiCartes(nomSlot(slot), options, this::carteChoixEquipement);
         if (choix == null) return;
@@ -336,15 +343,17 @@ public class EcranFichePersonnageController {
                 perso.desequiper(slot);
                 inv.ajouterEquipement(actuel);
             }
-            perso.equiper(choisi);
             inv.retirerEquipement(choisi);
+            // Copie independante : sinon plusieurs personnages equipant "le meme type" depuis
+            // l'inventaire partageraient le meme objet, et fortifier l'un affecterait tous les autres.
+            perso.equiper(choisi.copier());
             info("Equipement", choisi.getNomAffiche() + " equipe sur " + perso.getNom() + " !");
         }
         rafraichir();
     }
 
     /** Enveloppe une option du picker d'equipement ; equipement() == null represente "(Desequiper)". */
-    private record ChoixEquipement(Equipement equipement) {}
+    private record ChoixEquipement(Equipement equipement, int quantite) {}
 
     private Node carteParcheminXPChoix(ParcheminXP.Rarete r) {
         int stock = ctx.inventaire.getQuantiteParcheminXP(r);
@@ -386,6 +395,13 @@ public class EcranFichePersonnageController {
         VBox texte = new VBox(2, nom, detail);
         HBox carte = new HBox(10, icone, badge, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
+
+        if (choix.quantite() > 1) {
+            Label qte = new Label("x" + choix.quantite());
+            qte.getStyleClass().add("item-qte");
+            carte.getChildren().add(qte);
+        }
+
         carte.getStyleClass().add("carte-item");
         carte.setPrefWidth(320);
         return carte;
@@ -494,6 +510,41 @@ public class EcranFichePersonnageController {
         ctx.joueur.retirerOr(cout);
         String resultat = menuPersonnage.transfererNiveaux(perso, receveur, ctx);
         info("Transfert de niveaux", resultat);
+        rafraichir();
+    }
+
+    @FXML
+    private void onTransfererEquipement(ActionEvent event) {
+        if (perso.getEquipementsPortes().isEmpty()) {
+            info("Transfert d'equipement", perso.getNom() + " n'a aucun equipement equipe, rien a transferer.");
+            return;
+        }
+
+        List<PersonnageBase> cibles = new ArrayList<>();
+        for (PersonnageBase p : ctx.personnagesRecruites) {
+            if (p != perso) cibles.add(p);
+        }
+        if (cibles.isEmpty()) {
+            info("Transfert d'equipement", "Aucun autre personnage recrute pour recevoir le transfert.");
+            return;
+        }
+
+        PersonnageBase receveur = GuiVisuels.choisirParmiCartes(
+                "Transferer l'equipement de " + perso.getNom() + " vers...", cibles, this::cartePersonnageChoix);
+        if (receveur == null) return;
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                receveur.getNom() + " recevra tout l'equipement compatible de " + perso.getNom() + ".\n"
+                        + "L'equipement deja porte par " + receveur.getNom() + " sur les memes emplacements repart en inventaire.",
+                ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Transfert d'equipement");
+        confirm.setHeaderText(null);
+        styliser(confirm);
+        if (confirm.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) return;
+
+        String resultat = menuPersonnage.transfererEquipement(perso, receveur, ctx.inventaire);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Transfert d'equipement", resultat);
         rafraichir();
     }
 

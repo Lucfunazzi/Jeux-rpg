@@ -49,6 +49,24 @@ public class Equipement {
         this.bonusVITActuel = bonusVIT;
     }
 
+    /**
+     * Copie independante de cette piece (memes stats de base, fortification, affinage et
+     * pierres) : chaque exemplaire equipe doit etre un objet distinct, sinon plusieurs
+     * personnages equipant "le meme type" de piece depuis l'inventaire partageraient le
+     * meme objet, et fortifier/affiner l'un affecterait tous les autres.
+     */
+    public Equipement copier() {
+        Equipement copie = new Equipement(nom, slot, rarete, typeArme,
+                bonusATKBase, bonusDEFBase, bonusPVBase, bonusVITBase);
+        copie.niveauFortification = this.niveauFortification;
+        copie.niveauAffinage      = this.niveauAffinage;
+        for (int i = 0; i < NB_EMPLACEMENTS_PIERRES; i++) {
+            copie.pierres[i] = this.pierres[i]; // Pierre est immuable (type+niveau final), partage sans risque
+        }
+        copie.recalculerStats();
+        return copie;
+    }
+
     public String getNom()        { return nom; }
     public Slot getSlot()         { return slot; }
     public Rarete getRarete()     { return rarete; }

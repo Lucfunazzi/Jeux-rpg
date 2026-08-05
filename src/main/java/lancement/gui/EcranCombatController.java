@@ -80,9 +80,13 @@ public class EcranCombatController {
         final Label rageTexte;
         final FlowPane effetsBox;
         final Label koTampon;
+        final StackPane barreBouclierPane;
+        final Rectangle barreBouclier;
+        final Label bouclierTexte;
 
         CarteCombat(String nom, StackPane conteneur, VBox racine, Rectangle barrePV, Rectangle barreRage,
-                    Label pvTexte, Label rageTexte, FlowPane effetsBox, Label koTampon) {
+                    Label pvTexte, Label rageTexte, FlowPane effetsBox, Label koTampon,
+                    StackPane barreBouclierPane, Rectangle barreBouclier, Label bouclierTexte) {
             this.nom = nom;
             this.conteneur = conteneur;
             this.racine = racine;
@@ -92,6 +96,9 @@ public class EcranCombatController {
             this.rageTexte = rageTexte;
             this.effetsBox = effetsBox;
             this.koTampon = koTampon;
+            this.barreBouclierPane = barreBouclierPane;
+            this.barreBouclier = barreBouclier;
+            this.bouclierTexte = bouclierTexte;
         }
     }
 
@@ -127,7 +134,7 @@ public class EcranCombatController {
         chargerSonAction("Tobi", "Super Griffe Paralysante — Méga Méduse", "/audio/tobi_super_griffe_paralysante_mega_meduse.wav");
         chargerSonAction("Jubia", "Déferlante", "/audio/jubia_deferlante.wav");
         chargerSonAction("Jubia", "Prison d'eau", "/audio/jubia_prison_eau.wav");
-        chargerSonAction("Jellal", "Grande Ourse", "/audio/jellal_grande_ourse.wav");
+        chargerSonAction("Jellal", "Grand Chariot", "/audio/jellal_grand_chariot.wav");
         chargerSonAction("Ikaruga", "Flammes du Garuda", "/audio/ikaruga_flammes_garuda.wav");
         chargerSonAction("Ikaruga", "Eclats des Esprits", "/audio/ikaruga_eclats_esprits.wav");
         chargerSonAction("Miliana", "Kitten Blast", "/audio/miliana_kitten_blast.wav");
@@ -356,19 +363,28 @@ public class EcranCombatController {
         Label pvTexte = new Label();
         pvTexte.getStyleClass().add("texte");
         pvTexte.setStyle("-fx-font-size: 11px;");
-        StackPane barrePVPane = creerBarre();
+        StackPane barrePVPane = creerBarre(12);
         Rectangle barrePV = (Rectangle) barrePVPane.getChildren().get(1);
+
+        Label bouclierTexte = new Label();
+        bouclierTexte.getStyleClass().add("texte");
+        bouclierTexte.setStyle("-fx-font-size: 10px; -fx-text-fill: #5bc8e8;");
+        StackPane barreBouclierPane = creerBarre(6);
+        Rectangle barreBouclier = (Rectangle) barreBouclierPane.getChildren().get(1);
+        barreBouclier.setFill(Color.web("#5bc8e8"));
+        barreBouclier.setWidth(0);
 
         Label rageTexte = new Label();
         rageTexte.getStyleClass().add("texte");
         rageTexte.setStyle("-fx-font-size: 11px;");
-        StackPane barreRagePane = creerBarre();
+        StackPane barreRagePane = creerBarre(12);
         Rectangle barreRage = (Rectangle) barreRagePane.getChildren().get(1);
 
         FlowPane effetsBox = new FlowPane(4, 4);
         effetsBox.setPrefWrapLength(LARGEUR_BARRE);
 
-        VBox racine = new VBox(4, nomLabel, raretteLabel, pvTexte, barrePVPane, rageTexte, barreRagePane, effetsBox);
+        VBox racine = new VBox(4, nomLabel, raretteLabel, pvTexte, barrePVPane,
+                bouclierTexte, barreBouclierPane, rageTexte, barreRagePane, effetsBox);
         racine.getStyleClass().addAll("carte-combat", classeRole(snap.role));
         racine.setAlignment(Pos.CENTER);
         racine.setPrefWidth(LARGEUR_CARTE);
@@ -385,13 +401,15 @@ public class EcranCombatController {
         StackPane.setAlignment(racine, Pos.CENTER);
         StackPane.setAlignment(koTampon, Pos.CENTER);
 
-        CarteCombat carte = new CarteCombat(snap.nom, conteneur, racine, barrePV, barreRage, pvTexte, rageTexte, effetsBox, koTampon);
+        CarteCombat carte = new CarteCombat(snap.nom, conteneur, racine, barrePV, barreRage, pvTexte, rageTexte,
+                effetsBox, koTampon, barreBouclierPane, barreBouclier, bouclierTexte);
         appliquerEtat(carte, snap, 0);
         return carte;
     }
 
-    /** Petite icone carree colorée par effet, avec fleche haut (buff) / bas (debuff) et tooltip explicatif. */
-    private Node creerIconeEffet(String nomEffet) {
+    /** Petite icone carree colorée par effet, avec fleche haut (buff) / bas (debuff) et tooltip explicatif.
+     *  @param pointsBouclier PV de bouclier restants, utilise uniquement pour enrichir l'infobulle de "Bouclier". */
+    private Node creerIconeEffet(String nomEffet, double pointsBouclier) {
         EffetInfo info = infoEffet(nomEffet);
 
         Rectangle carre = new Rectangle(16, 16, Color.web(info.couleur()));
@@ -411,7 +429,10 @@ public class EcranCombatController {
             icone.getChildren().addAll(carre, fleche);
         }
 
-        Tooltip infobulle = new Tooltip(nomEffet + "\n" + info.description());
+        String detail = nomEffet.equals("Bouclier")
+                ? "\nPV restants : " + (int) Math.ceil(pointsBouclier)
+                : "";
+        Tooltip infobulle = new Tooltip(nomEffet + "\n" + info.description() + detail);
         infobulle.setShowDelay(Duration.millis(150));
         Tooltip.install(icone, infobulle);
 
@@ -426,17 +447,17 @@ public class EcranCombatController {
         };
     }
 
-    private StackPane creerBarre() {
-        Rectangle fond = new Rectangle(LARGEUR_BARRE, 12, Color.web("#12121c"));
+    private StackPane creerBarre(double hauteur) {
+        Rectangle fond = new Rectangle(LARGEUR_BARRE, hauteur, Color.web("#12121c"));
         fond.setArcWidth(8);
         fond.setArcHeight(8);
-        Rectangle remplissage = new Rectangle(LARGEUR_BARRE, 12, Color.web("#56c98a"));
+        Rectangle remplissage = new Rectangle(LARGEUR_BARRE, hauteur, Color.web("#56c98a"));
         remplissage.setArcWidth(8);
         remplissage.setArcHeight(8);
         StackPane pane = new StackPane(fond, remplissage);
         StackPane.setAlignment(fond, Pos.CENTER_LEFT);
         StackPane.setAlignment(remplissage, Pos.CENTER_LEFT);
-        pane.setPrefSize(LARGEUR_BARRE, 12);
+        pane.setPrefSize(LARGEUR_BARRE, hauteur);
         pane.setMaxWidth(LARGEUR_BARRE);
         return pane;
     }
@@ -446,14 +467,35 @@ public class EcranCombatController {
      *                 soin, 0 = pas de variation a mettre en evidence, ex. etat initial).
      */
     private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, double deltaVie) {
-        appliquerEtat(carte, snap, deltaVie, false);
+        appliquerEtat(carte, snap, deltaVie, false, 0);
     }
 
     private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, double deltaVie, boolean critique) {
+        appliquerEtat(carte, snap, deltaVie, critique, 0);
+    }
+
+    /**
+     * @param deltaVie      variation de PV depuis l'etat precedent (negatif = degats, positif =
+     *                      soin, 0 = pas de variation a mettre en evidence, ex. etat initial).
+     * @param deltaBouclier variation des PV du bouclier depuis l'etat precedent, affichee separement
+     *                      car des degats totalement absorbes par le bouclier ne bougent pas les PV.
+     */
+    private void appliquerEtat(CarteCombat carte, PersonnageSnapshot snap, double deltaVie, boolean critique, double deltaBouclier) {
         double ratioPV = snap.vieMax > 0 ? Math.max(0, Math.min(1, snap.vie / snap.vieMax)) : 0;
         animerBarre(carte.barrePV, LARGEUR_BARRE * ratioPV);
         carte.barrePV.setFill(couleurPV(ratioPV));
         carte.pvTexte.setText("PV : " + (int) Math.ceil(snap.vie) + " / " + (int) Math.ceil(snap.vieMax));
+
+        boolean aBouclier = snap.pointsBouclier > 0;
+        carte.barreBouclierPane.setVisible(aBouclier);
+        carte.barreBouclierPane.setManaged(aBouclier);
+        carte.bouclierTexte.setVisible(aBouclier);
+        carte.bouclierTexte.setManaged(aBouclier);
+        if (aBouclier) {
+            double ratioBouclier = snap.vieMax > 0 ? Math.min(1, snap.pointsBouclier / snap.vieMax) : 0;
+            animerBarre(carte.barreBouclier, LARGEUR_BARRE * ratioBouclier);
+            carte.bouclierTexte.setText("🛡 Bouclier : " + (int) Math.ceil(snap.pointsBouclier) + " PV");
+        }
 
         double ratioRage = Math.max(0, Math.min(1, snap.rage / 100.0));
         animerBarre(carte.barreRage, LARGEUR_BARRE * ratioRage);
@@ -462,7 +504,7 @@ public class EcranCombatController {
 
         carte.effetsBox.getChildren().clear();
         for (String nomEffet : snap.effets) {
-            carte.effetsBox.getChildren().add(creerIconeEffet(nomEffet));
+            carte.effetsBox.getChildren().add(creerIconeEffet(nomEffet, snap.pointsBouclier));
         }
 
         carte.koTampon.setVisible(!snap.vivant);
@@ -480,6 +522,14 @@ public class EcranCombatController {
             retirerApres(carte.racine, "carte-combat-heal");
             afficherNombreFlottant(carte.conteneur, "+" + (int) Math.round(deltaVie), "#6bffa0", false);
         }
+
+        // Distinct du deltaVie : des degats entierement absorbes par le bouclier ne bougent pas
+        // les PV, donc sans ceci l'attaque n'affichait aucun nombre flottant (rien ne semblait se passer).
+        if (deltaBouclier < -0.01) {
+            afficherNombreFlottant(carte.conteneur, "-" + (int) Math.round(-deltaBouclier) + " 🛡", "#5bc8e8", false, 18);
+        } else if (deltaBouclier > 0.01) {
+            afficherNombreFlottant(carte.conteneur, "+" + (int) Math.round(deltaBouclier) + " 🛡", "#5bc8e8", false, 18);
+        }
     }
 
     /** Anime la largeur d'une barre (PV/rage) vers sa nouvelle valeur au lieu d'un saut instantane. */
@@ -491,6 +541,10 @@ public class EcranCombatController {
 
     /** Fait apparaitre un nombre (degats/soin) au-dessus de la carte, qui monte et s'estompe. */
     private void afficherNombreFlottant(StackPane conteneur, String texte, String couleurHex, boolean critique) {
+        afficherNombreFlottant(conteneur, texte, couleurHex, critique, 0);
+    }
+
+    private void afficherNombreFlottant(StackPane conteneur, String texte, String couleurHex, boolean critique, double decalageX) {
         VBox pile = new VBox(0);
         pile.setAlignment(Pos.CENTER);
         pile.setMouseTransparent(true);
@@ -509,6 +563,7 @@ public class EcranCombatController {
 
         StackPane.setAlignment(pile, Pos.TOP_CENTER);
         pile.setTranslateY(-10);
+        pile.setTranslateX(decalageX);
         conteneur.getChildren().add(pile);
 
         TranslateTransition monte = new TranslateTransition(Duration.millis(900), pile);
@@ -562,7 +617,13 @@ public class EcranCombatController {
         for (int i = 0; i < evt.etat.size(); i++) {
             PersonnageSnapshot avant = etatPrecedent.get(i);
             PersonnageSnapshot apres = evt.etat.get(i);
-            appliquerEtat(cartes[i], apres, apres.vie - avant.vie, critique);
+            appliquerEtat(cartes[i], apres, apres.vie - avant.vie, critique, apres.pointsBouclier - avant.pointsBouclier);
+
+            if (evt.lignes.contains(apres.nom + " esquive !")) {
+                afficherNombreFlottant(cartes[i].conteneur, "Esquive !", "#f2c14e", false);
+            } else if (evt.lignes.stream().anyMatch(l -> l.contains(apres.nom + " bloque ! Degats reduits a "))) {
+                afficherNombreFlottant(cartes[i].conteneur, "Bloque !", "#5bc8e8", false, -30);
+            }
         }
 
         if (evt.actionNom != null) {
@@ -604,7 +665,10 @@ public class EcranCombatController {
      *  les effets ne sont pas coupes dans les Options), en baissant brievement la musique de
      *  fond pour que les deux ne se superposent pas trop fort. */
     private void jouerSonAction(String nomPerso, String nomAction, boolean estUltime) {
-        AudioClip clip = SONS_ACTIONS.get(nomPerso + "|" + nomAction);
+        // Mistgun est Jellal infiltre sous un autre nom (voir Chapitre5.lancerStage, stage 9) :
+        // meme voix pour ses competences.
+        String cleNom = nomPerso.equals("Mistgun") ? "Jellal" : nomPerso;
+        AudioClip clip = SONS_ACTIONS.get(cleNom + "|" + nomAction);
         if (clip == null) return;
         if (!ParametresAudio.isMuet()) {
             clip.play(ParametresAudio.getVolumeEffets());

@@ -49,6 +49,9 @@ public class perso_Hoteye extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hoteye dévore la magie de " + cible.getNom() + " avec son Doigt du Sable !");
         double degats = this.getAttaque() * 1.15;
+        if (cible.aEffet(ReductionVitesse.class)) {
+            degats *= 1.15;
+        }
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);

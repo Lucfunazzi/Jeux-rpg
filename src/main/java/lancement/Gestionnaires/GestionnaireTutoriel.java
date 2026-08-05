@@ -73,8 +73,8 @@ public class GestionnaireTutoriel {
               + "niveau 20) avec des pierres d'affinage, et incrustez des pierres pour des bonus supplementaires."),
         java.util.Map.entry("Abilites",
                 "Chaque arbre de competences (debloque l'un apres l'autre) permet de debloquer une nouvelle "
-              + "attaque speciale nommee en depensant vos points d'aptitude. Terminer les 3 arbres fait progresser "
-              + "votre personnage principal, y compris son rang joueur."),
+              + "attaque speciale ou ultime nommee en depensant vos points d'aptitude. Terminer l'Arbre 3 fait "
+              + "progresser votre personnage principal, y compris son rang joueur."),
         java.util.Map.entry("Recrutement",
                 "Utilisez vos Parchemins C/B/A pour recruter des personnages via les Pages de recrutement. "
               + "Le mini-jeu Pierre-Feuille-Ciseaux permet d'en gagner davantage : en manuel (3 manches jouees a la main, "

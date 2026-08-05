@@ -52,7 +52,9 @@ public class perso_Sol extends PersonnageBase {
         log.add("Sol plonge dans le sol et lit les souvenirs douloureux de " + cible.getNom() + " — Merci la Vie !");
         double degats = this.getAttaque() * 1.10;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (Math.random() < 0.50) {
+        double chanceConfusion = 0.50;
+        if (cible.aEffet(ReductionVitesse.class)) chanceConfusion += 0.15;
+        if (Math.random() < chanceConfusion) {
             Combat.appliquerEffet(this, cible, new Confusion(2), log);
         }
     }

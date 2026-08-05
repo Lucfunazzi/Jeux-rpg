@@ -39,7 +39,7 @@ public class perso_Freed extends PersonnageBase {
         log.add("Freed utilise coup d'épée!");
         double degats = this.getAttaque() * 1.00;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        // Synergie Equipe du Tonnerre : si Bickslow a touché cible ce tour
+        // Si Bickslow a touché cible ce tour
         // → Freed gagne +5% ATK (géré côté Bickslow)
     }
 
@@ -57,7 +57,7 @@ public class perso_Freed extends PersonnageBase {
         // Runes sur lui-même
         Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
 
-        // Synergie Equipe du Tonnerre : si Bickslow ou Evergreen vivants → DEF bonus
+        // Si Bickslow ou Evergreen vivants → DEF bonus
         boolean tonnerre = false;
         for (PersonnageBase allie : equipeAlliee) {
             if ((allie.getNom().equals("Bickslow") || allie.getNom().equals("Evergreen"))
@@ -68,7 +68,6 @@ public class perso_Freed extends PersonnageBase {
         }
         if (tonnerre) {
             Combat.appliquerEffet(this, new BuffDefense(0.05, 2), log);
-            log.add("Synergie Equipe du Tonnerre : les runes de Freed se renforcent ! +5% DEF bonus.");
         }
     }
 
@@ -99,8 +98,7 @@ public class perso_Freed extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Runes protectrices — applique un bouclier (15% PV max) et +10% DEF "
-                + "a toute l'equipe pendant 2 tours, +15% DEF pour Freed. "
-                + "[Synergie Equipe du Tonnerre] Bickslow ou Evergreen vivant : +5% DEF bonus.");
+                + "a toute l'equipe pendant 2 tours, +15% DEF pour Freed.");
     }
 
     @Override

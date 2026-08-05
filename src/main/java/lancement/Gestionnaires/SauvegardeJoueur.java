@@ -38,8 +38,14 @@ public class SauvegardeJoueur {
         data.arbreNoeudDebloques      = joueur.getArbreCompetences().getEtatNoeuds();
         data.arbreNoeudDebloques2     = joueur.getArbreCompetences().getEtatNoeuds2();
         data.arbreNoeudDebloques3     = joueur.getArbreCompetences().getEtatNoeuds3();
+        data.arbreNoeudDebloques4     = joueur.getArbreCompetences().getEtatNoeuds4();
+        data.arbreNoeudDebloques5     = joueur.getArbreCompetences().getEtatNoeuds5();
+        data.arbreNoeudDebloques6     = joueur.getArbreCompetences().getEtatNoeuds6();
+        data.arbreNoeudDebloques7     = joueur.getArbreCompetences().getEtatNoeuds7();
+        data.arbreNoeudDebloques8     = joueur.getArbreCompetences().getEtatNoeuds8();
         data.arbrePointsDisponibles   = joueur.getArbreCompetences().getPointsDisponibles();
         data.competenceSpecialeActive = joueur.getCompetenceSpecialeActive();
+        data.competenceUltimeActive   = joueur.getCompetenceUltimeActive();
 
         // Équipements portés par le joueur principal
         for (Equipement e : joueur.getEquipementsPortes())
@@ -89,7 +95,13 @@ public class SauvegardeJoueur {
         joueur.getArbreCompetences().setPointsDisponibles(data.arbrePointsDisponibles);
         joueur.getArbreCompetences().setEtatNoeuds2(data.arbreNoeudDebloques2);
         joueur.getArbreCompetences().setEtatNoeuds3(data.arbreNoeudDebloques3);
+        joueur.getArbreCompetences().setEtatNoeuds4(data.arbreNoeudDebloques4);
+        joueur.getArbreCompetences().setEtatNoeuds5(data.arbreNoeudDebloques5);
+        joueur.getArbreCompetences().setEtatNoeuds6(data.arbreNoeudDebloques6);
+        joueur.getArbreCompetences().setEtatNoeuds7(data.arbreNoeudDebloques7);
+        joueur.getArbreCompetences().setEtatNoeuds8(data.arbreNoeudDebloques8);
         joueur.setCompetenceSpecialeActive(data.competenceSpecialeActive);
+        joueur.setCompetenceUltimeActive(data.competenceUltimeActive);
         while (joueur.getNiveau() < data.joueurNiveau) joueur.monterDeNiveau();
         joueur.setExperience(data.joueurExperience);
         joueur.setExperienceMax(data.joueurExperienceMax);

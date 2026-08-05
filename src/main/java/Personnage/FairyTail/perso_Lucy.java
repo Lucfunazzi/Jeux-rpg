@@ -59,7 +59,6 @@ public class perso_Lucy extends PersonnageBase {
         double mult = 0.80;
         if (yukinoAlliee) {
             mult += 0.20;
-            log.add("  Yukino renforce l'invocation ! +20% degats.");
         }
 
         int count = 0;
@@ -67,7 +66,6 @@ public class perso_Lucy extends PersonnageBase {
             if (count >= 2) break;
             Combat.appliquerDegatsAvecLog(this, ennemi, this.getAttaque() * mult, log);
             Combat.appliquerEffet(this, ennemi, new Saignement(2, 0.02), log);
-            // Synergie Angel : Marquage en plus
             if (angelAlliee) {
                 Combat.appliquerEffet(this, ennemi, new Marquage(), log);
             }
@@ -77,8 +75,6 @@ public class perso_Lucy extends PersonnageBase {
         // Buff DEF équipe
         for (PersonnageBase allie : equipeAlliee)
             if (allie.estVivant()) Combat.appliquerEffet(this, allie, new BuffDefense(0.10, 3), log);
-
-        if (angelAlliee) log.add("  Angel guide Taurus — Marquage applique !");
     }
 
     @Override
@@ -95,16 +91,10 @@ public class perso_Lucy extends PersonnageBase {
         boolean yukinoAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
 
         double mult = 1.05;
-        // Synergie Angel ET Yukino : AoE renforcée
         if (angelAlliee && yukinoAlliee) {
             mult = 1.40;
-            log.add("  Angel & Yukino ouvrent leurs portes — Aquarius se dechaine ! +35% degats !");
-        } else if (yukinoAlliee) {
+        } else if (yukinoAlliee || angelAlliee) {
             mult = 1.20;
-            log.add("  Yukino amplifie le torrent ! +15% degats.");
-        } else if (angelAlliee) {
-            mult = 1.20;
-            log.add("  Angel guide les eaux d'Aquarius ! +15% degats.");
         }
 
         for (PersonnageBase ennemi : equipeEnnemie) {
@@ -125,14 +115,11 @@ public class perso_Lucy extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Invocation Taurus — inflige 80% ATK aux 2 ennemis avec le moins de PV"
-                + " + Saignement 2 tours + BuffDEF 10% equipe 3 tours."
-                + " Si Yukino alliee : +20% degats. Si Angel alliee : applique aussi Marquage.");
+                + " + Saignement 2 tours + BuffDEF 10% equipe 3 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Invocation Aquarius — AoE 105% ATK + Trempe 3 tours + 40% chance Etourdissement."
-                + " Si Angel ou Yukino alliee : +15% degats."
-                + " Si Angel ET Yukino alliees : +35% degats.");
+        System.out.println("Invocation Aquarius — AoE 105% ATK + Trempe 3 tours + 40% chance Etourdissement.");
     }
 }

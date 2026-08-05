@@ -35,7 +35,7 @@ public class perso_jellal extends PersonnageBase {
     
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Rayon Célestes", "Grande Ourse", "Altairis"};
+        return new String[]{"Rayon Célestes", "Grand Chariot", "Altairis"};
     }
 
     
@@ -50,7 +50,7 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
 
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
-    log.add("Jellal utilise Grande Ourse !");
+    log.add("Jellal utilise Grand Chariot !");
     for (PersonnageBase ennemi : equipeEnnemie) {
         if (ennemi.estVivant()) {
             double degats = this.getAttaque() * 1.50;
@@ -87,7 +87,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Grand chariot — inflige 150% ATK a tous les ennemis, "
+        System.out.println("Grand Chariot — inflige 150% ATK a tous les ennemis, "
                 + "applique Ralentissement (gain de rage réduit de 10%)  pendant 2 tours, "
                 + "et inflige marquage de 30% pendants 2 tours .");
     }

@@ -27,39 +27,62 @@ public class MenuAbilite {
             System.out.println("  Ultime  active  : " + noms[2]);
             System.out.println();
 
-            System.out.println("1. Arbre 1 — Nouvelle Spéciale"
-                    + (arbre.isNoeud10Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 1) + "]" : ""));
-            System.out.println("2. Arbre 2 — Nouvelle Spéciale"
-                    + (!arbre.isArbre2Debloque()
-                        ? " [VERROUILLÉ — terminez l'Arbre 1]"
-                        : arbre.isNoeud10Arbre2Debloque() ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 2) + "]" : ""));
-            System.out.println("3. Arbre 3 — Nouvelle Spéciale"
-                    + (!arbre.isArbre3Debloque()
-                        ? " [VERROUILLÉ — terminez l'Arbre 2]"
-                        : arbre.isNoeud10Arbre3Debloque()
-                            ? " [DÉBLOQUÉ : " + getNomCompetence(joueur.getChoixClasses(), 3) + "] — Rang B !"
-                            : ""));
+            for (int numArbre = 1; numArbre <= 8; numArbre++) {
+                System.out.println(numArbre + ". " + ligneArbre(arbre, numArbre, joueur.getChoixClasses()));
+            }
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
-            switch (scanner.nextLine().trim()) {
-                case "1" -> afficherArbre(ctx, arbre, 1, scanner);
-                case "2" -> {
-                    if (!arbre.isArbre2Debloque())
-                        System.out.println("L'arbre 2 se débloque en terminant l'Arbre 1.");
-                    else
-                        afficherArbre(ctx, arbre, 2, scanner);
-                }
-                case "3" -> {
-                    if (!arbre.isArbre3Debloque())
-                        System.out.println("L'arbre 3 se débloque en terminant l'Arbre 2.");
-                    else
-                        afficherArbre(ctx, arbre, 3, scanner);
-                }
-                case "0" -> retour = true;
-                default  -> System.out.println("Choix invalide.");
+            String choix = scanner.nextLine().trim();
+            if (choix.equals("0")) {
+                retour = true;
+                continue;
+            }
+            int numArbre;
+            try {
+                numArbre = Integer.parseInt(choix);
+            } catch (NumberFormatException e) {
+                System.out.println("Choix invalide.");
+                continue;
+            }
+            if (numArbre < 1 || numArbre > 8) {
+                System.out.println("Choix invalide.");
+            } else if (!estArbreDebloque(arbre, numArbre)) {
+                System.out.println("L'arbre " + numArbre + " se débloque en terminant l'Arbre " + (numArbre - 1) + ".");
+            } else {
+                afficherArbre(ctx, arbre, numArbre, scanner);
             }
         }
+    }
+
+    private static boolean estArbreDebloque(ArbreCompetences arbre, int numArbre) {
+        return switch (numArbre) {
+            case 1  -> true;
+            case 2  -> arbre.isArbre2Debloque();
+            case 3  -> arbre.isArbre3Debloque();
+            case 4  -> arbre.isArbre4Debloque();
+            case 5  -> arbre.isArbre5Debloque();
+            case 6  -> arbre.isArbre6Debloque();
+            case 7  -> arbre.isArbre7Debloque();
+            default -> arbre.isArbre8Debloque();
+        };
+    }
+
+    private static boolean estArbreComplete(ArbreCompetences arbre, int numArbre) {
+        return arbre.getNoeud(numArbre, 10).isDebloque();
+    }
+
+    private static String ligneArbre(ArbreCompetences arbre, int numArbre, String classe) {
+        boolean ultime = numArbre == 4 || numArbre == 8;
+        String titre = "Arbre " + numArbre + " — Nouvelle " + (ultime ? "Ultime" : "Spéciale");
+        if (!estArbreDebloque(arbre, numArbre)) {
+            return titre + " [VERROUILLÉ — terminez l'Arbre " + (numArbre - 1) + "]";
+        }
+        if (estArbreComplete(arbre, numArbre)) {
+            String nom = ultime ? Personnage_principale.getNomUltimeArbre(classe, numArbre) : getNomCompetence(classe, numArbre);
+            return titre + " [DÉBLOQUÉ : " + nom + "]" + (numArbre == 3 ? " — Rang B !" : "");
+        }
+        return titre;
     }
 
     private void afficherArbre(GameContext ctx,
@@ -73,7 +96,9 @@ public class MenuAbilite {
             String nomArbre = switch (numArbre) {
                 case 1 -> " — Voie du Combattant";
                 case 2 -> " — Voie du Maître";
-                default -> " — Voie de l'Ascension";
+                case 3 -> " — Voie de l'Ascension";
+                case 4 -> " — Voie de l'Ultime (à définir)";
+                default -> numArbre == 8 ? " — Voie de l'Ultime supreme (à définir)" : " — Voie de la Maitrise (à définir)";
             };
             System.out.println("\n========================================");
             System.out.println("  ARBRE " + numArbre + nomArbre);
@@ -105,7 +130,8 @@ public class MenuAbilite {
             } else {
                 NoeudArbre n = getNoeud(arbre, numArbre, choix);
 
-                if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE) {
+                if (n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_SPECIALE
+                        || n.getTypeBonus() == NoeudArbre.TypeBonus.COMPETENCE_ULTIME) {
                     System.out.println(debloquerNoeudCompetence(ctx, arbre, numArbre, choix));
                 } else {
                     String resultat = arbre.tenterDebloquer(numArbre, choix);
@@ -121,20 +147,39 @@ public class MenuAbilite {
     }
 
     public static NoeudArbre getNoeud(ArbreCompetences arbre, int numArbre, int index) {
-        return switch (numArbre) {
-            case 1 -> arbre.getNoeud(index);
-            case 2 -> arbre.getNoeudArbre2(index);
-            default -> arbre.getNoeudArbre3(index);
-        };
+        return arbre.getNoeud(numArbre, index);
     }
 
-    /** Debloque un noeud de type competence speciale (avec activation automatique). Retourne le message resultat. */
+    /** true pour les arbres 4 et 8 (ultime), false pour les arbres a speciale (1/2/3/5/6/7). */
+    private static boolean estArbreUltime(int numArbre) {
+        return numArbre == 4 || numArbre == 8;
+    }
+
+    /** Active sur le joueur la speciale/ultime debloquee par cet arbre (1 a 8). */
+    private static void activerArbre(Personnage_principale joueur, int numArbre) {
+        switch (numArbre) {
+            case 1 -> joueur.activerArbre1();
+            case 2 -> joueur.activerArbre2();
+            case 3 -> joueur.activerArbre3();
+            case 4 -> joueur.activerArbre4();
+            case 5 -> joueur.activerArbre5();
+            case 6 -> joueur.activerArbre6();
+            case 7 -> joueur.activerArbre7();
+            default -> joueur.activerArbre8();
+        }
+    }
+
+    /** Debloque un noeud de type competence speciale/ultime (avec activation automatique). Retourne le message resultat. */
     public static String debloquerNoeudCompetence(GameContext ctx,
                                            ArbreCompetences arbre,
                                            int numArbre, int indexNoeud) {
         Personnage_principale joueur = ctx.joueur;
         NoeudArbre n = getNoeud(arbre, numArbre, indexNoeud);
-        String nomComp = getNomCompetence(joueur.getChoixClasses(), numArbre);
+        boolean ultime = estArbreUltime(numArbre);
+        String nomComp = ultime
+                ? Personnage_principale.getNomUltimeArbre(joueur.getChoixClasses(), numArbre)
+                : getNomCompetence(joueur.getChoixClasses(), numArbre);
+        String typeMot = ultime ? "ultime" : "speciale";
 
         if (n.isDebloque()) {
             return nomComp + " est deja debloquee et active.";
@@ -143,26 +188,17 @@ public class MenuAbilite {
         String resultat = arbre.tenterDebloquer(numArbre, indexNoeud);
         if (!resultat.equals("OK")) return resultat;
 
+        activerArbre(joueur, numArbre);
         StringBuilder sb = new StringBuilder();
-        switch (numArbre) {
-            case 1 -> {
-                joueur.activerArbre1();
-                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !\n");
-                sb.append("Votre attaque speciale est maintenant remplacee par ").append(nomComp).append(".");
-            }
-            case 2 -> {
-                joueur.activerArbre2();
-                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !\n");
-                sb.append("Votre attaque speciale est maintenant remplacee par ").append(nomComp).append(".");
-            }
-            default -> {
-                sb.append("Nouvelle speciale debloquee : ").append(nomComp).append(" !");
-                RangJoueur rangJoueur = ctx.rangJoueur;
-                if (rangJoueur.getRang() == RangJoueur.Rang.C) {
-                    rangJoueur.setRang(RangJoueur.Rang.B);
-                    sb.append("\nFelicitations ! L'Arbre 3 complete vous fait passer Rang B !\n");
-                    sb.append("Multiplicateur de stats : x").append(String.format("%.2f", rangJoueur.getMultiplicateur()));
-                }
+        sb.append("Nouvelle ").append(typeMot).append(" debloquee : ").append(nomComp).append(" !\n");
+        sb.append("Votre attaque ").append(typeMot).append(" est maintenant remplacee par ").append(nomComp).append(".");
+
+        if (numArbre == 3) {
+            RangJoueur rangJoueur = ctx.rangJoueur;
+            if (rangJoueur.getRang() == RangJoueur.Rang.C) {
+                rangJoueur.setRang(RangJoueur.Rang.B);
+                sb.append("\nFelicitations ! L'Arbre 3 complete vous fait passer Rang B !\n");
+                sb.append("Multiplicateur de stats : x").append(String.format("%.2f", rangJoueur.getMultiplicateur()));
             }
         }
         sb.append("\nPoints restants : ").append(arbre.getPointsDisponibles());

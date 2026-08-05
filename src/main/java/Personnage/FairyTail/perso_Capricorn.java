@@ -67,6 +67,7 @@ public class perso_Capricorn extends PersonnageBase {
             double multiplicateurRage = 1.0;
             if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
             double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
+            if (cible.aEffet(Fragilite.class)) degats *= 1.15;
             Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         }
         Combat.appliquerEffet(this, new BuffTauxCritique(0.30, 2), log);

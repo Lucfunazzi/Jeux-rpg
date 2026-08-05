@@ -49,6 +49,7 @@ public class perso_ErzaKnightwalker extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Erza Knightwalker enchaîne la Technique Ransui sur " + cible.getNom() + " !");
         double degats = this.getAttaque() * 1.35;
+        if (cible.aEffet(ReductionDefense.class)) degats *= 1.15;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new Saignement(2, 0.06), log);

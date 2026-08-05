@@ -60,7 +60,8 @@ public class EcranFormationController {
         }
 
         competenceBox.getChildren().setAll(
-                GuiVisuels.creerFicheStat("✦", "Compétence spéciale active", nomCompetenceActive()));
+                GuiVisuels.creerFicheStat("✦", "Compétence spéciale active", nomCompetenceActive()),
+                GuiVisuels.creerFicheStat("★", "Attaque ultime active", nomUltimeActive()));
 
         List<GestionnaireLiens.Lien> liens = f.getLiensActifs();
         if (liens.isEmpty()) {
@@ -124,6 +125,11 @@ public class EcranFormationController {
         rafraichir();
     }
 
+    /** Numeros des arbres qui debloquent une speciale alternative (4 et 8 sont des arbres d'ultime). */
+    private static final int[] ARBRES_SPECIALE = {1, 2, 3, 5, 6, 7};
+    /** Numeros des arbres qui debloquent un ultime alternatif. */
+    private static final int[] ARBRES_ULTIME = {4, 8};
+
     @FXML
     private void onChangerCompetence(ActionEvent event) {
         Personnage_principale joueur = ctx.joueur;
@@ -134,30 +140,58 @@ public class EcranFormationController {
         String nomOriginal = joueur.getCompetencesChoisie() != null
                 ? joueur.getCompetencesChoisie().getNomsCompetences()[joueur.getChoixComp() - 1]
                 : "Competence originale";
-        boolean arbre1Dispo = arbre.isNoeud10Debloque();
-        String nomArbre1    = MenuAbilite.getNomCompetence(classe, 1);
-        boolean arbre2Dispo = arbre.isNoeud10Arbre2Debloque();
-        String nomArbre2    = MenuAbilite.getNomCompetence(classe, 2);
 
-        List<Integer> options = List.of(0, 1, 2);
+        List<Integer> options = new ArrayList<>();
+        options.add(0);
+        for (int numArbre : ARBRES_SPECIALE) options.add(numArbre);
+
         Integer choix = GuiVisuels.choisirParmiCartes("Compétence spéciale", options,
-                i -> carteCompetenceChoix(i, nomOriginal, nomArbre1, nomArbre2, arbre1Dispo, arbre2Dispo, actuelle));
+                numArbre -> carteCompetenceChoix(numArbre, nomOriginal,
+                        n -> MenuAbilite.getNomCompetence(classe, n),
+                        n -> arbre.getNoeud(n, 10).isDebloque(), actuelle));
         if (choix == null) return;
 
-        int index = choix;
-        switch (index) {
-            case 0 -> {
-                joueur.setCompetenceSpecialeActive(0);
-                info("Competence", "Competence active : " + nomOriginal);
-            }
-            case 1 -> {
-                if (!arbre1Dispo) info("Competence", "Competence verrouillee - completez l'arbre 1 d'abord.");
-                else { joueur.setCompetenceSpecialeActive(1); info("Competence", "Competence active : " + nomArbre1); }
-            }
-            case 2 -> {
-                if (!arbre2Dispo) info("Competence", "Competence verrouillee - completez l'arbre 2 d'abord.");
-                else { joueur.setCompetenceSpecialeActive(2); info("Competence", "Competence active : " + nomArbre2); }
-            }
+        if (choix == 0) {
+            joueur.setCompetenceSpecialeActive(0);
+            info("Competence", "Competence active : " + nomOriginal);
+        } else if (!arbre.getNoeud(choix, 10).isDebloque()) {
+            info("Competence", "Competence verrouillee - completez l'arbre " + choix + " d'abord.");
+        } else {
+            joueur.setCompetenceSpecialeActive(choix);
+            info("Competence", "Competence active : " + MenuAbilite.getNomCompetence(classe, choix));
+        }
+        rafraichir();
+    }
+
+    @FXML
+    private void onChangerUltime(ActionEvent event) {
+        Personnage_principale joueur = ctx.joueur;
+        ArbreCompetences arbre = joueur.getArbreCompetences();
+        String classe = joueur.getChoixClasses();
+        int actuelle = joueur.getCompetenceUltimeActive();
+
+        String nomOriginal = joueur.getCompetencesChoisie() != null
+                ? joueur.getCompetencesChoisie().getNomsCompetences()[1]
+                : "Ultime originale";
+
+        List<Integer> options = new ArrayList<>();
+        options.add(0);
+        for (int numArbre : ARBRES_ULTIME) options.add(numArbre);
+
+        Integer choix = GuiVisuels.choisirParmiCartes("Attaque ultime", options,
+                numArbre -> carteCompetenceChoix(numArbre, nomOriginal,
+                        n -> Personnage_principale.getNomUltimeArbre(classe, n),
+                        n -> arbre.getNoeud(n, 10).isDebloque(), actuelle));
+        if (choix == null) return;
+
+        if (choix == 0) {
+            joueur.setCompetenceUltimeActive(0);
+            info("Ultime", "Ultime active : " + nomOriginal);
+        } else if (!arbre.getNoeud(choix, 10).isDebloque()) {
+            info("Ultime", "Ultime verrouillee - completez l'arbre " + choix + " d'abord.");
+        } else {
+            joueur.setCompetenceUltimeActive(choix);
+            info("Ultime", "Ultime active : " + Personnage_principale.getNomUltimeArbre(classe, choix));
         }
         rafraichir();
     }
@@ -220,23 +254,44 @@ public class EcranFormationController {
 
     private String nomCompetenceActive() {
         Personnage_principale joueur = ctx.joueur;
-        return switch (joueur.getCompetenceSpecialeActive()) {
-            case 1  -> MenuAbilite.getNomCompetence(joueur.getChoixClasses(), 1);
-            case 2  -> MenuAbilite.getNomCompetence(joueur.getChoixClasses(), 2);
-            default -> joueur.getCompetencesChoisie() != null
+        int actuelle = joueur.getCompetenceSpecialeActive();
+        if (actuelle == 0) {
+            return joueur.getCompetencesChoisie() != null
                     ? joueur.getCompetencesChoisie().getNomsCompetences()[joueur.getChoixComp() - 1]
                     : "Aucune";
-        };
+        }
+        return MenuAbilite.getNomCompetence(joueur.getChoixClasses(), actuelle);
     }
 
-    private Node carteCompetenceChoix(int index, String nomOriginal, String nomArbre1, String nomArbre2,
-            boolean arbre1Dispo, boolean arbre2Dispo, int actuelle) {
+    private String nomUltimeActive() {
+        Personnage_principale joueur = ctx.joueur;
+        int actuelle = joueur.getCompetenceUltimeActive();
+        if (actuelle == 0) {
+            return joueur.getCompetencesChoisie() != null
+                    ? joueur.getCompetencesChoisie().getNomsCompetences()[1]
+                    : "Aucune";
+        }
+        return Personnage_principale.getNomUltimeArbre(joueur.getChoixClasses(), actuelle);
+    }
+
+    /**
+     * Carte d'un choix de competence/ultime dans le selecteur.
+     * @param numArbre 0 = option originale, sinon numero de l'arbre (1-8)
+     * @param nomDe    resout le nom affiche pour un numero d'arbre donne
+     * @param dispoDe  indique si le noeud 10 de cet arbre est debloque
+     */
+    private Node carteCompetenceChoix(int numArbre, String nomOriginal,
+            java.util.function.IntFunction<String> nomDe,
+            java.util.function.IntPredicate dispoDe, int actuelle) {
         String nom;
         String statut;
-        switch (index) {
-            case 0 -> { nom = nomOriginal + " (originale)"; statut = actuelle == 0 ? "ACTIVE" : ""; }
-            case 1 -> { nom = nomArbre1 + " (Arbre 1)"; statut = !arbre1Dispo ? "VERROUILLÉ" : actuelle == 1 ? "ACTIVE" : ""; }
-            default -> { nom = nomArbre2 + " (Arbre 2)"; statut = !arbre2Dispo ? "VERROUILLÉ" : actuelle == 2 ? "ACTIVE" : ""; }
+        if (numArbre == 0) {
+            nom = nomOriginal + " (originale)";
+            statut = actuelle == 0 ? "ACTIVE" : "";
+        } else {
+            boolean dispo = dispoDe.test(numArbre);
+            nom = nomDe.apply(numArbre) + " (Arbre " + numArbre + ")";
+            statut = !dispo ? "VERROUILLÉ" : actuelle == numArbre ? "ACTIVE" : "";
         }
 
         Label nomLabel = new Label(nom);

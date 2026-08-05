@@ -56,6 +56,7 @@ public class perso_Sugarboy extends PersonnageBase {
         log.add("Sugarboy avale la magie ambiante — Absorption Magique !");
         Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.12), log);
         double degats = this.getAttaque() * 1.05;
+        if (cible.aEffet(Saignement.class)) degats *= 1.15;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals("DPS")) {

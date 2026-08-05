@@ -45,6 +45,7 @@ public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Erza enfile l'Armure Adamantine !");
      double degats = this.getAttaque() * 1.30;
+    if (cible.aEffet(Brulure.class)) degats *= 1.15;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.30), log);
     Combat.appliquerEffet(this, new BuffDefense(0.15, 3), log);
@@ -61,6 +62,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     for (PersonnageBase ennemi : equipeEnnemie) {
         if (ennemi.estVivant()) {
             double degats = (this.getAttaque() * 1.30) * multiplicateurRage;
+            if (ennemi.aEffet(Brulure.class)) degats *= 1.15;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             Combat.appliquerEffet(this, ennemi, new Saignement(2, 0.05), log);
             Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.10, 3), log);

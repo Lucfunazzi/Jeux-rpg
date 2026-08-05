@@ -42,22 +42,39 @@ public class EcranAbilitesController {
         );
         statsBox.getChildren().setAll(stats);
 
-        choixBox.getChildren().setAll(
-                carteArbre(1, "Arbre 1 - Nouvelle Spéciale", true, arbre.isNoeud10Debloque(), classe),
-                carteArbre(2, "Arbre 2 - Nouvelle Spéciale", arbre.isArbre2Debloque(), arbre.isNoeud10Arbre2Debloque(), classe),
-                carteArbre(3, "Arbre 3 - Nouvelle Spéciale", arbre.isArbre3Debloque(), arbre.isNoeud10Arbre3Debloque(), classe)
-        );
+        choixBox.getChildren().clear();
+        for (int numero = 1; numero <= 8; numero++) {
+            boolean ultime = numero == 4 || numero == 8;
+            String titre = "Arbre " + numero + " - Nouvelle " + (ultime ? "Ultime" : "Spéciale");
+            choixBox.getChildren().add(carteArbre(numero, titre, estArbreDebloque(arbre, numero),
+                    arbre.getNoeud(numero, 10).isDebloque(), classe));
+        }
+    }
+
+    private boolean estArbreDebloque(ArbreCompetences arbre, int numero) {
+        return switch (numero) {
+            case 1  -> true;
+            case 2  -> arbre.isArbre2Debloque();
+            case 3  -> arbre.isArbre3Debloque();
+            case 4  -> arbre.isArbre4Debloque();
+            case 5  -> arbre.isArbre5Debloque();
+            case 6  -> arbre.isArbre6Debloque();
+            case 7  -> arbre.isArbre7Debloque();
+            default -> arbre.isArbre8Debloque();
+        };
     }
 
     private Node carteArbre(int numero, String titre, boolean accesDebloque, boolean completee, String classe) {
+        boolean ultime = numero == 4 || numero == 8;
         String description;
         if (!accesDebloque) {
             description = "Verrouillé — terminez l'arbre précédent.";
         } else if (completee) {
-            description = "Débloqué : " + MenuAbilite.getNomCompetence(classe, numero)
-                    + (numero == 3 ? " — Rang B !" : "");
+            String nom = ultime ? Joueur.Personnage_principale.getNomUltimeArbre(classe, numero)
+                                 : MenuAbilite.getNomCompetence(classe, numero);
+            description = "Débloqué : " + nom + (numero == 3 ? " — Rang B !" : "");
         } else {
-            description = "Nouvelle spéciale à débloquer.";
+            description = ultime ? "Nouvelle ultime à débloquer." : "Nouvelle spéciale à débloquer.";
         }
 
         Node carte = GuiVisuels.creerCarteChoix(titre, description, e -> ouvrirArbre(e, numero));

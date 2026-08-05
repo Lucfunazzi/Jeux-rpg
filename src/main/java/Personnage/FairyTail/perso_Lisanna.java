@@ -35,6 +35,12 @@ public class perso_Lisanna extends PersonnageBase {
             double soin = this.getAttaque()*0.80; al.recevoirSoin(soin, log);
         }
         Purification.purifierEquipe(a, 1, log);
+        for (PersonnageBase al : a) {
+            if (al.estVivant() && al.getNom().contains("Mirajane") && al.getVie() < al.getVieMax() * 0.5) {
+                Combat.appliquerEffet(this, al, new Regeneration(0.08, 2), log);
+                break;
+            }
+        }
     }
     @Override public void attaqueUltime(List<PersonnageBase> a, List<PersonnageBase> e, List<String> log) {
         log.add("Lisanna prend sa forme de colombe et régénère l'équipe !");

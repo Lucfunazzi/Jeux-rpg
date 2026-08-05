@@ -52,6 +52,7 @@ public class perso_Yuka extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Yuka Lance Onde Explosive " + cible.getNom() + " — une explosion dévaste la cible !");
         double degats = this.getAttaque() * 1.30;
+        if (cible.aEffet(Paralysie.class)) degats *= 1.15;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, new BuffTauxEsquive(0.15,2), log);
         

@@ -1,12 +1,19 @@
 package Equipement;
 
 import Personnage.PersonnageBase;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Fabrique les instances d'équipements.
  * Ajouter ici les nouvelles pièces au fur et à mesure des rangs.
  */
 public class EquipementFactory {
+
+    private static final Random RNG = new Random();
 
     /**
      * Équipe un personnage (typiquement un ennemi) avec un set complet (arme + 5 pièces
@@ -73,6 +80,65 @@ public class EquipementFactory {
             case SSS -> bottesSSS();
             case UR  -> bottesUR();
         });
+    }
+
+    /**
+     * Equipe un ennemi d'Elite avec {@code nbPieces} pieces choisies aleatoirement parmi celles
+     * compatibles avec son type (l'arme correspondant a sa classe, s'il y en a une, + les 5
+     * pieces d'armure), toutes de la rarete donnee (passer 6 pour un set complet). Chaque piece
+     * equipee recoit une fortification aleatoire dans [fortMin, fortMax], un niveau d'affinage
+     * aleatoire dans [affinageMin, affinageMax] (memes bornes des deux cotes pour un niveau fixe),
+     * et un nombre aleatoire de pierres niveau 1 (types distincts) dans [pierresMin, pierresMax].
+     * <p>
+     * Pensee pour les stages Elite : contrairement a {@link #equiperSetStandard}, appelee via le
+     * seuil de niveau 25 de {@code Stage} (aucun equipement fantome avant, faute de Compagnons
+     * pour compenser), les stages Elite sont un mode optionnel et delibere ou ce garde-fou ne
+     * s'applique pas.
+     */
+    public static void equiperGearElite(PersonnageBase p, Equipement.Rarete rarete, int nbPieces,
+                                         int fortMin, int fortMax, int affinageMin, int affinageMax,
+                                         int pierresMin, int pierresMax) {
+        equiperGearElite(p, rarete, nbPieces, fortMin, fortMax, affinageMin, affinageMax,
+                pierresMin, pierresMax, 1, 1);
+    }
+
+    /**
+     * Variante avec niveau de pierre configurable : si {@code pierreNiveauMin == pierreNiveauMax},
+     * toutes les pierres inserees sont a ce niveau ; sinon, la moitie des pierres (arrondie au
+     * superieur) sont au niveau {@code pierreNiveauMax} et le reste au niveau {@code pierreNiveauMin}.
+     */
+    public static void equiperGearElite(PersonnageBase p, Equipement.Rarete rarete, int nbPieces,
+                                         int fortMin, int fortMax, int affinageMin, int affinageMax,
+                                         int pierresMin, int pierresMax,
+                                         int pierreNiveauMin, int pierreNiveauMax) {
+        List<Equipement> disponibles = new ArrayList<>();
+        for (Equipement e : piecesSetComplet(rarete)) {
+            if (e.getSlot() != Equipement.Slot.ARME || estCompatibleArme(p.getType(), e)) {
+                disponibles.add(e);
+            }
+        }
+        Collections.shuffle(disponibles, RNG);
+
+        int n = Math.min(nbPieces, disponibles.size());
+        for (int i = 0; i < n; i++) {
+            Equipement piece = disponibles.get(i);
+
+            piece.setNiveauFortification(fortMin + RNG.nextInt(fortMax - fortMin + 1));
+            piece.setNiveauAffinage(affinageMin + RNG.nextInt(affinageMax - affinageMin + 1));
+
+            int nbPierres = Math.min(
+                    pierresMin + RNG.nextInt(pierresMax - pierresMin + 1),
+                    Equipement.NB_EMPLACEMENTS_PIERRES);
+            List<Pierre.Type> types = new ArrayList<>(Arrays.asList(Pierre.Type.values()));
+            Collections.shuffle(types, RNG);
+            int nbNiveauHaut = (nbPierres + 1) / 2;
+            for (int slot = 0; slot < nbPierres; slot++) {
+                int niveauPierre = slot < nbNiveauHaut ? pierreNiveauMax : pierreNiveauMin;
+                piece.insererPierre(slot, new Pierre(types.get(slot), niveauPierre));
+            }
+
+            p.equiper(piece);
+        }
     }
 
     /**
@@ -570,6 +636,18 @@ public class EquipementFactory {
             case SS   -> 200;
             case SSS  -> 500;
             case UR   -> 1200;
+        };
+    }
+
+    /** Niveau joueur minimum pour acheter un fragment de cette rarete a la Boutique d'equipement. */
+    public static int niveauRequisAchatFragmentBoutiqueEquipement(Equipement.Rarete rarete) {
+        return switch (rarete) {
+            case C, B -> 0;
+            case A    -> 40;
+            case S    -> 70;
+            case SS   -> 80;
+            case SSS  -> 90;
+            case UR   -> 100;
         };
     }
 

@@ -51,7 +51,13 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
             Combat.appliquerEffet(this, ennemi, new Malediction(2, 0.10), log);
         }
     }
-    Combat.appliquerEffet(this, new BuffTauxCritique(0.10, 2), log);
+    double bonusCritique = 0.10;
+    for (PersonnageBase allie : equipeAlliee) {
+        if (allie.getNom().equals("Elfman") && allie.estVivant()) {
+            bonusCritique += 0.05;
+        }
+    }
+    Combat.appliquerEffet(this, new BuffTauxCritique(bonusCritique, 2), log);
 }
 
 @Override

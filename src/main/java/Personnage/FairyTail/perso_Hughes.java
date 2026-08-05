@@ -73,7 +73,9 @@ public class perso_Hughes extends PersonnageBase {
             if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
             double degats = (this.getAttaque() * 1.25) * multiplicateurRage;
             boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-            if (touche && Math.random() < 0.20) {
+            double chanceConfusion = 0.20;
+            if (cible.aEffet(ReductionVitesse.class)) chanceConfusion += 0.15;
+            if (touche && Math.random() < chanceConfusion) {
                 Combat.appliquerEffet(this, cible, new Confusion(2), log);
             }
         }

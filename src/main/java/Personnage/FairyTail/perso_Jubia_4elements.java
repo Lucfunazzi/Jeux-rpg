@@ -67,6 +67,7 @@ public class perso_Jubia_4elements extends PersonnageBase {
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
                 double degats = this.getAttaque() * 0.80;
+                if (ennemi.aEffet(Fragilite.class)) degats *= 1.15;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new ReductionVitesse(0.20, 2), log);
                 Combat.appliquerEffet(this, ennemi, new Etourdissement(2), log);

@@ -53,7 +53,8 @@ public class perso_Tobi extends PersonnageBase {
         log.add("Tobi utilise Super Griffe Paralysante et frappe " + cible.getNom() + " avec puissance!");
         double degats = this.getAttaque() * 1.35;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
+        double chanceLiberation = cible.aEffet(Gel.class) ? 0.05 : 0.20;
+        Combat.appliquerEffet(this, cible, new Paralysie(1,chanceLiberation), log);
     }
 
     @Override
@@ -64,8 +65,10 @@ public class perso_Tobi extends PersonnageBase {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                if (Math.random() < 0.35) {
-                    Combat.appliquerEffet(this, cible, new Paralysie(1,0.20), log);
+                boolean estGelee = cible.aEffet(Gel.class);
+                double chanceParalysie = estGelee ? 0.35 + 0.15 : 0.35;
+                if (Math.random() < chanceParalysie) {
+                    Combat.appliquerEffet(this, cible, new Paralysie(1, estGelee ? 0.05 : 0.20), log);
                 }
             }
         }

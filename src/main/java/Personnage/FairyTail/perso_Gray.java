@@ -47,7 +47,8 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     double degats = this.getAttaque() * 1.20;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, cible, new ReductionVitesse(0.20, 2), log);
-    if (Math.random() < 0.30) {
+    double chanceGel = cible.aEffet(Trempe.class) ? 0.50 : 0.30;
+    if (Math.random() < chanceGel) {
         Combat.appliquerEffet(this, cible, new Gel(2), log);
     }
 }
@@ -63,7 +64,8 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
         if (ennemi.estVivant()) {
             double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            if (Math.random() < 0.30) {
+            double chanceGel = ennemi.aEffet(Trempe.class) ? 0.50 : 0.30;
+            if (Math.random() < chanceGel) {
                 Combat.appliquerEffet(this, ennemi, new Gel(2), log);
             }
         }

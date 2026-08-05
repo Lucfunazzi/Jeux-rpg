@@ -56,7 +56,7 @@ public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAll
     } else {
         double degats = this.getAttaque() * 0.80;
         for (PersonnageBase ennemi : attaquants) {
-            Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            Combat.appliquerDegatsAvecLog(this, ennemi, ennemi.aEffet(Gel.class) ? degats * 1.15 : degats, log);
             Combat.appliquerEffet(this, ennemi, new Brulure(2, 0.10), log);
         }
     }
@@ -79,7 +79,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     } else {
         double degats = this.getAttaque() * 1.05;
         for (PersonnageBase ennemi : attaquants) {
-            Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            Combat.appliquerDegatsAvecLog(this, ennemi, ennemi.aEffet(Gel.class) ? degats * 1.15 : degats, log);
         }
     }
 }

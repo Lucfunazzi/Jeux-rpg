@@ -57,7 +57,6 @@ public class perso_Arzak extends PersonnageBase {
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Bisca") && allie.estVivant()) {
                 Combat.appliquerEffet(this, new BuffAttaque(0.05, 2), log);
-                log.add("Synergie Duo de tireurs : Bisca couvre Alzack ! +5% ATK.");
                 break;
             }
         }
@@ -86,8 +85,7 @@ public class perso_Arzak extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Tir de folie — inflige 120% ATK a une cible, "
-                + "Augmente son Taux critique de 15% pendants 2 tours. "
-                + "[Synergie Duo de tireurs] Bisca vivante : +5% ATK pendant 2 tours.");
+                + "Augmente son Taux critique de 15% pendants 2 tours.");
     }
 
     @Override

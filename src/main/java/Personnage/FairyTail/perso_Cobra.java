@@ -51,7 +51,8 @@ public class perso_Cobra extends PersonnageBase {
         double degats = this.getAttaque() * 1.35;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
-            Combat.appliquerEffet(this, cible, new Poison(3, 0.06), log);
+            int dureePoison = cible.aEffet(Confusion.class) ? 4 : 3;
+            Combat.appliquerEffet(this, cible, new Poison(dureePoison, 0.06), log);
         }
     }
 

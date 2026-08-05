@@ -62,9 +62,10 @@ public class perso_Cherry extends PersonnageBase {
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
                 double degats = this.getAttaque() * 0.70;
+                if (cible.aEffet(Gel.class)) degats *= 1.20;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
 
-                
+
             }
         }
     }

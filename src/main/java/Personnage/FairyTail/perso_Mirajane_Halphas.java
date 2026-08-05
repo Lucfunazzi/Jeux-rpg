@@ -79,7 +79,13 @@ public class perso_Mirajane_Halphas extends PersonnageBase {
             log.add("Mirajane Halphas absorbe " + String.format("%.0f", totalAbsorbe)
                     + " PV via le drain !");
         }
-        Combat.appliquerEffet(this, new BuffTauxCritique(0.20, 2), log);
+        double bonusCritique = 0.20;
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.getNom().equals("Elfman") && allie.estVivant()) {
+                bonusCritique += 0.05;
+            }
+        }
+        Combat.appliquerEffet(this, new BuffTauxCritique(bonusCritique, 2), log);
     }
 
     // ── Attaque ultime ────────────────────────────────────────────────────

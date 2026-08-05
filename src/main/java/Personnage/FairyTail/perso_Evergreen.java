@@ -61,7 +61,6 @@ public class perso_Evergreen extends PersonnageBase {
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.getNom().equals("Bickslow") && allie.estVivant()) {
                 Combat.appliquerEffet(this, allie, new BuffAttaque(0.25, 1), log);
-                log.add("Synergie Equipe du Tonnerre : Bickslow profite de la cible ! +25% ATK.");
                 break;
             }
         }
@@ -84,7 +83,6 @@ public class perso_Evergreen extends PersonnageBase {
                     for (PersonnageBase allie : equipeAlliee) {
                         if (allie.getNom().equals("Bickslow") && allie.estVivant()) {
                             Combat.appliquerEffet(this, allie, new BuffAttaque(0.25, 1), log);
-                            log.add("Synergie Equipe du Tonnerre : Bickslow profite de la brulure ! +25% ATK.");
                             break;
                         }
                     }
@@ -101,8 +99,7 @@ public class perso_Evergreen extends PersonnageBase {
     @Override
     public void descriptionAttaqueSpeciale() {
         System.out.println("Mitrailleuse ferique Leprechaun — inflige 150% ATK au Support ennemi (fallback cible normale), "
-                + "reduit sa defense de 10% pendant 2 tours. "
-                + "[Synergie Equipe du Tonnerre] Bickslow vivant : +25% ATK pendant 1 tour.");
+                + "reduit sa defense de 10% pendant 2 tours.");
     }
 
     @Override
@@ -110,7 +107,6 @@ public class perso_Evergreen extends PersonnageBase {
         System.out.println("Explosion ferique du Gremlin — inflige 90% ATK a tous les ennemis, "
                 + "reduit leur defense de 15% pendant 2 tours, "
                 + "25% de chance de Brulure (5% PV/tour) sur chaque cible pendant 2 tours. "
-                + "[Synergie Equipe du Tonnerre] Chaque brulure donne +25% ATK a Bickslow. "
                 + "Puissance augmentee par la Rage.");
     }
 }

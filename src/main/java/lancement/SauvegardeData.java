@@ -20,8 +20,14 @@ public class SauvegardeData {
     public boolean[] arbreNoeudDebloques     = new boolean[10];
     public boolean[] arbreNoeudDebloques2    = new boolean[10];
     public boolean[] arbreNoeudDebloques3    = new boolean[10];
+    public boolean[] arbreNoeudDebloques4    = new boolean[10];
+    public boolean[] arbreNoeudDebloques5    = new boolean[10];
+    public boolean[] arbreNoeudDebloques6    = new boolean[10];
+    public boolean[] arbreNoeudDebloques7    = new boolean[10];
+    public boolean[] arbreNoeudDebloques8    = new boolean[10];
     public int       arbrePointsDisponibles  = 0;
     public int       competenceSpecialeActive = 0;
+    public int       competenceUltimeActive   = 0;
 
     public String rangJoueur = "C";
     public boolean[] rangJoueurCoffresReclames = null;

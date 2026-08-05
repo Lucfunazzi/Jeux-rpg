@@ -21,12 +21,17 @@ public class Personnage_principale extends PersonnageBase {
     private ArbreCompetences arbreCompetences = new ArbreCompetences();
 
     /**
-     * Quelle version de la spéciale est active (l'ultime n'est jamais remplacée) :
-     *   0 = spéciale de base
-     *   1 = spéciale remplacée par competenceArbre   (nœud 10 arbre 1 débloqué)
-     *   2 = spéciale remplacée par competenceArbre2  (nœud 10 arbre 2 débloqué)
+     * Quel arbre fournit la spéciale active (0 = spéciale de base) : 1, 2, 3, 5, 6 ou 7 selon
+     * le nœud 10 debloque le plus recemment active (voir activerArbreN). Les arbres 4 et 8 ne
+     * touchent pas la spéciale — ce sont des arbres d'ULTIME (voir competenceUltimeActive).
      */
     private int competenceSpecialeActive = 0;
+
+    /**
+     * Quel arbre fournit l'ultime active (0 = ultime de base) : 4 ou 8 selon le nœud 10
+     * debloque le plus recemment active (voir activerUltimeArbreN).
+     */
+    private int competenceUltimeActive = 0;
 
     private GameContext ctx;
 
@@ -83,6 +88,17 @@ public class Personnage_principale extends PersonnageBase {
         return 1.00;
     }
 
+    /**
+     * Le coefficient de rang n'est plus applique comme multiplicateur "live" sur le total
+     * courant (ce qui reappliquait retroactivement tout l'historique de croissance a chaque
+     * montee de rang et provoquait un boost instantane disproportionne). A la place, il
+     * modifie le taux de croissance des montees de niveau FUTURES : monter de rang ne change
+     * rien dans l'instant, mais chaque niveau gagne ensuite rapporte proportionnellement plus.
+     */
+    @Override protected double multiplicateurCroissanceNiveau() {
+        return getMultiplicateurRang();
+    }
+
     /** La rarete affichee (badge, couleur) suit toujours le rang actuel du joueur. */
     @Override public String getRarete() {
         if (ctx != null && ctx.rangJoueur != null) return ctx.rangJoueur.getRangNom();
@@ -90,16 +106,16 @@ public class Personnage_principale extends PersonnageBase {
     }
 
     @Override public double getAttaque() {
-        return super.getAttaque() * (1.0 + arbreCompetences.getBonusATK()) * getMultiplicateurRang();
+        return super.getAttaque() * (1.0 + arbreCompetences.getBonusATK());
     }
     @Override public double getDefense() {
-        return super.getDefense() * (1.0 + arbreCompetences.getBonusDEF()) * getMultiplicateurRang();
+        return super.getDefense() * (1.0 + arbreCompetences.getBonusDEF());
     }
     @Override public double getVieMax() {
-        return super.getVieMax() * (1.0 + arbreCompetences.getBonusPV()) * getMultiplicateurRang();
+        return super.getVieMax() * (1.0 + arbreCompetences.getBonusPV());
     }
     @Override public double getVitesse() {
-        return super.getVitesse() * (1.0 + arbreCompetences.getBonusVIT()) * getMultiplicateurRang();
+        return super.getVitesse() * (1.0 + arbreCompetences.getBonusVIT());
     }
 
     @Override public boolean estPersonnagePrincipal() { return true; }
@@ -108,26 +124,58 @@ public class Personnage_principale extends PersonnageBase {
         if (competenceChoisie == null)
             return new String[]{"Attaque de base", "Attaque spéciale", "Attaque ultime"};
         String[] noms = competenceChoisie.getNomsCompetences();
-        // noms[0] = spéciale de base, noms[1] = ultime de base (jamais remplacée)
-        String nomSpeciale = switch (competenceSpecialeActive) {
-            case 1  -> getNomCompetenceArbre(choixClasse, 1);
-            case 2  -> getNomCompetenceArbre(choixClasse, 2);
-            default -> noms[0];
-        };
-        return new String[]{"Attaque de base", nomSpeciale, noms[1]};
+        // noms[0] = spéciale de base, noms[1] = ultime de base (jamais remplacée par defaut)
+        String nomSpeciale = competenceSpecialeActive == 0
+                ? noms[0]
+                : getNomCompetenceArbre(choixClasse, competenceSpecialeActive);
+        String nomUltime = competenceUltimeActive == 0
+                ? noms[1]
+                : getNomUltimeArbre(choixClasse, competenceUltimeActive);
+        return new String[]{"Attaque de base", nomSpeciale, nomUltime};
     }
 
-    /** Noms des compétences débloquées par l'arbre — dupliqué de MenuAbilite pour éviter la dépendance circulaire. */
+    /**
+     * Noms des spéciales débloquées par les arbres 1/2/3/5/6/7 — dupliqué de MenuAbilite pour
+     * éviter la dépendance circulaire. Arbres 5/6/7 : contenu pas encore défini par classe,
+     * renvoie un nom générique en attendant.
+     */
     public static String getNomCompetenceArbre(String classe, int arbre) {
-        if (classe == null) return "Compétence spéciale " + arbre;
-        if (arbre == 3) return "Compétence spéciale (Arbre 3)";
+        if (classe == null) return "Compétence spéciale (Arbre " + arbre + ")";
         return switch (classe) {
-            case "Mage"               -> arbre == 1 ? "Rayon sacré"                  : "Décharge de foudre";
-            case "Chasseur de Dragon" -> arbre == 1 ? "Fouet du Dragon d'Eau"        : "Tir à haute pression du dragon d'eau";
-            case "Chevalier"          -> arbre == 1 ? "Lance de Feu"                 : "Marteau vengeur";
-            case "Constellationniste" -> arbre == 1 ? "Invocation : Cancer"          : "Invocation : Virgo";
-            default -> "Compétence spéciale " + arbre;
+            case "Mage" -> switch (arbre) {
+                case 1  -> "Rayon sacré";
+                case 2  -> "Décharge de foudre";
+                case 3  -> "Epines fleuries";
+                default -> "Compétence spéciale (Arbre " + arbre + ")";
+            };
+            case "Chasseur de Dragon" -> switch (arbre) {
+                case 1  -> "Fouet du Dragon d'Eau";
+                case 2  -> "Tir à haute pression du dragon d'eau";
+                case 3  -> "Triples Tir du Dragon de l'eau";
+                default -> "Compétence spéciale (Arbre " + arbre + ")";
+            };
+            case "Chevalier" -> switch (arbre) {
+                case 1  -> "Lance de Feu";
+                case 2  -> "Marteau vengeur";
+                case 3  -> "Lance du Tyran céleste";
+                default -> "Compétence spéciale (Arbre " + arbre + ")";
+            };
+            case "Constellationniste" -> switch (arbre) {
+                case 1  -> "Invocation : Cancer";
+                case 2  -> "Invocation : Virgo";
+                case 3  -> "Invocation Aries";
+                default -> "Compétence spéciale (Arbre " + arbre + ")";
+            };
+            default -> "Compétence spéciale (Arbre " + arbre + ")";
         };
+    }
+
+    /**
+     * Noms des ultimes débloqués par les arbres 4/8 — contenu pas encore défini par classe,
+     * renvoie un nom générique en attendant (voir Competences.ultimeArbre4/ultimeArbre8).
+     */
+    public static String getNomUltimeArbre(String classe, int arbre) {
+        return "Attaque ultime (Arbre " + arbre + ")";
     }
 
     // ── Attaque de base ───────────────────────────────────────────────────
@@ -146,6 +194,10 @@ public class Personnage_principale extends PersonnageBase {
         switch (competenceSpecialeActive) {
             case 1  -> competenceChoisie.competenceArbre(this, cible, equipeAlliee, equipeEnnemie, log);
             case 2  -> competenceChoisie.competenceArbre2(this, cible, equipeAlliee, equipeEnnemie, log);
+            case 3  -> competenceChoisie.competenceArbre3(this, cible, equipeAlliee, equipeEnnemie, log);
+            case 5  -> competenceChoisie.competenceArbre5(this, cible, equipeAlliee, equipeEnnemie, log);
+            case 6  -> competenceChoisie.competenceArbre6(this, cible, equipeAlliee, equipeEnnemie, log);
+            case 7  -> competenceChoisie.competenceArbre7(this, cible, equipeAlliee, equipeEnnemie, log);
             default -> competenceChoisie.attaqueSpeciale(this, cible, equipeAlliee, equipeEnnemie, log);
         }
     }
@@ -156,7 +208,11 @@ public class Personnage_principale extends PersonnageBase {
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         if (competenceChoisie == null) { log.add("Aucune classe active !"); return; }
 
-        competenceChoisie.ultime(this, equipeAlliee, equipeEnnemie, log);
+        switch (competenceUltimeActive) {
+            case 4  -> competenceChoisie.ultimeArbre4(this, equipeAlliee, equipeEnnemie, log);
+            case 8  -> competenceChoisie.ultimeArbre8(this, equipeAlliee, equipeEnnemie, log);
+            default -> competenceChoisie.ultime(this, equipeAlliee, equipeEnnemie, log);
+        }
     }
 
 
@@ -169,12 +225,20 @@ public class Personnage_principale extends PersonnageBase {
         switch (competenceSpecialeActive) {
             case 1  -> competenceChoisie.descriptionCompetenceArbre();
             case 2  -> competenceChoisie.descriptionCompetenceArbre2();
+            case 3  -> competenceChoisie.descriptionCompetenceArbre3();
+            case 5  -> competenceChoisie.descriptionCompetenceArbre5();
+            case 6  -> competenceChoisie.descriptionCompetenceArbre6();
+            case 7  -> competenceChoisie.descriptionCompetenceArbre7();
             default -> competenceChoisie.descriptionAttaqueSpeciale();
         }
     }
     @Override public void descriptionAttaqueUltime() {
         if (competenceChoisie == null) { System.out.println("Aucune classe active."); return; }
-        competenceChoisie.descriptionUltime();
+        switch (competenceUltimeActive) {
+            case 4  -> competenceChoisie.descriptionUltimeArbre4();
+            case 8  -> competenceChoisie.descriptionUltimeArbre8();
+            default -> competenceChoisie.descriptionUltime();
+        }
     }
 
     // ── Getters / Setters ─────────────────────────────────────────────────
@@ -210,11 +274,18 @@ public class Personnage_principale extends PersonnageBase {
     public ArbreCompetences getArbreCompetences() { return arbreCompetences; }
 
     /**
-     * 0 = base, 1 = spéciale arbre, 2 = ultime arbre, 3 = les deux.
-     * Mis à jour automatiquement quand un nœud 10 est débloqué.
+     * Numero de l'arbre (1, 2, 3, 5, 6 ou 7) dont la spéciale est active, 0 = spéciale de base.
+     * Mis à jour automatiquement quand un nœud 10 de type spéciale est débloqué.
      */
     public int  getCompetenceSpecialeActive()     { return competenceSpecialeActive; }
     public void setCompetenceSpecialeActive(int v){ this.competenceSpecialeActive = v; }
+
+    /**
+     * Numero de l'arbre (4 ou 8) dont l'ultime est active, 0 = ultime de base.
+     * Mis à jour automatiquement quand un nœud 10 de type ultime est débloqué.
+     */
+    public int  getCompetenceUltimeActive()       { return competenceUltimeActive; }
+    public void setCompetenceUltimeActive(int v)  { this.competenceUltimeActive = v; }
 
     /** Active la spéciale débloquée par l'arbre 1. */
     public void activerArbre1() {
@@ -224,6 +295,36 @@ public class Personnage_principale extends PersonnageBase {
     /** Active la spéciale débloquée par l'arbre 2. */
     public void activerArbre2() {
         competenceSpecialeActive = 2;
+    }
+
+    /** Active la spéciale débloquée par l'arbre 3. */
+    public void activerArbre3() {
+        competenceSpecialeActive = 3;
+    }
+
+    /** Active la spéciale débloquée par l'arbre 5. */
+    public void activerArbre5() {
+        competenceSpecialeActive = 5;
+    }
+
+    /** Active la spéciale débloquée par l'arbre 6. */
+    public void activerArbre6() {
+        competenceSpecialeActive = 6;
+    }
+
+    /** Active la spéciale débloquée par l'arbre 7. */
+    public void activerArbre7() {
+        competenceSpecialeActive = 7;
+    }
+
+    /** Active l'ultime débloquée par l'arbre 4. */
+    public void activerArbre4() {
+        competenceUltimeActive = 4;
+    }
+
+    /** Active l'ultime débloquée par l'arbre 8. */
+    public void activerArbre8() {
+        competenceUltimeActive = 8;
     }
 
     // Compatibilité ascendante sauvegarde

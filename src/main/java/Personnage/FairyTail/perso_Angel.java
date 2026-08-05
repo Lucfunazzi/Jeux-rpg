@@ -52,21 +52,22 @@ public class perso_Angel extends PersonnageBase {
         double mult = 1.50;
         if (yukinoAlliee) {
             mult += 0.20;
-            log.add("  Yukino amplifie Caelum ! +20% degats.");
         }
 
         Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * mult, log);
 
         // 30% chance d'étourdir
-        if (Math.random() < 0.30) {
+        double chanceEtourdissement = 0.30;
+        if (cible.aEffet(ReductionVitesse.class)) {
+            chanceEtourdissement += 0.15;
+        }
+        if (Math.random() < chanceEtourdissement) {
             Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
             log.add("  Le laser aveugle " + cible.getNom() + " !");
         }
 
-        // Synergie Lucy : Marquage en plus
         if (lucyAlliee) {
             Combat.appliquerEffet(this, cible, new Marquage(), log);
-            log.add("  Lucy cible avec precision — Marquage applique !");
         }
     }
 
@@ -86,7 +87,6 @@ public class perso_Angel extends PersonnageBase {
         double reductionATK = 0.20;
         if (lucyAlliee && yukinoAlliee) {
             reductionATK = 0.40;
-            log.add("  Lucy & Yukino unissent leurs portes — reduction ATK doublee !");
         }
 
         for (PersonnageBase ennemi : equipeEnnemie) {
@@ -106,14 +106,11 @@ public class perso_Angel extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Caelum — inflige 150% ATK a une cible, 30% de chance d'etourdir 1 tour."
-                + " Si Lucy alliee : applique Marquage 2 tours."
-                + " Si Yukino alliee : +20% degats.");
+        System.out.println("Caelum — inflige 150% ATK a une cible, 30% de chance d'etourdir 1 tour.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Aries — AoE 130% ATK sur toute l'equipe ennemie + ReductionATK 20% 2 tours."
-                + " Si Lucy ET Yukino alliees : ReductionATK doublee a 40%.");
+        System.out.println("Aries — AoE 130% ATK sur toute l'equipe ennemie + ReductionATK 20% 2 tours.");
     }
 }

@@ -21,18 +21,20 @@ public class MenuFormation {
         while (!retour) {
             formation.afficherFormation();
 
-            // Résumé de la compétence spéciale active
-            ArbreCompetences arbre = joueur.getArbreCompetences();
+            // Résumé de la compétence spéciale/ultime active
             String nomCompActive   = nomCompetenceActive(joueur);
+            String nomUltimeActive = nomUltimeActive(joueur);
 
             System.out.println("\n========================================");
             System.out.println("           MENU FORMATION");
             System.out.println("========================================");
             System.out.println("Competence speciale active : " + nomCompActive);
+            System.out.println("Attaque ultime active       : " + nomUltimeActive);
             System.out.println();
             System.out.println("1. Ajouter un personnage");
             System.out.println("2. Retirer un personnage");
             System.out.println("3. Changer la competence speciale");
+            System.out.println("4. Changer l'attaque ultime");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
@@ -40,6 +42,7 @@ public class MenuFormation {
                 case "1" -> ajouterMenu(formation, personnagesDisponibles, scanner);
                 case "2" -> retirerMenu(formation, scanner);
                 case "3" -> changerCompetenceSpeciale(joueur, scanner);
+                case "4" -> changerCompetenceUltime(joueur, scanner);
                 case "0" -> retour = true;
                 default  -> System.out.println("Choix invalide.");
             }
@@ -120,7 +123,12 @@ public class MenuFormation {
         }
     }
     
-// ── Changer la compétence spéciale active ─────────────────────────────
+    /** Numeros des arbres qui debloquent une speciale alternative (4 et 8 sont des arbres d'ultime). */
+    private static final int[] ARBRES_SPECIALE = {1, 2, 3, 5, 6, 7};
+    /** Numeros des arbres qui debloquent un ultime alternatif. */
+    private static final int[] ARBRES_ULTIME = {4, 8};
+
+    // ── Changer la compétence spéciale active ─────────────────────────────
     private void changerCompetenceSpeciale(Personnage_principale joueur, Scanner scanner) {
         ArbreCompetences arbre  = joueur.getArbreCompetences();
         String classe           = joueur.getChoixClasses();
@@ -132,66 +140,120 @@ public class MenuFormation {
         System.out.println("Competence active : " + nomCompetenceActive(joueur));
         System.out.println();
 
-        // Construire la liste des options disponibles
-        // Option 0 : compétence originale (toujours disponible)
         String nomOriginal = joueur.getCompetencesChoisie() != null
                 ? joueur.getCompetencesChoisie()
                          .getNomsCompetences()[joueur.getChoixComp() - 1]
                 : "Competence originale";
-
         System.out.println("1. " + nomOriginal + " (competence originale)"
                 + (actuelle == 0 ? "  [ACTIVE]" : ""));
 
-        // Option arbre 1
-        boolean arbre1Dispo = arbre.isNoeud10Debloque();
-        String nomArbre1    = MenuAbilite.getNomCompetence(classe, 1);
-        System.out.println("2. " + nomArbre1 + " (Arbre 1)"
-                + (!arbre1Dispo ? "  [VERROUILLE]" : actuelle == 1 ? "  [ACTIVE]" : ""));
-
-        // Option arbre 2
-        boolean arbre2Dispo = arbre.isNoeud10Arbre2Debloque();
-        String nomArbre2    = MenuAbilite.getNomCompetence(classe, 2);
-        System.out.println("3. " + nomArbre2 + " (Arbre 2)"
-                + (!arbre2Dispo ? "  [VERROUILLE]" : actuelle == 2 ? "  [ACTIVE]" : ""));
+        for (int i = 0; i < ARBRES_SPECIALE.length; i++) {
+            int numArbre = ARBRES_SPECIALE[i];
+            boolean dispo = arbre.getNoeud(numArbre, 10).isDebloque();
+            String nom = MenuAbilite.getNomCompetence(classe, numArbre);
+            System.out.println((i + 2) + ". " + nom + " (Arbre " + numArbre + ")"
+                    + (!dispo ? "  [VERROUILLE]" : actuelle == numArbre ? "  [ACTIVE]" : ""));
+        }
 
         System.out.println("0. Annuler");
         System.out.print("Votre choix : ");
 
-        switch (scanner.nextLine().trim()) {
-            case "1" -> {
+        try {
+            int choix = Integer.parseInt(scanner.nextLine().trim());
+            if (choix == 0) return;
+            if (choix == 1) {
                 joueur.setCompetenceSpecialeActive(0);
                 System.out.println(">> Competence active : " + nomOriginal);
+                return;
             }
-            case "2" -> {
-                if (!arbre1Dispo) {
-                    System.out.println("Competence verrouillee — completez l'arbre 1 d'abord.");
-                } else {
-                    joueur.setCompetenceSpecialeActive(1);
-                    System.out.println(">> Competence active : " + nomArbre1);
-                }
+            if (choix < 2 || choix > ARBRES_SPECIALE.length + 1) {
+                System.out.println("Choix invalide.");
+                return;
             }
-            case "3" -> {
-                if (!arbre2Dispo) {
-                    System.out.println("Competence verrouillee — completez l'arbre 2 d'abord.");
-                } else {
-                    joueur.setCompetenceSpecialeActive(2);
-                    System.out.println(">> Competence active : " + nomArbre2);
-                }
+            int numArbre = ARBRES_SPECIALE[choix - 2];
+            if (!arbre.getNoeud(numArbre, 10).isDebloque()) {
+                System.out.println("Competence verrouillee — completez l'arbre " + numArbre + " d'abord.");
+            } else {
+                joueur.setCompetenceSpecialeActive(numArbre);
+                System.out.println(">> Competence active : " + MenuAbilite.getNomCompetence(classe, numArbre));
             }
-            case "0" -> {}
-            default  -> System.out.println("Choix invalide.");
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
+        }
+    }
+
+    // ── Changer l'attaque ultime active ────────────────────────────────────
+    private void changerCompetenceUltime(Personnage_principale joueur, Scanner scanner) {
+        ArbreCompetences arbre  = joueur.getArbreCompetences();
+        String classe           = joueur.getChoixClasses();
+        int actuelle            = joueur.getCompetenceUltimeActive();
+
+        System.out.println("\n========================================");
+        System.out.println("       CHOISIR L'ATTAQUE ULTIME");
+        System.out.println("========================================");
+        System.out.println("Ultime active : " + nomUltimeActive(joueur));
+        System.out.println();
+
+        String nomOriginal = joueur.getCompetencesChoisie() != null
+                ? joueur.getCompetencesChoisie().getNomsCompetences()[1]
+                : "Ultime originale";
+        System.out.println("1. " + nomOriginal + " (ultime originale)"
+                + (actuelle == 0 ? "  [ACTIVE]" : ""));
+
+        for (int i = 0; i < ARBRES_ULTIME.length; i++) {
+            int numArbre = ARBRES_ULTIME[i];
+            boolean dispo = arbre.getNoeud(numArbre, 10).isDebloque();
+            String nom = Personnage_principale.getNomUltimeArbre(classe, numArbre);
+            System.out.println((i + 2) + ". " + nom + " (Arbre " + numArbre + ")"
+                    + (!dispo ? "  [VERROUILLE]" : actuelle == numArbre ? "  [ACTIVE]" : ""));
+        }
+
+        System.out.println("0. Annuler");
+        System.out.print("Votre choix : ");
+
+        try {
+            int choix = Integer.parseInt(scanner.nextLine().trim());
+            if (choix == 0) return;
+            if (choix == 1) {
+                joueur.setCompetenceUltimeActive(0);
+                System.out.println(">> Ultime active : " + nomOriginal);
+                return;
+            }
+            if (choix < 2 || choix > ARBRES_ULTIME.length + 1) {
+                System.out.println("Choix invalide.");
+                return;
+            }
+            int numArbre = ARBRES_ULTIME[choix - 2];
+            if (!arbre.getNoeud(numArbre, 10).isDebloque()) {
+                System.out.println("Ultime verrouillee — completez l'arbre " + numArbre + " d'abord.");
+            } else {
+                joueur.setCompetenceUltimeActive(numArbre);
+                System.out.println(">> Ultime active : " + Personnage_principale.getNomUltimeArbre(classe, numArbre));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Entree invalide.");
         }
     }
 
     private String nomCompetenceActive(Personnage_principale joueur) {
-        return switch (joueur.getCompetenceSpecialeActive()) {
-            case 1  -> MenuAbilite.getNomCompetence(joueur.getChoixClasses(), 1);
-            case 2  -> MenuAbilite.getNomCompetence(joueur.getChoixClasses(), 2);
-            default -> joueur.getCompetencesChoisie() != null
+        int actuelle = joueur.getCompetenceSpecialeActive();
+        if (actuelle == 0) {
+            return joueur.getCompetencesChoisie() != null
                     ? joueur.getCompetencesChoisie()
                              .getNomsCompetences()[joueur.getChoixComp() - 1]
                     : "Aucune";
-        };
+        }
+        return MenuAbilite.getNomCompetence(joueur.getChoixClasses(), actuelle);
+    }
+
+    private String nomUltimeActive(Personnage_principale joueur) {
+        int actuelle = joueur.getCompetenceUltimeActive();
+        if (actuelle == 0) {
+            return joueur.getCompetencesChoisie() != null
+                    ? joueur.getCompetencesChoisie().getNomsCompetences()[1]
+                    : "Aucune";
+        }
+        return Personnage_principale.getNomUltimeArbre(joueur.getChoixClasses(), actuelle);
     }
 
 }
