@@ -3,6 +3,9 @@ package lancement.Gestionnaires;
 import Equipement.BoiteEquipement;
 import Equipement.CarteOr;
 import Equipement.CristalTranscendance;
+import Equipement.Equipement;
+import Equipement.EquipementFactory;
+import Equipement.FragmentEquipement;
 import Equipement.FriandiseFamilier;
 import Equipement.Inventaire;
 import Equipement.ParcheminAptitude;
@@ -14,10 +17,13 @@ import Personnage.FairyTail.perso_Rogue;
 import Personnage.FairyTail.perso_Sting;
 import Personnage.FairyTail.perso_Yukino;
 import Personnage.PersonnageBase;
+import lancement.GameContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Regroupe les 4 systèmes de récompenses : niveau, pointage du mois,
@@ -26,8 +32,6 @@ import java.util.ArrayList;
  * {@link lancement.Menus.MenuExamenS#MATERIAU_BOITE_PIERRE_LV1}.
  */
 public class GestionnaireRecompenses {
-
-    private static final String BOITE_PIERRE_LV1 = "Boite de pierre Lv.1";
 
     // ── Récompenses de niveau ────────────────────────────────────────────
     // Etendu jusqu'a 200 : les Chapitres Elite montent deja au-dela du niveau 70 (Chapitre 8
@@ -45,19 +49,159 @@ public class GestionnaireRecompenses {
 
     public boolean isNiveauReclame(int index) { return niveauReclame[index]; }
 
-    /** Recompenses d'un palier de niveau : or / cartes d'or / boites / aptitude / sceau / boites d'equipement / parchemins XP (facultatifs). */
-    private record RecompenseNiveau(int or, int cartesOrLv1, int boitesPierreLv1,
-                                     int parcheminsAptitude, SceauDeRang sceau,
-                                     int boitesEquipement, BoiteEquipement boiteEquipement,
-                                     int parcheminsXPB) {}
+    /** Une ligne de recompense de niveau : texte affiche + octroi effectif sur le GameContext. */
+    private record LigneRecompense(String texte, Consumer<GameContext> octroi) {}
 
-    private RecompenseNiveau calculerRecompenseNiveau(int index) {
+    private static LigneRecompense carteOr(CarteOr niveau, int qte) {
+        return new LigneRecompense(qte + " " + niveau.nom, ctx -> ctx.inventaire.ajouterCartesOr(niveau, qte));
+    }
+
+    private static LigneRecompense boitePierre(int niveauBoite, int qte) {
+        String nom = lancement.Menus.MenuExamenS.nomBoite(niveauBoite);
+        return new LigneRecompense(qte + "x " + nom, ctx -> ctx.inventaire.ajouterMateriau(nom, qte));
+    }
+
+    private static LigneRecompense boiteEquipement(BoiteEquipement type, int qte) {
+        return new LigneRecompense(qte + "x " + type.nom, ctx -> ctx.inventaire.ajouterMateriau(type.nom, qte));
+    }
+
+    private static LigneRecompense parcheminXP(ParcheminXP.Rarete rarete, int qte) {
+        String nom = new ParcheminXP(rarete).getNom();
+        return new LigneRecompense(qte + "x " + nom, ctx -> ctx.inventaire.ajouterParcheminXP(rarete, qte));
+    }
+
+    private static LigneRecompense parcheminAptitude(ParcheminAptitude palier, int qte) {
+        return new LigneRecompense(qte + "x " + palier.nom, ctx -> ctx.inventaire.ajouterMateriau(palier.nom, qte));
+    }
+
+    /** Parchemin de Recrutement (recrutement classique C/B/A/S) — pas a confondre avec le Parchemin de Chasse. */
+    private static LigneRecompense parcheminRecrutement(String rang, int qte) {
+        return new LigneRecompense(qte + "x Parchemin de Recrutement [" + rang + "]", ctx -> {
+            switch (rang) {
+                case "B" -> ctx.menuRecrutement.ajouterParcheminB(qte);
+                case "A" -> ctx.menuRecrutement.ajouterParcheminA(qte);
+                case "S" -> ctx.menuRecrutement.ajouterParcheminS(qte);
+                default  -> ctx.menuRecrutement.ajouterParcheminC(qte);
+            }
+        });
+    }
+
+    /** Parchemin de Chasse (chasse au tresor / recrutement rare) — voir GestionnaireChasseTresor.PARCHEMIN_A/S/SS. */
+    private static LigneRecompense parcheminChasse(String nomMateriau, int qte) {
+        return new LigneRecompense(qte + "x " + nomMateriau, ctx -> ctx.inventaire.ajouterMateriau(nomMateriau, qte));
+    }
+
+    private static LigneRecompense sceau(SceauDeRang s, int qte) {
+        return new LigneRecompense(qte + "x " + s.nom, ctx -> ctx.inventaire.ajouterMateriau(s.nom, qte));
+    }
+
+    private static LigneRecompense cristalTranscendance(int qte) {
+        return new LigneRecompense(qte + "x " + CristalTranscendance.NOM, ctx -> ctx.inventaire.ajouterMateriau(CristalTranscendance.NOM, qte));
+    }
+
+    private static LigneRecompense coupons(int qte) {
+        return new LigneRecompense(qte + " coupons", ctx -> ctx.joueur.setCoupons(ctx.joueur.getCoupons() + qte));
+    }
+
+    /** {@code qtePerPiece} fragments de chacune des 9 pieces d'un set complet de la rarete donnee. */
+    private static LigneRecompense fragmentsToutesPieces(Equipement.Rarete rarete, int qtePerPiece) {
+        return new LigneRecompense(qtePerPiece + "x fragment de chaque piece [" + rarete + "]", ctx -> {
+            for (Equipement e : EquipementFactory.piecesSetComplet(rarete))
+                ctx.inventaire.ajouterMateriau(FragmentEquipement.PREFIXE_FRAGMENT + e.getNomAffiche(), qtePerPiece);
+        });
+    }
+
+    /**
+     * Table explicite des recompenses de niveau 10 a 100 (index 0-9), fournie par le design.
+     * Au-dela (niveau 110+), on retombe sur l'ancienne formule generique en attendant qu'elle
+     * soit retravaillee a son tour.
+     */
+    private List<LigneRecompense> lignesRecompenseNiveau(int index) {
+        return switch (index) {
+            case 0 -> List.of( // niveau 10
+                    carteOr(CarteOr.NIVEAU_1, 30),
+                    boitePierre(1, 2),
+                    boiteEquipement(BoiteEquipement.C, 1),
+                    parcheminXP(ParcheminXP.Rarete.C, 25),
+                    coupons(50));
+            case 1 -> List.of( // niveau 20
+                    carteOr(CarteOr.NIVEAU_1, 50),
+                    boitePierre(1, 2),
+                    boiteEquipement(BoiteEquipement.C, 2),
+                    parcheminXP(ParcheminXP.Rarete.C, 50),
+                    coupons(50));
+            case 2 -> List.of( // niveau 30
+                    carteOr(CarteOr.NIVEAU_1, 100),
+                    boitePierre(1, 5),
+                    parcheminRecrutement("B", 200),
+                    parcheminXP(ParcheminXP.Rarete.B, 50),
+                    coupons(100));
+            case 3 -> List.of( // niveau 40
+                    carteOr(CarteOr.NIVEAU_2, 50),
+                    boitePierre(2, 2),
+                    boiteEquipement(BoiteEquipement.B, 2),
+                    parcheminXP(ParcheminXP.Rarete.B, 150),
+                    coupons(150));
+            case 4 -> List.of( // niveau 50
+                    carteOr(CarteOr.NIVEAU_2, 100),
+                    boitePierre(2, 5),
+                    boiteEquipement(BoiteEquipement.A, 1),
+                    parcheminRecrutement("A", 200),
+                    parcheminXP(ParcheminXP.Rarete.A, 20),
+                    coupons(250));
+            case 5 -> List.of( // niveau 60
+                    carteOr(CarteOr.NIVEAU_3, 100),
+                    boitePierre(3, 5),
+                    boiteEquipement(BoiteEquipement.A, 2),
+                    parcheminRecrutement("A", 300),
+                    parcheminXP(ParcheminXP.Rarete.A, 50),
+                    parcheminAptitude(ParcheminAptitude.PETITE, 10),
+                    coupons(300));
+            case 6 -> List.of( // niveau 70
+                    carteOr(CarteOr.NIVEAU_4, 50),
+                    boitePierre(4, 3),
+                    fragmentsToutesPieces(Equipement.Rarete.S, 10),
+                    parcheminRecrutement("S", 100),
+                    parcheminXP(ParcheminXP.Rarete.S, 30),
+                    parcheminAptitude(ParcheminAptitude.PETITE, 20),
+                    coupons(350));
+            case 7 -> List.of( // niveau 80
+                    carteOr(CarteOr.NIVEAU_4, 100),
+                    boitePierre(5, 3),
+                    fragmentsToutesPieces(Equipement.Rarete.S, 10),
+                    parcheminRecrutement("S", 500),
+                    parcheminXP(ParcheminXP.Rarete.S, 100),
+                    parcheminAptitude(ParcheminAptitude.MOYENNE, 5),
+                    coupons(500));
+            case 8 -> List.of( // niveau 90
+                    carteOr(CarteOr.NIVEAU_4, 100),
+                    boitePierre(5, 10),
+                    boiteEquipement(BoiteEquipement.S, 2),
+                    parcheminChasse(GestionnaireChasseTresor.PARCHEMIN_S, 30),
+                    parcheminAptitude(ParcheminAptitude.MOYENNE, 15),
+                    parcheminXP(ParcheminXP.Rarete.S, 200),
+                    coupons(700));
+            case 9 -> List.of( // niveau 100
+                    carteOr(CarteOr.NIVEAU_5, 200),
+                    boitePierre(5, 10),
+                    cristalTranscendance(10),
+                    sceau(SceauDeRang.S, 30),
+                    parcheminChasse(GestionnaireChasseTresor.PARCHEMIN_SS, 20),
+                    parcheminChasse(GestionnaireChasseTresor.PARCHEMIN_S, 20),
+                    parcheminChasse(GestionnaireChasseTresor.PARCHEMIN_A, 40),
+                    coupons(1000));
+            default -> ancienneFormuleRecompenseNiveau(index);
+        };
+    }
+
+    /** Ancienne formule generique, encore utilisee au-dela du niveau 100 (index >= 10) pour l'instant. */
+    private List<LigneRecompense> ancienneFormuleRecompenseNiveau(int index) {
         int or       = PALIERS_NIVEAU[index] * 500;
         int cartes   = index + 1;
         int boites   = Math.max(0, index - 3);
         int aptitude = index >= 6 ? 2 : (index >= 2 ? 1 : 0);   // niveau 70+ : 2, niveau 30+ : 1
 
-        SceauDeRang sceau = switch (index) {
+        SceauDeRang sceauPalier = switch (index) {
             case 4  -> SceauDeRang.C;   // niveau 50
             case 6  -> SceauDeRang.B;   // niveau 70
             case 8  -> SceauDeRang.A;   // niveau 90
@@ -67,42 +211,41 @@ public class GestionnaireRecompenses {
             case 19 -> SceauDeRang.UR;  // niveau 200
             default -> null;
         };
-        int boitesEquipement = switch (index) {
+        int boitesEquipementQte = switch (index) {
             case 1 -> 3; // niveau 20
             case 3 -> 2; // niveau 40
             default -> 0;
         };
-        BoiteEquipement boiteEquipement = switch (index) {
+        BoiteEquipement boiteEquipementType = switch (index) {
             case 1  -> BoiteEquipement.C; // niveau 20
             case 3  -> BoiteEquipement.B; // niveau 40
             default -> null;
         };
-        // Rattrapage XP pour les personnages recrutes en retard sur le joueur principal :
-        // 200x Parchemin XP [B] au niveau 30.
-        int parcheminsXPB = index == 2 ? 200 : 0;
-        return new RecompenseNiveau(or, cartes, boites, aptitude, sceau, boitesEquipement, boiteEquipement, parcheminsXPB);
+        int parcheminsXPB = index == 2 ? 200 : 0; // rattrapage niveau 30
+
+        List<LigneRecompense> lignes = new ArrayList<>();
+        lignes.add(new LigneRecompense(or + " or", ctx -> ctx.joueur.ajouterOr(or)));
+        lignes.add(carteOr(CarteOr.NIVEAU_1, cartes));
+        if (boites > 0)              lignes.add(boitePierre(1, boites));
+        if (aptitude > 0)            lignes.add(parcheminAptitude(ParcheminAptitude.PETITE, aptitude));
+        if (sceauPalier != null)     lignes.add(sceau(sceauPalier, 1));
+        if (boitesEquipementQte > 0) lignes.add(boiteEquipement(boiteEquipementType, boitesEquipementQte));
+        if (parcheminsXPB > 0)       lignes.add(parcheminXP(ParcheminXP.Rarete.B, parcheminsXPB));
+        return lignes;
     }
 
     public String afficherRecompenseNiveau(int index) {
-        RecompenseNiveau r = calculerRecompenseNiveau(index);
-        StringBuilder sb = new StringBuilder(r.or() + " or, " + r.cartesOrLv1() + " Carte(s) d'Or Lv.1");
-        if (r.boitesPierreLv1() > 0)     sb.append(", ").append(r.boitesPierreLv1()).append(" Boite(s) de pierre Lv.1");
-        if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.PETITE.nom);
-        if (r.sceau() != null)           sb.append(", 1x ").append(r.sceau().nom);
-        if (r.boitesEquipement() > 0)    sb.append(", ").append(r.boitesEquipement()).append("x ").append(r.boiteEquipement().nom);
-        if (r.parcheminsXPB() > 0)       sb.append(", ").append(r.parcheminsXPB()).append("x ").append(new ParcheminXP(ParcheminXP.Rarete.B).getNom());
+        List<LigneRecompense> lignes = lignesRecompenseNiveau(index);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lignes.size(); i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(lignes.get(i).texte());
+        }
         return sb.toString();
     }
 
-    public String reclamerNiveau(int index, Personnage_principale joueur, Inventaire inventaire) {
-        RecompenseNiveau r = calculerRecompenseNiveau(index);
-        joueur.ajouterOr(r.or());
-        inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, r.cartesOrLv1());
-        if (r.boitesPierreLv1() > 0)    inventaire.ajouterMateriau(BOITE_PIERRE_LV1, r.boitesPierreLv1());
-        if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.PETITE.nom, r.parcheminsAptitude());
-        if (r.sceau() != null)          inventaire.ajouterMateriau(r.sceau().nom, 1);
-        if (r.boitesEquipement() > 0)   inventaire.ajouterMateriau(r.boiteEquipement().nom, r.boitesEquipement());
-        if (r.parcheminsXPB() > 0)      inventaire.ajouterParcheminXP(ParcheminXP.Rarete.B, r.parcheminsXPB());
+    public String reclamerNiveau(int index, GameContext ctx) {
+        for (LigneRecompense ligne : lignesRecompenseNiveau(index)) ligne.octroi().accept(ctx);
         niveauReclame[index] = true;
         return "Niveau " + PALIERS_NIVEAU[index] + " reclame ! " + afficherRecompenseNiveau(index);
     }

@@ -67,7 +67,7 @@ public class MenuRecompenses {
             System.out.println("Ce palier n'est pas reclamable.");
             return;
         }
-        System.out.println(gr.reclamerNiveau(index, ctx.joueur, ctx.inventaire));
+        System.out.println(gr.reclamerNiveau(index, ctx));
         ctx.sauvegarde.sauvegarder(ctx);
     }
 

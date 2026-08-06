@@ -157,7 +157,7 @@ public class EcranRecompensesController {
         if (choisi == null || !choisi.disponible()) return;
 
         int index = paliers.indexOf(choisi);
-        info("Récompense de niveau", gr.reclamerNiveau(index, ctx.joueur, ctx.inventaire));
+        info("Récompense de niveau", gr.reclamerNiveau(index, ctx));
         ctx.sauvegarde.sauvegarder(ctx);
         rafraichir();
     }
