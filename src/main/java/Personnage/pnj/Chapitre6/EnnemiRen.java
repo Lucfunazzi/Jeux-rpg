@@ -80,6 +80,6 @@ public class EnnemiRen extends PersonnageBase {
         System.out.println("Air Rondo — Inflige 150% ATK à une cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Void — Inflige 220% ATK à une cible, réduit sa vitesse de 20% pendant 2 tours.");
+        System.out.println("Void — Inflige 220% ATK à une cible et réduit sa vitesse de 20% pendant 2 tours.");
     }
 }

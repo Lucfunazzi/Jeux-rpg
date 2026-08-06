@@ -15,11 +15,11 @@ public final class CourbeChapitres {
 
     /**
      * Chapitres normaux/Elite avec du contenu reel (ennemis, or, XP) a afficher dans les menus.
-     * Les Chapitres normaux 11-13 et Elite 4-13 restent des coquilles vides (0 XP/Or/ennemis) :
+     * Les Chapitres normaux 11-13 et Elite 9-13 restent des coquilles vides (0 XP/Or/ennemis) :
      * masques ici en attendant d'etre construits, sans toucher a leur logique de deblocage.
      */
     public static final int NB_CHAPITRES_VISIBLES       = 10;
-    public static final int NB_CHAPITRES_ELITE_VISIBLES = 3;
+    public static final int NB_CHAPITRES_ELITE_VISIBLES = 8;
 
     public record Palier(int chapitre, int niveauDebut, int niveauFin) {}
 

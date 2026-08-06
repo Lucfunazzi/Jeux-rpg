@@ -63,11 +63,9 @@ public class perso_Hibiki extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hibiki déploie un Hexadecagon de lumière !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
+                double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
@@ -83,9 +81,9 @@ public class perso_Hibiki extends PersonnageBase {
         System.out.println("Frappe d'Archive — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Analyse Tactique — Inflige 125% ATK et augmente la defense de l'equipe de 10% et la vitesse de 10%.");
+        System.out.println("Analyse Tactique — Inflige 125% ATK à la cible et augmente la défense et la vitesse de son équipe de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Hexadecagon — Inflige 120% ATK (bonus selon la Rage) à tous les ennemis et augmente l'attaque de 15% des attaquants et le taux critiques des attaquants de 10%.");
+        System.out.println("Hexadecagon — Inflige 120% ATK à tous les ennemis et augmente l'attaque de ses DPS alliés de 15% et leur taux critique de 10% pendant 2 tours.");
     }
 }

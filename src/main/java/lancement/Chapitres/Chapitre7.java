@@ -1,7 +1,14 @@
 package lancement.Chapitres;
 
+import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
+import Personnage.FairyTail.perso_Gray;
+import Personnage.FairyTail.perso_Lucy;
+import Personnage.FairyTail.perso_Natsu;
+import Personnage.FairyTail.perso_Gajeel;
+import Personnage.FairyTail.perso_Wendy;
 import lancement.GameContext;
+import lancement.Formation;
 import lancement.Stage;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -65,10 +72,9 @@ public class Chapitre7 implements Chapitre {
     }
 
     /**
-     * Lance le stage donne et applique les recompenses en cas de victoire. Suppose que le stage
-     * est deja debloque. Reutilisable par la console et l'interface graphique.
-     * TODO : ajouter ici les invites temporaires / combats scriptes propres a ce chapitre,
-     * sur le modele de Chapitre4.lancerStage (switch par numero de stage).
+     * Lance le stage donne (avec les invites temporaires des stages 4, 5, 6, 7 et 9) et applique
+     * les recompenses en cas de victoire. Suppose que le stage est deja debloque. Reutilisable par
+     * la console et l'interface graphique.
      */
     public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
         if (!ctx.gestionnaireEnergie.consommerEnergie(1)) {
@@ -80,7 +86,42 @@ public class Chapitre7 implements Chapitre {
 
         Stage stage        = construireStage(numero);
         boolean estNouveau = !stagesReussis[numero];
-        Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        Stage.ResultatStage resultatStage = switch (numero) {
+            // Stage 4 : Gray prete main forte contre Sugarboy.
+            case 4 -> {
+                perso_Gray invite = Formation.creerInvite(perso_Gray::new,
+                        CourbeChapitres.niveauEnnemiPourStage(7, 4), 6900, 1450, 700, 285);
+                yield lancerStageAvecInvites(ctx, stage, estNouveau, invite);
+            }
+            // Stage 5 : Natsu et Lucy rejoignent l'assaut contre Hughes.
+            case 5 -> {
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 5);
+                perso_Lucy lucy   = Formation.creerInvite(perso_Lucy::new, niv, 7400, 1150, 620, 310);
+                perso_Natsu natsu = Formation.creerInvite(perso_Natsu::new, niv, 7700, 1600, 740, 300);
+                yield lancerStageAvecInvites(ctx, stage, estNouveau, lucy, natsu);
+            }
+            // Stage 6 : Lucy affronte Byro aux cotes de l'equipe.
+            case 6 -> {
+                perso_Lucy invite = Formation.creerInvite(perso_Lucy::new,
+                        CourbeChapitres.niveauEnnemiPourStage(7, 6), 7500, 1180, 630, 312);
+                yield lancerStageAvecInvites(ctx, stage, estNouveau, invite);
+            }
+            // Stage 7 : Gajeel affronte Panther Lily.
+            case 7 -> {
+                perso_Gajeel invite = Formation.creerInvite(perso_Gajeel::new,
+                        CourbeChapitres.niveauEnnemiPourStage(7, 7), 7300, 1400, 730, 245);
+                yield lancerStageAvecInvites(ctx, stage, estNouveau, invite);
+            }
+            // Stage 9 : Wendy, Natsu et Gajeel se joignent a l'assaut final contre Dorma Anim.
+            case 9 -> {
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 9);
+                perso_Wendy wendy   = Formation.creerInvite(perso_Wendy::new, niv, 6800, 700, 600, 300);
+                perso_Natsu natsu   = Formation.creerInvite(perso_Natsu::new, niv, 7850, 1630, 750, 303);
+                perso_Gajeel gajeel = Formation.creerInvite(perso_Gajeel::new, niv, 7450, 1425, 745, 248);
+                yield lancerStageAvecInvites(ctx, stage, estNouveau, wendy, natsu, gajeel);
+            }
+            default -> stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
+        };
 
         if (resultatStage.victoire) {
             stagesReussis[numero] = true;
@@ -104,49 +145,99 @@ public class Chapitre7 implements Chapitre {
         ArrayList<PersonnageBase> e = new ArrayList<>();
 
         return switch (numero) {
+            // Stage 1 — equipe generique : 1 tank, 2 dps, 2 supports.
             case 1 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(7, 1);
-                e.add(new EnnemiErzaKnightwalker(niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
                 yield new Stage(1, "Prologue Edolas", 13500, 175, e);
             }
+            // Stage 2 — equipe generique : 1 tank, 3 dps, 1 support.
             case 2 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(7, 2);
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
-                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 yield new Stage(2, "Magie Limité", 13800, 179, e);
             }
+            // Stage 3 — Erza Knightwalker + 3 dps + 1 support generiques.
             case 3 -> {
-                e.add(new EnnemiErzaKnightwalker(CourbeChapitres.niveauEnnemiPourStage(7, 3)));
-                yield new Stage(3, "La chasseus de fée", 14100, 183, e);
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 3);
+                e.add(new EnnemiErzaKnightwalker(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                yield new Stage(3, "La chasseuses de fées", 14100, 183, e);
             }
+            // Stage 4 — Gray invite vs Sugarboy + 2 dps + 2 supports generiques.
             case 4 -> {
-                e.add(new EnnemiSugarboy(CourbeChapitres.niveauEnnemiPourStage(7, 4)));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 4);
+                e.add(new EnnemiSugarboy(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
                 yield new Stage(4, "Gray contre sugarBoy", 14400, 187, e);
             }
+            // Stage 5 — Lucy et Natsu invites vs Hughes + 1 tank + 2 dps + 2 supports generiques.
             case 5 -> {
-                e.add(new EnnemiHughes(CourbeChapitres.niveauEnnemiPourStage(7, 5)));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 5);
+                e.add(new EnnemiHughes(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
                 yield new Stage(5, "Natsu et Lucy vs huges", 14700, 191, e);
             }
+            // Stage 6 — Lucy invitee vs Byro + 1 tank + 3 dps generiques.
             case 6 -> {
-                e.add(new EnnemiByro(CourbeChapitres.niveauEnnemiPourStage(7, 6)));
-                yield new Stage(6, "Lucy contre bario", 15000, 195, e);
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 6);
+                e.add(new EnnemiByro(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
+                yield new Stage(6, "Lucy contre byro", 15000, 195, e);
             }
+            // Stage 7 — Gajeel invite vs Panther Lily + 3 supports generiques.
             case 7 -> {
-                e.add(new EnnemiPantherLily(CourbeChapitres.niveauEnnemiPourStage(7, 7)));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 7);
+                e.add(new EnnemiPantherLily(niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 yield new Stage(7, "Gajeel vs Panthère Lilly", 15300, 199, e);
             }
+            // Stage 8 — Dorma Anim + 1 dps + 3 supports generiques, sans invite.
             case 8 -> {
-                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 8)));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 8);
+                e.add(new EnnemiDormaAnim(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 yield new Stage(8, "Le roi d'edolas rentre en jeu", 15600, 203, e);
             }
+            // Stage 9 — Wendy, Natsu et Gajeel invites vs Dorma Anim + 3 dps + 1 support generiques.
             case 9 -> {
-                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 9)));
+                int niv = CourbeChapitres.niveauEnnemiPourStage(7, 9);
+                e.add(new EnnemiDormaAnim(niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 yield new Stage(9, "Natsu et Gajeel et wendy vs Le roi d'edolas", 15900, 207, e);
             }
+            // Stage 10 — Dorma Anim boosté, seul contre toute l'equipe : le combat le plus dur du chapitre.
             case 10 -> {
-                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 10)));
+                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 10) + 4));
                 yield new Stage(10, "Le dernier combat", 16500, 214, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
@@ -175,4 +266,30 @@ public class Chapitre7 implements Chapitre {
     public boolean[] getStagesReussis()   { return stagesReussis; }
     public void setStagesDebloques(boolean[] d) { for (int i = 0; i <= NB_STAGES; i++) stagesDebloques[i] = d[i]; }
     public void setStagesReussis(boolean[] r)   { for (int i = 0; i <= NB_STAGES; i++) stagesReussis[i]   = r[i]; }
+
+    // ── Invites temporaires (stages 4, 5, 6, 7 et 9) ───────────────────────
+
+    /**
+     * Injecte un ou plusieurs invites deja configures (niveau/stats) dans l'equipe pour la duree
+     * d'un seul combat, en respectant les regles de formation, puis lance le stage.
+     */
+    private Stage.ResultatStage lancerStageAvecInvites(GameContext ctx, Stage stage, boolean estNouveau, PersonnageBase... invites) {
+        ArrayList<PersonnageBase> equipe = ctx.formation.getEquipe();
+        StringBuilder noms = new StringBuilder();
+        for (int i = 0; i < invites.length; i++) {
+            PersonnageBase invite = invites[i];
+            // Equipement fantome pour l'invite, au meme titre que les ennemis, sinon il se retrouve
+            // largement depasse face a des ennemis qui, eux, sont equipes selon leur niveau.
+            EquipementFactory.equiperSetStandard(invite, EquipementFactory.rareteEnnemiPourNiveau(invite.getNiveau()));
+            Formation.ajouterInviteTemporaire(equipe, invite);
+
+            if (i > 0) noms.append(i == invites.length - 1 ? " et " : ", ");
+            noms.append(invite.getNom());
+        }
+
+        System.out.println(">> " + noms + (invites.length > 1 ? " rejoignent" : " rejoint") + " votre equipe pour ce combat !");
+        Stage.ResultatStage resultat = stage.lancer(ctx, equipe, estNouveau);
+        System.out.println(">> " + noms + (invites.length > 1 ? " quittent" : " quitte") + " l'equipe apres le combat.");
+        return resultat;
+    }
 }

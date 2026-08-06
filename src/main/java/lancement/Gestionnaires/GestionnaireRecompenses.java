@@ -31,7 +31,13 @@ public class GestionnaireRecompenses {
     private static final String BOITE_PIERRE_LV1 = "Boite de pierre Lv.1";
 
     // ── Récompenses de niveau ────────────────────────────────────────────
-    public static final int[] PALIERS_NIVEAU = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    // Etendu jusqu'a 200 : les Chapitres Elite montent deja au-dela du niveau 70 (Chapitre 8
+    // Elite : 64-74) et continueront de grimper au fil des chapitres restants, donc le mur des
+    // recompenses de niveau doit suivre au-dela de l'ancien plafond de 100.
+    public static final int[] PALIERS_NIVEAU = {
+        10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
+        110, 120, 130, 140, 150, 160, 170, 180, 190, 200
+    };
     private boolean[] niveauReclame = new boolean[PALIERS_NIVEAU.length];
 
     public boolean estNiveauDisponible(int index, int niveauJoueur) {
@@ -53,10 +59,13 @@ public class GestionnaireRecompenses {
         int aptitude = index >= 6 ? 2 : (index >= 2 ? 1 : 0);   // niveau 70+ : 2, niveau 30+ : 1
 
         SceauDeRang sceau = switch (index) {
-            case 4  -> SceauDeRang.C;  // niveau 50
-            case 6  -> SceauDeRang.B;  // niveau 70
-            case 8  -> SceauDeRang.A;  // niveau 90
-            case 9  -> SceauDeRang.S;  // niveau 100
+            case 4  -> SceauDeRang.C;   // niveau 50
+            case 6  -> SceauDeRang.B;   // niveau 70
+            case 8  -> SceauDeRang.A;   // niveau 90
+            case 9  -> SceauDeRang.S;   // niveau 100
+            case 11 -> SceauDeRang.SS;  // niveau 120
+            case 14 -> SceauDeRang.SSS; // niveau 150
+            case 19 -> SceauDeRang.UR;  // niveau 200
             default -> null;
         };
         int boitesEquipement = switch (index) {

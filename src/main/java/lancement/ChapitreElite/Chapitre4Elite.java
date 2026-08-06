@@ -1,12 +1,25 @@
 package lancement.ChapitreElite;
 
+import Equipement.Equipement;
+import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
+import Personnage.pnj.EnnemisGeneriques.*;
+import Personnage.pnj.Chapitre4.*;
 import lancement.GameContext;
 import lancement.Stage;
 import lancement.Chapitres.Chapitre4;
+import lancement.Chapitres.CourbeChapitres;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Chapitre 4 Elite — memes affrontements que le Chapitre 4 normal, mais sans aucun invite
+ * temporaire (Natsu, Erza, Lucy, Jubia, Simon, Shaw, Natsu Etherion n'y participent pas) : c'est
+ * toujours la formation reelle du joueur qui affronte les ennemis, a des niveaux nettement plus
+ * eleves. Les deux combats scriptes du Chapitre 4 normal deviennent de vrais combats d'equipe :
+ * stage 1 (l'embuscade du casino, jouee par une equipe de heros fixe) et stage 8 (Erza seule
+ * contre Jellal, desormais escortee par le reste de l'equipe et par une garde renforcee).
+ */
 public class Chapitre4Elite implements ChapitreElite {
 
     private static final int NB_STAGES = 10;
@@ -82,10 +95,10 @@ public class Chapitre4Elite implements ChapitreElite {
     }
 
     /**
-     * Verifie les runs/energie, lance le stage donne et applique les recompenses en cas de
-     * victoire. Suppose que le stage est deja debloque. Retourne null si le stage n'a pas pu
-     * etre lance (runs epuises ou energie insuffisante -- message imprime dans ce cas).
-     * Reutilisable par la console et l'interface graphique.
+     * Verifie les runs/energie, lance le stage donne (toujours avec la formation reelle du
+     * joueur, aucun invite) et applique les recompenses en cas de victoire. Suppose que le stage
+     * est deja debloque. Retourne null si le stage n'a pas pu etre lance (runs epuises ou energie
+     * insuffisante -- message imprime dans ce cas). Reutilisable par la console et l'interface graphique.
      */
     public Stage.ResultatStage lancerStage(GameContext ctx, int numero) {
         if (!ctx.gestionnaireEnergie.peutFaireRunElite(numero)) {
@@ -99,7 +112,7 @@ public class Chapitre4Elite implements ChapitreElite {
         }
 
         ctx.gestionnaireEnergie.enregistrerRunElite(numero);
-        Stage stage        = construireStage(numero, ctx);
+        Stage stage        = construireStage(numero);
         boolean estNouveau = !stagesReussis[numero];
         Stage.ResultatStage resultatStage = stage.lancer(ctx, ctx.formation.getEquipe(), estNouveau);
 
@@ -110,7 +123,7 @@ public class Chapitre4Elite implements ChapitreElite {
                 System.out.println(">> Stage " + (numero + 1) + " debloque !");
             } else {
                 System.out.println(">> Felicitations ! Vous avez termine le Chapitre 4 Elite !");
-                ctx.gestionnaireTitres.debloquerTitre("[Titre a definir] -- Chapitre 4 Elite");
+                ctx.gestionnaireTitres.debloquerTitre("Vainqueur de la Tour du Paradis Renforcée");
             }
 
             ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());
@@ -122,43 +135,158 @@ public class Chapitre4Elite implements ChapitreElite {
         return resultatStage;
     }
 
-    // TODO : remplacer par les vrais ennemis (elite) de chaque stage, ex :
-    // e.add(new EnnemiXxx(niveau));
-    private Stage construireStage(int numero, GameContext ctx) {
-        ArrayList<PersonnageBase> e = new ArrayList<>();
-
+    /** Niveau scenarise (boss par boss, comme Chapitre3Elite/5Elite) : bande calibree pour
+     *  combler l'ecart entre le Chapitre 3 Elite et le plancher du Chapitre 5 Elite (40) —
+     *  le stage 10 termine 2 crans en dessous, comme pour les Elites suivants. */
+    private static int niveauPourStage(int numero) {
         return switch (numero) {
-            case 1  -> new Stage(1,  "[ELITE] Stage 1 -- [Titre a definir]",  0, 0, e);
-            case 2  -> new Stage(2,  "[ELITE] Stage 2 -- [Titre a definir]",  0, 0, e);
-            case 3  -> new Stage(3,  "[ELITE] Stage 3 -- [Titre a definir]",  0, 0, e);
-            case 4  -> new Stage(4,  "[ELITE] Stage 4 -- [Titre a definir]",  0, 0, e);
-            case 5  -> new Stage(5,  "[ELITE] Stage 5 -- [Titre a definir]",  0, 0, e);
-            case 6  -> new Stage(6,  "[ELITE] Stage 6 -- [Titre a definir]",  0, 0, e);
-            case 7  -> new Stage(7,  "[ELITE] Stage 7 -- [Titre a definir]",  0, 0, e);
-            case 8  -> new Stage(8,  "[ELITE] Stage 8 -- [Titre a definir]",  0, 0, e);
-            case 9  -> new Stage(9,  "[ELITE] Stage 9 -- [Titre a definir]",  0, 0, e);
-            case 10 -> new Stage(10, "[ELITE] Stage 10 -- [Titre a definir]", 0, 0, e);
+            case 1  -> 32;
+            case 2  -> 33;
+            case 3  -> 34;
+            case 4  -> 35;
+            case 5  -> 36;
+            case 6  -> 37;
+            case 7  -> 38;
+            case 8  -> 39;
+            case 9  -> 40;
+            case 10 -> 42;
+            default -> CourbeChapitres.niveauEnnemiPourStage(4, numero);
+        };
+    }
+
+    /** Bornes de niveau du chapitre, pour la fortification aleatoire de l'equipement Elite. */
+    private static final int NIVEAU_MIN_CHAPITRE = 32;
+    private static final int NIVEAU_MAX_CHAPITRE = 42;
+
+    /** Equipement fantome d'Elite : set complet rang B, fortification dans les bornes de niveau
+     *  du chapitre, affinage 10, uniquement des pierres niveau 1 sur les 5 emplacements. */
+    private static void equiperEnnemisElite(ArrayList<PersonnageBase> ennemis) {
+        for (PersonnageBase ennemi : ennemis) {
+            EquipementFactory.equiperGearElite(ennemi, Equipement.Rarete.B, 6,
+                    NIVEAU_MIN_CHAPITRE, NIVEAU_MAX_CHAPITRE, 10, 10, 5, 5, 1, 1);
+        }
+    }
+
+    private Stage construireStage(int numero) {
+        ArrayList<PersonnageBase> e = new ArrayList<>();
+        int niv = niveauPourStage(numero);
+
+        Stage stage = switch (numero) {
+            // Stage 1 — remplace l'embuscade scriptee (equipe de heros fixe) : la formation reelle
+            // du joueur affronte directement Wolly, Miliana, Shaw et Simon + une garde generique.
+            case 1 -> {
+                e.add(new EnnemiWolly(niv));
+                e.add(new EnnemiMiliana(niv));
+                e.add(new EnnemiShaw(niv));
+                e.add(new EnnemiSimon(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                yield new Stage(1, "[ELITE] Embuscade dans le casino", 2900, 0, e);
+            }
+            // Stage 2 — memes ennemis que le Chapitre 4 normal (gardes generiques).
+            case 2 -> {
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                yield new Stage(2, "[ELITE] Infiltration dans la tour du paradis", 3300, 0, e);
+            }
+            // Stage 3 — Miliana + Wolly + generiques, sans Natsu.
+            case 3 -> {
+                e.add(new EnnemiMiliana(niv));
+                e.add(new EnnemiWolly(niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                yield new Stage(3, "[ELITE] Miaou, Il faut sauver Happy", 3700, 0, e);
+            }
+            // Stage 4 — Shaw + generiques, sans Erza.
+            case 4 -> {
+                e.add(new EnnemiShaw(niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                yield new Stage(4, "[ELITE] Libération d'erza", 4200, 0, e);
+            }
+            // Stage 5 — Vivaldus + generiques, sans Lucy ni Jubia.
+            case 5 -> {
+                e.add(new EnnemiVivaldus(niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                yield new Stage(5, "[ELITE] Les esprits et l'eau", 4800, 0, e);
+            }
+            // Stage 6 — Owl + generiques, sans Natsu ni Simon.
+            case 6 -> {
+                e.add(new EnnemiOwl(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
+                yield new Stage(6, "[ELITE] Le hiboux assasin", 5500, 0, e);
+            }
+            // Stage 7 — Ikaruga + generiques, sans Erza ni Shaw.
+            case 7 -> {
+                e.add(new EnnemiIkaruga(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
+                yield new Stage(7, "[ELITE] Epée contre Epée", 6300, 0, e);
+            }
+            // Stage 8 — remplace le duel scripte (Erza seule vs Jellal) : toute l'equipe alliee
+            // affronte Jellal, desormais escorte d'une garde renforcee.
+            case 8 -> {
+                e.add(new EnnemiJellal(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                yield new Stage(8, "[ELITE] Erza contre Jellal — Le Passe Ressurgit", 8100, 0, e);
+            }
+            // Stage 9 — memes ennemis que le Chapitre 4 normal, sans Simon.
+            case 9 -> {
+                e.add(new EnnemiJellal(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                yield new Stage(9, "[ELITE] Le sacrifice de Simon — L'Assaut sur Jellal", 8600, 0, e);
+            }
+            // Stage 10 — memes ennemis que le Chapitre 4 normal, sans Natsu Etherion : le combat
+            // le plus dur du chapitre.
+            case 10 -> {
+                e.add(new EnnemiJellal(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
+                yield new Stage(10, "[ELITE] Jellal — L'Effondrement de la Tour du Paradis", 11000, 0, e);
+            }
             default -> new Stage(numero, "???", 0, 0, e);
         };
+
+        equiperEnnemisElite(e);
+        return stage;
     }
 
     public String getTitreStage(int numero) {
         return switch (numero) {
-            case 1  -> "[ELITE] Stage 1 -- [Titre a definir]";
-            case 2  -> "[ELITE] Stage 2 -- [Titre a definir]";
-            case 3  -> "[ELITE] Stage 3 -- [Titre a definir]";
-            case 4  -> "[ELITE] Stage 4 -- [Titre a definir]";
-            case 5  -> "[ELITE] Stage 5 -- [Titre a definir]";
-            case 6  -> "[ELITE] Stage 6 -- [Titre a definir]";
-            case 7  -> "[ELITE] Stage 7 -- [Titre a definir]";
-            case 8  -> "[ELITE] Stage 8 -- [Titre a definir]";
-            case 9  -> "[ELITE] Stage 9 -- [Titre a definir]";
-            case 10 -> "[ELITE] Stage 10 -- [Titre a definir]";
+            case 1  -> "[ELITE] Embuscade dans le casino";
+            case 2  -> "[ELITE] Infiltration dans la tour du paradis";
+            case 3  -> "[ELITE] Miaou, Il faut sauver Happy";
+            case 4  -> "[ELITE] Libération d'erza";
+            case 5  -> "[ELITE] Les esprits et l'eau";
+            case 6  -> "[ELITE] Le hiboux assasin";
+            case 7  -> "[ELITE] Epée contre Epée";
+            case 8  -> "[ELITE] Erza contre Jellal — Le Passe Ressurgit";
+            case 9  -> "[ELITE] Le sacrifice de Simon — L'Assaut sur Jellal";
+            case 10 -> "[ELITE] Jellal — L'Effondrement de la Tour du Paradis";
             default -> "???";
         };
     }
 
-    public String getNomChapitre() { return "[Titre a definir]"; }
+    public String getNomChapitre() { return "La Tour du Paradis"; }
 
     public boolean[] getStagesDebloques() { return stagesDebloques; }
     public boolean[] getStagesReussis()   { return stagesReussis; }

@@ -31,7 +31,7 @@ public class EnnemiJura extends PersonnageBase {
         this.taux_critiques    = 0.08;
         this.degat_critiques   = 1.20;
         this.taux_precisions   = 100.00;
-        this.taux_esquives     = 0.06;
+        this.taux_esquives     = 0.10;
         this.taux_blocage      = 0.16;
         this.reduction_blocage = 0.20;
         this.degats_renvoi     = 0.80;
@@ -57,14 +57,14 @@ public class EnnemiJura extends PersonnageBase {
         log.add("Jura invoque la Montagne sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.25;
+                double degats = this.getAttaque() * 1.55;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche && Math.random() < 0.25) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
                 }
             }
         }
-        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffDefense(0.30, 2), log);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EnnemiJura extends PersonnageBase {
         log.add("Jura invoque le Grondement du Mont Fuji !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.60;
+                double degats = this.getAttaque() * 2.00;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.10, 2), log);
@@ -88,9 +88,9 @@ public class EnnemiJura extends PersonnageBase {
         System.out.println("Poing de Roc — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Montagne — Inflige 125% ATK à tous les ennemis, 25% de chance d'étourdir 1 tour, augmente sa défense de 15%.");
+        System.out.println("Montagne — Inflige 155% ATK à tous les ennemis, 25% de chance d'étourdir 1 tour, augmente sa défense de 30%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Grondement du Mont Fuji — Inflige 160% ATK à tous les ennemis, réduit leur attaque de 10% pendant 2 tours, augmente son blocage de 20% et régénère 8% pendant 2 tours.");
+        System.out.println("Grondement du Mont Fuji — Inflige 200% ATK à tous les ennemis, réduit leur attaque de 10% pendant 2 tours, augmente son blocage de 20% et régénère 8% pendant 2 tours.");
     }
 }

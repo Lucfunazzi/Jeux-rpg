@@ -41,22 +41,8 @@ public class perso_Jura extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jura écrase les attaquants et supports ennemis d'un Poing de Roc !");
-        boolean frappe = false;
-        for (PersonnageBase ennemi : equipeEnnemie) {
-            if (ennemi.estVivant() && (ennemi.getRole().equals("DPS") || ennemi.getRole().equals("Support"))) {
-                frappe = true;
-                double degats = this.getAttaque() * 1.75;
-                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            }
-        }
-        if (!frappe) {
-            PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
-            if (repli != null) {
-                double degats = this.getAttaque() * 1.75;
-                Combat.appliquerDegatsAvecLog(this, repli, degats, log);
-            }
-        }
+        log.add("Jura écrase " + cible.getNom() + " d'un Poing de Roc !");
+        Combat.attaquer(this, cible, log);
     }
 
     @Override
@@ -65,25 +51,23 @@ public class perso_Jura extends PersonnageBase {
         log.add("Jura invoque la Montagne sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.25;
+                double degats = this.getAttaque() * 1.55;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche && Math.random() < 0.25) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
                 }
             }
         }
-        Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
+        Combat.appliquerEffet(this, new BuffDefense(0.30, 2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Jura invoque le Grondement du Mont Fuji — la montagne elle-même s'abat !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        log.add("Jura invoque le Grondement du Mont Fuji !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.60) * multiplicateurRage;
+                double degats = this.getAttaque() * 2.00;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.10, 2), log);
@@ -95,12 +79,12 @@ public class perso_Jura extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Poing de Roc — Inflige 175% ATK aux attaquants et supports .");
+        System.out.println("Poing de Roc — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Montagne — Inflige 125% ATK à tous les ennemis, 25% de chance d'étourdir chacun 1 tour et augmente sa defense de 15%.");
+        System.out.println("Montagne — Inflige 155% ATK à tous les ennemis, 25% de chance d'étourdir 1 tour, augmente sa défense de 30%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Grondement du Mont Fuji — Inflige 160% ATK (bonus selon la Rage) à tous les ennemis et augmente son blocage de 20% et reduit l'attaque des adversaires de 10% et s'applique regenration de 8%  pendant 2 tours.");
+        System.out.println("Grondement du Mont Fuji — Inflige 200% ATK à tous les ennemis, réduit leur attaque de 10% pendant 2 tours, augmente son blocage de 20% et régénère 8% pendant 2 tours.");
     }
 }

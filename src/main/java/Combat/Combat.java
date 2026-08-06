@@ -128,14 +128,26 @@ public class Combat {
             }
         }
 
-        PersonnageBase cible = cibleParRole(equipeEnnemie, "Tank");
+        List<PersonnageBase> ciblesPossibles = equipeEnnemie;
+        Peur peur = attaquant.getEffet(Peur.class);
+        if (peur != null) {
+            PersonnageBase cibleEvitee = peur.getSource();
+            List<PersonnageBase> sansCibleEvitee = new ArrayList<>();
+            for (PersonnageBase p : equipeEnnemie) if (p != cibleEvitee) sansCibleEvitee.add(p);
+            if (!sansCibleEvitee.isEmpty()) {
+                System.out.println("[Peur] " + attaquant.getNom() + " evite d'attaquer " + cibleEvitee.getNom() + " !");
+                ciblesPossibles = sansCibleEvitee;
+            }
+        }
+
+        PersonnageBase cible = cibleParRole(ciblesPossibles, "Tank");
         if (cible != null) return cible;
-        cible = cibleParRole(equipeEnnemie, "DPS");
+        cible = cibleParRole(ciblesPossibles, "DPS");
         if (cible != null) return cible;
-        cible = cibleParRole(equipeEnnemie, "Support");
+        cible = cibleParRole(ciblesPossibles, "Support");
         if (cible != null) return cible;
 
-        return cibleMoinsPv(equipeEnnemie);
+        return cibleMoinsPv(ciblesPossibles);
     }
 
     /**

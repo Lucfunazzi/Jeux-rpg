@@ -45,72 +45,36 @@ public class perso_Angel extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Angel invoque Caelum !");
-
-        boolean lucyAlliee   = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Lucy"));
-        boolean yukinoAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
-
-        double mult = 1.50;
-        if (yukinoAlliee) {
-            mult += 0.20;
-        }
-
-        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * mult, log);
-
-        // 30% chance d'étourdir
-        double chanceEtourdissement = 0.30;
-        if (cible.aEffet(ReductionVitesse.class)) {
-            chanceEtourdissement += 0.15;
-        }
-        if (Math.random() < chanceEtourdissement) {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+        Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.50, log);
+        if (Math.random() < 0.30) {
+            Combat.appliquerEffet(this, cible, new Etourdissement(2), log);
             log.add("  Le laser aveugle " + cible.getNom() + " !");
         }
+        Combat.appliquerEffet(this,cible,new  ReductionDefense(0.20,2), log);
 
-        if (lucyAlliee) {
-            Combat.appliquerEffet(this, cible, new Marquage(), log);
-        }
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Angel invoque Aries !");
-
         double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) {
-            multiplicateurRage += (this.getRage() - 100) / 100.0;
-        }
-
-        boolean lucyAlliee   = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Lucy"));
-        boolean yukinoAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
-
-        double reductionATK = 0.20;
-        if (lucyAlliee && yukinoAlliee) {
-            reductionATK = 0.40;
-        }
-
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (!ennemi.estVivant()) continue;
             double degats = this.getAttaque() * 1.30 * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-            Combat.appliquerEffet(this, ennemi, new ReductionAttaque(reductionATK, 2), log);
+            Combat.appliquerEffet(this, ennemi, new ReductionAttaque(0.20, 2), log);
         }
-
-        
     }
 
-    @Override
-    public void descriptionAttaqueBase() {
-        System.out.println("Epée de Caelum — inflige 120% ATK a une cible.");
+    @Override public void descriptionAttaqueBase() {
+        System.out.println("Epée de caelum — Inflige 120% ATK.");
     }
-
-    @Override
-    public void descriptionAttaqueSpeciale() {
-        System.out.println("Caelum — inflige 150% ATK a une cible, 30% de chance d'etourdir 1 tour.");
+    @Override public void descriptionAttaqueSpeciale() {
+        System.out.println("Caelum — Inflige 150% ATK,Reduit la defense de la cible de 20% et à 30% de chance d'étourdir la cible 2 tours .");
     }
-
-    @Override
-    public void descriptionAttaqueUltime() {
-        System.out.println("Aries — AoE 130% ATK sur toute l'equipe ennemie + ReductionATK 20% 2 tours.");
+    @Override public void descriptionAttaqueUltime() {
+        System.out.println("Aries — Inflige 130% ATK (bonus selon la Rage) à tous les ennemis et réduit leur ATK de 20% pendant 2 tours.");
     }
 }

@@ -87,9 +87,9 @@ public class EnnemiHibiki extends PersonnageBase {
         System.out.println("Frappe d'Archive — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Analyse Tactique — Inflige 125% ATK, augmente la défense et la vitesse de l'équipe de 10% pendant 2 tours.");
+        System.out.println("Analyse Tactique — Inflige 125% ATK à la cible et augmente la défense et la vitesse de son équipe de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Hexadecagon — Inflige 120% ATK à tous les ennemis, augmente l'attaque de 15% et le taux critique de 10% des DPS alliés pendant 2 tours.");
+        System.out.println("Hexadecagon — Inflige 120% ATK à tous les ennemis et augmente l'attaque de ses DPS alliés de 15% et leur taux critique de 10% pendant 2 tours.");
     }
 }

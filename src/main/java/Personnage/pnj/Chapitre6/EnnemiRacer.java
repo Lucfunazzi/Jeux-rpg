@@ -61,6 +61,7 @@ public class EnnemiRacer extends PersonnageBase {
         if (touche) {
             Combat.appliquerEffet(this, cible, new ReductionVitesse(0.25, 2), log);
         }
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.10,2), log);
     }
 
     @Override
@@ -80,7 +81,8 @@ public class EnnemiRacer extends PersonnageBase {
         System.out.println("Frappe Éclair — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Magie du Ralentissement — Inflige 125% ATK et réduit la vitesse de la cible de 25% pendant 2 tours.");
+        System.out.println("Magie du Ralentissement — Inflige 125% ATK et réduit la vitesse de la cible de 25% et "
+                + "augmente son taux critique de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Vitesse Absolue — Augmente sa vitesse de 30% pendant 2 tours et inflige 90% ATK à tous les ennemis.");

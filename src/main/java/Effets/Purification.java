@@ -52,7 +52,9 @@ public class Purification {
         ReductionAttaque.class,
         ReductionVitesse.class,
         Fragilite.class,
-        Marquage.class
+        Marquage.class,
+        Peur.class,
+        MarqueExplosive.class
     );
 
     // Constructeur privé : classe purement statique

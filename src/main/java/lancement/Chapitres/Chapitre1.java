@@ -174,7 +174,12 @@ public class Chapitre1 implements Chapitre {
   
     
     private Stage.ResultatStage lancerStage4AvecErza(GameContext ctx,Stage stage, boolean estNouveau){
-        perso_Erza erzaTemporaire = Formation.creerInvite(perso_Erza::new, 70, 10000, 4500, 10, 4000);
+        // Niveau aligne sur le palier reel du stage (et non un niveau "70" arbitraire) : sinon
+        // Formation.ajouterInviteTemporaire -> alignerNiveauSurPrincipal recalibre les stats sur
+        // l'ecart niveau invite / niveau joueur, et un ecart de -66 niveaux ecrase les 2000 PV
+        // vises a environ 0.042x, soit ~85 PV (le "Erza a 400 PV" observe avec les 10000 PV d'origine).
+        perso_Erza erzaTemporaire = Formation.creerInvite(perso_Erza::new,
+                CourbeChapitres.niveauEnnemiPourStage(1, 4), 2000, 350, 260, 150);
         erzaTemporaire.ajouterRage(100);
 
     ArrayList<PersonnageBase> equipeAvecErza = ctx.formation.getEquipe();

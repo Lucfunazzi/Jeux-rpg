@@ -81,10 +81,10 @@ public class EnnemiZero extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Souffle des Ténèbres — Inflige 100% ATK.");
+        System.out.println("Souffle des Ténèbres — Inflige 100% ATK à la cible.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Cauchemar — Inflige 140% ATK et réduit la cible au silence pendant 2 tours.");
+        System.out.println("Cauchemar — Inflige 140% ATK à la cible et la réduit au silence pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Néant Absolu — Inflige 110% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");

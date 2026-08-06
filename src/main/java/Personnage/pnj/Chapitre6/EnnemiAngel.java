@@ -59,9 +59,11 @@ public class EnnemiAngel extends PersonnageBase {
         log.add("Angel invoque Caelum !");
         Combat.appliquerDegatsAvecLog(this, cible, this.getAttaque() * 1.50, log);
         if (Math.random() < 0.30) {
-            Combat.appliquerEffet(this, cible, new Etourdissement(1), log);
+            Combat.appliquerEffet(this, cible, new Etourdissement(2), log);
             log.add("  Le laser aveugle " + cible.getNom() + " !");
         }
+        Combat.appliquerEffet(this,cible,new  ReductionDefense(0.20,2), log);
+        
     }
 
     @Override
@@ -82,7 +84,7 @@ public class EnnemiAngel extends PersonnageBase {
         System.out.println("Epée de caelum — Inflige 120% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Caelum — Inflige 150% ATK, 30% de chance d'étourdir la cible 1 tour.");
+        System.out.println("Caelum — Inflige 150% ATK,Reduit la defense de la cible de 20% et à 30% de chance d'étourdir la cible 2 tours .");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Aries — Inflige 130% ATK (bonus selon la Rage) à tous les ennemis et réduit leur ATK de 20% pendant 2 tours.");

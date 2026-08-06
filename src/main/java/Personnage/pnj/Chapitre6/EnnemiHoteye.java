@@ -80,7 +80,7 @@ public class EnnemiHoteye extends PersonnageBase {
         System.out.println("Poing de Sable — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Doigt du Sable Dévorant — Inflige 115% ATK et réduit l'ATK de la cible de 15% pendant 2 tours.");
+        System.out.println("Doigt du Sable Dévorant — Inflige 115% ATK à la cible et réduit son attaque de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Grande Muraille de Sable — Augmente son taux de blocage de 20% pendant 2 tours et inflige 80% ATK à tous les ennemis.");

@@ -81,7 +81,7 @@ public class EnnemiMidnight extends PersonnageBase {
         System.out.println("Reflector — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Miroir Illusoire — Inflige 130% ATK et réduit la précision de la cible de 20% pendant 2 tours.");
+        System.out.println("Miroir Illusoire — Inflige 130% ATK à la cible et réduit sa précision de 20% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Chaos Réflecté — Inflige 95% ATK à tous les ennemis et augmente les dégâts qu'ils subissent de 15% pendant 2 tours.");

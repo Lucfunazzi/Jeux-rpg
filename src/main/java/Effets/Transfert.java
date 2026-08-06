@@ -54,6 +54,8 @@ public class Transfert {
             || effet instanceof ReductionVitesse
             || effet instanceof Sommeil
             || effet instanceof Silence
-            || effet instanceof Trempe;
+            || effet instanceof Trempe
+            || effet instanceof Peur
+            || effet instanceof MarqueExplosive;
     }
 }

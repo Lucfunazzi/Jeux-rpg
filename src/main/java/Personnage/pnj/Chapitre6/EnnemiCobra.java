@@ -32,7 +32,7 @@ public class EnnemiCobra extends PersonnageBase {
         this.taux_critiques    = 0.14;
         this.degat_critiques   = 1.30;
         this.taux_precisions   = 105.00;
-        this.taux_esquives     = 0.18;
+        this.taux_esquives     = 0.05;
         this.taux_blocage      = 0.06;
         this.reduction_blocage = 0.10;
         this.degats_renvoi     = 0.80;
@@ -42,7 +42,7 @@ public class EnnemiCobra extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Écailles du Serpent", "Rugissement du Dragon du Poison", "Perception Totale"};
+        return new String[]{"Écailles du Serpent", "Ecailles du Dagon Venimeux", "Hurlement du Dragon Venimeux"};
     }
 
     @Override
@@ -50,39 +50,43 @@ public class EnnemiCobra extends PersonnageBase {
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cobra lacère " + cible.getNom() + " de ses Écailles du Serpent !");
         Combat.attaquer(this, cible, log);
+        Combat.appliquerEffet(this, cible, new Poison(3,0.06), log);
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Cobra crache un Rugissement du Dragon du Poison sur " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.35;
+        log.add("Cobra lance Ecailles du Dagon Venimeux sur " + cible.getNom() + " !");
+        double degats = this.getAttaque() * 1.75;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new Poison(3, 0.06), log);
         }
+        Combat.appliquerEffet(this, new BuffTauxEsquive(0.15,2), log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Cobra entend chaque pensée ennemie — Perception Totale !");
-        Combat.appliquerEffet(this, new BuffTauxEsquive(0.25, 2), log);
+        
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
                 double degats = this.getAttaque() * 1.10;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                Combat.appliquerEffet(this, ennemi, new Poison(3, 0.06), log);
             }
         }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Écailles du Serpent — Inflige 100% ATK.");
+        System.out.println("Écailles du Serpent — Inflige 100% ATK et empoisonne la cible pendant 3 tours (6% Pv/tour.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Rugissement du Dragon du Poison — Inflige 135% ATK et empoisonne la cible pendant 3 tours (6% PV/tour).");
+        System.out.println("Ecailles du Dragon Venimeux — Inflige 175% ATK et empoisonne la cible pendant 3 tours (6% PV/tour) "
+                + "Et augmente son esquive de 15% pendants 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Perception Totale — Augmente son esquive de 25% pendant 2 tours et inflige 110% ATK à tous les ennemis.");
+        System.out.println("Hurlement du Dragon Venimeux — inflige 110% ATK à tous les ennemis et empoisonne les cibles pendants 3 tours (6% PV/Tour).");
     }
 }

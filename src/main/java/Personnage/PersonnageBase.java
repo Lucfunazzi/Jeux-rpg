@@ -24,6 +24,7 @@ import Effets.Poison;
 import Effets.Bouclier;
 import Effets.Brulure;
 import Effets.Absorption;
+import Effets.Symbiose;
 import java.util.ArrayList;
 import java.util.List;
 import Equipement.Equipement;
@@ -229,6 +230,9 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
 
         this.vie = Math.max(0, this.vie - degats);
 
+        Symbiose symbioseDegats = getEffet(Symbiose.class);
+        if (symbioseDegats != null) symbioseDegats.partagerDegats(this, degats);
+
         Sommeil sommeil = getEffet(Sommeil.class);
         if (sommeil != null && degats > 0) sommeil.reveillerSiDegats();
 
@@ -242,6 +246,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     }
     public void retirerVie(double montant) {
         this.vie = Math.max(0, this.vie - montant);
+        Symbiose symbiose = getEffet(Symbiose.class);
+        if (symbiose != null) symbiose.partagerDegats(this, montant);
         if (!estVivant()) {
             Effets.Resurrection resurrection = getEffet(Effets.Resurrection.class);
             if (resurrection != null) resurrection.tenterResurrection(this);
@@ -251,6 +257,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
     /** Surcharge avec log — utilisée par les DoT (Brûlure, Saignement, Poison) via appliquerEffets(log). */
     public void retirerVie(double montant, java.util.List<String> log) {
         this.vie = Math.max(0, this.vie - montant);
+        Symbiose symbiose = getEffet(Symbiose.class);
+        if (symbiose != null) symbiose.partagerDegats(this, montant, log);
         if (!estVivant()) {
             Effets.Resurrection resurrection = getEffet(Effets.Resurrection.class);
             if (resurrection != null) resurrection.tenterResurrection(this, log);
@@ -274,6 +282,8 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         if (soinEffectif > 0) {
             log.add("💚 " + this.nom + " recupere " + String.format("%.0f", soinEffectif)
                     + " PV (" + String.format("%.0f", pvAvant) + " → " + String.format("%.0f", this.vie) + " PV)");
+            Symbiose symbiose = getEffet(Symbiose.class);
+            if (symbiose != null) symbiose.partagerSoin(this, soinEffectif, log);
         } else {
             log.add(this.nom + " est deja au maximum de PV.");
         }

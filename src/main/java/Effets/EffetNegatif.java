@@ -7,7 +7,7 @@ package Effets;
  * Effets négatifs : Brulure, Saignement, Poison, Gel, Petrification,
  * Etourdissement, Silence, Paralysie, Sommeil, Confusion, Aveuglement,
  * Ralentissement, ReductionAttaque, ReductionDefense, ReductionVitesse,
- * Fragilite, Malediction, Marquage, Trempe, Provocation.
+ * Fragilite, Malediction, Marquage, Trempe, Provocation, Peur, MarqueExplosive.
  */
 public interface EffetNegatif {
     // Marqueur — aucune méthode requise

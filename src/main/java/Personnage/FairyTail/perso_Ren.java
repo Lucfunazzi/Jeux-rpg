@@ -57,12 +57,9 @@ public class perso_Ren extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Ren ouvre le Void — le vide aspire tout l'air autour de la cible !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.20) * multiplicateurRage;
+        PersonnageBase cible = Combat.choisirCible(this, equipeEnnemie);
+        if (cible != null) {
+            double degats = this.getAttaque() * 2.20;
             boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
             if (touche) {
                 Combat.appliquerEffet(this, cible, new ReductionVitesse(0.20, 2), log);
@@ -77,6 +74,6 @@ public class perso_Ren extends PersonnageBase {
         System.out.println("Air Rondo — Inflige 150% ATK à une cible.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Void — Inflige 220% ATK (bonus selon la Rage) au DPS ennemi (ou au Tank), réduit sa vitesse de 20% pendant 2 tours.");
+        System.out.println("Void — Inflige 220% ATK à une cible et réduit sa vitesse de 20% pendant 2 tours.");
     }
 }
