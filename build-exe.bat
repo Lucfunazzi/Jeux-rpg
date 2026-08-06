@@ -20,10 +20,10 @@ rmdir /s /q Jeu 2>nul
 "%JDK_BIN%\jpackage.exe" ^
   --type app-image ^
   --input target ^
-  --main-jar jeux-rpg-1.0-jar-with-dependencies.jar ^
+  --main-jar jeux-rpg-1.1-jar-with-dependencies.jar ^
   --main-class lancement.gui.Launcher ^
   --name "Fairy Tail RPG" ^
-  --app-version 1.0 ^
+  --app-version 1.1 ^
   --java-options "--enable-native-access=ALL-UNNAMED" ^
   --dest Jeu
 
