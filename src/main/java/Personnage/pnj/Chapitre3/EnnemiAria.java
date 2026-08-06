@@ -32,7 +32,9 @@ public class EnnemiAria extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 300.0 * mult * niv;
+        // PV releves (~x4) : boss titulaire des stages 6 et 10 (dernier, sans invite), sinon
+        // combat expedie en un ou deux tours.
+        this.vie     = 1200.0 * mult * niv;
         this.attaque = 135.0 * mult * niv;
         this.defense =  70.0 * mult * niv;
         this.vitesse = 100.0 * mult * vit;

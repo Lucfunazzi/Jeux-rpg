@@ -11,6 +11,7 @@
       fx:controller="lancement.gui.EcranAreneAdversairesController"
       alignment="CENTER" spacing="10" styleClass="root-menu">
     <Label text="CHOISIR UN ADVERSAIRE" styleClass="titre"/>
+    <Label fx:id="labelCombativiteJoueur" styleClass="sous-titre"/>
 
     <ScrollPane fitToWidth="true" prefHeight="380">
         <VBox fx:id="adversairesBox" alignment="CENTER" spacing="8">

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Lucas
  */
 public class EnnemiNatsuStage4 extends PersonnageBase {
-    public  EnnemiNatsuStage4() {this(10);}
+    public  EnnemiNatsuStage4() {this(30);}
         
     public EnnemiNatsuStage4(int niveau){
      this.nom = "Natsu";
@@ -27,10 +27,10 @@ public class EnnemiNatsuStage4 extends PersonnageBase {
          double mult = 1.20 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 300.0 * mult * niv;
-        this.attaque = 100.0 * mult * niv;
-        this.defense = 45.0 * mult * niv;
-        this.vitesse =  110.0 * mult * vit;
+        this.vie     = 200.0 * mult * niv;
+        this.attaque = 420.0 * mult * niv;
+        this.defense = 120.0 * mult * niv;
+        this.vitesse =  130.0 * mult * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.30;
@@ -95,7 +95,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Poings d'acier du dragon de feu — inflige 130% ATK a une cible, "
+        System.out.println("Poings d'acier du dragon de feu — inflige 250% ATK a une cible, "
                 + "30% de chance d'etourdir pendant 1 tour, "
                 + "applique Brulure (10% PV/tour) pendant 2 tours, "
                 + "gagne 15% d'attaque pendant 2 tours.");
@@ -103,7 +103,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Hurlement du dragon de feu — inflige 160% ATK a tous les ennemis "
+        System.out.println("Hurlement du dragon de feu — inflige 300% ATK a tous les ennemis "
                 + "et applique Brulure intense (12% PV/tour) pendant 3 tours.");
     }
 }

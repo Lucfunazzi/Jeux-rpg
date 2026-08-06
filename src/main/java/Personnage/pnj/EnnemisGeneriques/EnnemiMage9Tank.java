@@ -16,7 +16,7 @@ public class EnnemiMage9Tank extends PersonnageBase {
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        double mult = variante.getMultiplicateur();
+        double mult = variante.getMultiplicateur() * Variante.multiplicateurRang(niveau);
         // Ecart historique entre variantes, preserve tel quel : chapitre1Elite (def 50) et
         // Chapitre2/2Elite (def 70, plus tanky) different du profil de base (def 45) utilise
         // par Chapitre1/Chapitre3/Chapitre4. Le blocage suit Chapitre1 seul a 0.10, 0.22 ailleurs.

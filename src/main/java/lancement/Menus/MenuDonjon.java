@@ -157,7 +157,7 @@ public class MenuDonjon {
 
         switch (type) {
             case OR -> or = switch (diff) {
-                case NORMAL -> 15000; case DIFFICILE -> 50000; case EXTREME -> 500000;
+                case NORMAL -> 30000; case DIFFICILE -> 100000; case EXTREME -> 500000;
             };
             case AFFINAGE -> pierres = switch (diff) {
                 case NORMAL -> 10; case DIFFICILE -> 50; case EXTREME -> 150;
@@ -282,6 +282,14 @@ public class MenuDonjon {
         return ennemis;
     }
 
+    /** Combativite totale de l'equipe ennemie d'un donjon (type + difficulte), pour affichage
+     *  d'une recommandation au joueur avant de s'engager (voir PersonnageBase.getCombativite). */
+    public double combativiteRecommandee(TypeDonjon type, Difficulte diff, GameContext ctx) {
+        return creerEnnemis(type, diff, ctx).stream()
+                .mapToDouble(PersonnageBase::getCombativite)
+                .sum();
+    }
+
     private PersonnageBase niv(PersonnageBase p, int n) {
         while (p.getNiveau() < n) p.monterDeNiveau();
         return p;
@@ -303,9 +311,9 @@ public class MenuDonjon {
     }
     public static String descriptionRecompense(TypeDonjon type, Difficulte diff) {
         return switch (type) {
-            case OR -> switch (diff) { case NORMAL -> "15 000 or"; case DIFFICILE -> "50 000 or"; case EXTREME -> "500 000 or"; };
+            case OR -> switch (diff) { case NORMAL -> "30 000 or"; case DIFFICILE -> "100 000 or"; case EXTREME -> "500 000 or"; };
             case AFFINAGE -> switch (diff) { case NORMAL -> "10 pierres d'affinage"; case DIFFICILE -> "50 pierres d'affinage"; case EXTREME -> "150 pierres d'affinage"; };
-            case XP -> switch (diff) { case NORMAL -> "1x Parchemin XP [C] (500 XP)"; case DIFFICILE -> "1x Parchemin XP [B] (1500 XP)"; case EXTREME -> "1x Parchemin XP [A] (5000 XP)"; };
+            case XP -> switch (diff) { case NORMAL -> "30x Parchemin XP [C] (500 XP)"; case DIFFICILE -> "30x Parchemin XP [B] (1500 XP)"; case EXTREME -> "30x Parchemin XP [A] (5000 XP)"; };
         };
     }
 }

@@ -19,7 +19,7 @@ public class EnnemiMage2DPS extends PersonnageBase {
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        double mult = variante.getMultiplicateur();
+        double mult = variante.getMultiplicateur() * Variante.multiplicateurRang(niveau);
         this.vie     = 220.0 * niv * mult;
         this.attaque =  55.0 * niv * mult;
         this.defense =  18.0 * niv * mult;

@@ -1,9 +1,7 @@
 package Personnage.pnj.Chapitre2Elite;
 
 import Combat.Combat;
-import Effets.Purification;
-import Effets.ReductionAttaque;
-import Effets.Silence;
+import Effets.*;
 import Personnage.PersonnageBase;
 import java.util.List;
 
@@ -27,7 +25,9 @@ public class EnnemiCherry extends PersonnageBase {
         double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 260.0 * multElite * niv;
+        // PV releves (~x4.4, voir Chapitre2/EnnemiCherry) pour rester coherent avec la
+        // version non-elite de ce boss d'histoire.
+        this.vie     = 1150.0 * multElite * niv;
         this.attaque =  70.0 * multElite * niv;
         this.defense =  65.0 * multElite * niv;
         this.vitesse =  65.0 * multElite * vit;
@@ -75,11 +75,9 @@ public class EnnemiCherry extends PersonnageBase {
         log.add("Cherry invoque le Grand Arbre Marionnette — la forêt entière se dresse contre les ennemis !");
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = this.getAttaque() * 0.50;
+                double degats = this.getAttaque() * 0.70;
+                if (cible.aEffet(Gel.class)) degats *= 1.20;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-                if (Math.random() < 0.30){
-                    Combat.appliquerEffet(this, cible, new Silence(2), log);
-                }
             }
         }
     }
@@ -88,9 +86,9 @@ public class EnnemiCherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Je Fais de Toi ma Marionnette — Soigne l'allié le plus faible de 120% ATK et le purifie d'un effet négatif.");
+        System.out.println("Je Fais de Toi ma Marionnette — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Grand Arbre Marionnette — Inflige 50% ATK à tous, à 30% de silence les cibles pendants 2 tours.");
+        System.out.println("Grand Arbre Marionnette — Inflige 70% ATK à tous.");
     }
 }

@@ -28,7 +28,9 @@ public class EnnemiEvaro extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 280.0 * niv;
+        // PV releves (~x3.2) : boss titulaire du stage, ne doit pas tomber plus vite que ses
+        // sbires generiques qui l'accompagnent.
+        this.vie     = 900.0 * niv;
         this.attaque =  55.0 * niv;
         this.defense =  75.0 * niv;
         this.vitesse =  50.0 * vit;

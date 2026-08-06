@@ -524,6 +524,8 @@ public class EcranMenuPrincipalController {
     }
 
     private static final Object CARTE_EFFETS = new Object();
+    private static final Object CARTE_BIENVENUE = new Object();
+    private static final Object CARTE_NOUVEAUX_EFFETS = new Object();
 
     private static final String[][] EFFETS_NEGATIFS = {
         {"Brulure", "Inflige un pourcentage des PV actuels en degats a chaque tour, pendant plusieurs tours (contourne la defense)."},
@@ -546,11 +548,16 @@ public class EcranMenuPrincipalController {
         {"Marquage", "Augmente les degats recus de 30% pendant 2 tours (valeurs fixes)."},
         {"Trempe", "Rend plus vulnerable au Gel et a la Paralysie."},
         {"Provocation", "Force la cible a attaquer en priorite l'auteur de la provocation."},
+        {"Peur", "La cible evite d'attaquer la source de la peur tant que l'effet dure."},
+        {"Marque explosive", "Ne fait aucun degat immediat, puis explose au dernier tour et inflige des degats bases sur les PV max de la cible."},
+        {"Symbiose", "Lie deux personnages : une partie des degats et des soins subis par l'un est repercutee sur son partenaire."},
     };
 
     @FXML
     private void onAide(ActionEvent event) {
         List<Object> disponibles = new ArrayList<>();
+        disponibles.add(CARTE_BIENVENUE);
+        disponibles.add(CARTE_NOUVEAUX_EFFETS);
         disponibles.add(CARTE_EFFETS);
         for (GestionnaireTutoriel.EtapeTutoriel e : GestionnaireTutoriel.getEtapes()) {
             if (boutonsParLibelle.containsKey(e.libelle())) disponibles.add(e);
@@ -564,13 +571,25 @@ public class EcranMenuPrincipalController {
             afficherEffetsNegatifs();
             return;
         }
+        if (choix == CARTE_BIENVENUE) {
+            info("Conseils de bienvenue", GestionnaireTutoriel.explicationEcran("Bienvenue"));
+            return;
+        }
+        if (choix == CARTE_NOUVEAUX_EFFETS) {
+            info("Nouveaux effets de combat", GestionnaireTutoriel.explicationEcran("Effets"));
+            return;
+        }
         afficherEtape(List.of((GestionnaireTutoriel.EtapeTutoriel) choix), 0);
     }
 
     private Node carteAide(Object item) {
-        Label titre = new Label(item == CARTE_EFFETS
-                ? "Les differents effets"
-                : "Tutoriel " + ((GestionnaireTutoriel.EtapeTutoriel) item).libelle());
+        String texte;
+        if (item == CARTE_BIENVENUE) texte = "Conseils de bienvenue";
+        else if (item == CARTE_NOUVEAUX_EFFETS) texte = "Nouveaux effets de combat";
+        else if (item == CARTE_EFFETS) texte = "Les differents effets";
+        else texte = "Tutoriel " + ((GestionnaireTutoriel.EtapeTutoriel) item).libelle();
+
+        Label titre = new Label(texte);
         titre.getStyleClass().add("item-nom");
 
         HBox carte = new HBox(titre);
@@ -732,5 +751,13 @@ public class EcranMenuPrincipalController {
     private void styliser(Dialog<?> dialog) {
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("root-menu");
+    }
+
+    private void info(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        styliser(alert);
+        alert.showAndWait();
     }
 }

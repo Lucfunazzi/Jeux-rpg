@@ -30,7 +30,9 @@ public class EnnemiDeliora extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 700.0 * niv;
+        // PV releves (~x4.1, coherent avec les autres boss du chapitre 2 remontes en meme
+        // temps) : boss final du chapitre, doit rester le plus tanky de tous.
+        this.vie     = 2900.0 * niv;
         this.attaque =  100.0 * niv;
         this.defense =  50.0 * niv;
         this.vitesse =   90.0 * vit;

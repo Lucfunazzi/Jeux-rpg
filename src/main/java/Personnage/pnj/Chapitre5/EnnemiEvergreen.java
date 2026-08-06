@@ -24,7 +24,9 @@ public class EnnemiEvergreen extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 380.0 * mult * niv;
+        // PV releves (~x1.8) : boss titulaire des stages 3 et 6, tombait en a peine plus d'un
+        // tour face aux invites (Elfman/Erza) combines a l'equipe.
+        this.vie     = 680.0 * mult * niv;
         this.attaque = 140.0 * mult * niv;
         this.defense = 100.0 * mult * niv;
         this.vitesse = 110.0 * mult * vit;

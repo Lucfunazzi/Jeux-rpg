@@ -16,7 +16,7 @@ public class EnnemiMage5Tank extends PersonnageBase {
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        double mult = variante.getMultiplicateur();
+        double mult = variante.getMultiplicateur() * Variante.multiplicateurRang(niveau);
         // Ecart historique entre variantes, preserve tel quel : le Chapitre 1 est plus
         // fragile/esquive moins (def 50, esquive/blocage 0.10) que toutes les autres
         // variantes (def 45, esquive 0.12, blocage 0.18), sauf Chapitre2/2Elite plus tanky

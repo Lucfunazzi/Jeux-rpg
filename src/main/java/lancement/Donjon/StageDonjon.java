@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class StageDonjon {
 
+    private static final int NB_PARCHEMINS_PAR_RUN = 30;
+
     private final TypeDonjon  type;
     private final Difficulte  difficulte;
     private final ArrayList<PersonnageBase> ennemis;
@@ -113,8 +115,8 @@ public class StageDonjon {
             }
             if (recompenseParchemin != null) {
                 // Stocker le parchemin comme materiau avec son nom
-                inventaire.ajouterMateriau(recompenseParchemin.getNom(), 1);
-                System.out.println("   + 1x " + recompenseParchemin);
+                inventaire.ajouterMateriau(recompenseParchemin.getNom(), NB_PARCHEMINS_PAR_RUN);
+                System.out.println("   + " + NB_PARCHEMINS_PAR_RUN + "x " + recompenseParchemin);
             }
 
             // Enregistrer le run

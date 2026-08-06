@@ -23,7 +23,9 @@ public class EnnemiShaw extends PersonnageBase {
         double mult = 1.30;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 350.0 * mult * niv;
+        // PV releves (~x3) : boss titulaire du stage 4 ("Liberation d'Erza") face a Erza
+        // (invite ~4200 PV), sinon combat expedie en un ou deux tours.
+        this.vie     = 1050.0 * mult * niv;
         this.attaque = 150.0 * mult * niv;
         this.defense = 110.0 * mult * niv;
         this.vitesse = 150.0 * mult * vit;

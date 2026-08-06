@@ -26,6 +26,11 @@ public class EcranAccueilController {
     @FXML private Button nouvellePartieButton;
 
     @FXML
+    private void initialize() {
+        GestionnaireMusique.jouerMusiqueAccueil();
+    }
+
+    @FXML
     private void onValiderPseudo(ActionEvent event) {
         pseudo = pseudoField.getText().trim();
         if (pseudo.isEmpty()) pseudo = "Aventurier";

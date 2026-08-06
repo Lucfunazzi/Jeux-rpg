@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireExamenS;
 import lancement.Menus.MenuExamenS;
+import Personnage.PersonnageBase;
 
 public class EcranExamenSController {
 
@@ -91,12 +92,22 @@ public class EcranExamenSController {
         Label etat = new Label(etatTxt);
         etat.getStyleClass().add(premiereFois ? "item-qte" : "item-detail");
 
+        double combativiteJoueur = ctx.formation.getEquipe().stream()
+                .filter(p -> p != null)
+                .mapToDouble(PersonnageBase::getCombativite)
+                .sum();
+        double combativiteRecommandee = ctx.menuExamenS.combativiteRecommandee(numero, ctx);
+        Label combativite = new Label("Combativité recommandée : "
+                + GuiVisuels.formaterMontant(combativiteRecommandee)
+                + "  (la tienne : " + GuiVisuels.formaterMontant(combativiteJoueur) + ")");
+        combativite.getStyleClass().add("item-detail");
+
         Button defier = new Button(faitAujourdhui ? "Fait aujourd'hui" : "⚔ Défier");
         defier.getStyleClass().add("bouton-defier");
         defier.setDisable(faitAujourdhui);
         defier.setOnAction(e -> lancerStage(numero, (Stage) defier.getScene().getWindow()));
 
-        VBox contenu = new VBox(8, titre, nom, etat, defier);
+        VBox contenu = new VBox(8, titre, nom, etat, combativite, defier);
         contenu.setAlignment(Pos.CENTER);
         contenu.getStyleClass().add("carte-examen-spotlight");
         contenu.setPrefWidth(320);

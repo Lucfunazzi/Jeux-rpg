@@ -21,39 +21,50 @@ EXAMEN DE RANG S — une piste par tranche de 10 stages (40 stages au total) :
   examenS3.mp3   (stages 21 a 30)
   examenS4.mp3   (stages 31 a 40)
 
-DONJON — tiree au hasard a chaque lancement parmi :
+DONJON — tiree au hasard a chaque lancement parmi (NB_PISTES_DONJON = 1 pour l'instant,
+voir Notes) :
 
-  donjon1.mp3
+  donjon1.wav   <- deja fourni (piste temporaire, a remplacer par une piste dediee)
   donjon2.mp3
   donjon3.mp3
   donjon4.mp3
   donjon5.mp3
 
-ARENE — tiree au hasard a chaque lancement parmi :
+ARENE — tiree au hasard a chaque lancement parmi (NB_PISTES_ARENE = 1 pour l'instant,
+voir Notes) :
 
-  arene1.mp3
+  arene1.wav   <- deja fourni
   arene2.mp3
   arene3.mp3
   arene4.mp3
   arene5.mp3
 
-MENUS (tous les ecrans hors combat) — tiree au hasard, nomme exactement :
+MENUS (ecrans en jeu hors combat : Formation, Inventaire, Quetes, etc.) — tiree au
+hasard, nomme exactement :
 
   menu1.mp3   <- deja fourni
   menu2.mp3   <- deja fourni
   menu3.mp3   <- deja fourni
 
-  La piste continue de jouer sans se relancer tant qu'on navigue entre les menus
-  (Formation, Inventaire, Quetes, etc.). Une nouvelle piste n'est tiree au sort
-  qu'au demarrage du jeu ou juste apres un combat (retour au menu).
+  La piste continue de jouer sans se relancer tant qu'on navigue entre les menus.
+  Une nouvelle piste n'est tiree au sort qu'a l'arrivee sur le menu principal ou
+  juste apres un combat (retour au menu).
+
+ACCUEIL (ecran de titre : nouvelle partie / charger la partie) — une seule piste :
+
+  accueil.mp3
+
+CREATION DE PERSONNAGE (choix de classe + fiche de classe) — une seule piste :
+
+  creation.mp3
 
 Notes :
 - Format : mp3 (javafx-media le lit nativement).
 - Chaque piste tourne en boucle et se coupe (fondu) en quittant l'ecran de combat.
 - Un fichier absent reste simplement silencieux (aucune erreur), donc vous pouvez
   completer progressivement.
-- Le nombre de pistes Donjon/Arene (5 chacun) est un choix par defaut ; pour en
-  ajouter plus, changer NB_PISTES_DONJON / NB_PISTES_ARENE dans
-  lancement.gui.GestionnaireMusique.
+- Le nombre de pistes Donjon/Arene est reglable via NB_PISTES_DONJON / NB_PISTES_ARENE
+  dans lancement.gui.GestionnaireMusique (actuellement 1 chacun, le temps de fournir
+  plus de pistes — remonter la constante en meme temps que vous ajoutez donjonN/areneN).
 
 Voir lancement.gui.GestionnaireMusique pour la logique de lecture.

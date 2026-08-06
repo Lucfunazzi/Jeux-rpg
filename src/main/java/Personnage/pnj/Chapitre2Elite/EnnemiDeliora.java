@@ -25,7 +25,8 @@ public class EnnemiDeliora extends PersonnageBase {
         double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 1000.0 * multElite * niv;
+        // PV releves (~x4.1, meme ratio que la version non-elite).
+        this.vie     = 4100.0 * multElite * niv;
         this.attaque =  150.0 * multElite * niv;
         this.defense =  50.0 * multElite * niv;
         this.vitesse =   110.0 * multElite * vit;

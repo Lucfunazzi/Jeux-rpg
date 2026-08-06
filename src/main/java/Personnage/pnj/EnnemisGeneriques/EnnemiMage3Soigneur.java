@@ -20,7 +20,7 @@ public class EnnemiMage3Soigneur extends PersonnageBase {
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        double mult = variante.getMultiplicateur();
+        double mult = variante.getMultiplicateur() * Variante.multiplicateurRang(niveau);
         this.vie     = 250.0 * niv * mult;
         this.attaque =  65.0 * niv * mult;
         this.defense =  22.0 * niv * mult;

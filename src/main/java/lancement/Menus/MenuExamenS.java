@@ -186,6 +186,14 @@ public class MenuExamenS {
         return "Boite ouverte : vous obtenez " + new Pierre(type, niveauBoite) + " !";
     }
 
+    /** Combativite totale de l'equipe ennemie d'un stage, pour affichage d'une recommandation
+     *  au joueur avant de s'engager (voir PersonnageBase.getCombativite). */
+    public double combativiteRecommandee(int stage, GameContext ctx) {
+        return creerEnnemis(stage, ctx).stream()
+                .mapToDouble(PersonnageBase::getCombativite)
+                .sum();
+    }
+
     // ── Construction des equipes ennemies (niveau = numero du stage) ───────
     private ArrayList<PersonnageBase> creerEnnemis(int stage, GameContext ctx) {
         ArrayList<PersonnageBase> ennemis = new ArrayList<>();

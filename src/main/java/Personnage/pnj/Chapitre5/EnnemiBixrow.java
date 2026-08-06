@@ -25,7 +25,9 @@ public class EnnemiBixrow extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 400.0 * mult * niv;
+        // PV releves (~x1.8) : boss titulaire des stages 4 et 5, tombait en a peine plus d'un
+        // tour face aux invites (Gray/Lucy) combines a l'equipe.
+        this.vie     = 720.0 * mult * niv;
         this.attaque = 150.0 * mult * niv;
         this.defense =  90.0 * mult * niv;
         this.vitesse = 115.0 * mult * vit;

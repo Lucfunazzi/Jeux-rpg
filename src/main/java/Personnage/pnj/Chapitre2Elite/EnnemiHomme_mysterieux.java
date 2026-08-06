@@ -19,7 +19,8 @@ public class EnnemiHomme_mysterieux extends PersonnageBase {
         double mult = 1.50 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 200.0 * mult * niv;
+        // PV releves (~x4.25, meme ratio que la version non-elite).
+        this.vie     = 850.0 * mult * niv;
         this.attaque =  80.0 * mult * niv;
         this.defense =  50.0 * mult * niv;
         this.vitesse =  200.0 * mult * vit;

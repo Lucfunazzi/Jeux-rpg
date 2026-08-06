@@ -135,9 +135,14 @@ public class EcranCombatController {
         chargerSonAction("Jubia", "Déferlante", "/audio/jubia_deferlante.wav");
         chargerSonAction("Jubia", "Prison d'eau", "/audio/jubia_prison_eau.wav");
         chargerSonAction("Jellal", "Grand Chariot", "/audio/jellal_grand_chariot.wav");
+        chargerSonAction("Jellal", "Altairis", "/audio/altaris_jellal.wav");
         chargerSonAction("Ikaruga", "Flammes du Garuda", "/audio/ikaruga_flammes_garuda.wav");
         chargerSonAction("Ikaruga", "Eclats des Esprits", "/audio/ikaruga_eclats_esprits.wav");
         chargerSonAction("Miliana", "Kitten Blast", "/audio/miliana_kitten_blast.wav");
+        chargerSonAction("Miliana", "Entraves Féline multiples ", "/audio/entravesmultiples_miliana.wav");
+        chargerSonAction("Simon", "Nuit fugitive", "/audio/nuit_fugitif_simon.wav");
+        chargerSonAction("Simon", "Sombre Explosion", "/audio/nuit_fugitif_simon.wav");
+        chargerSonAction("Wolly", "Pistolet des Polygones", "/audio/wolly-attaque-special.wav");
         chargerSonAction("Owl", "Mise à feu", "/audio/owl_mise_a_feu.wav");
         chargerSonAction("Owl", "Missiles HOU HOU ", "/audio/owl_missiles_hou_hou.wav");
         chargerSonAction("Vivaldus", "Rock of Succubus", "/audio/vivaldus_rock_succubus.wav");

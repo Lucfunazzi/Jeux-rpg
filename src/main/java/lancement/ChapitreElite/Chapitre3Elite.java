@@ -148,10 +148,10 @@ public class Chapitre3Elite implements ChapitreElite {
 
             double chanceFragment = (numero == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
             if (Math.random() < chanceFragment) {
-                // Uniquement des fragments rang A ici : les rangs S/SS/SSS/UR s'obtiennent
-                // via la Boutique d'equipement (recyclage), pas en Chapitre 3 Elite.
+                // Fragments rang B (Chapitres 3-5 Elite) : les rangs A viennent des Chapitres
+                // 6-7 Elite, S/SS/SSS/UR s'obtiennent via la Boutique d'equipement (recyclage).
                 List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue().stream()
-                        .filter(f -> f.getRarete() == Equipement.Rarete.A)
+                        .filter(f -> f.getRarete() == Equipement.Rarete.B)
                         .toList();
                 FragmentEquipement fragment = catalogue.get((int) (Math.random() * catalogue.size()));
                 ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);

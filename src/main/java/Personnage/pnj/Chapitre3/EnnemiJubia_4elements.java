@@ -23,7 +23,9 @@ public class EnnemiJubia_4elements extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 280.0 * mult * niv;
+        // PV releves (~x4) : boss titulaire du stage face a Gray (invite ~1450 PV), sinon
+        // combat expedie en un ou deux tours.
+        this.vie     = 1100.0 * mult * niv;
         this.attaque = 100.0 * mult * niv;
         this.defense =  85.0 * mult * niv;
         this.vitesse =  95.0 * mult * vit;

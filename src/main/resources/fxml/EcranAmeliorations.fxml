@@ -15,16 +15,16 @@
 
     <Label text="AMELIORATION" styleClass="titre"/>
 
-    <HBox spacing="18" alignment="TOP_CENTER">
+    <HBox spacing="24" alignment="TOP_CENTER" maxWidth="Infinity" VBox.vgrow="ALWAYS">
         <ScrollPane fitToWidth="true" prefWidth="230" prefHeight="460" styleClass="scroll-pane">
             <VBox fx:id="personnagesBox" spacing="8">
                 <padding><Insets top="4" right="8" bottom="4" left="4"/></padding>
             </VBox>
         </ScrollPane>
 
-        <VBox fx:id="equipementBox" spacing="10" alignment="TOP_CENTER" prefWidth="300"/>
+        <VBox fx:id="equipementBox" spacing="10" alignment="TOP_CENTER" prefWidth="340" HBox.hgrow="ALWAYS"/>
 
-        <VBox fx:id="panneauDroit" spacing="12" alignment="TOP_CENTER" prefWidth="300"/>
+        <VBox fx:id="panneauDroit" spacing="12" alignment="TOP_CENTER" prefWidth="420" HBox.hgrow="ALWAYS"/>
     </HBox>
 
     <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>

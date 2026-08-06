@@ -29,7 +29,8 @@ public class EnnemiLeon extends PersonnageBase {
         double mult = 1.30 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 230.0 * mult * niv;
+        // PV releves (~x4.1, meme ratio que la version non-elite).
+        this.vie     = 950.0 * mult * niv;
         this.attaque =  100.0 * mult * niv;
         this.defense =  65.0 * mult * niv;
         this.vitesse =  88.0 * mult * vit;

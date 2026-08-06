@@ -14,7 +14,18 @@ public class GestionnaireFragments {
     // ── Catalogue de tous les fragments disponibles ───────────────────────
     private static final List<FragmentEquipement> CATALOGUE = List.of(
 
-        // ── Rang A (Chapitre 3 Elite) ──
+        // ── Rang B (Chapitres 3-5 Elite) ──
+        new FragmentEquipement("Baton Renforce",       Equipement.Slot.ARME, Equipement.TypeArme.BATON, Equipement.Rarete.B),
+        new FragmentEquipement("Gants Renforces",      Equipement.Slot.ARME, Equipement.TypeArme.GANTS, Equipement.Rarete.B),
+        new FragmentEquipement("Lance Renforcee",      Equipement.Slot.ARME, Equipement.TypeArme.LANCE, Equipement.Rarete.B),
+        new FragmentEquipement("Fouet Renforce",       Equipement.Slot.ARME, Equipement.TypeArme.FOUET, Equipement.Rarete.B),
+        new FragmentEquipement("Heaume Renforce",      Equipement.Slot.COUVRE_CHEF, Equipement.TypeArme.AUCUN, Equipement.Rarete.B),
+        new FragmentEquipement("Cuirasse Renforcee",   Equipement.Slot.TORSE,       Equipement.TypeArme.AUCUN, Equipement.Rarete.B),
+        new FragmentEquipement("Gantelets Renforces",  Equipement.Slot.MAINS,       Equipement.TypeArme.AUCUN, Equipement.Rarete.B),
+        new FragmentEquipement("Jambières Renforcees", Equipement.Slot.JAMBIERES,   Equipement.TypeArme.AUCUN, Equipement.Rarete.B),
+        new FragmentEquipement("Bottes Renforcees",    Equipement.Slot.BOTTES,      Equipement.TypeArme.AUCUN, Equipement.Rarete.B),
+
+        // ── Rang A (Chapitres 6-7 Elite) ──
         new FragmentEquipement("Baton de Foudre",    Equipement.Slot.ARME, Equipement.TypeArme.BATON, Equipement.Rarete.A),
         new FragmentEquipement("Gants de Titane",    Equipement.Slot.ARME, Equipement.TypeArme.GANTS, Equipement.Rarete.A),
         new FragmentEquipement("Lance Celeste",      Equipement.Slot.ARME, Equipement.TypeArme.LANCE, Equipement.Rarete.A),

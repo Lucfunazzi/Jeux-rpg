@@ -155,20 +155,6 @@ public class MenuAbilite {
         return numArbre == 4 || numArbre == 8;
     }
 
-    /** Active sur le joueur la speciale/ultime debloquee par cet arbre (1 a 8). */
-    private static void activerArbre(Personnage_principale joueur, int numArbre) {
-        switch (numArbre) {
-            case 1 -> joueur.activerArbre1();
-            case 2 -> joueur.activerArbre2();
-            case 3 -> joueur.activerArbre3();
-            case 4 -> joueur.activerArbre4();
-            case 5 -> joueur.activerArbre5();
-            case 6 -> joueur.activerArbre6();
-            case 7 -> joueur.activerArbre7();
-            default -> joueur.activerArbre8();
-        }
-    }
-
     /** Debloque un noeud de type competence speciale/ultime (avec activation automatique). Retourne le message resultat. */
     public static String debloquerNoeudCompetence(GameContext ctx,
                                            ArbreCompetences arbre,
@@ -188,17 +174,21 @@ public class MenuAbilite {
         String resultat = arbre.tenterDebloquer(numArbre, indexNoeud);
         if (!resultat.equals("OK")) return resultat;
 
-        activerArbre(joueur, numArbre);
+        // Ne pas equiper automatiquement la nouvelle competence : le joueur choisit quand
+        // l'activer depuis le menu Formation (bouton "Changer la competence").
         StringBuilder sb = new StringBuilder();
         sb.append("Nouvelle ").append(typeMot).append(" debloquee : ").append(nomComp).append(" !\n");
-        sb.append("Votre attaque ").append(typeMot).append(" est maintenant remplacee par ").append(nomComp).append(".");
+        sb.append("Retrouvez-la dans le menu Formation pour l'equiper.");
 
         if (numArbre == 3) {
             RangJoueur rangJoueur = ctx.rangJoueur;
             if (rangJoueur.getRang() == RangJoueur.Rang.C) {
-                rangJoueur.setRang(RangJoueur.Rang.B);
-                sb.append("\nFelicitations ! L'Arbre 3 complete vous fait passer Rang B !\n");
-                sb.append("Multiplicateur de stats : x").append(String.format("%.2f", rangJoueur.getMultiplicateur()));
+                String resultatRang = rangJoueur.tenterMonteeRang(
+                        joueur.getNiveau(), joueur.getArbreCompetences(), ctx.gestionnaireExamenS);
+                if (resultatRang.equals("OK")) {
+                    sb.append("\nFelicitations ! Vous passez Rang B !\n");
+                    sb.append("Multiplicateur de stats : x").append(String.format("%.2f", rangJoueur.getMultiplicateur()));
+                }
             }
         }
         sb.append("\nPoints restants : ").append(arbre.getPointsDisponibles());

@@ -17,8 +17,8 @@ import java.util.List;
  * @author Lucas
  */
 public class EnnemiGrayStage4 extends PersonnageBase {
-    public EnnemiGrayStage4() {this(11);}
-    
+    public EnnemiGrayStage4() {this(30);}
+
     public EnnemiGrayStage4(int niveau){
         this.nom = "Gray";
         this.type = "Elementaliste";
@@ -28,10 +28,10 @@ public class EnnemiGrayStage4 extends PersonnageBase {
          double mult = 1.20 * 1.25; // 1.25 = bonus Elite
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 450.0 * mult * niv;
-        this.attaque = 75.0 * mult * niv;
-        this.defense = 25.0 * mult * niv;
-        this.vitesse =  120.0 * mult * vit;
+        this.vie     = 220.0 * mult * niv;
+        this.attaque = 300.0 * mult * niv;
+        this.defense = 140.0 * mult * niv;
+        this.vitesse =  170.0 * mult * vit;
 
         this.taux_critiques    = 0.15;
         this.degat_critiques   = 1.30;
@@ -89,7 +89,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 }
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Lance de glace — Inflige 120% ATK a la cible.");
+        System.out.println("Lance de glace — Inflige 110% ATK a la cible.");
     }
 
     @Override

@@ -31,6 +31,15 @@ public class GestionnaireExamenS {
 
     public boolean estDejaReussi(int stage)     { return dejaReussi[stage]; }
 
+    /** Vrai si les stages 1 a n sont tous deja reussis (utilise pour les conditions de
+     *  montee de rang, voir RangJoueur). */
+    public boolean auMoinsReussiJusqua(int n) {
+        for (int i = 1; i <= n && i <= NB_STAGES; i++) {
+            if (!dejaReussi[i]) return false;
+        }
+        return true;
+    }
+
     public boolean estFaitAujourdhui(int stage) {
         mettreAJour();
         return faitAujourdhui[stage];

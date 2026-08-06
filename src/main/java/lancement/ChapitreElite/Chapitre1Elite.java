@@ -165,21 +165,21 @@ public class Chapitre1Elite implements ChapitreElite {
             case 7  -> { ennemis.add(new EnnemiEvaro(niveau)); ennemis.add(new EnnemiBora(niveau));
                          ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage2DPS(Variante.CHAPITRE_1_ELITE, niveau));
                          ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau));
-                         yield new Stage(7, "Retour a fairy tail Elite ", 4400, 0, ennemis); }
+                         yield new Stage(7, "Retour a fairy tail Elite ", 4400, 0, ennemis, EquipementFactory.torseC()); }
 
 
             case 8  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1_ELITE, niveau));
                          ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_1_ELITE, niveau));
-                         yield new Stage(8, "Eisen Wald Elite", 5200, 0, ennemis); }
+                         yield new Stage(8, "Eisen Wald Elite", 5200, 0, ennemis, EquipementFactory.couvreCheC()); }
 
 
             case 9  -> { ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiEligor(niveau));
                          ennemis.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1_ELITE, niveau)); ennemis.add(new EnnemiMage6Debuff(Variante.CHAPITRE_1_ELITE, niveau));
-                         yield new Stage(9, "Eligor le mage de vent Elite", 6200, 0, ennemis); }
+                         yield new Stage(9, "Eligor le mage de vent Elite", 6200, 0, ennemis, EquipementFactory.bottesC()); }
 
             case 10 -> { ennemis.add(new EnnemiLullaby(niveau));
 
-                         yield new Stage(10, "La flute maudite Elite", 8000, 0, ennemis); }
+                         yield new Stage(10, "La flute maudite Elite", 8000, 0, ennemis, EquipementFactory.jambieresC()); }
             default -> new Stage(numero, "???", 0, 0, ennemis);
         };
 

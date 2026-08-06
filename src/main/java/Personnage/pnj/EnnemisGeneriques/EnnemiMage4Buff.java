@@ -11,12 +11,12 @@ public class EnnemiMage4Buff extends PersonnageBase {
         this.nom    = "Sorcier de la prophétie";
         this.niveau = niveau;
         this.type="Elementaliste";
-        this.role   = "DPS";
+        this.role   = "Support";
         this.rarete = "C";
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        double mult = variante.getMultiplicateur();
+        double mult = variante.getMultiplicateur() * Variante.multiplicateurRang(niveau);
         // Ecart historique : le Chapitre 1 avait une attaque de base plus faible (70) que
         // toutes les autres variantes (92). Preserve tel quel plutot que corrige.
         double attaqueBase = (variante == Variante.CHAPITRE_1) ? 70.0 : 92.0;

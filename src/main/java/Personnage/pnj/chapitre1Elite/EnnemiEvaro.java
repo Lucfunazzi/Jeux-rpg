@@ -29,7 +29,8 @@ public class EnnemiEvaro extends PersonnageBase {
         double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 280.0 * multElite * niv;
+        // PV releves (~x3.2, meme ratio que la version non-elite).
+        this.vie     = 900.0 * multElite * niv;
         this.attaque =  55.0 * multElite * niv;
         this.defense =  75.0 * multElite * niv;
         this.vitesse =  50.0 * multElite * vit;

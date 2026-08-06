@@ -697,6 +697,16 @@ public class EquipementFactory {
     public static Equipement creerEquipement(String nom, Equipement.Slot slot,
                                              Equipement.TypeArme typeArme, Equipement.Rarete rarete) {
         return switch (nom) {
+            // Rang B
+            case "Baton Renforce"       -> batonB();
+            case "Gants Renforces"      -> gantsArmeB();
+            case "Lance Renforcee"      -> lanceB();
+            case "Fouet Renforce"       -> fouetB();
+            case "Heaume Renforce"      -> couvreCheB();
+            case "Cuirasse Renforcee"   -> torseB();
+            case "Gantelets Renforces"  -> mainsB();
+            case "Jambières Renforcees" -> jambieresB();
+            case "Bottes Renforcees"    -> bottesB();
             // Rang A
             case "Baton de Foudre"    -> batonA();
             case "Gants de Titane"    -> gantsArmeA();

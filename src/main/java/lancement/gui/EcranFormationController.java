@@ -59,9 +59,21 @@ public class EcranFormationController {
             ligneSupportBox.getChildren().setAll(supports);
         }
 
+        Label detailSpeciale = new Label(GuiVisuels.capturerDescription(ctx.joueur::descriptionAttaqueSpeciale));
+        detailSpeciale.getStyleClass().add("item-detail");
+        detailSpeciale.setWrapText(true);
+        detailSpeciale.setMaxWidth(320);
+
+        Label detailUltime = new Label(GuiVisuels.capturerDescription(ctx.joueur::descriptionAttaqueUltime));
+        detailUltime.getStyleClass().add("item-detail");
+        detailUltime.setWrapText(true);
+        detailUltime.setMaxWidth(320);
+
         competenceBox.getChildren().setAll(
                 GuiVisuels.creerFicheStat("✦", "Compétence spéciale active", nomCompetenceActive()),
-                GuiVisuels.creerFicheStat("★", "Attaque ultime active", nomUltimeActive()));
+                detailSpeciale,
+                GuiVisuels.creerFicheStat("★", "Attaque ultime active", nomUltimeActive()),
+                detailUltime);
 
         List<GestionnaireLiens.Lien> liens = f.getLiensActifs();
         if (liens.isEmpty()) {
@@ -130,6 +142,27 @@ public class EcranFormationController {
     /** Numeros des arbres qui debloquent un ultime alternatif. */
     private static final int[] ARBRES_ULTIME = {4, 8};
 
+    /** Texte de description d'une competence/ultime alternative pour un numero d'arbre donne
+     *  (1/2/3/5/6/7 = specials, 4/8 = ultimes), capture depuis les methodes description*()
+     *  existantes (qui impriment sur la console) via GuiVisuels.capturerDescription. */
+    private String descriptionArbre(int numArbre) {
+        var comp = ctx.joueur.getCompetencesChoisie();
+        if (comp == null) return "";
+        return GuiVisuels.capturerDescription(() -> {
+            switch (numArbre) {
+                case 1 -> comp.descriptionCompetenceArbre();
+                case 2 -> comp.descriptionCompetenceArbre2();
+                case 3 -> comp.descriptionCompetenceArbre3();
+                case 5 -> comp.descriptionCompetenceArbre5();
+                case 6 -> comp.descriptionCompetenceArbre6();
+                case 7 -> comp.descriptionCompetenceArbre7();
+                case 4 -> comp.descriptionUltimeArbre4();
+                case 8 -> comp.descriptionUltimeArbre8();
+                default -> {}
+            }
+        });
+    }
+
     @FXML
     private void onChangerCompetence(ActionEvent event) {
         Personnage_principale joueur = ctx.joueur;
@@ -141,21 +174,20 @@ public class EcranFormationController {
                 ? joueur.getCompetencesChoisie().getNomsCompetences()[joueur.getChoixComp() - 1]
                 : "Competence originale";
 
+        // Les competences alternatives non debloquees restent masquees (pas de spoil) : seule
+        // l'option originale et les arbres deja completes apparaissent dans la liste.
         List<Integer> options = new ArrayList<>();
         options.add(0);
-        for (int numArbre : ARBRES_SPECIALE) options.add(numArbre);
+        for (int numArbre : ARBRES_SPECIALE) if (arbre.getNoeud(numArbre, 10).isDebloque()) options.add(numArbre);
 
         Integer choix = GuiVisuels.choisirParmiCartes("Compétence spéciale", options,
                 numArbre -> carteCompetenceChoix(numArbre, nomOriginal,
-                        n -> MenuAbilite.getNomCompetence(classe, n),
-                        n -> arbre.getNoeud(n, 10).isDebloque(), actuelle));
+                        n -> MenuAbilite.getNomCompetence(classe, n), actuelle));
         if (choix == null) return;
 
         if (choix == 0) {
             joueur.setCompetenceSpecialeActive(0);
             info("Competence", "Competence active : " + nomOriginal);
-        } else if (!arbre.getNoeud(choix, 10).isDebloque()) {
-            info("Competence", "Competence verrouillee - completez l'arbre " + choix + " d'abord.");
         } else {
             joueur.setCompetenceSpecialeActive(choix);
             info("Competence", "Competence active : " + MenuAbilite.getNomCompetence(classe, choix));
@@ -176,19 +208,16 @@ public class EcranFormationController {
 
         List<Integer> options = new ArrayList<>();
         options.add(0);
-        for (int numArbre : ARBRES_ULTIME) options.add(numArbre);
+        for (int numArbre : ARBRES_ULTIME) if (arbre.getNoeud(numArbre, 10).isDebloque()) options.add(numArbre);
 
         Integer choix = GuiVisuels.choisirParmiCartes("Attaque ultime", options,
                 numArbre -> carteCompetenceChoix(numArbre, nomOriginal,
-                        n -> Personnage_principale.getNomUltimeArbre(classe, n),
-                        n -> arbre.getNoeud(n, 10).isDebloque(), actuelle));
+                        n -> Personnage_principale.getNomUltimeArbre(classe, n), actuelle));
         if (choix == null) return;
 
         if (choix == 0) {
             joueur.setCompetenceUltimeActive(0);
             info("Ultime", "Ultime active : " + nomOriginal);
-        } else if (!arbre.getNoeud(choix, 10).isDebloque()) {
-            info("Ultime", "Ultime verrouillee - completez l'arbre " + choix + " d'abord.");
         } else {
             joueur.setCompetenceUltimeActive(choix);
             info("Ultime", "Ultime active : " + Personnage_principale.getNomUltimeArbre(classe, choix));
@@ -275,32 +304,42 @@ public class EcranFormationController {
     }
 
     /**
-     * Carte d'un choix de competence/ultime dans le selecteur.
+     * Carte d'un choix de competence/ultime dans le selecteur (uniquement les options
+     * debloquees y figurent deja, voir onChangerCompetence/onChangerUltime).
      * @param numArbre 0 = option originale, sinon numero de l'arbre (1-8)
      * @param nomDe    resout le nom affiche pour un numero d'arbre donne
-     * @param dispoDe  indique si le noeud 10 de cet arbre est debloque
      */
     private Node carteCompetenceChoix(int numArbre, String nomOriginal,
-            java.util.function.IntFunction<String> nomDe,
-            java.util.function.IntPredicate dispoDe, int actuelle) {
+            java.util.function.IntFunction<String> nomDe, int actuelle) {
         String nom;
         String statut;
+        String description;
         if (numArbre == 0) {
             nom = nomOriginal + " (originale)";
             statut = actuelle == 0 ? "ACTIVE" : "";
+            description = "";
         } else {
-            boolean dispo = dispoDe.test(numArbre);
             nom = nomDe.apply(numArbre) + " (Arbre " + numArbre + ")";
-            statut = !dispo ? "VERROUILLÉ" : actuelle == numArbre ? "ACTIVE" : "";
+            statut = actuelle == numArbre ? "ACTIVE" : "";
+            description = descriptionArbre(numArbre);
         }
 
         Label nomLabel = new Label(nom);
         nomLabel.getStyleClass().add("item-nom");
 
-        HBox carte = new HBox(10, nomLabel);
+        VBox texte = new VBox(2, nomLabel);
+        if (!description.isEmpty()) {
+            Label descLabel = new Label(description);
+            descLabel.getStyleClass().add("item-detail");
+            descLabel.setWrapText(true);
+            descLabel.setMaxWidth(320);
+            texte.getChildren().add(descLabel);
+        }
+
+        HBox carte = new HBox(10, texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("ACTIVE".equals(statut) ? "carte-item-joueur" : "carte-item");
-        carte.setPrefWidth(280);
+        carte.setPrefWidth(340);
 
         if (!statut.isEmpty()) {
             Label statutLabel = new Label(statut);

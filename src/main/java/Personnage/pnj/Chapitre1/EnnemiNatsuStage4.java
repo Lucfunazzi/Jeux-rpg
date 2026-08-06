@@ -95,7 +95,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Poings d'acier du dragon de feu — inflige 130% ATK a une cible, "
+        System.out.println("Poings d'acier du dragon de feu — inflige 250% ATK a une cible, "
                 + "30% de chance d'etourdir pendant 1 tour, "
                 + "applique Brulure (10% PV/tour) pendant 2 tours, "
                 + "gagne 15% d'attaque pendant 2 tours.");
@@ -103,7 +103,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Hurlement du dragon de feu — inflige 160% ATK a tous les ennemis "
+        System.out.println("Hurlement du dragon de feu — inflige 300% ATK a tous les ennemis "
                 + "et applique Brulure intense (12% PV/tour) pendant 3 tours.");
     }
 }

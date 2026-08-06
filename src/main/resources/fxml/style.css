@@ -10,7 +10,7 @@
 
 .menu-bouton {
     -fx-font-size: 16px;
-    -fx-pref-width: 220px;
+    -fx-min-width: 220px;
     -fx-background-color: #2e2e42;
     -fx-text-fill: white;
     -fx-background-radius: 6;

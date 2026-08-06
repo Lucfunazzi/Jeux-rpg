@@ -18,14 +18,17 @@ import lancement.GameContext;
 import lancement.Gestionnaires.GestionnaireDonjon.Difficulte;
 import lancement.Gestionnaires.GestionnaireDonjon.TypeDonjon;
 import lancement.Menus.MenuDonjon;
+import Personnage.PersonnageBase;
 
 public class EcranDifficulteDonjonController {
 
     private GameContext ctx;
     private TypeDonjon type;
     private Runnable onRetour;
+    private final MenuDonjon menuDonjon = new MenuDonjon();
 
     @FXML private Label titreLabel;
+    @FXML private Label labelCombativiteJoueur;
     @FXML private VBox difficultesBox;
 
     public void initData(GameContext ctx, TypeDonjon type, Runnable onRetour) {
@@ -33,6 +36,11 @@ public class EcranDifficulteDonjonController {
         this.type = type;
         this.onRetour = onRetour;
         titreLabel.setText("DONJON " + MenuDonjon.nomType(type).toUpperCase());
+        double combativiteJoueur = ctx.formation.getEquipe().stream()
+                .filter(p -> p != null)
+                .mapToDouble(PersonnageBase::getCombativite)
+                .sum();
+        labelCombativiteJoueur.setText("Ta combativité : " + GuiVisuels.formaterMontant(combativiteJoueur));
         rafraichir();
     }
 
@@ -62,7 +70,12 @@ public class EcranDifficulteDonjonController {
         detail.setWrapText(true);
         detail.setMaxWidth(320);
 
-        VBox texte = new VBox(2, nom, detail);
+        double combativiteRecommandee = menuDonjon.combativiteRecommandee(type, diff, ctx);
+        Label combativite = new Label("Combativité recommandée : "
+                + GuiVisuels.formaterMontant(combativiteRecommandee));
+        combativite.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, detail, combativite);
         HBox carte = new HBox(texte);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");

@@ -24,7 +24,9 @@ public class EnnemiYuka extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 230.0 * niv;
+        // PV releves (~x4.1) : boss titulaire du stage face a Natsu (invite ~1100 PV), sinon
+        // combat expedie en un ou deux tours.
+        this.vie     = 950.0 * niv;
         this.attaque =  80.0 * niv;
         this.defense =  65.0 * niv;
         this.vitesse =  70.0 * vit;

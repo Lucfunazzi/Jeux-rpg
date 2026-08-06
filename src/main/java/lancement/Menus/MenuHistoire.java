@@ -162,11 +162,13 @@ public class MenuHistoire {
         System.out.printf("Etoiles obtenues : %d / 30%n", ge.compterEtoiles(chapitre, elite));
         System.out.println();
 
-        String[] labelsRecomp = {
-            "2x Parchemin Tirage Ordinaire",
-            "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
-            "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
-        };
+        String[] labelsRecomp = elite
+            ? new String[] { "30 coupons", "50 coupons", "100 coupons" }
+            : new String[] {
+                "2x Parchemin Tirage Ordinaire",
+                "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
+                "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
+            };
 
         boolean unDisponible = false;
         for (int i = 1; i <= 3; i++) {
@@ -219,6 +221,11 @@ public class MenuHistoire {
                 System.out.printf("%n>> +%d Parchemin(s) de Tirage Elite !%n", recomp.quantite());
                 System.out.printf("   Total : %d parchemins elite.%n",
                         ctx.menuTirage.getParcheminElite());
+            }
+            case COUPONS -> {
+                ctx.joueur.ajouterCoupons(recomp.quantite());
+                System.out.printf("%n>> +%d coupons !%n", recomp.quantite());
+                System.out.printf("   Total : %d coupons.%n", ctx.joueur.getCoupons());
             }
         }
         for (GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {

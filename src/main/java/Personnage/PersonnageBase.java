@@ -427,6 +427,14 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         this.vitesseBase = vitesse;
     }
 
+    /** Score de "combativite" (puissance de combat globale), utilise en Arene, Donjon et
+     *  Examen de Rang S pour donner au joueur une idee rapide de ses chances face a un
+     *  adversaire. Somme ponderee des stats principales (PV compte pour moins car il ne
+     *  varie pas dans les mêmes proportions que les autres stats). */
+    public double getCombativite() {
+        return getVieMax() * 0.5 + getAttaque() * 2.0 + getDefense() * 2.0 + getVitesse();
+    }
+
     @Override
     public double getTauxCritique() {
         BuffTauxCritique buff = getEffet(BuffTauxCritique.class);

@@ -22,7 +22,9 @@ public class EnnemiMiliana extends PersonnageBase {
         double mult = 1.00;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 360.0 * mult * niv;
+        // PV releves (~x2.9) : villaine titulaire du stage 3 ("sauver Happy") face a Natsu
+        // (invite ~3600 PV), sinon combat expedie en un ou deux tours.
+        this.vie     = 1050.0 * mult * niv;
         this.attaque =  80.0 * mult * niv;
         this.defense =  95.0 * mult * niv;
         this.vitesse = 145.0 * mult * vit;

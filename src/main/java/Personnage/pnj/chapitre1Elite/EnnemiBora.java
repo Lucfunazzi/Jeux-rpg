@@ -26,7 +26,8 @@ public class EnnemiBora extends PersonnageBase {
         double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 150.0 * multElite * niv;
+        // PV releves (~x4.4, meme ratio que la version non-elite) pour eviter un combat expedie.
+        this.vie     = 660.0 * multElite * niv;
         this.attaque =  75.0 * multElite * niv;
         this.defense =  25.0 * multElite * niv;
         this.vitesse =  75.0 * multElite * vit;

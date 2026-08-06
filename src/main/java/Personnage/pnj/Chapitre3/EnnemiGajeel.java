@@ -28,7 +28,10 @@ public class EnnemiGajeel extends PersonnageBase {
         // mise a l'echelle pour permettre la reutilisation en Chapitre 3 Elite.
         double niv = Math.pow(1.05, niveau - 30);
         double vit = Math.pow(1.03, niveau - 30);
-        this.vie = 580 * multiplicateurRarete * niv;
+        // PV releves (~x4) : boss titulaire du stage face a Natsu (invite ~1600 PV). La formule
+        // niv est ancree sur le niveau 30 alors que le stage reel tourne vers le niveau 18,
+        // ce qui divisait deja les PV de base par ~2 avant meme ce correctif.
+        this.vie = 2300 * multiplicateurRarete * niv;
         this.attaque = 220 * multiplicateurRarete * niv;
         this.defense = 130 * multiplicateurRarete * niv;
         this.vitesse = 110 * multiplicateurRarete * vit;

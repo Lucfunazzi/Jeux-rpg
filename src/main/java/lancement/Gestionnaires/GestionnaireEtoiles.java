@@ -29,7 +29,8 @@ public class GestionnaireEtoiles {
     /** Types de récompense des coffres étoiles. */
     public enum TypeRecompenseCoffre {
         PARCHEMIN_ORDINAIRE,
-        PARCHEMIN_ELITE
+        PARCHEMIN_ELITE,
+        COUPONS
     }
 
     /** Recompense supplementaire generique, ajoutee a l'inventaire comme un Materiau. */
@@ -43,6 +44,15 @@ public class GestionnaireEtoiles {
                 List.of(new ItemBonus(CristalTranscendance.NOM, 1))),
         new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ELITE, 1,                    // coffre 3 (le plus dur)
                 List.of(new ItemBonus(ParcheminAscension.NOM, 1)))
+    };
+
+    /** Recompenses des coffres etoiles pour les chapitres Elite : des coupons plutot que des
+     *  parchemins de tirage (les chapitres Elite recompensent deja fragments/equipement via
+     *  leurs propres drops de stage — voir ChapitreNElite). */
+    private static final RecompenseCoffre[] RECOMPENSES_ELITE = {
+        new RecompenseCoffre(TypeRecompenseCoffre.COUPONS, 30, List.of()),  // coffre 1
+        new RecompenseCoffre(TypeRecompenseCoffre.COUPONS, 50, List.of()),  // coffre 2
+        new RecompenseCoffre(TypeRecompenseCoffre.COUPONS, 100, List.of()), // coffre 3 (le plus dur)
     };
 
     // étoiles par stage : clé = "C1S3", "C1E5", "C2S7"...
@@ -110,14 +120,21 @@ public class GestionnaireEtoiles {
         if (!coffreDisponible(chapitre, elite, numeroCoffre)) return null;
         coffresClaimes.put(cleCoffre(chapitre, elite, numeroCoffre), true);
 
-        RecompenseCoffre r = RECOMPENSES[numeroCoffre - 1];
+        RecompenseCoffre r = getRecompenseCoffre(elite, numeroCoffre);
         for (ItemBonus b : r.itemsBonus()) inventaire.ajouterMateriau(b.nom(), b.quantite());
         return r;
     }
 
+    /** @deprecated utiliser {@link #getRecompenseCoffre(boolean, int)} — conserve pour compatibilite,
+     *  suppose un chapitre normal (non Elite). */
+    @Deprecated
     public RecompenseCoffre getRecompenseCoffre(int numeroCoffre) {
+        return getRecompenseCoffre(false, numeroCoffre);
+    }
+
+    public RecompenseCoffre getRecompenseCoffre(boolean elite, int numeroCoffre) {
         if (numeroCoffre < 1 || numeroCoffre > 3) return null;
-        return RECOMPENSES[numeroCoffre - 1];
+        return elite ? RECOMPENSES_ELITE[numeroCoffre - 1] : RECOMPENSES[numeroCoffre - 1];
     }
 
     public int getSeuilCoffre(int numeroCoffre) {

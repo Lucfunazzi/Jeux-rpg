@@ -2,12 +2,15 @@ package lancement.Menus;
 
 import Combat.Combat;
 import lancement.GameContext;
+import lancement.RangJoueur;
+import Joueur.ArbreCompetences;
 import Joueur.Personnage_principale;
 import Joueur.Elementaliste;
 import Joueur.Chevalier;
 import Joueur.ChasseurDeDragon;
 import Joueur.Invocateur;
 import Joueur.Competences;
+import Equipement.EquipementFactory;
 import Personnage.PersonnageBase;
 import lancement.Gestionnaires.AreneData;
 import lancement.Gestionnaires.GestionnaireArene;
@@ -185,7 +188,7 @@ public class MenuArene {
         // Ajouter le personnage principal IA (5ème membre) au même niveau que l'équipe
         int niveauEquipeAdv = Math.max(1, adversaire.getNiveauMoyenEquipe());
         PersonnageBase principalAdverse = creerPersonnagePrincipalIA(
-            adversaire.getPersonnagePrincipalNom(), niveauEquipeAdv
+            adversaire.getPersonnagePrincipalNom(), niveauEquipeAdv, adversaire.getRang()
         );
         if (principalAdverse != null) {
             equipeAdverse.add(principalAdverse);
@@ -222,8 +225,12 @@ public class MenuArene {
      * Le marqueur est "PP_Chevalier", "PP_Chasseur de Dragon", "PP_Mage" ou "PP_Constellationniste".
      * Pour les vrais joueurs, on essaie creerPersonnage() normalement.
      */
-    /** Crée le PP adverse IA au bon niveau et avec les compétences exclusives à sa classe. */
-    public static PersonnageBase creerPersonnagePrincipalIA(String marqueur, int niveauCible) {
+    /** Crée le PP adverse IA au bon niveau et avec les compétences exclusives à sa classe.
+     *  @param rangArene position au classement (1 = meilleur), utilisee pour donner au PP un
+     *  rang de stats et un nombre d'arbres de competences debloques coherents avec son niveau
+     *  de classement (sans quoi ce PP restait toujours plus faible que ses 4 coequipiers, qui
+     *  eux sont geares et montes de niveau via AreneData.construireEquipe). */
+    public static PersonnageBase creerPersonnagePrincipalIA(String marqueur, int niveauCible, int rangArene) {
         if (marqueur == null || !marqueur.startsWith("PP_")) return null;
 
         String classe = marqueur.replace("PP_", "");
@@ -241,10 +248,45 @@ public class MenuArene {
         pp.setChoixClasses(classe);
         pp.setCompetencesChoisie(comp);
 
+        // Rang IA independant du rang du vrai joueur : contexte minimal ne portant que le
+        // rangJoueur necessaire au multiplicateur de stats (getMultiplicateurRang()).
+        GameContext ctxIA = new GameContext();
+        ctxIA.rangJoueur = new RangJoueur();
+        ctxIA.rangJoueur.setRang(rangJoueurPourRangArene(rangArene));
+        pp.setGameContext(ctxIA);
+
+        // Debloque completement les N premiers arbres de competences selon le classement, ce
+        // qui donne aux PP les mieux classes l'acces a des specials/ultimes alternatifs (arbres
+        // 2/3/5/6/7 = special alternative, 4/8 = ultime alternative).
+        ArbreCompetences arbre = pp.getArbreCompetences();
+        int nbArbres = nombreArbresDeblo(rangArene);
+        for (int numArbre = 1; numArbre <= nbArbres; numArbre++) {
+            for (int i = 1; i <= 10; i++) arbre.getNoeud(numArbre, i).debloquer();
+        }
+
         // Monter le PP au même niveau que l'équipe adverse
         while (pp.getNiveau() < niveauCible) pp.monterDeNiveauSilencieux();
 
+        // Equipement fantome, comme les 4 coequipiers (AreneData.construireEquipe) : sans ca,
+        // le PP adverse restait toujours nu face a des coequipiers geares.
+        EquipementFactory.equiperSetStandard(pp, EquipementFactory.rareteEnnemiPourRangArene(rangArene));
+
         return pp;
+    }
+
+    private static RangJoueur.Rang rangJoueurPourRangArene(int rangArene) {
+        if (rangArene <= 4)  return RangJoueur.Rang.S;
+        if (rangArene <= 24) return RangJoueur.Rang.A;
+        if (rangArene <= 59) return RangJoueur.Rang.B;
+        return RangJoueur.Rang.C;
+    }
+
+    private static int nombreArbresDeblo(int rangArene) {
+        if (rangArene <= 4)  return 4;
+        if (rangArene <= 9)  return 3;
+        if (rangArene <= 24) return 2;
+        if (rangArene <= 49) return 1;
+        return 0;
     }
 
     // ── Coffre journalier ─────────────────────────────────────────────────

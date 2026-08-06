@@ -24,7 +24,9 @@ public class EnnemiBora extends PersonnageBase {
 
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 250.0 * niv;
+        // PV releves (~x4.4) pour que ce combat de boss d'histoire ne se regle pas en un ou
+        // deux tours face a l'equipe du joueur (meme logique que Cherry, cf. Chapitre2).
+        this.vie     = 1100.0 * niv;
         this.attaque =  85.0 * niv;
         this.defense =  25.0 * niv;
         this.vitesse =  75.0 * vit;
@@ -42,7 +44,7 @@ public class EnnemiBora extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Bague de charme"};
+        return new String[]{"Coup de poings", "Fouet de la Protubérance", "Typhon de la Protubérance"};
     }
 
     @Override
@@ -67,7 +69,7 @@ public class EnnemiBora extends PersonnageBase {
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Bora utilise Bague de charme  !");
+        log.add("Bora utilise Typhon de la Protubérance !");
 
         PersonnageBase cible = Combat.choisirCible(this, equipeEnnemie);
         if (cible == null) return; // sécurité : tous KO
@@ -86,6 +88,6 @@ public class EnnemiBora extends PersonnageBase {
         System.out.println("Fouet de la Protubérance — Inflige 120% ATK à un ennemi, augmente sa précision de 100% pendatns 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Bague de Charme— Inflige 80% ATK à un ennemi avec 30% d'endormir la cible.");
+        System.out.println("Typhon de la Protubérance — Inflige 80% ATK à un ennemi avec 30% d'endormir la cible pendant 1 tour.");
     }
 }

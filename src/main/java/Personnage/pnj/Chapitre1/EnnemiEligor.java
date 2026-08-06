@@ -25,7 +25,9 @@ public class EnnemiEligor extends PersonnageBase {
         double mult = 1.20;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 270.0 * mult * niv;
+        // PV releves (~x3.15) : boss titulaire du stage 9, doit rester tanky face a une equipe
+        // deja renforcee par plusieurs niveaux de progression.
+        this.vie     = 850.0 * mult * niv;
         this.attaque = 100.0 * mult * niv;
         this.defense =  65.0 * mult * niv;
         this.vitesse =  90.0 * mult * vit;

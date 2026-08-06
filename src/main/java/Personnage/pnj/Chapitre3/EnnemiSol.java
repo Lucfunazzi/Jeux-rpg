@@ -30,7 +30,9 @@ public class EnnemiSol extends PersonnageBase {
         double mult = 1.30;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 320.0 * mult * niv;
+        // PV releves (~x4) : boss titulaire du stage face a Elfman (invite ~1900 PV), sinon
+        // combat expedie en un ou deux tours.
+        this.vie     = 1250.0 * mult * niv;
         this.attaque =  85.0 * mult * niv;
         this.defense = 45.0 * mult * niv;
         this.vitesse =  70.0 * mult * vit;

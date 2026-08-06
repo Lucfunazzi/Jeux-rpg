@@ -129,11 +129,13 @@ public class EcranListeChapitresController {
 
     private void ouvrirCoffres(LigneChapitre ligne) {
         GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
-        String[] labelsRecomp = {
-            "2x Parchemin Tirage Ordinaire",
-            "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
-            "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
-        };
+        String[] labelsRecomp = ligne.elite()
+            ? new String[] { "30 coupons", "50 coupons", "100 coupons" }
+            : new String[] {
+                "2x Parchemin Tirage Ordinaire",
+                "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
+                "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
+            };
 
         List<Integer> options = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
@@ -159,6 +161,10 @@ public class EcranListeChapitresController {
             case PARCHEMIN_ELITE -> {
                 ctx.menuTirage.setParcheminElite(ctx.menuTirage.getParcheminElite() + recomp.quantite());
                 yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Elite !\nTotal : " + ctx.menuTirage.getParcheminElite();
+            }
+            case COUPONS -> {
+                ctx.joueur.ajouterCoupons(recomp.quantite());
+                yield "+ " + recomp.quantite() + " coupons !\nTotal : " + ctx.joueur.getCoupons();
             }
         });
         for (GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {

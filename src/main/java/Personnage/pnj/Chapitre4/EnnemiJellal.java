@@ -23,7 +23,10 @@ public class EnnemiJellal extends PersonnageBase {
         double mult = 1.50;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 360.0 * mult * niv;
+        // PV releves (~x3) : antagoniste final du chapitre (stages 8/9/10), face a une Erza
+        // deja specifiquement renforcee pour ce duel (~6800 PV) — sans ce correctif il tombait
+        // en un ou deux tours.
+        this.vie     = 1100.0 * mult * niv;
         this.attaque = 150.0 * mult * niv;
         this.defense = 100.0 * mult * niv;
         this.vitesse = 120.0 * mult * vit;

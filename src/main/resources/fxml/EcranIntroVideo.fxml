@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.media.MediaView?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="lancement.gui.EcranIntroVideoController"
+           style="-fx-background-color: black;">
+    <MediaView fx:id="mediaView" fitWidth="1280" fitHeight="720" preserveRatio="true"/>
+    <Button fx:id="boutonPasser" text="Passer" onAction="#onPasser" styleClass="menu-bouton"
+            StackPane.alignment="BOTTOM_RIGHT">
+        <StackPane.margin>
+            <Insets bottom="20" right="20"/>
+        </StackPane.margin>
+    </Button>
+</StackPane>

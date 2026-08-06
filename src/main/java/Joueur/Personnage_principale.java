@@ -282,6 +282,7 @@ public class Personnage_principale extends PersonnageBase {
     public void        setOr(double or)                     { this.or = or; }
     public int         getCoupons()                         { return coupons; }
     public void        setCoupons(int coupons)              { this.coupons = coupons; }
+    public void        ajouterCoupons(int montant)          { this.coupons += montant; }
     public String      getGenre()                           { return genre; }
     public void         setGenre(String genre)              { this.genre = genre; }
 

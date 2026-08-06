@@ -88,7 +88,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 }
     @Override
     public void descriptionAttaqueBase() {
-        System.out.println("Lance de glace — Inflige 120% ATK a la cible.");
+        System.out.println("Lance de glace — Inflige 110% ATK a la cible.");
     }
 
     @Override

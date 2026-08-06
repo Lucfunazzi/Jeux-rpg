@@ -52,4 +52,20 @@ public enum Variante {
         double base = Math.pow(1.05, getChapitre() - 1);
         return estElite() ? base * MULT_ELITE : base;
     }
+
+    // Memes paliers/valeurs que RangJoueur (C->B au niveau 30, B->A au niveau 50), pour que
+    // les ennemis generiques montent aussi de "rang" en meme temps que le joueur et ne
+    // deviennent pas trop faciles passe ces niveaux.
+    private static final int    NIVEAU_RANG_B = 30;
+    private static final int    NIVEAU_RANG_A = 50;
+    private static final double MULT_RANG_B   = 1.35;
+    private static final double MULT_RANG_A   = 1.80;
+
+    /** Multiplicateur de rang applique aux ennemis generiques selon le niveau du combat, en
+     *  plus du multiplicateur de chapitre/elite ci-dessus (memes paliers que RangJoueur). */
+    public static double multiplicateurRang(int niveau) {
+        if (niveau >= NIVEAU_RANG_A) return MULT_RANG_A;
+        if (niveau >= NIVEAU_RANG_B) return MULT_RANG_B;
+        return 1.00;
+    }
 }

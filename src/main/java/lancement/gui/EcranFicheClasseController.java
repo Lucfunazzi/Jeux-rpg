@@ -121,8 +121,8 @@ public class EcranFicheClasseController {
 
         try {
             Stage stage = (Stage) titreClasse.getScene().getWindow();
-            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranMenuPrincipal.fxml");
-            EcranMenuPrincipalController controller = loader.getController();
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranIntroVideo.fxml");
+            EcranIntroVideoController controller = loader.getController();
             controller.initData(ctx);
         } catch (IOException ex) {
             throw new RuntimeException(ex);

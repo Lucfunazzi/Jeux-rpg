@@ -58,6 +58,20 @@ public class GestionnaireTutoriel {
 
     /** Explications affichees a la premiere visite d'un sous-ecran (independant de la visite guidee du menu principal). */
     private static final java.util.Map<String, String> EXPLICATIONS_ECRAN = java.util.Map.ofEntries(
+        // Conseils de bienvenue affiches au tout premier lancement, avant la proposition de
+        // visite guidee. A completer librement au fil des retours joueurs.
+        java.util.Map.entry("Bienvenue",
+                "Quelques conseils pour bien demarrer :\n"
+              + "- Acceptez d'abord les quetes du menu Quetes : un stage reste verrouille tant que sa quete "
+              + "n'est pas acceptee.\n"
+              + "- Ne negligez pas l'arbre de Competences (menu Abilites) : il debloque vos attaques speciales "
+              + "et ultimes, et fait progresser votre Rang Joueur.\n"
+              + "- Equipez systematiquement vos personnages depuis l'Inventaire ou leur fiche : de l'equipement "
+              + "non porte n'apporte aucun bonus.\n"
+              + "- Le Donjon de ressources et l'Examen de Rang S se rejouent chaque jour : n'oubliez pas vos "
+              + "tentatives quotidiennes.\n"
+              + "- Consultez la combativite recommandee avant un combat (Arene, Donjon, Examen de Rang S) pour "
+              + "jauger vos chances."),
         java.util.Map.entry("Histoire",
                 "Chaque stage doit d'abord etre debloque en acceptant sa quete associee (menu Quetes). Terminez "
               + "tous les stages d'un chapitre pour debloquer sa version Elite, plus difficile, ainsi que le chapitre suivant."),
@@ -127,7 +141,19 @@ public class GestionnaireTutoriel {
         java.util.Map.entry("Etoiles & Fragments",
                 "Deux usages pour les fragments d'un personnage : recruter un personnage pas encore possede une "
               + "fois assez de fragments collectes, ou faire monter en etoiles (jusqu'a 5) un personnage deja "
-              + "recrute pour augmenter durablement sa puissance.")
+              + "recrute pour augmenter durablement sa puissance."),
+        java.util.Map.entry("Effets",
+                "Nouveaux effets de statut apparus dans les derniers chapitres :\n"
+              + "- Peur : la cible evite d'attaquer la source de la peur tant que l'effet dure.\n"
+              + "- Marque explosive : ne fait aucun degat immediat, puis explose au dernier tour et inflige des "
+              + "degats bases sur les PV max de la cible.\n"
+              + "- Symbiose : lie deux personnages ; une partie des degats et des soins subis par l'un est "
+              + "repercutee sur son partenaire.\n\n"
+              + "Nouvelles actions liees aux effets :\n"
+              + "- Transfert : renvoie tous vos effets negatifs actifs sur un ennemi.\n"
+              + "- Vol de Buff : derobe le premier effet positif actif sur un ennemi et se l'applique.\n"
+              + "- Purification : retire un ou plusieurs effets negatifs sur un allie ou toute l'equipe.\n"
+              + "- Gain de rage : augmente instantanement la rage d'un ou plusieurs allies.")
     );
 
     /** Texte d'explication de l'ecran donne, ou {@code null} si aucun n'est defini pour cette cle. */

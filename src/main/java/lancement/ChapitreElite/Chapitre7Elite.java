@@ -2,6 +2,8 @@ package lancement.ChapitreElite;
 
 import Equipement.Equipement;
 import Equipement.EquipementFactory;
+import Equipement.FragmentEquipement;
+import Equipement.GestionnaireFragments;
 import Personnage.PersonnageBase;
 import Personnage.pnj.EnnemisGeneriques.*;
 import Personnage.pnj.Chapitre7.*;
@@ -10,6 +12,7 @@ import lancement.Stage;
 import lancement.Chapitres.Chapitre7;
 import lancement.Chapitres.CourbeChapitres;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -19,7 +22,12 @@ import java.util.Scanner;
  */
 public class Chapitre7Elite implements ChapitreElite {
 
-    private static final int NB_STAGES = 10;
+    private static final int    NB_STAGES            = 10;
+    private static final double CHANCE_FRAGMENT      = 0.40;
+    private static final double CHANCE_FRAGMENT_BOSS = 0.70;
+
+    private static final GestionnaireFragments gestionnaireFragments = new GestionnaireFragments();
+
     private final boolean[] stagesDebloques = new boolean[NB_STAGES + 1];
     private final boolean[] stagesReussis   = new boolean[NB_STAGES + 1];
 
@@ -121,6 +129,19 @@ public class Chapitre7Elite implements ChapitreElite {
             } else {
                 System.out.println(">> Felicitations ! Vous avez termine le Chapitre 7 Elite !");
                 ctx.gestionnaireTitres.debloquerTitre("Vainqueur du Royaume d'Edolas");
+            }
+
+            double chanceFragment = (numero == NB_STAGES) ? CHANCE_FRAGMENT_BOSS : CHANCE_FRAGMENT;
+            if (Math.random() < chanceFragment) {
+                // Fragments rang A (Chapitres 6-7 Elite).
+                List<FragmentEquipement> catalogue = gestionnaireFragments.getCatalogue().stream()
+                        .filter(f -> f.getRarete() == Equipement.Rarete.A)
+                        .toList();
+                FragmentEquipement fragment = catalogue.get((int) (Math.random() * catalogue.size()));
+                ctx.inventaire.ajouterMateriau(fragment.getNomFragment(), 1);
+                int total = ctx.inventaire.getQuantiteMateriau(fragment.getNomFragment());
+                System.out.printf("   ✦ Fragment obtenu : %s (%d/%d)%n",
+                        fragment.getNomFragment(), total, fragment.getQuantiteRequise());
             }
 
             ctx.gestionnaireQuetes.notifierOrGagne(stage.getRecompenseOr());

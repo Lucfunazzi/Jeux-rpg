@@ -101,7 +101,7 @@ public class EcranRangTitresController {
 
     private void onMonteeRang() {
         Personnage_principale joueur = ctx.joueur;
-        String resultat = ctx.rangJoueur.tenterMonteeRang(joueur.getNiveau(), joueur.getArbreCompetences());
+        String resultat = ctx.rangJoueur.tenterMonteeRang(joueur.getNiveau(), joueur.getArbreCompetences(), ctx.gestionnaireExamenS);
 
         if (resultat.equals("OK")) {
             info("Rang", "Felicitations ! Vous etes maintenant rang " + ctx.rangJoueur.getRangNom() + " !\n"

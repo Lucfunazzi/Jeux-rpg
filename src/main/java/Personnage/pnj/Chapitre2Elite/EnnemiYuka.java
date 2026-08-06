@@ -25,7 +25,8 @@ public class EnnemiYuka extends PersonnageBase {
         double multElite = 1.25;
         double niv = Math.pow(1.05, niveau - 1);
         double vit = Math.pow(1.03, niveau - 1);
-        this.vie     = 230.0 * multElite * niv;
+        // PV releves (~x4.1, meme ratio que la version non-elite).
+        this.vie     = 950.0 * multElite * niv;
         this.attaque =  80.0 * multElite * niv;
         this.defense =  65.0 * multElite * niv;
         this.vitesse =  70.0 * multElite * vit;

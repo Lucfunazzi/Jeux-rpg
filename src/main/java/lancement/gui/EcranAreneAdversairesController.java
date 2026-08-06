@@ -30,6 +30,7 @@ public class EcranAreneAdversairesController {
     private Runnable onRetour;
 
     @FXML private VBox adversairesBox;
+    @FXML private Label labelCombativiteJoueur;
 
     public void initData(GameContext ctx, GestionnaireArene gestionnaireArene, AreneData joueurArene, Runnable onRetour) {
         this.ctx = ctx;
@@ -43,9 +44,26 @@ public class EcranAreneAdversairesController {
         adversairesBox.getChildren().clear();
         List<AreneData> adversaires = gestionnaireArene.getAdversairesVisibles(joueurArene.getRang());
 
+        double combativiteJoueur = ctx.formation.getEquipe().stream()
+                .filter(p -> p != null)
+                .mapToDouble(PersonnageBase::getCombativite)
+                .sum();
+        labelCombativiteJoueur.setText("Ta combativité : " + GuiVisuels.formaterMontant(combativiteJoueur));
+
         for (AreneData a : adversaires) {
             adversairesBox.getChildren().add(carteAdversaire(a));
         }
+    }
+
+    /** Combativite totale d'un adversaire (4 coequipiers + PP), pour comparaison rapide avec
+     *  la combativite du joueur avant de s'engager dans le combat. */
+    private double combativiteAdversaire(AreneData a) {
+        List<PersonnageBase> equipe = a.construireEquipe(ctx.sauvegarde::creerPersonnageParNom);
+        double total = equipe.stream().mapToDouble(PersonnageBase::getCombativite).sum();
+        PersonnageBase principal = MenuArene.creerPersonnagePrincipalIA(
+                a.getPersonnagePrincipalNom(), Math.max(1, a.getNiveauMoyenEquipe()), a.getRang());
+        if (principal != null) total += principal.getCombativite();
+        return total;
     }
 
     private Node carteAdversaire(AreneData a) {
@@ -76,6 +94,10 @@ public class EcranAreneAdversairesController {
         Label niveau = new Label("Niv. moy. " + a.getNiveauMoyenEquipe());
         niveau.getStyleClass().add("item-qte");
 
+        Label combativite = new Label("Combativité recommandée : "
+                + GuiVisuels.formaterMontant(combativiteAdversaire(a)));
+        combativite.getStyleClass().add("item-detail");
+
         HBox entete = new HBox(10, rang, pseudo);
         entete.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(pseudo, Priority.ALWAYS);
@@ -88,7 +110,7 @@ public class EcranAreneAdversairesController {
             equipe.getChildren().add(chip);
         }
 
-        VBox texte = new VBox(6, entete, equipe);
+        VBox texte = new VBox(6, entete, equipe, combativite);
         HBox carte = new HBox(14, texte, niveau);
         carte.setAlignment(Pos.CENTER_LEFT);
         carte.getStyleClass().add("carte-item");
@@ -110,7 +132,7 @@ public class EcranAreneAdversairesController {
 
         List<PersonnageBase> equipeAdverse = adversaire.construireEquipe(ctx.sauvegarde::creerPersonnageParNom);
         int niveauEquipeAdv = Math.max(1, adversaire.getNiveauMoyenEquipe());
-        PersonnageBase principalAdverse = MenuArene.creerPersonnagePrincipalIA(adversaire.getPersonnagePrincipalNom(), niveauEquipeAdv);
+        PersonnageBase principalAdverse = MenuArene.creerPersonnagePrincipalIA(adversaire.getPersonnagePrincipalNom(), niveauEquipeAdv, adversaire.getRang());
         if (principalAdverse != null) {
             equipeAdverse.add(principalAdverse);
         } else if (!equipeAdverse.isEmpty()) {

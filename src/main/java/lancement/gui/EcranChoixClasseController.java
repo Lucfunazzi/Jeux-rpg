@@ -37,6 +37,7 @@ public class EcranChoixClasseController {
 
     @FXML
     private void initialize() {
+        GestionnaireMusique.jouerMusiqueCreationPersonnage();
         rafraichirGenre();
         rafraichirClasses();
     }

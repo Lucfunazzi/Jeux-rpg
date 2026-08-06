@@ -142,19 +142,25 @@ public class EcranAmeliorationsController {
 
         Label nom = new Label(e != null ? e.getNomAffiche() : "[Vide]");
         nom.getStyleClass().add(e != null ? "item-nom" : "item-vide");
+        nom.setWrapText(true);
+        nom.setMaxWidth(160);
+        nom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         String infos = nomSlotAffiche(slot);
         if (e != null) infos += "  ·  Fort." + e.getNiveauFortification() + "  ·  Aff." + e.getNiveauAffinage();
         Label detail = new Label(infos);
         detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(160);
+        detail.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         VBox texte = new VBox(2, nom, detail);
         texte.setAlignment(Pos.CENTER);
         VBox carte = new VBox(texte);
         carte.setAlignment(Pos.CENTER);
         carte.getStyleClass().add(slot == slotSelectionne ? "carte-item-joueur" : "carte-item");
-        carte.setPrefWidth(140);
-        carte.setPrefHeight(60);
+        carte.setPrefWidth(170);
+        carte.setMinHeight(60);
 
         if (e != null) {
             carte.setCursor(Cursor.HAND);
@@ -234,6 +240,8 @@ public class EcranAmeliorationsController {
     private void construirePanneauNormal(Equipement equip) {
         labelTitreEquip = new Label(equip.getNomAffiche());
         labelTitreEquip.getStyleClass().add("section-titre");
+        labelTitreEquip.setWrapText(true);
+        labelTitreEquip.setMaxWidth(320);
         HBox header = new HBox(8,
                 GuiVisuels.creerIconeEquipement(equip.getIcone(), equip.getRarete().name()),
                 GuiVisuels.creerBadgeRarete(equip.getRarete().name()), labelTitreEquip);
@@ -295,10 +303,57 @@ public class EcranAmeliorationsController {
         boutonPierres.getStyleClass().add("menu-bouton");
         boutonPierres.setOnAction(e -> { modePierres = true; rafraichirPanneauDroit(); });
 
+        Button boutonFusionner = new Button("Fusionner pierres");
+        boutonFusionner.getStyleClass().add("menu-bouton");
+        boutonFusionner.setOnAction(e -> onFusionnerPierres());
+
+        HBox boutonsPierres = new HBox(10, boutonPierres, boutonFusionner);
+        boutonsPierres.setAlignment(Pos.CENTER);
+
         mettreAJourValeursFort(equip);
         if (affinageDebloque) mettreAJourValeursAff(equip);
 
-        panneauDroit.getChildren().setAll(header, blocFort, separateur, blocAff, boutonPierres);
+        panneauDroit.getChildren().setAll(header, blocFort, separateur, blocAff, boutonsPierres);
+    }
+
+    /** Fusionne 2 pierres identiques (meme type + meme niveau) du stock en 1 pierre de niveau
+     *  superieur (voir Inventaire.synthetiserPierre). Propose uniquement les stacks eligibles. */
+    private void onFusionnerPierres() {
+        List<Inventaire.StackPierre> eligibles = ctx.inventaire.getPierres().stream()
+                .filter(s -> s.getQuantite() >= 2 && s.getNiveau() < Pierre.NIVEAU_MAX)
+                .toList();
+
+        if (eligibles.isEmpty()) {
+            info("Fusionner pierres", "Aucune pierre en double a fusionner (il faut 2 pierres identiques, niveau < "
+                    + Pierre.NIVEAU_MAX + ").");
+            return;
+        }
+
+        Inventaire.StackPierre choisi = GuiVisuels.choisirParmiCartes("Fusionner pierres", eligibles,
+                this::cartePierreFusion);
+        if (choisi == null) return;
+
+        String resultat = ctx.inventaire.synthetiserPierre(choisi.getType(), choisi.getNiveau());
+        info("Fusionner pierres", resultat.equals("OK")
+                ? "Fusion reussie ! Nouvelle pierre : " + new Pierre(choisi.getType(), choisi.getNiveau() + 1)
+                : resultat);
+        rafraichirPanneauDroit();
+    }
+
+    private Node cartePierreFusion(Inventaire.StackPierre s) {
+        Node icone = GuiVisuels.creerPastilleCouleur(new Pierre(s.getType(), s.getNiveau()).getCouleurHex());
+
+        Label nom = new Label(s.toString());
+        nom.getStyleClass().add("item-nom");
+        Label fleche = new Label("→ " + new Pierre(s.getType(), s.getNiveau() + 1));
+        fleche.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(2, nom, fleche);
+        HBox carte = new HBox(8, icone, texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(280);
+        return carte;
     }
 
     /** Un cout qui depasse cette fraction des ressources actuelles declenche une confirmation. */
@@ -320,12 +375,28 @@ public class EcranAmeliorationsController {
                         + " or ? Ca represente une grosse partie de votre or actuel (" + (int) ctx.joueur.getOr() + ").")) {
             return;
         }
+        double atkAvant = equip.getBonusATK(), defAvant = equip.getBonusDEF();
+        double pvAvant  = equip.getBonusPV(),  vitAvant = equip.getBonusVIT();
+
         ctx.joueur.retirerOr(cout);
         equip.fortifier();
         ctx.gestionnaireQuetes.notifierFortification();
-        labelFeedbackFort.setText("");
+
+        labelFeedbackFort.setText("Fortification reussie ! " + formaterDeltas(
+                equip.getBonusATK() - atkAvant, equip.getBonusDEF() - defAvant,
+                equip.getBonusPV() - pvAvant,   equip.getBonusVIT() - vitAvant));
         mettreAJourValeursFort(equip);
         mettreAJourCarteSlot(slotSelectionne, equip);
+    }
+
+    /** Formate les gains de stats non nuls d'une amelioration d'equipement (ex: "+12 ATK, +8 DEF"). */
+    private String formaterDeltas(double deltaAtk, double deltaDef, double deltaPv, double deltaVit) {
+        List<String> parts = new ArrayList<>();
+        if (deltaAtk > 0.01) parts.add("+" + Math.round(deltaAtk) + " ATK");
+        if (deltaDef > 0.01) parts.add("+" + Math.round(deltaDef) + " DEF");
+        if (deltaPv  > 0.01) parts.add("+" + Math.round(deltaPv)  + " PV");
+        if (deltaVit > 0.01) parts.add("+" + Math.round(deltaVit) + " VIT");
+        return String.join(", ", parts);
     }
 
     private void mettreAJourValeursFort(Equipement equip) {
@@ -555,6 +626,14 @@ public class EcranAmeliorationsController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void info(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        styliser(alert);
+        alert.showAndWait();
     }
 
     private boolean confirmer(String question) {

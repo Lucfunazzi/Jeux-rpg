@@ -24,7 +24,9 @@ public class EnnemiRacer extends PersonnageBase {
         double mult = 1.40;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 380.0 * mult * niv;
+        // PV releves (~x1.8) : boss titulaire du stage 3, plus proche des invites (Gray/Leon)
+        // qui l'affrontent au lieu de tomber en un ou deux tours.
+        this.vie     = 680.0 * mult * niv;
         this.attaque = 180.0 * mult * niv;
         this.defense =  90.0 * mult * niv;
         this.vitesse = 175.0 * mult * vit;

@@ -28,7 +28,9 @@ public class EnnemiJose extends PersonnageBase {
         double mult = 1.50;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 320.0 * mult * niv;
+        // PV releves (~x4) : boss titulaire des stages 7, 8 (seul) et 9, sinon combat expedie
+        // en un ou deux tours.
+        this.vie     = 1300.0 * mult * niv;
         this.attaque = 130.0 * mult * niv;
         this.defense =  90.0 * mult * niv;
         this.vitesse = 110.0 * mult * vit;

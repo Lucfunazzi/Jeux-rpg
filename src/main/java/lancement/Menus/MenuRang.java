@@ -54,7 +54,8 @@ public class MenuRang {
                 case "1" -> {
                     String resultat = rangJoueur.tenterMonteeRang(
                             joueur.getNiveau(),
-                            joueur.getArbreCompetences());
+                            joueur.getArbreCompetences(),
+                            ctx.gestionnaireExamenS);
                     if (resultat.equals("OK")) {
                         System.out.println(">> Felicitations ! Vous etes maintenant rang "
                                 + rangJoueur.getRangNom() + " !");

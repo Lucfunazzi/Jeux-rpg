@@ -26,7 +26,9 @@ public class EnnemiHomme_mysterieux extends PersonnageBase {
         double mult = 1.50;
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);
-        this.vie     = 200.0 * mult * niv;
+        // PV releves (~x4.25) : boss titulaire du stage ("Natsu contre l'homme mysterieux"),
+        // sinon combat expedie en un ou deux tours.
+        this.vie     = 850.0 * mult * niv;
         this.attaque =  80.0 * mult * niv;
         this.defense =  50.0 * mult * niv;
         this.vitesse =  200.0 * mult * vit;

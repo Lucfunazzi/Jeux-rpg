@@ -10,6 +10,7 @@
       fx:controller="lancement.gui.EcranDifficulteDonjonController"
       alignment="CENTER" spacing="16" styleClass="root-menu">
     <Label fx:id="titreLabel" styleClass="titre"/>
+    <Label fx:id="labelCombativiteJoueur" styleClass="sous-titre"/>
 
     <VBox fx:id="difficultesBox" alignment="CENTER" spacing="10">
         <padding><Insets top="10"/></padding>
