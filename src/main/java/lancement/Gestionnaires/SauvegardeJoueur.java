@@ -57,6 +57,7 @@ public class SauvegardeJoueur {
                 p.getNom(), p.getNiveau(), p.getExperience(), p.getExperienceMax()
             );
             pd.nbreEtoiles = p.getNbreEtoiles();
+            pd.ascensionne = p.isAscensionne();
             for (Equipement e : p.getEquipementsPortes())
                 pd.equipementsPortes.add(SauvegardeEquipement.versEquipementData(e, 1));
             data.personnagesRecruites.add(pd);
@@ -127,6 +128,7 @@ public class SauvegardeJoueur {
             if (p != null) {
                 appliquerNiveaux(p, pd);
                 p.setNbreEtoiles(pd.nbreEtoiles);
+                p.setAscensionne(pd.ascensionne);
                 if (pd.equipementsPortes != null)
                     for (SauvegardeData.EquipementData ed : pd.equipementsPortes)
                         p.equiper(SauvegardeEquipement.versEquipement(ed));

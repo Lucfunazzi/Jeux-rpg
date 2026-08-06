@@ -26,6 +26,9 @@ public class SauvegardeActivites {
         data.examenSDejaReussi     = ctx.gestionnaireExamenS.getDejaReussi();
         data.examenSFaitAujourdhui = ctx.gestionnaireExamenS.getFaitAujourdhui();
         data.examenSDernierReset   = ctx.gestionnaireExamenS.getDernierReset().toString();
+
+        data.boutiqueAchetesAujourdhui = new java.util.ArrayList<>(ctx.gestionnaireBoutique.getAchetesAujourdhui());
+        data.boutiqueDernierReset      = ctx.gestionnaireBoutique.getDernierReset().toString();
     }
 
     public static void restaurerEnergie(GestionnaireEnergie ge, SauvegardeData data) {
@@ -55,5 +58,12 @@ public class SauvegardeActivites {
         if (data.examenSDejaReussi != null)     ge.setDejaReussi(data.examenSDejaReussi);
         if (data.examenSFaitAujourdhui != null) ge.setFaitAujourdhui(data.examenSFaitAujourdhui);
         if (data.examenSDernierReset != null)   ge.setDernierReset(LocalDate.parse(data.examenSDernierReset));
+    }
+
+    public static void restaurerBoutique(GestionnaireBoutique gb, SauvegardeData data) {
+        if (data.boutiqueAchetesAujourdhui != null)
+            gb.setAchetesAujourdhui(new java.util.HashSet<>(data.boutiqueAchetesAujourdhui));
+        if (data.boutiqueDernierReset != null)
+            gb.setDernierReset(LocalDate.parse(data.boutiqueDernierReset));
     }
 }

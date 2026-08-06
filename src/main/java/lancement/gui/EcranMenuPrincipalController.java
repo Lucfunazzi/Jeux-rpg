@@ -100,6 +100,7 @@ public class EcranMenuPrincipalController {
         if (niveau >= 6)                                       recrutementGacha.add(new BoutonDef("Etoiles & Fragments", this::onEtoiles));
 
         List<BoutonDef> modes = new ArrayList<>();
+        if (niveau >= 10)                                       modes.add(new BoutonDef("Boutique", this::onBoutique));
         if (niveau >= 10)                                       modes.add(new BoutonDef("Donjon de ressources", this::onDonjon));
         if (niveau >= 20)                                       modes.add(new BoutonDef("Arene", this::onArene));
         if (niveau >= GestionnaireExamenS.NIVEAU_REQUIS)        modes.add(new BoutonDef("Examen de Rang S", this::onExamenS));
@@ -474,6 +475,10 @@ public class EcranMenuPrincipalController {
 
     private void onDonjon(ActionEvent event) {
         naviguerVers(event, "/fxml/EcranDonjon.fxml", c -> ((EcranDonjonController) c).initData(ctx));
+    }
+
+    private void onBoutique(ActionEvent event) {
+        naviguerVers(event, "/fxml/EcranBoutique.fxml", c -> ((EcranBoutiqueController) c).initData(ctx));
     }
 
     private void onAbilites(ActionEvent event) {

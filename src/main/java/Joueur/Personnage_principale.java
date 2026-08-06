@@ -5,7 +5,6 @@ import java.util.List;
 import Combat.Combat;
 import lancement.GameContext;
 import Equipement.Inventaire;
-import Equipement.ElixirMaitrise;
 import Equipement.ParcheminAptitude;
 
 public class Personnage_principale extends PersonnageBase {
@@ -377,22 +376,13 @@ public class Personnage_principale extends PersonnageBase {
         this.or = Math.max(0, this.or - montant);
     }
 
-    /** Utilise 1 Elixir de Maitrise : XP directe sur le personnage principal. */
-    public String utiliserElixirMaitrise(Inventaire inventaire) {
-        if (!inventaire.retirerMateriau(ElixirMaitrise.NOM, 1)) {
-            return "Aucun " + ElixirMaitrise.NOM + " en stock.";
+    /** Utilise 1 Parchemin d'Aptitude (palier au choix) : ajoute ses points a l'arbre de competences. */
+    public String utiliserParcheminAptitude(Inventaire inventaire, ParcheminAptitude palier) {
+        if (!inventaire.retirerMateriau(palier.nom, 1)) {
+            return "Aucun " + palier.nom + " en stock.";
         }
-        gagnerExperience(ElixirMaitrise.XP);
-        return ElixirMaitrise.NOM + " utilise ! +" + ElixirMaitrise.XP + " XP.";
-    }
-
-    /** Utilise 1 Parchemin d'Aptitude : +10 points a depenser dans l'arbre de competences. */
-    public String utiliserParcheminAptitude(Inventaire inventaire) {
-        if (!inventaire.retirerMateriau(ParcheminAptitude.NOM, 1)) {
-            return "Aucun " + ParcheminAptitude.NOM + " en stock.";
-        }
-        arbreCompetences.ajouterPoints(ParcheminAptitude.POINTS);
-        return ParcheminAptitude.NOM + " utilise ! +" + ParcheminAptitude.POINTS
+        arbreCompetences.ajouterPoints(palier.points);
+        return palier.nom + " utilise ! +" + palier.points
                 + " points de talent (Total disponible : " + arbreCompetences.getPointsDisponibles() + ")";
     }
 

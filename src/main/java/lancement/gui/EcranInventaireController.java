@@ -1,5 +1,6 @@
 package lancement.gui;
 
+import Equipement.CristalTranscendance;
 import Equipement.Equipement;
 import Equipement.EquipementFactory;
 import Equipement.FragmentEquipement;
@@ -567,12 +568,46 @@ public class EcranInventaireController {
 
     private void actionsPierre(Inventaire.StackPierre s) {
         Pierre p = new Pierre(s.getType(), s.getNiveau());
-        ButtonType equiperBtn = new ButtonType("Équiper");
-        ButtonType vendreBtn  = new ButtonType("Vendre (" + prixVentePierre(s.getNiveau()) + " or)");
-        Optional<ButtonType> choix = choisirAction(p.getNom(), p.toString(), equiperBtn, vendreBtn);
+        int cristaux = ctx.inventaire.getQuantiteMateriau(CristalTranscendance.NOM);
+        ButtonType equiperBtn     = new ButtonType("Équiper");
+        ButtonType vendreBtn      = new ButtonType("Vendre (" + prixVentePierre(s.getNiveau()) + " or)");
+        ButtonType transcenderBtn = new ButtonType("Transcender (" + cristaux + "x Cristal)");
+        Optional<ButtonType> choix = choisirAction(p.getNom(), p.toString(), equiperBtn, vendreBtn, transcenderBtn);
         if (choix.isEmpty()) return;
         if (choix.get() == equiperBtn) equiperPierre(s);
         else if (choix.get() == vendreBtn) vendrePierre(s);
+        else if (choix.get() == transcenderBtn) transcenderPierre(s);
+    }
+
+    private void transcenderPierre(Inventaire.StackPierre s) {
+        if (ctx.inventaire.getQuantiteMateriau(CristalTranscendance.NOM) <= 0) {
+            info("Transcender", "Aucun " + CristalTranscendance.NOM + " en stock. Achetez-en un a la Boutique.");
+            return;
+        }
+        List<Pierre.Type> autresTypes = new ArrayList<>();
+        for (Pierre.Type t : Pierre.Type.values()) if (t != s.getType()) autresTypes.add(t);
+
+        Pierre.Type nouveauType = GuiVisuels.choisirParmiCartes("Transcender vers quel type ?", autresTypes, this::carteTypePierre);
+        if (nouveauType == null) return;
+        if (!confirmer("Consommer 1 " + CristalTranscendance.NOM + " pour transformer "
+                + p(s) + " en " + new Pierre(nouveauType, s.getNiveau()) + " ?")) return;
+
+        String resultat = ctx.inventaire.utiliserCristalTranscendanceStock(s.getType(), s.getNiveau(), nouveauType);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Transcender", resultat);
+        rafraichir();
+    }
+
+    private Pierre p(Inventaire.StackPierre s) { return new Pierre(s.getType(), s.getNiveau()); }
+
+    private Node carteTypePierre(Pierre.Type type) {
+        Label nom = new Label(type.name());
+        nom.getStyleClass().add("item-nom");
+        HBox carte = new HBox(10, nom);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(200);
+        return carte;
     }
 
     private void equiperPierre(Inventaire.StackPierre s) {

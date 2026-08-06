@@ -58,40 +58,40 @@ public final class GestionnaireGuilde {
             case C -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_1, 10));
                 ajouter(parts, item(inv, PotionEnergie.MOYENNE.nom, 2));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 3));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 3));
                 coupons = 20; parcheminElite = 1;
             }
             case B -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_2, 10));
                 ajouter(parts, item(inv, PotionEnergie.MOYENNE.nom, 3));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 5));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 5));
                 coupons = 40; parcheminElite = 3;
             }
             case A -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_3, 10));
                 ajouter(parts, item(inv, PotionEnergie.GRANDE.nom, 2));
                 ajouter(parts, boitePierre(inv, 2, 3));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 5));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 5));
                 coupons = 60; parcheminElite = 5;
             }
             case S -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_4, 10));
                 ajouter(parts, item(inv, PotionEnergie.GRANDE.nom, 3));
                 ajouter(parts, boitePierre(inv, 3, 3));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 20));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 20));
                 coupons = 120; parcheminElite = 10;
             }
             case SS -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_4, 50));
                 ajouter(parts, item(inv, PotionEnergie.GRANDE.nom, 10));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 100));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 100));
                 ajouter(parts, sceau(inv, SceauDeRang.S, 10));
                 ajouter(parts, sceau(inv, SceauDeRang.SS, 5));
                 coupons = 200; parcheminElite = 15;
             }
             case SSS -> {
                 ajouter(parts, boitePierre(inv, 6, 5));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 350));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 350));
                 ajouter(parts, sceau(inv, SceauDeRang.S, 20));
                 ajouter(parts, sceau(inv, SceauDeRang.SS, 10));
                 ajouter(parts, sceau(inv, SceauDeRang.SSS, 5));
@@ -102,7 +102,7 @@ public final class GestionnaireGuilde {
             case UR -> {
                 ajouter(parts, carteOr(inv, CarteOr.NIVEAU_5, 250));
                 ajouter(parts, boitePierre(inv, 6, 10));
-                ajouter(parts, item(inv, ParcheminAptitude.NOM, 700));
+                ajouter(parts, item(inv, ParcheminAptitude.PETITE.nom, 700));
                 ajouter(parts, item(inv, PotionEnergie.GRANDE.nom, 30));
                 ajouter(parts, sceau(inv, SceauDeRang.S, 25));
                 ajouter(parts, sceau(inv, SceauDeRang.SS, 20));

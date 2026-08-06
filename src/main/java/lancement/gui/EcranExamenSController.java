@@ -120,16 +120,16 @@ public class EcranExamenSController {
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(resultat.etatInitial(), resultat.evenements(), resultat.victoire(),
-                    v -> retourExamen(stage, resultat.victoire(), resultat.boiteGagnee()));
+                    v -> retourExamen(stage, numero, resultat.victoire(), resultat.boiteGagnee()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void retourExamen(Stage stage, boolean victoire, boolean boiteGagnee) {
+    private void retourExamen(Stage stage, int numero, boolean victoire, boolean boiteGagnee) {
         if (victoire) {
             info("Examen de Rang S", boiteGagnee
-                    ? "Victoire ! Vous obtenez 1x " + MenuExamenS.MATERIAU_BOITE_PIERRE_LV1 + " !"
+                    ? "Victoire ! Vous obtenez 1x " + MenuExamenS.nomBoite(numero >= 50 ? 2 : 1) + " !"
                     : "Victoire ! Pas de boite cette fois...");
         }
         try {

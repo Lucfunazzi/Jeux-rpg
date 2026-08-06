@@ -84,6 +84,7 @@ public class SauvegardeData {
         public int    experience;
         public int    experienceMax;
         public int    nbreEtoiles = 0;
+        public boolean ascensionne = false;
         public List<EquipementData> equipementsPortes = new ArrayList<>();
 
         public PersonnageData() {}
@@ -212,6 +213,10 @@ public class SauvegardeData {
     public boolean[] examenSDejaReussi     = new boolean[11];
     public boolean[] examenSFaitAujourdhui = new boolean[11];
     public String    examenSDernierReset;
+
+    // ── Boutique (achats limites a 1 fois par jour) ────────────────────────
+    public List<String> boutiqueAchetesAujourdhui = new ArrayList<>();
+    public String        boutiqueDernierReset;
 
     // ── Etoiles & coffres ────────────────────────────────────────────────
     public List<EtoileData>   etoiles       = new ArrayList<>();

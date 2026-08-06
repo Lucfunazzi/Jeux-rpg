@@ -172,7 +172,7 @@ public class GestionnaireArene {
     public void chargerDepuisFirebase() {
         try {
             HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(URL_FIREBASE + ".json"))
+                .uri(URI.create(FirebaseAuth.avecAuth(URL_FIREBASE + ".json")))
                 .GET().build();
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
 
@@ -212,7 +212,7 @@ public class GestionnaireArene {
         try {
             String json = gson.toJson(joueur.versMap());
             HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(URL_FIREBASE + securiser(joueur.getUserId()) + ".json"))
+                .uri(URI.create(FirebaseAuth.avecAuth(URL_FIREBASE + securiser(joueur.getUserId()) + ".json")))
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
                 .build();

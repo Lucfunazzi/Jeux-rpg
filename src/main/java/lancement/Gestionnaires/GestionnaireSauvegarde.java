@@ -30,7 +30,7 @@ public class GestionnaireSauvegarde {
     public boolean sauvegardeExiste(String nomJoueur) {
         String url = URL_FIREBASE + "joueurs/" + securiser(nomJoueur) + ".json";
         try {
-            HttpRequest req = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpRequest req = HttpRequest.newBuilder().uri(URI.create(FirebaseAuth.avecAuth(url))).GET().build();
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
             return res.statusCode() == 200 && !res.body().trim().equals("null");
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class GestionnaireSauvegarde {
         SauvegardeProgression.sauvegarder(ctx, data);
 
         // Coupons
-        data.coupons = ctx.coupons;
+        data.coupons = ctx.joueur.getCoupons();
 
         // Mode debug
         data.debugDeverrouille = ctx.debugDeverrouille;
@@ -104,7 +104,7 @@ public class GestionnaireSauvegarde {
         String url     = URL_FIREBASE + "joueurs/" + securiser(joueur.getNom()) + ".json";
         String payload = gson.toJson(data);
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(FirebaseAuth.avecAuth(url)))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(payload, StandardCharsets.UTF_8))
                 .build();
@@ -137,7 +137,7 @@ public class GestionnaireSauvegarde {
     public SauvegardeData charger(String nomJoueur) {
         String url = URL_FIREBASE + "joueurs/" + securiser(nomJoueur) + ".json";
         try {
-            HttpRequest req = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpRequest req = HttpRequest.newBuilder().uri(URI.create(FirebaseAuth.avecAuth(url))).GET().build();
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
             if (res.statusCode() == 200 && !res.body().trim().equals("null"))
                 return gson.fromJson(res.body(), SauvegardeData.class);
@@ -251,6 +251,10 @@ public class GestionnaireSauvegarde {
 
     public void restaurerExamenS(GestionnaireExamenS ge, SauvegardeData data) {
         SauvegardeActivites.restaurerExamenS(ge, data);
+    }
+
+    public void restaurerBoutique(GestionnaireBoutique gb, SauvegardeData data) {
+        SauvegardeActivites.restaurerBoutique(gb, data);
     }
 
     // ── Utilitaires privés ────────────────────────────────────────────────

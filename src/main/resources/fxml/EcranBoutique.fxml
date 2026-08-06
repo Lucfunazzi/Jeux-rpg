@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="lancement.gui.EcranBoutiqueController"
+            styleClass="root-menu">
+    <top>
+        <VBox alignment="CENTER" spacing="4">
+            <padding><Insets top="20" bottom="10"/></padding>
+            <Label text="BOUTIQUE" styleClass="titre"/>
+            <VBox fx:id="soldeBox" alignment="CENTER"/>
+        </VBox>
+    </top>
+
+    <center>
+        <TabPane fx:id="ongletsBoutique" tabClosingPolicy="UNAVAILABLE" styleClass="root-menu">
+            <Tab text="Promo de la semaine">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="360">
+                    <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
+                    <VBox fx:id="promoBox" alignment="CENTER" spacing="8"/>
+                </ScrollPane>
+            </Tab>
+            <Tab text="Consommables">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="360">
+                    <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
+                    <VBox fx:id="consommablesBox" alignment="CENTER" spacing="8"/>
+                </ScrollPane>
+            </Tab>
+            <Tab text="Items rares">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="360">
+                    <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
+                    <VBox fx:id="raresBox" alignment="CENTER" spacing="8"/>
+                </ScrollPane>
+            </Tab>
+            <Tab text="Mage Event">
+                <ScrollPane fitToWidth="true" styleClass="scroll-pane" prefHeight="360">
+                    <padding><Insets left="30" right="30" top="10" bottom="10"/></padding>
+                    <VBox fx:id="mageEventBox" alignment="CENTER" spacing="8"/>
+                </ScrollPane>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <bottom>
+        <VBox alignment="CENTER" spacing="8">
+            <padding><Insets top="10" bottom="20"/></padding>
+            <Button text="Retour" onAction="#onRetour" styleClass="menu-bouton"/>
+        </VBox>
+    </bottom>
+</BorderPane>

@@ -2,7 +2,6 @@ package lancement.Gestionnaires;
 
 import Equipement.CristalTranscendance;
 import Equipement.Inventaire;
-import Equipement.JetonIncursion;
 import Equipement.ParcheminAscension;
 import lancement.EtoilesStage;
 import java.util.HashMap;
@@ -43,8 +42,7 @@ public class GestionnaireEtoiles {
         new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ORDINAIRE, 5,               // coffre 2
                 List.of(new ItemBonus(CristalTranscendance.NOM, 1))),
         new RecompenseCoffre(TypeRecompenseCoffre.PARCHEMIN_ELITE, 1,                    // coffre 3 (le plus dur)
-                List.of(new ItemBonus(JetonIncursion.NOM, 2),
-                        new ItemBonus(ParcheminAscension.NOM, 1)))
+                List.of(new ItemBonus(ParcheminAscension.NOM, 1)))
     };
 
     // étoiles par stage : clé = "C1S3", "C1E5", "C2S7"...

@@ -5,7 +5,6 @@ import Equipement.CarteOr;
 import Equipement.CristalTranscendance;
 import Equipement.FriandiseFamilier;
 import Equipement.Inventaire;
-import Equipement.JetonIncursion;
 import Equipement.ParcheminAptitude;
 import Equipement.ParcheminXP;
 import Equipement.PotionEnergie;
@@ -88,7 +87,7 @@ public class GestionnaireRecompenses {
         RecompenseNiveau r = calculerRecompenseNiveau(index);
         StringBuilder sb = new StringBuilder(r.or() + " or, " + r.cartesOrLv1() + " Carte(s) d'Or Lv.1");
         if (r.boitesPierreLv1() > 0)     sb.append(", ").append(r.boitesPierreLv1()).append(" Boite(s) de pierre Lv.1");
-        if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.NOM);
+        if (r.parcheminsAptitude() > 0)  sb.append(", ").append(r.parcheminsAptitude()).append("x ").append(ParcheminAptitude.PETITE.nom);
         if (r.sceau() != null)           sb.append(", 1x ").append(r.sceau().nom);
         if (r.boitesEquipement() > 0)    sb.append(", ").append(r.boitesEquipement()).append("x ").append(r.boiteEquipement().nom);
         if (r.parcheminsXPB() > 0)       sb.append(", ").append(r.parcheminsXPB()).append("x ").append(new ParcheminXP(ParcheminXP.Rarete.B).getNom());
@@ -100,7 +99,7 @@ public class GestionnaireRecompenses {
         joueur.ajouterOr(r.or());
         inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, r.cartesOrLv1());
         if (r.boitesPierreLv1() > 0)    inventaire.ajouterMateriau(BOITE_PIERRE_LV1, r.boitesPierreLv1());
-        if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.NOM, r.parcheminsAptitude());
+        if (r.parcheminsAptitude() > 0) inventaire.ajouterMateriau(ParcheminAptitude.PETITE.nom, r.parcheminsAptitude());
         if (r.sceau() != null)          inventaire.ajouterMateriau(r.sceau().nom, 1);
         if (r.boitesEquipement() > 0)   inventaire.ajouterMateriau(r.boiteEquipement().nom, r.boitesEquipement());
         if (r.parcheminsXPB() > 0)      inventaire.ajouterParcheminXP(ParcheminXP.Rarete.B, r.parcheminsXPB());
@@ -259,9 +258,9 @@ public class GestionnaireRecompenses {
 
     public String afficherRecompenseJour(int jour) {
         return switch (jour) {
-            case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie, 2x " + JetonIncursion.NOM;
-            case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 100 Cartes d'or Lv.1, 2x Petite Potion d'Energie, 5x " + JetonIncursion.NOM;
-            case 3 -> "3 Potion d'Energie simple, 100 carte d'or lv.2, 5x " + GestionnaireChasseTresor.PARCHEMIN_S + ", 8x " + JetonIncursion.NOM;
+            case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie";
+            case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 100 Cartes d'or Lv.1, 2x Petite Potion d'Energie";
+            case 3 -> "3 Potion d'Energie simple, 100 carte d'or lv.2, 5x " + GestionnaireChasseTresor.PARCHEMIN_S;
             case 4 -> "1 " + BoiteEquipement.A.nom + ", 20 cartes d'or lv.3, 2 grandes potions d'energies";
             case 5 -> "4x " + BOITE_PIERRE_LV4 + ", 100 carte d'or lv3, 3x " + MATERIAU_AFFINAGE;
             case 6 -> "30 carte d'or lv.5, 10x " + GestionnaireChasseTresor.PARCHEMIN_S + ", 10x " + FriandiseFamilier.MOYENNE.nom;
@@ -275,19 +274,16 @@ public class GestionnaireRecompenses {
             case 1 -> {
                 inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
                 inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
-                inventaire.ajouterMateriau(JetonIncursion.NOM, 2);
             }
             case 2 -> {
                 inventaire.ajouterMateriau(MATERIAU_PARCHEMIN_JOUR2, QUANTITE_PARCHEMIN_JOUR2);
                 inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
                 inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
-                inventaire.ajouterMateriau(JetonIncursion.NOM, 5);
             }
             case 3 -> {
                 inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 3);
                 inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 100);
                 inventaire.ajouterMateriau(GestionnaireChasseTresor.PARCHEMIN_S, 5);
-                inventaire.ajouterMateriau(JetonIncursion.NOM, 8);
             }
             case 4 -> {
                 inventaire.ajouterMateriau(BoiteEquipement.A.nom, 1);

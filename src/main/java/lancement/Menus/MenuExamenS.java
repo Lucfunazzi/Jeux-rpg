@@ -100,8 +100,9 @@ public class MenuExamenS {
             boiteGagnee = g.enregistrerReussite(stage);
             System.out.println("\n>> Victoire !");
             if (boiteGagnee) {
-                ctx.inventaire.ajouterMateriau(MATERIAU_BOITE_PIERRE_LV1, 1);
-                System.out.println("   + 1x " + MATERIAU_BOITE_PIERRE_LV1);
+                String materiau = materiauRecompense(stage);
+                ctx.inventaire.ajouterMateriau(materiau, 1);
+                System.out.println("   + 1x " + materiau);
             } else {
                 System.out.println("   Pas de boite cette fois...");
             }
@@ -121,24 +122,32 @@ public class MenuExamenS {
         g.mettreAJour();
 
         int stagesReclames = 0;
-        int boites = 0;
+        int boitesLv1 = 0;
+        int boitesLv2 = 0;
         for (int i = 1; i <= GestionnaireExamenS.NB_STAGES; i++) {
             if (g.estDejaReussi(i) && !g.estFaitAujourdhui(i)) {
                 stagesReclames++;
                 if (g.enregistrerReussite(i)) {
-                    ctx.inventaire.ajouterMateriau(MATERIAU_BOITE_PIERRE_LV1, 1);
-                    boites++;
+                    ctx.inventaire.ajouterMateriau(materiauRecompense(i), 1);
+                    if (i >= 50) boitesLv2++; else boitesLv1++;
                 }
             }
         }
 
         String message = stagesReclames == 0
                 ? "Aucun stage a ratisser (deja fait aujourd'hui, ou jamais reussi)."
-                : stagesReclames + " stage(s) ratisse(s) ! + " + boites + " boite(s) de pierre Lv.1.";
+                : stagesReclames + " stage(s) ratisse(s) ! + " + boitesLv1 + " boite(s) de pierre Lv.1, + "
+                        + boitesLv2 + " boite(s) de pierre Lv.2.";
 
         if (stagesReclames > 0) ctx.sauvegarde.sauvegarder(ctx);
         System.out.println(message);
         return message;
+    }
+
+    /** Materiau de recompense pour un stage donne : Boite Lv.1 avant le stage 50,
+     *  Lv.2 a partir du stage 50 (combats plus difficiles). */
+    private static String materiauRecompense(int stage) {
+        return nomBoite(stage >= 50 ? 2 : 1);
     }
 
     /** Niveau max des boites de pierre disponibles (Lv.1 a Lv.10). */
@@ -240,6 +249,111 @@ public class MenuExamenS {
                 ennemis.add(monterAuNiveau(new perso_Freed(), stage));
                 ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, stage));
                 ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, stage));
+            }
+
+            // ── Stages 41-50 : suite des blocs de 5 (A/B/C/D generiques + boss nomme) ──
+            case 41, 46 -> ajouterEquipeGeneriqueA(ennemis, stage);
+            case 42, 47 -> ajouterEquipeGeneriqueB(ennemis, stage);
+            case 43, 48 -> ajouterEquipeGeneriqueC(ennemis, stage);
+            case 44, 49 -> ajouterEquipeGeneriqueD(ennemis, stage);
+
+            case 45 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Luxus"), stage));
+                ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage2DPS(stage));
+                ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            // Stage 50 : Escouade Raijinshuu au complet. Recompense = Boite de pierre Lv.2
+            // (voir materiauRecompense) — a partir d'ici les combats sont plus durs.
+            case 50 -> {
+                for (String nom : List.of("Evergreen", "Luxus", "Freed", "Bickslow"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1, stage));
+            }
+
+            // ── Stages 51-65 : escouades nommees, plus de blocs generiques ──
+            case 51 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Racer"), stage));
+                ennemis.add(new EnnemiMage1DPS(stage));
+                ennemis.add(new EnnemiMage6Debuff(stage));
+                ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 52 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Angel"), stage));
+                ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage6Debuff(stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 53 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Hoteye"), stage));
+                ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage2DPS(stage));
+                ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, stage));
+            }
+            case 54 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Cobra"), stage));
+                ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage1DPS(stage));
+                ennemis.add(new EnnemiMage6Debuff(stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 55 -> {
+                for (String nom : List.of("Angel", "Cobra", "Hoteye", "Racer"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 56 -> {
+                ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom("Midnight"), stage));
+                ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage8DPS(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage6Debuff(stage));
+                ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, stage));
+            }
+            case 57 -> {
+                for (String nom : List.of("Hibiki", "Ichiya", "Ren", "Eve"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                ennemis.add(new EnnemiMage5Tank(Variante.CHAPITRE_1, stage));
+            }
+            case 58 -> {
+                for (String nom : List.of("Vivaldus", "Ikaruga", "Owl", "Jellal"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                ennemis.add(new EnnemiMage7DPS(Variante.CHAPITRE_1, stage));
+            }
+            case 59 -> {
+                ennemis.add(monterAuNiveau(new perso_Brain(), stage));
+                ennemis.add(new EnnemiMage9Tank(Variante.CHAPITRE_1, stage));
+                ennemis.add(new EnnemiMage2DPS(stage));
+                ennemis.add(new EnnemiMage6Debuff(stage));
+                ennemis.add(new EnnemiMage4Buff(Variante.CHAPITRE_1, stage));
+            }
+            case 60 -> {
+                for (String nom : List.of("Zero", "Midnight", "Hoteye", "Cobra"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                ennemis.add(new EnnemiMage3Soigneur(stage));
+            }
+            case 61 -> {
+                for (String nom : List.of("Kana", "Elfman", "Mirajane", "Lisanna", "Cherry"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 62 -> {
+                for (String nom : List.of("Natsu", "Lucy", "Gray", "Wendy", "Elfman"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 63 -> {
+                for (String nom : List.of("Jura", "Leon", "Cherry", "Tobi", "Gray"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 64 -> {
+                for (String nom : List.of("Jubia (phantom Lord)", "Sol", "Aria", "Totomaru", "José Pora"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 65 -> {
+                for (String nom : List.of("Erza", "Natsu Etherion", "Lucy", "Gray", "Wendy"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
             }
 
             default -> { }

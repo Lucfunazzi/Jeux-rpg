@@ -1,6 +1,7 @@
 package lancement.gui;
 
 import Equipement.Inventaire;
+import Equipement.ParcheminAscension;
 import Personnage.PersonnageBase;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +73,20 @@ public class EcranEtoilesController {
             for (PersonnageBase p : eligibles) grille.getChildren().add(carteMonteeEtoile(p));
             contenuBox.getChildren().add(grille);
         }
+
+        // ── Ascension ────────────────────────────────────────────────────
+        contenuBox.getChildren().add(titreSection("Ascension"));
+        List<PersonnageBase> ascensionnables = new ArrayList<>();
+        for (PersonnageBase p : tous) if (p.peutAscensionner()) ascensionnables.add(p);
+
+        if (ascensionnables.isEmpty()) {
+            contenuBox.getChildren().add(texteVide(
+                    "Aucun personnage à 5 étoiles en attente d'ascension pour l'instant."));
+        } else {
+            FlowPane grille = new FlowPane(10, 10);
+            for (PersonnageBase p : ascensionnables) grille.getChildren().add(carteAscension(p));
+            contenuBox.getChildren().add(grille);
+        }
     }
 
     private Label titreSection(String texte) {
@@ -127,7 +142,41 @@ public class EcranEtoilesController {
         return ligne;
     }
 
+    /** Carte pour l'ascension d'un personnage a 5 etoiles. Clic -> Ascensionner (si Parchemin en stock). */
+    private Node carteAscension(PersonnageBase p) {
+        int qte = ctx.inventaire.getQuantiteMateriau(ParcheminAscension.NOM);
+
+        Label badge = GuiVisuels.creerBadgeRarete(p.getRarete());
+        Label nomLabel = new Label(p.getNom() + "  ★★★★★");
+        nomLabel.getStyleClass().add("item-nom");
+        Label detail = new Label(qte + "x " + ParcheminAscension.NOM + " en stock");
+        detail.getStyleClass().add("item-detail");
+
+        VBox texte = new VBox(4, nomLabel, detail);
+        HBox ligne = new HBox(10, badge, texte);
+        ligne.setAlignment(Pos.CENTER_LEFT);
+        ligne.getStyleClass().add("carte-item");
+        ligne.setPrefWidth(260);
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(e -> ascensionner(p));
+        return ligne;
+    }
+
     // ── Actions ──────────────────────────────────────────────────────────
+
+    private void ascensionner(PersonnageBase p) {
+        int qte = ctx.inventaire.getQuantiteMateriau(ParcheminAscension.NOM);
+        if (qte <= 0) {
+            info("Ascension", "Aucun " + ParcheminAscension.NOM + " en stock. Achetez-en un à la Boutique.");
+            return;
+        }
+        if (!confirmer("Consommer 1 " + ParcheminAscension.NOM + " pour ascensionner " + p.getNom() + " ?")) return;
+
+        String resultat = GestionnaireEtoilesPerso.utiliserParcheminAscension(ctx.inventaire, p);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Ascension", resultat);
+        rafraichir();
+    }
 
     private void recruter(String nom, String rarete) {
         int qte  = GestionnaireEtoilesPerso.getFragments(ctx.inventaire, nom);

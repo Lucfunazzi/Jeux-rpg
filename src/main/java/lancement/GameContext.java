@@ -37,6 +37,7 @@ import lancement.Gestionnaires.GestionnaireEnergie;
 import lancement.Gestionnaires.GestionnaireEtoiles;
 import lancement.Gestionnaires.GestionnaireEtoilesPerso;
 import lancement.Gestionnaires.GestionnaireExamenS;
+import lancement.Gestionnaires.GestionnaireBoutique;
 import lancement.Gestionnaires.GestionnaireQuetes;
 import lancement.Gestionnaires.GestionnaireRecompenses;
 import lancement.Gestionnaires.GestionnaireSauvegarde;
@@ -106,6 +107,7 @@ public class GameContext {
     public GestionnaireDonjon            gestionnaireDonjon;
     public GestionnaireChasseTresor      gestionnaireChasseTresor;
     public GestionnaireExamenS           gestionnaireExamenS;
+    public GestionnaireBoutique          gestionnaireBoutique;
     public GestionnaireEtoiles           gestionnaireEtoiles;
     public GestionnaireEtoilesPerso      gestionnaireEtoilesPerso;
     public GestionnaireCompagnons        gestionnaireCompagnons;
@@ -121,7 +123,6 @@ public class GameContext {
     public MenuExamenS       menuExamenS;
 
     // ── Divers ────────────────────────────────────────────────────────────
-    public int    coupons            = 0;
     public String dernierCoffreArene = null;
     /** Deverrouille via le code secret dans Options ; donne acces au menu de debug (test only). */
     public boolean debugDeverrouille = false;
@@ -160,6 +161,7 @@ public class GameContext {
         ctx.gestionnaireDonjon   = new GestionnaireDonjon();
         ctx.gestionnaireChasseTresor = new GestionnaireChasseTresor();
         ctx.gestionnaireExamenS  = new GestionnaireExamenS();
+        ctx.gestionnaireBoutique = new GestionnaireBoutique();
         ctx.menuExamenS          = new MenuExamenS();
         ctx.gestionnaireEtoiles    = new GestionnaireEtoiles();
         ctx.gestionnaireCompagnons       = new GestionnaireCompagnons();
@@ -212,6 +214,7 @@ public class GameContext {
         sauvegarde.restaurerDonjon(gestionnaireDonjon, data);
         sauvegarde.restaurerChasseTresor(gestionnaireChasseTresor, data);
         sauvegarde.restaurerExamenS(gestionnaireExamenS, data);
+        sauvegarde.restaurerBoutique(gestionnaireBoutique, data);
         menuRecrutement.setParcheminC(data.parcheminC);
         menuRecrutement.setParcheminB(data.parcheminB);
         menuRecrutement.setParcheminA(data.parcheminA);
@@ -222,7 +225,7 @@ public class GameContext {
         menuTirage.setCompteurPitySS(data.tirageEliteCompteurSansSS);
         menuTirage.setCompteurPityS(data.tirageEliteCompteurSansS);
         sauvegarde.restaurerEtoiles(gestionnaireEtoiles, data);
-        this.coupons = data.coupons;
+        this.joueur.setCoupons(data.coupons);
         this.debugDeverrouille = data.debugDeverrouille;
     }
 }

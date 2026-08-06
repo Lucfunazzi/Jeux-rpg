@@ -165,7 +165,7 @@ public class MenuHistoire {
         String[] labelsRecomp = {
             "2x Parchemin Tirage Ordinaire",
             "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
-            "1x Parchemin Tirage Elite, 2x " + Equipement.JetonIncursion.NOM + ", 1x " + Equipement.ParcheminAscension.NOM
+            "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
         };
 
         boolean unDisponible = false;
