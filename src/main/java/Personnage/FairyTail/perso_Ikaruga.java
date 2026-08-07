@@ -74,7 +74,7 @@ public class perso_Ikaruga extends PersonnageBase {
         String roleCible = Combat.rolePrioritaireVivant(equipeEnnemie);
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 1.10;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.10, 2), log);
             }
@@ -91,7 +91,7 @@ public class perso_Ikaruga extends PersonnageBase {
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Eclats des Esprits — se donne 10% de défense pendant 2 tours, "
-                + "puis inflige 80% ATK a tous les DPS ennemis  "
+                + "puis inflige 110% ATK a tous les DPS ennemis  "
                   + "avec Reduction de défense -10% sur ses cibles pendant 2 tours.");
     }
     

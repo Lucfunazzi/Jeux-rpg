@@ -55,7 +55,7 @@ public class perso_Vivaldus extends PersonnageBase {
                 .findFirst()
                 .orElse(cible);
 
-        double degats = this.getAttaque() * 1.00;
+        double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cibleSupport, degats, log);
         if (Math.random() < 0.30){
             Combat.appliquerEffet(this, cibleSupport, new Confusion(2), log);
@@ -72,7 +72,7 @@ public class perso_Vivaldus extends PersonnageBase {
         else roleCible = "Tank";
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 1.30;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 
                 
@@ -90,11 +90,11 @@ public class perso_Vivaldus extends PersonnageBase {
     }
     @Override public void descriptionAttaqueSpeciale() {
         System.out.println("Rock of succubus — cible les Supports ennemi prioritairement  "
-                + "inflige 100% ATK, à 30% de chance d'infliger confusions aux supports. "
+                + "inflige 150% ATK, à 30% de chance d'infliger confusions aux supports. "
               );
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Rock and roll — Attaque les Supports ennemis à 80% et immunise les supports alliée aux effets négatifs pendants "
+        System.out.println("Rock and roll — Attaque les Supports ennemis à 130% et immunise les supports alliée aux effets négatifs pendants "
                 + "2 tours. ");
                  
             

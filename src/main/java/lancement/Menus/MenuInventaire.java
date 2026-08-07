@@ -770,12 +770,34 @@ public class MenuInventaire {
             return;
         }
 
+        // Rembourse l'investissement (or de fortification, pierres d'affinage, pierres incrustees)
+        // avant de detruire la piece : sinon recycler un equipement travaille fait perdre ces
+        // ressources pour rien, ce qui decourage de recycler les pieces obsoletes.
+        int orRembourse               = choisi.getOrDepenseFortification() * quantite;
+        int pierresAffinageRembourse  = choisi.getPierresDepenseesAffinage() * quantite;
+
         for (int i = 0; i < quantite; i++) {
             ctx.inventaire.retirerEquipement(choisi);
         }
         ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, total);
-        ctx.sauvegarde.sauvegarder(ctx);
         System.out.println(quantite + "x " + choisi.getNomAffiche() + " recycle(s) pour " + total + " Pieces d'equipement.");
+
+        if (orRembourse > 0) {
+            ctx.joueur.ajouterOr(orRembourse);
+            System.out.println("  + " + orRembourse + " or (fortification remboursee)");
+        }
+        if (pierresAffinageRembourse > 0) {
+            ctx.inventaire.ajouterMateriau(MenuAmeliorations.MATERIAU_AFFINAGE, pierresAffinageRembourse);
+            System.out.println("  + " + pierresAffinageRembourse + " Pierre(s) d'affinage remboursee(s)");
+        }
+        for (Pierre pierre : choisi.getPierres()) {
+            if (pierre != null) {
+                ctx.inventaire.ajouterPierre(pierre.getType(), pierre.getNiveau(), quantite);
+                System.out.println("  + " + quantite + "x " + pierre.getNom() + " recuperee(s)");
+            }
+        }
+
+        ctx.sauvegarde.sauvegarder(ctx);
     }
 
     // ── Boutique d'equipement (fragments contre Pieces d'equipement) ───────

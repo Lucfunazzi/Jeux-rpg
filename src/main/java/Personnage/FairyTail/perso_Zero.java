@@ -48,7 +48,7 @@ public class perso_Zero extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Zero plonge " + cible.getNom() + " dans un Cauchemar sans fin !");
-        double degats = this.getAttaque() * 1.40;
+        double degats = this.getAttaque() * 2.30;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new Silence(2), log);
@@ -63,7 +63,7 @@ public class perso_Zero extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.10) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.75) * multiplicateurRage;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.20, 2), log);
@@ -76,9 +76,9 @@ public class perso_Zero extends PersonnageBase {
         System.out.println("Souffle des Ténèbres — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Cauchemar — Inflige 140% ATK et réduit la cible au silence pendant 2 tours.");
+        System.out.println("Cauchemar — Inflige 230% ATK et réduit la cible au silence pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Néant Absolu — Inflige 110% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");
+        System.out.println("Néant Absolu — Inflige 175% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");
     }
 }

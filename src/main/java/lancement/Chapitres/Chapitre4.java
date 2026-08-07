@@ -170,7 +170,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiShaw(niv));
                 e.add(new EnnemiSimon(niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
-                return new Stage(1, "Embuscade dans le casino", 1900, 62, e);
+                return new Stage(1, "Embuscade dans le casino", 1900, 0, e);
             }
 
             // Stage 2 — gardes generiques
@@ -181,7 +181,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
-                return new Stage(2, "Infiltration dans la tour du paradis", 2150, 64, e);
+                return new Stage(2, "Infiltration dans la tour du paradis", 2150, 0, e);
             }
 
             // Stage 3 — Natsu vs Wolly + Miliana + gardes generiques
@@ -192,7 +192,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
-                return new Stage(3, "Miaou, Il faut sauver Happy", 2400, 66, e);
+                return new Stage(3, "Miaou, Il faut sauver Happy", 2400, 0, e);
             }
 
             // Stage 4 — Erza contre Shaw (encore sous emprise) + gardes generiques
@@ -203,7 +203,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
-                return new Stage(4, "Libération d'erza", 2700, 68, e);
+                return new Stage(4, "Libération d'erza", 2700, 0, e);
             }
 
             // Stage 5 —  Lucy + jubia vs Vivaldus + gardes generiques
@@ -214,7 +214,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
-                return new Stage(5, "Les esprits et l'eau", 3050, 70, e);
+                return new Stage(5, "Les esprits et l'eau", 3050, 0, e);
             }
 
             // Stage 6 — Natsu et Simon contre Owl + gardes generiques
@@ -225,24 +225,24 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_4, niv));
-                return new Stage(6, "Le hiboux assasin", 3450, 72, e);
+                return new Stage(6, "Le hiboux assasin", 3450, 0, e);
             }
 
             // Stage 7 — Erza + Shaw vs Ikaruga + gardes generiques
             case 7 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(4, 7);
                 e.add(new EnnemiIkaruga(niv));
-                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
-                return new Stage(7, "Epée contre Epée", 3900, 74, e);
+                return new Stage(7, "Epée contre Epée", 3900, 0, e);
             }
 
             // Stage 8 — Combat scripte : Erza seule contre Jellal
             case 8 -> {
                 e.add(new EnnemiJellal(CourbeChapitres.niveauEnnemiPourStage(4, 8)));
-                return new Stage(8, "Erza contre Jellal — Le Passe Ressurgit", 4950, 80, e);
+                return new Stage(8, "Erza contre Jellal — Le Passe Ressurgit", 4950, 0, e);
             }
 
             // Stage 9 — Simon (alliee) + equipe contre Jellal + gardes generiques
@@ -252,7 +252,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
-                return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 82, e);
+                return new Stage(9, "Le sacrifice de Simon — L'Assaut sur Jellal", 5200, 0, e);
             }
 
             // Stage 10 — Natsu Etherion vs Jellal + gardes generiques
@@ -263,7 +263,7 @@ public class Chapitre4 implements Chapitre {
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_4, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_4, niv));
-                return new Stage(10, "Jellal — L'Effondrement de la Tour du Paradis", 6500, 84, e);
+                return new Stage(10, "Jellal — L'Effondrement de la Tour du Paradis", 6500, 0, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }

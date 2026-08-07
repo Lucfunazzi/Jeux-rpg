@@ -50,7 +50,7 @@ public class perso_Cherry extends PersonnageBase {
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "DPS");
         if (cibleSoin == null) cibleSoin = Combat.cibleParRole(equipeAlliee, "Support");
         if (cibleSoin == null) return;
-        double soin = this.getAttaque() * 1.20;
+        double soin = this.getAttaque() * 1.00;
         cibleSoin.recevoirSoin(soin, log);
         Purification.purifier(cibleSoin, 1, log);
     }
@@ -74,7 +74,7 @@ public class perso_Cherry extends PersonnageBase {
         System.out.println("Arbre Marionnette — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Je Fais de Toi ma Marionnette — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 120% ATK et retirer un effet negatif.");
+        System.out.println("Je Fais de Toi ma Marionnette — Soigne le Tank en priorite (sinon un DPS, sinon un Support) de 100% ATK et retirer un effet negatif.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Grand Arbre Marionnette — Inflige 70% ATK à tous.");

@@ -65,7 +65,7 @@ public class perso_Sol extends PersonnageBase {
         log.add("Sol liquéfie le sol — la Sonate de Plâtre engloutit toute l'équipe ennemie, non !");
         double multiplicateurRage = 1.0;
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-        Combat.appliquerEffet(this, new BuffDefense(0.30, 3), log);
+        Combat.appliquerEffet(this, new BuffDefense(0.15, 3), log);
         
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
@@ -75,11 +75,11 @@ public class perso_Sol extends PersonnageBase {
                 
             }
         }
-        double soin = this.getVieMax() * 0.10;
-        this.recevoirSoin(soin, log);
+        
+        
     }
 
     @Override public void descriptionAttaqueBase() { System.out.println("Show Time — Gravats de Pierre : 100% ATK."); }
     @Override public void descriptionAttaqueSpeciale() { System.out.println("Merci la Vie — Mémoire : 110% ATK, 50% de chance d'appliquer Confusion pendant 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre : +30% DEF (3 tours) pour Sol, 90% ATK à tous les ennemis (x rage), puis Sol récupère 10% de ses PV max."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Sonate de Plâtre : +15% DEF (3 tours) pour Sol, 90% ATK à tous les ennemis."); }
 }

@@ -177,8 +177,12 @@ public class EquipementFactory {
      */
     public static Equipement.Rarete rareteEnnemiPourRangArene(int rangArene) {
         if (rangArene >= 80) return Equipement.Rarete.C;
-        if (rangArene >= 20) return Equipement.Rarete.B;
-        return Equipement.Rarete.A;
+        if (rangArene >= 65) return Equipement.Rarete.B;
+        if (rangArene >= 30) return Equipement.Rarete.A;
+        if (rangArene >= 20) return Equipement.Rarete.S;
+        if (rangArene >= 10) return Equipement.Rarete.SS;
+        if (rangArene >= 3)  return Equipement.Rarete.SSS;
+        return Equipement.Rarete.UR;
     }
 
     // ── Rang C ────────────────────────────────────────────────────────────

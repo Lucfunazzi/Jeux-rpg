@@ -16,7 +16,7 @@ public class EnnemiMage3Soigneur extends PersonnageBase {
         this.niveau = niveau;
         this.type="Elementaliste";
         this.role   = "Support";
-        this.rarete = "C";
+        this.rarete = Variante.raretePourNiveau(niveau);
 
         double niv  = Math.pow(1.05, niveau - 1);
         double vit  = Math.pow(1.03, niveau - 1);

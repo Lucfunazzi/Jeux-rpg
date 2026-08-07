@@ -58,7 +58,7 @@ public class EnnemiDormaAnim extends PersonnageBase {
         log.add("Dorma Anim libère un Souffle Destructeur sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.95;
+                double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
@@ -72,7 +72,7 @@ public class EnnemiDormaAnim extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.30) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.70) * multiplicateurRage;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.20, 2), log);
@@ -85,9 +85,9 @@ public class EnnemiDormaAnim extends PersonnageBase {
         System.out.println("Griffe Mécanique — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Souffle Destructeur — Inflige 95% ATK à tous les ennemis.");
+        System.out.println("Souffle Destructeur — Inflige 120% ATK à tous les ennemis.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Rugissement du Jugement — Inflige 130% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");
+        System.out.println("Rugissement du Jugement — Inflige 170% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");
     }
 }

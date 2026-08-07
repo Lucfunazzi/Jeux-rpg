@@ -50,7 +50,7 @@ public class perso_Totomaru extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Totomaru génère un feu orange nauséabond — " + cible.getNom() + " est submergé par l'odeur répugnante !");
-        double degats = this.getAttaque() * 1.20;
+        double degats = this.getAttaque() * 1.45;
         if (cible.aEffet(Trempe.class)) degats *= 1.20;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, cible, new Poison(2, 0.06), log);
@@ -66,7 +66,7 @@ public class perso_Totomaru extends PersonnageBase {
         
         for (PersonnageBase cible : equipeEnnemie) {
             if (cible.estVivant()) {
-                double degats = (this.getAttaque() * 1.00) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.10) * multiplicateurRage;
                 if (cible.aEffet(Trempe.class)) degats *= 1.20;
                 Combat.appliquerDegatsAvecLog(this, cible, degats, log);
                 Combat.appliquerEffet(this, cible, new Brulure(2, 0.07), log);
@@ -76,6 +76,6 @@ public class perso_Totomaru extends PersonnageBase {
     }
 
     @Override public void descriptionAttaqueBase() { System.out.println("Flamme Blanche — 100% ATK."); }
-    @Override public void descriptionAttaqueSpeciale() { System.out.println("Feu Orange Nauséabond — 120% ATK, empoisonne 2 tours."); }
-    @Override public void descriptionAttaqueUltime() { System.out.println("Flammes Arc-en-Ciel —  100% ATK à tous (x rage), brûle  2 tours."); }
+    @Override public void descriptionAttaqueSpeciale() { System.out.println("Feu Orange Nauséabond — 145% ATK, empoisonne 2 tours."); }
+    @Override public void descriptionAttaqueUltime() { System.out.println("Flammes Arc-en-Ciel —  110% ATK à tous (x rage), brûle  2 tours."); }
 }

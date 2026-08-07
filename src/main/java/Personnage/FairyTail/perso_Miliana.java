@@ -54,7 +54,7 @@ public class perso_Miliana extends PersonnageBase{
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant() && ennemi.getRole().equals("Support")) {
                 toucheSupport = true;
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (Math.random() < 0.50) {
                     Combat.appliquerEffet(this, ennemi, new Etourdissement(1), log);
@@ -64,7 +64,7 @@ public class perso_Miliana extends PersonnageBase{
         if (!toucheSupport) {
             PersonnageBase repli = Combat.choisirCible(this, equipeEnnemie);
             if (repli != null) {
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, repli, degats, log);
                 if (Math.random() < 0.50) {
                     Combat.appliquerEffet(this, repli, new Etourdissement(1), log);
@@ -91,7 +91,7 @@ public class perso_Miliana extends PersonnageBase{
         System.out.println("Coup de poing félin — Inflige 100% ATK");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Entraves Féline multiples — Inflige 80% ATK aux Supports ennemis, 50% de chance d'étourdir chacun d'eux pendant 1 tour.");
+        System.out.println("Entraves Féline multiples — Inflige 120% ATK aux Supports ennemis, 50% de chance d'étourdir chacun d'eux pendant 1 tour.");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Kitten Blast — Inflige 130% ATK au Tank ennemi, 50% de chance de l'étourdir pendant 1 tour.");

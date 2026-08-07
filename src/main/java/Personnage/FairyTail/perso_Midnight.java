@@ -61,7 +61,7 @@ public class perso_Midnight extends PersonnageBase {
         log.add("Midnight déchaîne un Chaos Réflecté sur toute l'équipe ennemie !");
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.95;
+                double degats = this.getAttaque() * 1.20;
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new Fragilite(2, 0.15), log);
@@ -77,6 +77,6 @@ public class perso_Midnight extends PersonnageBase {
         System.out.println("Miroir Illusoire — Inflige 130% ATK à la cible et réduit sa précision de 20% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Chaos Réflecté — Inflige 95% ATK à tous les ennemis et augmente les dégâts qu'ils subissent de 15% pendant 2 tours.");
+        System.out.println("Chaos Réflecté — Inflige 120% ATK à tous les ennemis et augmente les dégâts qu'ils subissent de 15% pendant 2 tours.");
     }
 }

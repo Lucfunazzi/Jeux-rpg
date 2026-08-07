@@ -42,8 +42,11 @@ public class StageExamenS {
             System.out.println("  - " + e.getNom() + " [" + e.getRarete() + "] Niv." + e.getNiveau() + " (" + e.getRole() + ")");
         System.out.println();
 
+        // donnerXP=false : l'Examen S n'accorde pas d'XP de progression (recompense geree via
+        // boite de pierre par MenuExamenS) — sans ca, Combat.donnerExperience() en accordait
+        // silencieusement a chaque victoire, une source d'XP incontrolee hors de tout equilibrage.
         etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis);
+        Combat combat = new Combat(equipeAlliee, ennemis, false);
         evenements = combat.lancerCombatEnregistre();
 
         boolean victoire = tousKO(ennemis);

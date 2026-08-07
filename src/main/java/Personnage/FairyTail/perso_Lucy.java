@@ -56,7 +56,7 @@ public class perso_Lucy extends PersonnageBase {
             if (ennemi.estVivant()) ennemisVivants.add(ennemi);
         ennemisVivants.sort(Comparator.comparingDouble(PersonnageBase::getVie));
 
-        double mult = 0.80;
+        double mult = 1.20;
         if (yukinoAlliee) {
             mult += 0.20;
         }
@@ -74,7 +74,7 @@ public class perso_Lucy extends PersonnageBase {
 
         // Buff DEF équipe
         for (PersonnageBase allie : equipeAlliee)
-            if (allie.estVivant()) Combat.appliquerEffet(this, allie, new BuffDefense(0.10, 3), log);
+            if (allie.estVivant()) Combat.appliquerEffet(this, allie, new BuffTauxCritique(0.10, 3), log);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class perso_Lucy extends PersonnageBase {
         boolean angelAlliee  = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Angel"));
         boolean yukinoAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Yukino"));
 
-        double mult = 1.05;
+        double mult = 1.30;
         if (angelAlliee && yukinoAlliee) {
             mult = 1.40;
         } else if (yukinoAlliee || angelAlliee) {
@@ -114,12 +114,12 @@ public class perso_Lucy extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Invocation Taurus — inflige 80% ATK aux 2 ennemis avec le moins de PV"
-                + " + Saignement 2 tours + BuffDEF 10% equipe 3 tours.");
+        System.out.println("Invocation Taurus — inflige 120% ATK aux 2 ennemis avec le moins de PV"
+                + " + Saignement 2 tours + Buff Taux Critiques de 10% pour l'equipe pendant 3 tours.");
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Invocation Aquarius — AoE 105% ATK + Trempe 3 tours + 40% chance Etourdissement.");
+        System.out.println("Invocation Aquarius — AoE 130% ATK + Trempe 3 tours + 40% chance Etourdissement.");
     }
 }

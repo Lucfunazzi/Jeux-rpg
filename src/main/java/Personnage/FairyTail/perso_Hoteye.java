@@ -48,7 +48,7 @@ public class perso_Hoteye extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hoteye dévore la magie de " + cible.getNom() + " avec son Doigt du Sable !");
-        double degats = this.getAttaque() * 1.15;
+        double degats = this.getAttaque() * 1.50;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new ReductionAttaque(0.15, 2), log);
@@ -62,7 +62,7 @@ public class perso_Hoteye extends PersonnageBase {
         Combat.appliquerEffet(this, new BuffBlocage(0.20, 2), log);
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.80;
+                double degats = this.getAttaque() * 1.00;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
@@ -72,9 +72,9 @@ public class perso_Hoteye extends PersonnageBase {
         System.out.println("Poing de Sable — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Doigt du Sable Dévorant — Inflige 115% ATK et réduit l'ATK de la cible de 15% pendant 2 tours.");
+        System.out.println("Doigt du Sable Dévorant — Inflige 150% ATK et réduit l'ATK de la cible de 15% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Grande Muraille de Sable — Augmente son taux de blocage de 20% pendant 2 tours et inflige 80% ATK à tous les ennemis.");
+        System.out.println("Grande Muraille de Sable — Augmente son taux de blocage de 20% pendant 2 tours et inflige 100% ATK à tous les ennemis.");
     }
 }

@@ -90,8 +90,12 @@ public class StageDonjon {
             e.getEffetsActifs().clear();
         }
 
+        // donnerXP=false : la progression XP d'un donjon passe uniquement par le Parchemin XP
+        // remis en recompense (utiliserParchemin, plafonne au niveau du joueur) — sans ca,
+        // Combat.donnerExperience() accordait aussi de l'XP automatique au joueur a chaque
+        // victoire, une source d'XP incontrolee et repetable jusqu'a 3x/jour par donjon.
         etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis);
+        Combat combat = new Combat(equipeAlliee, ennemis, false);
         evenements = combat.lancerCombatEnregistre();
 
         boolean victoire = tousKO(ennemis);

@@ -48,7 +48,7 @@ public class perso_Racer extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Racer ralentit le temps autour de " + cible.getNom() + " !");
-        double degats = this.getAttaque() * 1.25;
+        double degats = this.getAttaque() * 1.75;
         boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         if (touche) {
             Combat.appliquerEffet(this, cible, new ReductionVitesse(0.25, 2), log);
@@ -63,7 +63,7 @@ public class perso_Racer extends PersonnageBase {
         Combat.appliquerEffet(this, new BuffVitesse(0.30, 2), log);
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.90;
+                double degats = this.getAttaque() * 1.40;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
@@ -73,10 +73,10 @@ public class perso_Racer extends PersonnageBase {
         System.out.println("Frappe Éclair — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Magie du Ralentissement — Inflige 125% ATK et réduit la vitesse de la cible de 25% et "
+        System.out.println("Magie du Ralentissement — Inflige 175% ATK et réduit la vitesse de la cible de 25% et "
                 + "augmente son taux critique de 10% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Vitesse Absolue — Augmente sa vitesse de 30% pendant 2 tours et inflige 90% ATK à tous les ennemis.");
+        System.out.println("Vitesse Absolue — Augmente sa vitesse de 30% pendant 2 tours et inflige 140% ATK à tous les ennemis.");
     }
 }

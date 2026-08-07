@@ -153,7 +153,7 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
-                yield new Stage(1, "Prologue Edolas", 13500, 175, e);
+                yield new Stage(1, "Prologue Edolas", 13500, 0, e);
             }
             // Stage 2 — equipe generique : 1 tank, 3 dps, 1 support.
             case 2 -> {
@@ -163,7 +163,7 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
-                yield new Stage(2, "Magie Limité", 13800, 179, e);
+                yield new Stage(2, "Magie Limité", 13800, 0, e);
             }
             // Stage 3 — Erza Knightwalker + 3 dps + 1 support generiques.
             case 3 -> {
@@ -173,7 +173,7 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
-                yield new Stage(3, "La chasseuses de fées", 14100, 183, e);
+                yield new Stage(3, "La chasseuses de fées", 14100, 0, e);
             }
             // Stage 4 — Gray invite vs Sugarboy + 2 dps + 2 supports generiques.
             case 4 -> {
@@ -183,18 +183,17 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
-                yield new Stage(4, "Gray contre sugarBoy", 14400, 187, e);
+                yield new Stage(4, "Gray contre sugarBoy", 14400, 0, e);
             }
             // Stage 5 — Lucy et Natsu invites vs Hughes + 1 tank + 2 dps + 2 supports generiques.
             case 5 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(7, 5);
                 e.add(new EnnemiHughes(niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
-                yield new Stage(5, "Natsu et Lucy vs huges", 14700, 191, e);
+                yield new Stage(5, "Natsu et Lucy vs huges", 14700, 0, e);
             }
             // Stage 6 — Lucy invitee vs Byro + 1 tank + 3 dps generiques.
             case 6 -> {
@@ -202,18 +201,19 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiByro(niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_7, niv));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
-                yield new Stage(6, "Lucy contre byro", 15000, 195, e);
+                yield new Stage(6, "Lucy contre byro", 15000, 0, e);
             }
             // Stage 7 — Gajeel invite vs Panther Lily + 3 supports generiques.
             case 7 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(7, 7);
                 e.add(new EnnemiPantherLily(niv));
+                e.add(new EnnemiMage9Tank(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
-                yield new Stage(7, "Gajeel vs Panthère Lilly", 15300, 199, e);
+                yield new Stage(7, "Gajeel vs Panthère Lilly", 15300, 0, e);
             }
             // Stage 8 — Dorma Anim + 1 dps + 3 supports generiques, sans invite.
             case 8 -> {
@@ -223,7 +223,7 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
-                yield new Stage(8, "Le roi d'edolas rentre en jeu", 15600, 203, e);
+                yield new Stage(8, "Le roi d'edolas rentre en jeu", 15600, 0, e);
             }
             // Stage 9 — Wendy, Natsu et Gajeel invites vs Dorma Anim + 3 dps + 1 support generiques.
             case 9 -> {
@@ -233,12 +233,12 @@ public class Chapitre7 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_7, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_7, niv));
-                yield new Stage(9, "Natsu et Gajeel et wendy vs Le roi d'edolas", 15900, 207, e);
+                yield new Stage(9, "Natsu et Gajeel et wendy vs Le roi d'edolas", 15900, 0, e);
             }
             // Stage 10 — Dorma Anim boosté, seul contre toute l'equipe : le combat le plus dur du chapitre.
             case 10 -> {
-                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 10) + 4));
-                yield new Stage(10, "Le dernier combat", 16500, 214, e);
+                e.add(new EnnemiDormaAnim(CourbeChapitres.niveauEnnemiPourStage(7, 10) + 8));
+                yield new Stage(10, "Le dernier combat", 16500, 0, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
         };

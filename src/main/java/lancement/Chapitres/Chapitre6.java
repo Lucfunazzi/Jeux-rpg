@@ -182,7 +182,7 @@ public class Chapitre6 implements Chapitre {
                 jura.setVitesse(jura.getVitesse() * 0.8);
                 e.add(jura);
                 e.add(new EnnemiCherry(niv));
-                yield new Stage(1, "Prologue — L'alliance des guildes", 10200, 132, e);
+                yield new Stage(1, "Prologue — L'alliance des guildes", 10200, 0, e);
             }
             // Stage 2 — Combat scripte : meme equipe fixe contre Oracion Seis.
             case 2 -> {
@@ -192,7 +192,7 @@ public class Chapitre6 implements Chapitre {
                 e.add(new EnnemiMidnight(niv));
                 e.add(new EnnemiRacer(niv));
                 e.add(new EnnemiBrain(niv));
-                yield new Stage(2, "Oracions seis vs l'alliance des guildes", 10500, 136, e);
+                yield new Stage(2, "Oracions seis vs l'alliance des guildes", 10500, 0, e);
             }
             // Stage 3 — Gray et Leon rejoignent l'equipe (remplacent 2 DPS) contre Racer et des generiques.
             case 3 -> {
@@ -202,7 +202,7 @@ public class Chapitre6 implements Chapitre {
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_6, niv));
-                yield new Stage(3, "Gray et leon vs racer", 10800, 140, e);
+                yield new Stage(3, "Gray et leon vs racer", 10800, 0, e);
             }
             // Stage 4 — Lucy et Hibiki rejoignent l'equipe contre Angel et des generiques.
             case 4 -> {
@@ -212,12 +212,12 @@ public class Chapitre6 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
-                yield new Stage(4, "Combat de constellasioniste", 11100, 144, e);
+                yield new Stage(4, "Combat de constellasioniste", 11100, 0, e);
             }
             // Stage 5 — Combat scripte : Jura (seul, largement plus fort) contre Hoteye.
             case 5 -> {
                 e.add(new EnnemiHoteye(CourbeChapitres.niveauEnnemiPourStage(6, 5)));
-                yield new Stage(5, "Duel entre Jura et Hoy-eyes", 11400, 148, e);
+                yield new Stage(5, "Duel entre Jura et Hoy-eyes", 11400, 0, e);
             }
             // Stage 6 — Natsu rejoint l'equipe contre Cobra et des generiques.
             case 6 -> {
@@ -226,43 +226,43 @@ public class Chapitre6 implements Chapitre {
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_6, niv));
-                e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
-                yield new Stage(6, "Cobras vs Natsu", 11700, 152, e);
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_6, niv));
+                yield new Stage(6, "Cobras vs Natsu", 11700, 0, e);
             }
             // Stage 7 — Jellal et Erza rejoignent l'equipe contre Midnight et des generiques.
             case 7 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(6, 7);
                 e.add(new EnnemiMidnight(niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_6, niv));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_6, niv));
-                yield new Stage(7, "Jellal et erza vs midnight", 12000, 156, e);
+                yield new Stage(7, "Jellal et erza vs midnight", 12000, 0, e);
             }
             // Stage 8 — Natsu rejoint l'equipe contre Brain et des generiques.
             case 8 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(6, 8);
                 e.add(new EnnemiBrain(niv));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_6, niv));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_6, niv));
-                yield new Stage(8, "Natsu vs Brain", 12300, 160, e);
+                yield new Stage(8, "Natsu vs Brain", 12300, 0, e);
             }
             // Stage 9 — Jura (non boosté) rejoint l'equipe (remplace le Tank) contre Brain et des generiques.
             case 9 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(6, 9);
                 e.add(new EnnemiBrain(niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_6, niv));
-                e.add(new EnnemiMage1DPS(Variante.CHAPITRE_6, niv));
-                e.add(new EnnemiMage2DPS(Variante.CHAPITRE_6, niv));
+                e.add(new EnnemiMage8DPS(Variante.CHAPITRE_6, niv));
+                e.add(new EnnemiMage7DPS(Variante.CHAPITRE_6, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_6, niv));
-                yield new Stage(9, "Jura vs Brain", 12700, 165, e);
+                yield new Stage(9, "Jura vs Brain", 12700, 0, e);
             }
             // Stage 10 — Combat scripte : Natsu Etherion (seul) contre Zero.
             case 10 -> {
                 e.add(new EnnemiZero(CourbeChapitres.niveauEnnemiPourStage(6, 10)));
-                yield new Stage(10, "Natsu vs la nouvelle forme de Brain", 13200, 172, e);
+                yield new Stage(10, "Natsu vs la nouvelle forme de Brain", 13200, 0, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
         };

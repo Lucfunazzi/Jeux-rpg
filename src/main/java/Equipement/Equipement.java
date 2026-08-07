@@ -101,6 +101,11 @@ public class Equipement {
         return 200 * (niveauFortification + 1);
     }
 
+    /** Or total deja depense pour atteindre le niveau de fortification actuel (somme 200*1 + 200*2 + ... + 200*N). */
+    public int getOrDepenseFortification() {
+        return 200 * niveauFortification * (niveauFortification + 1) / 2;
+    }
+
     // ── Affinage ──────────────────────────────────────────────────────────
     public int getNiveauAffinage() { return niveauAffinage; }
 
@@ -120,6 +125,11 @@ public class Equipement {
      */
     public int getCoutAffinageProchainNiveau() {
         return (niveauAffinage + 1) * 2;
+    }
+
+    /** Pierres d'affinage deja depensees pour atteindre le niveau actuel (somme 2*1 + 2*2 + ... + 2*N). */
+    public int getPierresDepenseesAffinage() {
+        return niveauAffinage * (niveauAffinage + 1);
     }
 
     /**

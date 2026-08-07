@@ -171,7 +171,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
-                yield new Stage(1,  "Le début de la bataille de Fairy Tail",  7200, 90, e);
+                yield new Stage(1,  "Le début de la bataille de Fairy Tail",  7200, 0, e);
               }
 
             case 2  ->{
@@ -183,7 +183,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5,niv));
 
 
-              yield new Stage(2,  "En route pour sauver les femmes de Fairy Tail",  7500, 94, e);
+              yield new Stage(2,  "En route pour sauver les femmes de Fairy Tail",  7500, 0, e);
 
             }
             case 3  -> {
@@ -193,7 +193,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
-                yield new Stage(3, "Elfman vs Evergreen", 7800, 98, e);
+                yield new Stage(3, "Elfman vs Evergreen", 7800, 0, e);
             }
             case 4  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 4);
@@ -202,7 +202,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
-                yield new Stage(4, "Gray vs Bixrow", 8100, 102, e);
+                yield new Stage(4, "Gray vs Bixrow", 8100, 0, e);
             }
             case 5  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 5);
@@ -211,7 +211,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
-                yield new Stage(5, "Lucy vs Bixrow", 8400, 106, e);
+                yield new Stage(5, "Lucy vs Bixrow", 8400, 0, e);
             }
             case 6  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 6);
@@ -220,14 +220,14 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_5, niv));
-                yield new Stage(6, "Erza contre Evergreen", 8700, 110, e);
+                yield new Stage(6, "Erza contre Evergreen", 8700, 0, e);
             }
             case 7  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 7);
                 e.add(new EnnemiFreed(niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_5, niv));
-                yield new Stage(7, "Mirajane vs Freed", 9000, 114, e);
+                yield new Stage(7, "Mirajane vs Freed", 9000, 0, e);
             }
             case 8  -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 8);
@@ -236,12 +236,12 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage4Buff(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
-                yield new Stage(8, "Erza vs Luxus", 9300, 118, e);
+                yield new Stage(8, "Erza vs Luxus", 9300, 0, e);
             }
             case 9  -> {
                 // Combat scripte 1 vs 1 : pas de mobs generiques.
                 e.add(new EnnemiLuxus(CourbeChapitres.niveauEnnemiPourStage(5, 9)));
-                yield new Stage(9, "Mistgun vs Luxus", 9600, 122, e);
+                yield new Stage(9, "Mistgun vs Luxus", 9600, 0, e);
             }
             case 10 -> {
                 int niv = CourbeChapitres.niveauEnnemiPourStage(5, 10);
@@ -250,7 +250,7 @@ public class Chapitre5 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_5, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_5, niv));
-                yield new Stage(10, "Natsu et Gajeel vs Luxus", 10000, 130, e);
+                yield new Stage(10, "Natsu et Gajeel vs Luxus", 10000, 0, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
         };

@@ -55,7 +55,7 @@ public class perso_Sugarboy extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Sugarboy avale la magie ambiante — Absorption Magique !");
         Combat.appliquerEffet(this, new Bouclier(this.getVieMax() * 0.12), log);
-        double degats = this.getAttaque() * 1.05;
+        double degats = this.getAttaque() * 1.20;
         if (cible.aEffet(Saignement.class)) degats *= 1.15;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         for (PersonnageBase ennemi : equipeEnnemie) {
@@ -72,7 +72,7 @@ public class perso_Sugarboy extends PersonnageBase {
         double degatsTotaux = 0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 0.90;
+                double degats = this.getAttaque() * 1.20;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 degatsTotaux += degats;
             }
@@ -85,9 +85,9 @@ public class perso_Sugarboy extends PersonnageBase {
         System.out.println("Espanas — Inflige 150% ATK a deux ennemis.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Absorption Magique — Se protège d'un bouclier (12% PV max) et inflige 105% ATK. et reduit la defense des attaquants de 15%");
+        System.out.println("Absorption Magique — Se protège d'un bouclier (12% PV max) et inflige 120% ATK. et reduit la defense des attaquants de 15%");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Vague Dévorante — Inflige 90% ATK à tous les ennemis et se soigne de 15% des dégâts infligés. ");
+        System.out.println("Vague Dévorante — Inflige 120% ATK à tous les ennemis et se soigne de 15% des dégâts infligés. ");
     }
 }

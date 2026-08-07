@@ -98,14 +98,16 @@ public class EcranStagesController {
     }
 
     private void lancerStage(int numero, Stage stage) {
-        if (ligne.elite()) ctx.gestionnaireEnergie.mettreAJourRecharge();
+        ctx.gestionnaireEnergie.mettreAJourRecharge();
 
         if (ligne.elite() && !ctx.gestionnaireEnergie.peutFaireRunElite(numero)) {
             info("Stage", "Limite de runs atteinte pour ce stage aujourd'hui (10/10).");
             return;
         }
-        if (ligne.elite() && ctx.gestionnaireEnergie.getEnergie() < 5) {
-            info("Stage", "Pas assez d'énergie ! (il faut 5, vous avez " + ctx.gestionnaireEnergie.getEnergie() + ")");
+        int coutEnergie = ligne.elite() ? 5 : 1;
+        if (ctx.gestionnaireEnergie.getEnergie() < coutEnergie) {
+            info("Stage", "Pas assez d'énergie ! (il faut " + coutEnergie
+                    + ", vous avez " + ctx.gestionnaireEnergie.getEnergie() + ")");
             return;
         }
 
@@ -122,14 +124,47 @@ public class EcranStagesController {
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(resultat.etatInitial, resultat.evenements, resultat.victoire, v -> {
-                if (resultat.recompenses != null) {
-                    annoncerRecompenses(resultat.recompenses);
+                Runnable suite = () -> {
+                    if (resultat.recompenses != null) {
+                        annoncerRecompenses(resultat.recompenses);
+                    }
+                    for (PersonnageBase recrue : nouveauxRecrues) {
+                        annoncerRecrue(recrue);
+                    }
+                    retourStages(stage);
+                };
+                String cheminVideo = v ? cheminVideoFinStage(ligne.numeroChapitre(), numero) : null;
+                if (cheminVideo != null) {
+                    jouerVideoFinStage(stage, cheminVideo, suite);
+                } else {
+                    suite.run();
                 }
-                for (PersonnageBase recrue : nouveauxRecrues) {
-                    annoncerRecrue(recrue);
-                }
-                retourStages(stage);
             }, ligne.numeroChapitre());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** Chemin classpath de la cinematique de fin de stage, ou null si aucune video n'est
+     *  associee a ce stage (le jeu enchaine alors directement sur les recompenses). */
+    private String cheminVideoFinStage(int numeroChapitre, int numero) {
+        if (numeroChapitre == 1) {
+            return switch (numero) {
+                case 1  -> "/video/chapitre1/introp_stage1_chap1.mp4";
+                case 2  -> "/video/chapitre1/chapitre1_stage2.mp4";
+                case 3  -> "/video/chapitre1/stage3_chap1.mp4";
+                default -> null;
+            };
+        }
+        return null;
+    }
+
+    /** Joue la cinematique de fin de stage (avec bouton "Passer"), puis enchaine sur {@code suite}. */
+    private void jouerVideoFinStage(Stage stage, String cheminVideo, Runnable suite) {
+        try {
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranFinStageVideo.fxml");
+            EcranFinStageVideoController controller = loader.getController();
+            controller.initData(cheminVideo, suite);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -138,7 +173,9 @@ public class EcranStagesController {
     /** Popup recapitulant les recompenses obtenues a la fin d'un stage reussi. */
     private void annoncerRecompenses(lancement.Stage.Recompenses r) {
         StringBuilder sb = new StringBuilder();
-        sb.append("+ ").append(r.xp).append(" XP par personnage\n");
+        if (r.xp > 0) {
+            sb.append("+ ").append(r.xp).append(" XP par personnage\n");
+        }
         sb.append("+ ").append(r.or).append(" or\n");
         if (r.equipement != null) {
             sb.append("+ Equipement obtenu : ").append(r.equipement).append("\n");

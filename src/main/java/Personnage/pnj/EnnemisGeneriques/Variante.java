@@ -68,4 +68,13 @@ public enum Variante {
         if (niveau >= NIVEAU_RANG_B) return MULT_RANG_B;
         return 1.00;
     }
+
+    /** Rarete affichee (badge/couleur, voir GuiVisuels.couleurRarete) correspondant au meme
+     *  palier que multiplicateurRang ci-dessus, pour que la couleur de l'ennemi generique
+     *  change bien en meme temps que ses statistiques. */
+    public static String raretePourNiveau(int niveau) {
+        if (niveau >= NIVEAU_RANG_A) return "A";
+        if (niveau >= NIVEAU_RANG_B) return "B";
+        return "C";
+    }
 }

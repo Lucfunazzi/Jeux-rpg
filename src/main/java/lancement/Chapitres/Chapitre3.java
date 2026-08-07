@@ -142,7 +142,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(1, "L'assaut de Phantom Lord", 300, 22, e);
+                return new Stage(1, "L'assaut de Phantom Lord", 300, 0, e);
             }
 
             // Stage 2 — Natsu contre Totomaru + ennemis generiques
@@ -153,7 +153,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 25, e);
+                return new Stage(2, "Natsu contre Totomaru — Sept Flammes", 375, 0, e);
             }
 
             // Stage 3 — Elfman contre Sol + ennemis generiques
@@ -164,7 +164,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 28, e);
+                return new Stage(3, "Elfman contre Sol — L'Impénétrable", 475, 0, e);
             }
 
             // Stage 4 — Gray contre Jubia + ennemis generiques
@@ -175,7 +175,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 31, e);
+                return new Stage(4, "Gray contre Jubia — L'Eau qui emprisonne", 575, 0, e);
             }
 
             // Stage 5 — Natsu contre Gajeel + ennemis generiques
@@ -186,7 +186,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
-                return new Stage(5, "Natsu contre Gajeel — Le Dragon d'Acier", 675, 35, e);
+                return new Stage(5, "Natsu contre Gajeel — Le Dragon d'Acier", 675, 0, e);
             }
 
             // Stage 6 — Erza contre Aria + ennemis generiques
@@ -197,7 +197,7 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_3, niv));
-                return new Stage(6, "Erza contre Aria — Magie du Ciel Vide", 800, 39, e);
+                return new Stage(6, "Erza contre Aria — Magie du Ciel Vide", 800, 0, e);
             }
 
             // Stage 7 — Erza contre José + ennemis generiques
@@ -208,25 +208,25 @@ public class Chapitre3 implements Chapitre {
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_3, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_3, niv));
-                return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 43, e);
+                return new Stage(7, "Erza contre José — L'Ombre s'éveille", 950, 0, e);
             }
 
             // Stage 8 — Notre equipe seule contre José (sans invite, plus fort)
             case 8 -> {
                 e.add(new EnnemiJose(CourbeChapitres.niveauEnnemiPourStage(3, 8)));
-                return new Stage(8, "José Pora — Seul face à Phantom Lord", 1125, 48, e);
+                return new Stage(8, "José Pora — Seul face à Phantom Lord", 1125, 0, e);
             }
 
             // Stage 9 — Combat scripte : Makarov contre José, notre formation n'intervient pas
             case 9 -> {
                 e.add(new EnnemiJose(CourbeChapitres.niveauEnnemiPourStage(3, 9)));
-                return new Stage(9, "Makarov contre José — La Loi des Fées", 1350, 54, e);
+                return new Stage(9, "Makarov contre José — La Loi des Fées", 1350, 0, e);
             }
 
             // Stage 10 — Notre equipe seule contre Aria (sans invite, dernier rempart)
             case 10 -> {
                 e.add(new EnnemiAria(CourbeChapitres.niveauEnnemiPourStage(3, 10)));
-                return new Stage(10, "Aria — Le Dernier Rempart", 1700, 60, e);
+                return new Stage(10, "Aria — Le Dernier Rempart", 1700, 0, e);
             }
 
             default -> { return new Stage(numero, "???", 0, 0, e); }

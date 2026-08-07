@@ -15,6 +15,7 @@ import Equipement.Pierre;
 import Equipement.PotionEnergie;
 import Equipement.SceauDeRang;
 import Personnage.PersonnageBase;
+import lancement.Menus.MenuAmeliorations;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -554,13 +555,38 @@ public class EcranInventaireController {
             if (!confirmer("Recycler " + e.getNomAffiche() + " contre " + valeur + " Pièces d'équipement ?")) return;
         }
 
+        // Rembourse l'investissement (or de fortification, pierres d'affinage, pierres incrustees)
+        // avant de detruire la piece : sinon recycler un equipement travaille fait perdre ces
+        // ressources pour rien, ce qui decourage de recycler les pieces obsoletes.
+        int orRembourse            = e.getOrDepenseFortification() * quantite;
+        int pierresAffinageRembourse = e.getPierresDepenseesAffinage() * quantite;
+
         for (int i = 0; i < quantite; i++) {
             ctx.inventaire.retirerEquipement(e);
         }
         int total = valeur * quantite;
         ctx.inventaire.ajouterMateriau(EquipementFactory.MATERIAU_PIECE_EQUIPEMENT, total);
+
+        StringBuilder recompense = new StringBuilder();
+        recompense.append(total).append(" Pièces d'équipement");
+
+        if (orRembourse > 0) {
+            ctx.joueur.ajouterOr(orRembourse);
+            recompense.append(", ").append(orRembourse).append(" or (fortification remboursee)");
+        }
+        if (pierresAffinageRembourse > 0) {
+            ctx.inventaire.ajouterMateriau(MenuAmeliorations.MATERIAU_AFFINAGE, pierresAffinageRembourse);
+            recompense.append(", ").append(pierresAffinageRembourse).append(" Pierre(s) d'affinage remboursee(s)");
+        }
+        for (Pierre pierre : e.getPierres()) {
+            if (pierre != null) {
+                ctx.inventaire.ajouterPierre(pierre.getType(), pierre.getNiveau(), quantite);
+                recompense.append(", ").append(quantite).append("x ").append(pierre.getNom()).append(" recuperee(s)");
+            }
+        }
+
         ctx.sauvegarde.sauvegarder(ctx);
-        info("Recycler", quantite + "x " + e.getNomAffiche() + " recyclé(s) pour " + total + " Pièces d'équipement.");
+        info("Recycler", quantite + "x " + e.getNomAffiche() + " recyclé(s) pour " + recompense + ".");
         rafraichir();
     }
 

@@ -595,13 +595,7 @@ public class EcranCombatController {
     }
 
     private Color couleurRarete(String rarete) {
-        return switch (rarete == null ? "" : rarete.toUpperCase()) {
-            case "S" -> Color.web("#f2c14e");
-            case "A" -> Color.web("#b565d8");
-            case "B" -> Color.web("#4ea8f2");
-            case "C" -> Color.web("#7ed9a3");
-            default  -> Color.web("#9a9ac0");
-        };
+        return lancement.gui.GuiVisuels.couleurRarete(rarete);
     }
 
     private String versHex(Color c) {

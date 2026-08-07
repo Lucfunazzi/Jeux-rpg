@@ -64,7 +64,7 @@ public class perso_Cobra extends PersonnageBase {
 
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = this.getAttaque() * 1.10;
+                double degats = this.getAttaque() * 1.30;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 Combat.appliquerEffet(this, ennemi, new Poison(3, 0.06), log);
             }
@@ -79,6 +79,6 @@ public class perso_Cobra extends PersonnageBase {
                 + "Et augmente son esquive de 15% pendants 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Hurlement du Dragon Venimeux — inflige 110% ATK à tous les ennemis et empoisonne les cibles pendants 3 tours (6% PV/Tour).");
+        System.out.println("Hurlement du Dragon Venimeux — inflige 130% ATK à tous les ennemis et empoisonne les cibles pendants 3 tours (6% PV/Tour).");
     }
 }

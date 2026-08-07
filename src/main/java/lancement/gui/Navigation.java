@@ -11,13 +11,15 @@ public final class Navigation {
 
     private static final String ECRAN_COMBAT = "/fxml/EcranCombat.fxml";
     private static final String ECRAN_INTRO_VIDEO = "/fxml/EcranIntroVideo.fxml";
+    private static final String ECRAN_FIN_STAGE_VIDEO = "/fxml/EcranFinStageVideo.fxml";
     private static final String ECRAN_ACCUEIL = "/fxml/EcranAccueil.fxml";
     private static final String ECRAN_CHOIX_CLASSE = "/fxml/EcranChoixClasse.fxml";
     private static final String ECRAN_FICHE_CLASSE = "/fxml/EcranFicheClasse.fxml";
 
     /** Ecrans avec leur propre bande-son (pas de musique de menu generique automatique). */
     private static final java.util.Set<String> ECRANS_MUSIQUE_DEDIEE = java.util.Set.of(
-            ECRAN_COMBAT, ECRAN_INTRO_VIDEO, ECRAN_ACCUEIL, ECRAN_CHOIX_CLASSE, ECRAN_FICHE_CLASSE);
+            ECRAN_COMBAT, ECRAN_INTRO_VIDEO, ECRAN_FIN_STAGE_VIDEO, ECRAN_ACCUEIL,
+            ECRAN_CHOIX_CLASSE, ECRAN_FICHE_CLASSE);
 
     private Navigation() {}
 

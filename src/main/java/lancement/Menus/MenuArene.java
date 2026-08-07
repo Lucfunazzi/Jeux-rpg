@@ -252,20 +252,48 @@ public class MenuArene {
         // rangJoueur necessaire au multiplicateur de stats (getMultiplicateurRang()).
         GameContext ctxIA = new GameContext();
         ctxIA.rangJoueur = new RangJoueur();
-        ctxIA.rangJoueur.setRang(rangJoueurPourRangArene(rangArene));
         pp.setGameContext(ctxIA);
 
-        // Debloque completement les N premiers arbres de competences selon le classement, ce
-        // qui donne aux PP les mieux classes l'acces a des specials/ultimes alternatifs (arbres
-        // 2/3/5/6/7 = special alternative, 4/8 = ultime alternative).
+        // Monte le PP niveau par niveau en faisant progresser son rang (donc son coefficient de
+        // croissance) EN MEME TEMPS que le niveau, exactement comme un vrai joueur qui grimperait
+        // C -> B -> A -> ... au fil de sa progression. Fixer d'emblee le coefficient du rang final
+        // puis monter tous les niveaux avec cette valeur composerait le +5%/niveau avec un
+        // multiplicateur bien trop eleve des le niveau 1 (ex: rang A avec pres de 300k PV), ce qui
+        // ne correspond a aucun personnage reel de ce rang.
+        ctxIA.rangJoueur.setRang(rangPourNiveauIA(1));
+        while (pp.getNiveau() < niveauCible) {
+            ctxIA.rangJoueur.setRang(rangPourNiveauIA(pp.getNiveau() + 1));
+            pp.monterDeNiveauSilencieux();
+        }
+
+        // Une fois la courbe de niveaux montee, le rang "officiel" affiche (badge, couleur) et
+        // utilise pour l'equipement/les arbres suit la position au classement d'arene. Ce
+        // changement de rang ne s'applique qu'aux montees de niveau FUTURES (voir
+        // multiplicateurCroissanceNiveau) : il ne reapplique donc rien retroactivement sur les
+        // stats deja accumulees ci-dessus.
+        RangJoueur.Rang rangFinal = rangJoueurPourRangArene(rangArene);
+        ctxIA.rangJoueur.setRang(rangFinal);
+
+        // Debloque completement les arbres de competences correspondant au rang final (comme un
+        // vrai personnage qui aurait complete certains arbres a ce stade), puis choisit
+        // aleatoirement l'attaque speciale et l'attaque ultime actives parmi celles debloquees.
         ArbreCompetences arbre = pp.getArbreCompetences();
-        int nbArbres = nombreArbresDeblo(rangArene);
-        for (int numArbre = 1; numArbre <= nbArbres; numArbre++) {
+        int[] arbresDebloques = arbresDeblo(rangFinal);
+        for (int numArbre : arbresDebloques) {
             for (int i = 1; i <= 10; i++) arbre.getNoeud(numArbre, i).debloquer();
         }
 
-        // Monter le PP au même niveau que l'équipe adverse
-        while (pp.getNiveau() < niveauCible) pp.monterDeNiveauSilencieux();
+        List<Integer> specialesDispo = new ArrayList<>();
+        List<Integer> ultimesDispo   = new ArrayList<>();
+        for (int numArbre : arbresDebloques) {
+            if (numArbre == 4 || numArbre == 8) ultimesDispo.add(numArbre);
+            else                                specialesDispo.add(numArbre);
+        }
+        Random rng = new Random();
+        if (!specialesDispo.isEmpty())
+            pp.setCompetenceSpecialeActive(specialesDispo.get(rng.nextInt(specialesDispo.size())));
+        if (!ultimesDispo.isEmpty())
+            pp.setCompetenceUltimeActive(ultimesDispo.get(rng.nextInt(ultimesDispo.size())));
 
         // Equipement fantome, comme les 4 coequipiers (AreneData.construireEquipe) : sans ca,
         // le PP adverse restait toujours nu face a des coequipiers geares.
@@ -274,19 +302,46 @@ public class MenuArene {
         return pp;
     }
 
+    /** Rang de classement d'arene (1 = meilleur, 100 = pire) -> rang C..UR du faux PP, utilise
+     *  pour son rang affiche final, son equipement fantome et ses arbres de competences
+     *  debloques. */
     private static RangJoueur.Rang rangJoueurPourRangArene(int rangArene) {
-        if (rangArene <= 4)  return RangJoueur.Rang.S;
-        if (rangArene <= 24) return RangJoueur.Rang.A;
-        if (rangArene <= 59) return RangJoueur.Rang.B;
-        return RangJoueur.Rang.C;
+        if (rangArene >= 80) return RangJoueur.Rang.C;
+        if (rangArene >= 65) return RangJoueur.Rang.B;
+        if (rangArene >= 30) return RangJoueur.Rang.A;
+        if (rangArene >= 20) return RangJoueur.Rang.S;
+        if (rangArene >= 10) return RangJoueur.Rang.SS;
+        if (rangArene >= 3)  return RangJoueur.Rang.SSS;
+        return RangJoueur.Rang.UR;
     }
 
-    private static int nombreArbresDeblo(int rangArene) {
-        if (rangArene <= 4)  return 4;
-        if (rangArene <= 9)  return 3;
-        if (rangArene <= 24) return 2;
-        if (rangArene <= 49) return 1;
-        return 0;
+    /** Palier de rang C..UR selon le niveau, utilise UNIQUEMENT pour faire progresser le
+     *  coefficient de croissance du faux PP au fil de sa montee de niveaux (voir
+     *  creerPersonnagePrincipalIA) — distinct des seuils de RangJoueur (bases sur les arbres de
+     *  competences + l'Examen S), puisque le PP IA ne passe pas par ces conditions. */
+    private static RangJoueur.Rang rangPourNiveauIA(int niveau) {
+        if (niveau <= 30)  return RangJoueur.Rang.C;
+        if (niveau <= 60)  return RangJoueur.Rang.B;
+        if (niveau <= 90)  return RangJoueur.Rang.A;
+        if (niveau <= 120) return RangJoueur.Rang.S;
+        if (niveau <= 150) return RangJoueur.Rang.SS;
+        if (niveau <= 190) return RangJoueur.Rang.SSS;
+        return RangJoueur.Rang.UR;
+    }
+
+    /** Arbres de competences a debloquer entierement pour un rang donne : le rang C debloque les
+     *  2 premieres attaques speciales (arbres 1/2), B la 3e (arbre 3), A le 2e ultime (arbre 8 —
+     *  les 3 autres specials restent le seul choix disponible), S les 3 dernieres specials
+     *  (arbres 5/6/7), et SS/SSS/UR debloquent tous les arbres restants (dont l'arbre 4, le 1er
+     *  ultime). */
+    private static int[] arbresDeblo(RangJoueur.Rang rang) {
+        return switch (rang) {
+            case C  -> new int[]{1, 2};
+            case B  -> new int[]{1, 2, 3};
+            case A  -> new int[]{1, 2, 3, 8};
+            case S  -> new int[]{1, 2, 3, 5, 6, 7, 8};
+            default -> new int[]{1, 2, 3, 4, 5, 6, 7, 8}; // SS, SSS, UR
+        };
     }
 
     // ── Coffre journalier ─────────────────────────────────────────────────

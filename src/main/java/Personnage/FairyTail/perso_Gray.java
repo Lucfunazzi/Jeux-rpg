@@ -37,14 +37,14 @@ public class perso_Gray extends PersonnageBase {
   @Override
 public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Gray utilise Lance de glace !");
-    double degats = this.getAttaque() * 1.20;
+    double degats = this.getAttaque() * 1.30;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
 }
 
 @Override
 public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
     log.add("Marteau de glace !");
-    double degats = this.getAttaque() * 1.20;
+    double degats = this.getAttaque() * 1.30;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, cible, new ReductionVitesse(0.20, 2), log);
     double chanceGel = cible.aEffet(Trempe.class) ? 0.50 : 0.30;
@@ -62,7 +62,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
     }
     for (PersonnageBase ennemi : equipeEnnemie) {
         if (ennemi.estVivant()) {
-            double degats = (this.getAttaque() * 1.20) * multiplicateurRage;
+            double degats = (this.getAttaque() * 1.30) * multiplicateurRage;
             Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             double chanceGel = ennemi.aEffet(Trempe.class) ? 0.50 : 0.30;
             if (Math.random() < chanceGel) {

@@ -13,7 +13,7 @@ public class perso_Elfman extends PersonnageBase {
         this.role = "Tank";
         this.rarete = "B";
         double multiplicateurRarete = 1.24;
-        this.vie = 480 * multiplicateurRarete;
+        this.vie = 520 * multiplicateurRarete;
         this.attaque = 128 * multiplicateurRarete;
         this.defense = 120 * multiplicateurRarete;
         this.vitesse = 90 * multiplicateurRarete;
@@ -62,7 +62,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
         }
     }
     if (cible == null) return;
-    double degats = (this.getAttaque() * 0.80) * multiplicateurRage;
+    double degats = (this.getAttaque() * 1.30) * multiplicateurRage;
     Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     Combat.appliquerEffet(this, new BuffDefense(0.15, 2), log);
 }
@@ -79,7 +79,7 @@ public void attaqueUltime(List<PersonnageBase> equipeAlliee, List<PersonnageBase
 
     @Override
     public void descriptionAttaqueUltime() {
-        System.out.println("Prise totale Forme bestiale — inflige 80% ATK a l'ennemi "
+        System.out.println("Prise totale Forme bestiale — inflige 130% ATK a l'ennemi "
                 + "avec le moins de PV et gagne 15% de défense pendant 2 tours.");
     }
 }

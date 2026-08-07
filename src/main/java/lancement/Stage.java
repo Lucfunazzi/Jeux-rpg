@@ -117,9 +117,11 @@ public class Stage {
             System.out.println("  - " + e.getNom() + " (Niv." + e.getNiveau() + ")");
         System.out.println();
 
-        // Combat
+        // Combat — donnerXP=false : l'XP de combat generique de Combat.donnerExperience() est
+        // reservee a l'arene. En histoire, seule la recompense de la quete (recompenseXP,
+        // calibree sur CourbeChapitres) doit compter, sinon l'XP est comptee en double.
         List<Combat.PersonnageSnapshot> etatInitial = Combat.snapshotEquipes(equipeAlliee, ennemis);
-        Combat combat = new Combat(equipeAlliee, ennemis);
+        Combat combat = new Combat(equipeAlliee, ennemis, false);
 
         List<Combat.CombatEvent> evenements = combat.lancerCombatEnregistre();
 
@@ -135,7 +137,11 @@ public class Stage {
             }
 
             System.out.println("\n>> Recompenses :");
-            System.out.println("   + " + recompenseXP + " XP");
+            if (estNouveauStage) {
+                System.out.println("   + " + recompenseXP + " XP");
+            } else {
+                System.out.println("   + 0 XP (deja obtenue au premier clear)");
+            }
             System.out.println("   + " + recompenseOr + " or");
             ctx.joueur.ajouterOr(recompenseOr);
 
@@ -181,10 +187,15 @@ public class Stage {
             System.out.println("   " + (sansAllieMort ? "★" : "☆") + " Aucun allie mort");
             System.out.println("   " + (enMoinsDe10   ? "★" : "☆") + " Termine en " + toursUtilises + " tour(s) (<= 10)");
 
-            for (PersonnageBase p : equipeAlliee)
-                p.gagnerExperience(recompenseXP);
+            // XP de quete : uniquement au premier clear, comme les cartes d'or et points d'abilite —
+            // sinon farmer un replay redonnerait indefiniment l'XP calibree sur CourbeChapitres.
+            int xpAccordee = estNouveauStage ? recompenseXP : 0;
+            if (xpAccordee > 0) {
+                for (PersonnageBase p : equipeAlliee)
+                    p.gagnerExperience(xpAccordee);
+            }
 
-            recompenses = new Recompenses(recompenseOr, recompenseXP, recompenseEquipement,
+            recompenses = new Recompenses(recompenseOr, xpAccordee, recompenseEquipement,
                     carteOrNom, carteOrQte, pts);
 
             ctx.sauvegarde.sauvegarder(ctx);

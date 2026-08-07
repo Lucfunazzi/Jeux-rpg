@@ -183,7 +183,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_8, niv));
-                yield new Stage(1, "Prologue examen de rang S", 16800, 218, e);
+                yield new Stage(1, "Prologue examen de rang S", 16800, 0, e);
             }
             // Stage 2 — Bixrow et Freed + 1 tank + 1 dps + 2 supports generiques.
             case 2 -> {
@@ -194,7 +194,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_8, niv));
-                yield new Stage(2, "Lucy et cana vs bixrow et freed", 17100, 222, e);
+                yield new Stage(2, "Lucy et cana vs bixrow et freed", 17100, 0, e);
             }
             // Stage 3 — Mirajane + 1 tank + 2 dps + 1 support generiques.
             case 3 -> {
@@ -204,12 +204,12 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_8, niv));
-                yield new Stage(3, "Elfman et evergreen vs Mirajane", 17400, 226, e);
+                yield new Stage(3, "Elfman et evergreen vs Mirajane", 17400, 0, e);
             }
             // Stage 4 — combat scripte : Natsu seul contre Gildarts.
             case 4 -> {
                 e.add(new EnnemiGildarts(CourbeChapitres.niveauEnnemiPourStage(8, 4)));
-                yield new Stage(4, "Natsu vs Gildarts", 17700, 230, e);
+                yield new Stage(4, "Natsu vs Gildarts", 17700, 0, e);
             }
             // Stage 5 — Jubia et Lisanna + 1 tank + 2 dps generiques.
             case 5 -> {
@@ -219,7 +219,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_8, niv));
-                yield new Stage(5, "Erza vs jubia et lisanna", 18000, 234, e);
+                yield new Stage(5, "Erza vs jubia et lisanna", 18000, 0, e);
             }
             // Stage 6 — Mest et Wendy (ennemis) + 1 tank + 2 dps generiques.
             case 6 -> {
@@ -229,7 +229,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage5Tank(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_8, niv));
-                yield new Stage(6, "Gray et Loki vs Mest et Wendy", 18300, 238, e);
+                yield new Stage(6, "Gray et Loki vs Mest et Wendy", 18300, 0, e);
             }
             // Stage 7 — Kawazu et Yamaru + 1 tank + 2 dps generiques.
             case 7 -> {
@@ -239,7 +239,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage9Tank(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage1DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage8DPS(Variante.CHAPITRE_8, niv));
-                yield new Stage(7, "Gajeel et Levy vs kawazu et yamaru", 18600, 242, e);
+                yield new Stage(7, "Gajeel et Levy vs kawazu et yamaru", 18600, 0, e);
             }
             // Stage 8 — Azuma + 1 tank + 1 dps + 2 supports generiques.
             case 8 -> {
@@ -249,12 +249,12 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage6Debuff(Variante.CHAPITRE_8, niv));
-                yield new Stage(8, "Mest, panthere lilly et wendy vs Azuma", 19000, 247, e);
+                yield new Stage(8, "Mest, panthere lilly et wendy vs Azuma", 19000, 0, e);
             }
             // Stage 9 — combat scripte : Makarov seul contre Hades.
             case 9 -> {
                 e.add(new EnnemiHades(CourbeChapitres.niveauEnnemiPourStage(8, 9)));
-                yield new Stage(9, "Le maître de grimoir Heart vs Makarov", 19500, 253, e);
+                yield new Stage(9, "Le maître de grimoir Heart vs Makarov", 19500, 0, e);
             }
             // Stage 10 — Zancrow + 1 tank + 2 dps + 1 support generiques.
             case 10 -> {
@@ -264,7 +264,7 @@ public class Chapitre8 implements Chapitre {
                 e.add(new EnnemiMage2DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage7DPS(Variante.CHAPITRE_8, niv));
                 e.add(new EnnemiMage3Soigneur(Variante.CHAPITRE_8, niv));
-                yield new Stage(10, "Natsu vs Zancrow", 20000, 260, e);
+                yield new Stage(10, "Natsu vs Zancrow", 20000, 0, e);
             }
             default -> new Stage(numero, "???", 0, 0, e);
         };
