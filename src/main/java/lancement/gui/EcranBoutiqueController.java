@@ -67,12 +67,9 @@ public class EcranBoutiqueController {
     private List<Article> construireConsommables() {
         Inventaire inv = ctx.inventaire;
         List<Article> liste = new ArrayList<>();
-        liste.add(new Article("carte_or_1", "Carte d'Or Lv.1 x100", 20,  () -> inv.ajouterCartesOr(CarteOr.NIVEAU_1, 100)));
-        liste.add(new Article("carte_or_2", "Carte d'Or Lv.2 x100", 50,  () -> inv.ajouterCartesOr(CarteOr.NIVEAU_2, 100)));
-        liste.add(new Article("carte_or_3", "Carte d'Or Lv.3 x100", 100, () -> inv.ajouterCartesOr(CarteOr.NIVEAU_3, 100)));
-        liste.add(new Article("carte_or_4", "Carte d'Or Lv.4 x100", 200, () -> inv.ajouterCartesOr(CarteOr.NIVEAU_4, 100)));
-        liste.add(new Article("carte_or_5", "Carte d'Or Lv.5 x100", 500, () -> inv.ajouterCartesOr(CarteOr.NIVEAU_5, 100)));
-        liste.add(new Article("potion_petite",  "Petite Potion d'Energie x2", 15,  () -> inv.ajouterMateriau(PotionEnergie.PETITE.nom, 2)));
+        liste.add(new Article("carte_or_1", "Carte d'Or Lv.1 x10", 20,  () -> inv.ajouterCartesOr(CarteOr.NIVEAU_1, 100)));
+        liste.add(new Article("carte_or_2", "Carte d'Or Lv.2 x10", 50,  () -> inv.ajouterCartesOr(CarteOr.NIVEAU_2, 100)));
+        liste.add(new Article("carte_or_3", "Carte d'Or Lv.3 x5", 100, () -> inv.ajouterCartesOr(CarteOr.NIVEAU_3, 100)));
         liste.add(new Article("potion_moyenne", "Potion d'Energie x1",        50,  () -> inv.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1)));
         liste.add(new Article("potion_grande",  "Grande Potion d'Energie x1", 100, () -> inv.ajouterMateriau(PotionEnergie.GRANDE.nom, 1)));
         return liste;

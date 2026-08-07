@@ -46,7 +46,7 @@ public class perso_Sting extends PersonnageBase {
         double degats = this.getAttaque() * 1.60;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         // Marque la cible + bonus dégâts critiques à Sting
-        Combat.appliquerEffet(this, cible, new Fragilite(2, 0.35), log);
+        Combat.appliquerEffet(this, cible, new MarqueExplosive(1,0.25), log);
         Combat.appliquerEffet(this, this, new BuffTauxCritique(0.20, 2), log);
         // Si Rogue est allié vivant, le marquage dure 1 tour de plus
         for (PersonnageBase allie : equipeAlliee) {
@@ -85,8 +85,8 @@ public class perso_Sting extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Rugissement du dragon sacre — Inflige 160% ATK a la cible. "
-                + "Applique Marquage (+35% degats recus) pendant 2 tours. "
+        System.out.println("Marque du dragon sacre — Inflige 160% ATK a la cible. "
+                + "Applique MarqueExplosive  25% avec un temps de détonation de 1 tours. "
                 + "Sting gagne +20% taux critique pendant 2 tours.");
     }
 

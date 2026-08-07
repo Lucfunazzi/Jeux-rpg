@@ -77,6 +77,7 @@ public class perso_Azuma extends PersonnageBase {
                 boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
                 if (touche) {
                     Combat.appliquerEffet(this, ennemi, new Ralentissement(2, 0.15), log);
+                    VolDeBuff.voler(this, ennemi, log);
                 }
             }
         }

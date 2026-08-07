@@ -41,6 +41,14 @@ public class EnnemiAcnologia extends PersonnageBase {
         initialiserVieMax();
     }
 
+    /** Rang UR : immunise aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant tout le combat. */
+    @Override
+    public void reinitialiserPourCombat() {
+        super.reinitialiserPourCombat();
+        appliquerImmuniteControlePassive();
+    }
+
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Griffe du Dragon Noir", "Souffle Ardent du Dragon", "Extinction Draconique"};

@@ -40,6 +40,14 @@ public class EnnemiZeref extends PersonnageBase {
         initialiserVieMax();
     }
 
+    /** Rang UR : immunise aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant tout le combat. */
+    @Override
+    public void reinitialiserPourCombat() {
+        super.reinitialiserPourCombat();
+        appliquerImmuniteControlePassive();
+    }
+
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Toucher de la Mort", "Malédiction d'Ankhseram", "Fin de Toute Vie"};

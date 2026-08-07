@@ -1,7 +1,6 @@
 package lancement.Gestionnaires;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Map;
 import lancement.EtoilesStage;
 import lancement.GameContext;
@@ -43,9 +42,11 @@ public class SauvegardeProgression {
                     ? gr.getDernierJourConnexion().toString() : null;
             data.recompensesJourReclame              = gr.getJourReclame();
             data.recompensesTerminee                 = gr.estTerminee();
-            data.recompensesDerniereReclamation30min = gr.getDerniereReclamation30min() != null
-                    ? gr.getDerniereReclamation30min().toString() : null;
             data.recompensesPointsMois               = gr.getPointsMois();
+            data.recompensesMinutesJoueesAujourdhui  = gr.getMinutesJoueesAujourdhui();
+            data.recompensesDernierJourTempsJeu      = gr.getDernierJourTempsJeu() != null
+                    ? gr.getDernierJourTempsJeu().toString() : null;
+            data.recompensesTempsReclame             = gr.getTempsReclame();
         }
 
         if (ctx.gestionnaireCreaturesSacrees != null) {
@@ -106,9 +107,11 @@ public class SauvegardeProgression {
             gr.setDernierJourConnexion(LocalDate.parse(data.recompensesDernierJourConnexion));
         gr.setJourReclame(data.recompensesJourReclame);
         gr.setTerminee(data.recompensesTerminee);
-        if (data.recompensesDerniereReclamation30min != null)
-            gr.setDerniereReclamation30min(LocalDateTime.parse(data.recompensesDerniereReclamation30min));
         gr.setPointsMois(data.recompensesPointsMois);
+        gr.setMinutesJoueesAujourdhui(data.recompensesMinutesJoueesAujourdhui);
+        if (data.recompensesDernierJourTempsJeu != null)
+            gr.setDernierJourTempsJeu(LocalDate.parse(data.recompensesDernierJourTempsJeu));
+        gr.setTempsReclame(data.recompensesTempsReclame);
     }
 
     public static void restaurerRangEtTitres(RangJoueur rangJoueur,

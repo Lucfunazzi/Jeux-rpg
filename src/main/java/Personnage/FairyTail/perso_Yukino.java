@@ -48,7 +48,7 @@ public class perso_Yukino extends PersonnageBase {
         boolean lucyAlliee  = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Lucy"));
         boolean angelAlliee = equipeAlliee.stream().anyMatch(a -> a.estVivant() && a.getNom().equals("Angel"));
 
-        double mult = 1.00;
+        double mult = 1.40;
         if (lucyAlliee) {
             mult += 0.20;
         }
@@ -135,7 +135,7 @@ public class perso_Yukino extends PersonnageBase {
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        System.out.println("Pisces & Libra — Pisces inflige 100% ATK AoE a tous les ennemis,"
+        System.out.println("Pisces & Libra — Pisces inflige 140% ATK AoE a tous les ennemis,"
                 + " Libra reduit leur DEF de 15% pendant 2 tours."
                 );
     }

@@ -67,13 +67,14 @@ public class EnnemiHughes extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hughes invoque sa Poupée Titan !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.10) * multiplicateurRage;
-            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "Tank") != null ? "Tank" : "DPS";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        double degats = (this.getAttaque() * 2.10) * multiplicateurRage;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
         }
     }
 
@@ -84,6 +85,6 @@ public class EnnemiHughes extends PersonnageBase {
         System.out.println("Légion de Poupées — Inflige 75% ATK à tous les ennemis.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Poupée Titan — Inflige 210% ATK (bonus selon la Rage) au Tank ennemi (ou au DPS).");
+        System.out.println("Poupée Titan — Inflige 210% ATK (bonus selon la Rage) au Tank ennemi (ou à tous les DPS ennemis).");
     }
 }

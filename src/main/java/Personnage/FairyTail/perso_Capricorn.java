@@ -61,25 +61,26 @@ public class perso_Capricorn extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Capricorn déchaîne l'Ultime Discipline !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
-            if (cible.aEffet(Fragilite.class)) degats *= 1.15;
-            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "DPS") != null ? "DPS" : "Tank";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
+                if (ennemi.aEffet(Fragilite.class)) degats *= 1.15;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
         }
         Combat.appliquerEffet(this, new BuffTauxCritique(0.30, 2), log);
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Poing du Bouc — Inflige 100% ATK.");
+        System.out.println("Poing du Bouc — Inflige 140% ATK aux supports.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Danse du Combattant — Inflige 120% ATK à l'ennemi avec le plus d'attaque puis 60% ATK supplémentaires. et etourdit la cible ");
+        System.out.println("Danse du Combattant — Inflige 160% de degats aux supports et l'immunise aux controle pendants 2 tours ");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ultime Discipline — Inflige 200% ATK (bonus selon la Rage) au DPS ennemi (ou au Tank) augmente le taux critique de lui même a 30%.");
+        System.out.println("Ultime Discipline — Inflige 200% ATK (bonus selon la Rage) à tous les DPS ennemis (ou au Tank), augmente le taux critique de lui même a 30%.");
     }
 }

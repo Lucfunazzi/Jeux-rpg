@@ -39,6 +39,14 @@ public class EnnemiMakarov extends PersonnageBase {
         initialiserVieMax();
     }
 
+    /** Rang SS : immunise aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant tout le combat. */
+    @Override
+    public void reinitialiserPourCombat() {
+        super.reinitialiserPourCombat();
+        appliquerImmuniteControlePassive();
+    }
+
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Poigne du Titan", "Magie Titan — Ecrasement", "La Loi des Fées (Fairy Law)"};

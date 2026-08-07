@@ -105,6 +105,8 @@ public class EcranFichePersonnageController {
                         "Multiplicateur de dégâts appliqué lors d'un coup critique."),
                 statMini("Esquive", String.format("%.0f%%", perso.getTauxEsquives() * 100),
                         "Chance d'éviter complètement une attaque ennemie."),
+                statMini("Précision", String.format("%.0f", perso.getTauxPrecisions()),
+                        "Influence la chance de toucher la cible. 100 = neutre."),
                 statMini("Blocage", String.format("%.0f%%", perso.getTauxBlocage() * 100),
                         "Chance de bloquer une attaque ennemie et réduire les dégâts subis."),
                 statMini("Attaque S", String.format("%.0f", perso.getTauxAttaqueS()),

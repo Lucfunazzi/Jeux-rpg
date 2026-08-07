@@ -568,9 +568,9 @@ public class Combat {
                 return;
             }
         }
-        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification
+        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification/Gel
         if (effet instanceof Etourdissement || effet instanceof Paralysie
-                || effet instanceof Sommeil || effet instanceof Petrification) {
+                || effet instanceof Sommeil || effet instanceof Petrification || effet instanceof Gel) {
             Effets.ImmuniteControle immuniteControle = cible.getEffet(Effets.ImmuniteControle.class);
             if (immuniteControle != null && !immuniteControle.estTermine()) {
                 log.add("🛡 " + cible.getNom() + " resiste aux effets de controle — [" + effet.getNom() + "] bloque !");
@@ -608,9 +608,9 @@ public class Combat {
                 return;
             }
         }
-        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification
+        // Immunité de contrôle — bloque uniquement Etourdissement/Paralysie/Sommeil/Petrification/Gel
         if (effet instanceof Etourdissement || effet instanceof Paralysie
-                || effet instanceof Sommeil || effet instanceof Petrification) {
+                || effet instanceof Sommeil || effet instanceof Petrification || effet instanceof Gel) {
             Effets.ImmuniteControle immuniteControle = cible.getEffet(Effets.ImmuniteControle.class);
             if (immuniteControle != null && !immuniteControle.estTermine()) {
                 log.add("🛡 " + cible.getNom() + " resiste aux effets de controle — [" + effet.getNom() + "] bloque !");

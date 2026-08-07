@@ -33,24 +33,55 @@ public class EcranHistoireController {
         );
     }
 
-    private void onChapitres(MouseEvent event) {
-        List<LigneChapitre> lignes = new ArrayList<>();
-        for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_VISIBLES; i++) {
-            Chapitre c = ctx.chapitres.get(i - 1);
-            boolean sequentiel = (i == 1) || ctx.chapitres.get(i - 2).getStagesReussis()[10];
-            int niveauRequis = CourbeChapitres.niveauRequis(i);
-            boolean niveauSuffisant = ctx.joueur.getNiveau() >= niveauRequis;
-            boolean deverrouille = sequentiel && niveauSuffisant;
-            String messageVerrouille = !sequentiel
-                    ? "Terminez le Chapitre " + (i - 1) + " pour debloquer."
-                    : !niveauSuffisant
-                        ? "Necessite le niveau " + niveauRequis + "."
-                        : null;
-            lignes.add(new LigneChapitre("Chapitre " + i + " - " + c.getNomChapitre(), deverrouille, messageVerrouille,
-                    i, false, c::getStagesReussis, c::getStagesDebloques, c::getTitreStage, c::lancerStage));
-        }
+    /** Construit la LigneChapitre d'un chapitre normal donne (1 a NB_CHAPITRES_VISIBLES),
+     *  reutilisable par EcranStagesController pour la navigation par fleches gauche/droite. */
+    public static LigneChapitre construireLigneChapitre(GameContext ctx, int numero) {
+        Chapitre c = ctx.chapitres.get(numero - 1);
+        boolean sequentiel = (numero == 1) || ctx.chapitres.get(numero - 2).getStagesReussis()[10];
+        int niveauRequis = CourbeChapitres.niveauRequis(numero);
+        boolean niveauSuffisant = ctx.joueur.getNiveau() >= niveauRequis;
+        boolean deverrouille = sequentiel && niveauSuffisant;
+        String messageVerrouille = !sequentiel
+                ? "Terminez le Chapitre " + (numero - 1) + " pour debloquer."
+                : !niveauSuffisant
+                    ? "Necessite le niveau " + niveauRequis + "."
+                    : null;
+        return new LigneChapitre("Chapitre " + numero + " - " + c.getNomChapitre(), deverrouille, messageVerrouille,
+                numero, false, c::getStagesReussis, c::getStagesDebloques, c::getTitreStage, c::lancerStage);
+    }
 
-        naviguerVersListe(event, "CHAPITRES", lignes);
+    /** Chapitre normal a afficher par defaut : le premier chapitre debloque et pas encore
+     *  entierement termine (stage 10 non reussi) — c'est le Chapitre 1 en debut de partie, et le
+     *  chapitre "en cours" ensuite. Si tous les chapitres visibles sont finis, reste sur le dernier. */
+    public static int chapitreEnCours(GameContext ctx) {
+        for (int i = 1; i <= CourbeChapitres.NB_CHAPITRES_VISIBLES; i++) {
+            if (!ctx.chapitres.get(i - 1).getStagesReussis()[10]) return i;
+        }
+        return CourbeChapitres.NB_CHAPITRES_VISIBLES;
+    }
+
+    /** Va directement sur l'ecran des stages du chapitre en cours (au lieu de la liste des 10
+     *  chapitres) : avec la navigation par fleches gauche/droite de EcranStagesController, passer
+     *  par la liste intermediaire n'apporte plus rien pour les chapitres normaux. */
+    private void onChapitres(MouseEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Runnable retour = () -> {
+            try {
+                FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranHistoire.fxml");
+                EcranHistoireController controller = loader.getController();
+                controller.initData(ctx);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        try {
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranStages.fxml");
+            EcranStagesController controller = loader.getController();
+            controller.initData(ctx, construireLigneChapitre(ctx, chapitreEnCours(ctx)), retour);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void onChapitresElite(MouseEvent event) {

@@ -40,6 +40,14 @@ public class EnnemiBluenote extends PersonnageBase {
         initialiserVieMax();
     }
 
+    /** Rang SS : immunise aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant tout le combat. */
+    @Override
+    public void reinitialiserPourCombat() {
+        super.reinitialiserPourCombat();
+        appliquerImmuniteControlePassive();
+    }
+
     @Override
     public String[] getNomsAttaques() {
         return new String[]{"Poing de Gravité", "Noyau de Gravité", "Écrasement Gravitationnel"};
@@ -67,15 +75,16 @@ public class EnnemiBluenote extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Bluenote déclenche un Écrasement Gravitationnel !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 1.90) * multiplicateurRage;
-            boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-            if (touche) {
-                Combat.appliquerEffet(this, cible, new ReductionDefense(0.20, 2), log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "Tank") != null ? "Tank" : "DPS";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        double degats = (this.getAttaque() * 1.90) * multiplicateurRage;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (touche) {
+                    Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.20, 2), log);
+                }
             }
         }
     }
@@ -87,6 +96,6 @@ public class EnnemiBluenote extends PersonnageBase {
         System.out.println("Noyau de Gravité — Inflige 130% ATK et réduit la vitesse de la cible de 30% pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Écrasement Gravitationnel — Inflige 190% ATK (bonus selon la Rage) au Tank ennemi (ou au DPS), réduit sa défense de 20% pendant 2 tours.");
+        System.out.println("Écrasement Gravitationnel — Inflige 190% ATK (bonus selon la Rage) au Tank ennemi (ou à tous les DPS ennemis), réduit leur défense de 20% pendant 2 tours.");
     }
 }

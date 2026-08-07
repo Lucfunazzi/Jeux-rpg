@@ -60,6 +60,7 @@ public class EcranMenuPrincipalController {
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
+        lancement.Gestionnaires.SuiviTempsJeu.demarrer(ctx);
 
         statsBox.getChildren().setAll(
                 GuiVisuels.creerFicheStat("♚", ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
@@ -216,7 +217,10 @@ public class EcranMenuPrincipalController {
                 if (gr.estJourDisponible(jour)) return true;
             }
         }
-        return gr.peutReclamer30min();
+        for (int i = 0; i < GestionnaireRecompenses.SEUILS_TEMPS_MINUTES.length; i++) {
+            if (gr.estTempsDisponible(i)) return true;
+        }
+        return false;
     }
 
     private boolean notificationQuetes() {

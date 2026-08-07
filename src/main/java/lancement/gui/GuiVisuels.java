@@ -305,6 +305,91 @@ public final class GuiVisuels {
         return resultat.get();
     }
 
+    /** True si au moins un des 3 coffres a seuil d'etoiles du chapitre est reclamable. Sert a
+     *  savoir s'il faut proposer le bouton "Coffres disponibles !" sur un ecran donne. */
+    public static boolean unCoffreChapitreDisponible(GameContext ctx, LigneChapitre ligne) {
+        lancement.Gestionnaires.GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
+        return ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 1)
+                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 2)
+                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 3);
+    }
+
+    /** Ouvre le choix des coffres a seuil d'etoiles reclamables pour ce chapitre et applique la
+     *  recompense choisie. Partage entre EcranListeChapitresController (Chapitres Elite) et
+     *  EcranStagesController (Chapitres normaux, qui sautent desormais l'ecran de liste). */
+    public static void ouvrirCoffresChapitre(GameContext ctx, LigneChapitre ligne, Runnable onRafraichir) {
+        lancement.Gestionnaires.GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
+        String[] labelsRecomp = ligne.elite()
+            ? new String[] { "30 coupons", "50 coupons", "100 coupons" }
+            : new String[] {
+                "2x Parchemin Tirage Ordinaire",
+                "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
+                "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
+            };
+
+        List<Integer> options = new java.util.ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            if (ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), i)) options.add(i);
+        }
+        if (options.isEmpty()) { afficherInfo("Coffres", "Aucun coffre disponible pour l'instant."); return; }
+
+        Integer choix = choisirParmiCartes("Coffres - " + ligne.label(), options,
+                i -> carteCoffre(ge, i, labelsRecomp[i - 1]));
+        if (choix == null) return;
+
+        int numeroCoffre = choix;
+        lancement.Gestionnaires.GestionnaireEtoiles.RecompenseCoffre recomp =
+                ge.reclamerCoffre(ligne.numeroChapitre(), ligne.elite(), numeroCoffre, ctx.inventaire);
+        if (recomp == null) { afficherInfo("Coffres", "Ce coffre n'est pas disponible."); return; }
+
+        StringBuilder message = new StringBuilder(switch (recomp.type()) {
+            case PARCHEMIN_ORDINAIRE -> {
+                ctx.menuTirage.setParcheminOrdinaire(ctx.menuTirage.getParcheminOrdinaire() + recomp.quantite());
+                yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Ordinaire !\nTotal : " + ctx.menuTirage.getParcheminOrdinaire();
+            }
+            case PARCHEMIN_ELITE -> {
+                ctx.menuTirage.setParcheminElite(ctx.menuTirage.getParcheminElite() + recomp.quantite());
+                yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Elite !\nTotal : " + ctx.menuTirage.getParcheminElite();
+            }
+            case COUPONS -> {
+                ctx.joueur.ajouterCoupons(recomp.quantite());
+                yield "+ " + recomp.quantite() + " coupons !\nTotal : " + ctx.joueur.getCoupons();
+            }
+        });
+        for (lancement.Gestionnaires.GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {
+            message.append("\n+ ").append(b.quantite()).append("x ").append(b.nom());
+        }
+
+        ctx.sauvegarde.sauvegarder(ctx);
+        afficherInfo("Coffres", message.toString());
+        if (onRafraichir != null) onRafraichir.run();
+    }
+
+    private static Node carteCoffre(lancement.Gestionnaires.GestionnaireEtoiles ge, int numero, String recompense) {
+        Label nom = new Label("Coffre " + numero);
+        nom.getStyleClass().add("item-nom");
+        Label detail = new Label(ge.getSeuilCoffre(numero) + " étoiles → " + recompense);
+        detail.getStyleClass().add("item-detail");
+        detail.setWrapText(true);
+        detail.setMaxWidth(260);
+
+        VBox texte = new VBox(2, nom, detail);
+        HBox carte = new HBox(texte);
+        carte.setAlignment(Pos.CENTER_LEFT);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(300);
+        return carte;
+    }
+
+    private static void afficherInfo(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.getDialogPane().getStylesheets().add(GuiVisuels.class.getResource("/fxml/style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("root-menu");
+        alert.showAndWait();
+    }
+
     /** Affiche les resultats d'un tirage gacha sous forme de cartes (au lieu d'un texte brut). */
     public static void afficherResultatsTirage(String titre, List<LigneResultat> lignes) {
         Dialog<Void> dialog = new Dialog<>();

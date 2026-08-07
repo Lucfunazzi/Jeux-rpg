@@ -25,6 +25,7 @@ import Effets.Bouclier;
 import Effets.Brulure;
 import Effets.Absorption;
 import Effets.Symbiose;
+import Effets.ImmuniteControle;
 import java.util.ArrayList;
 import java.util.List;
 import Equipement.Equipement;
@@ -326,6 +327,15 @@ public abstract class PersonnageBase implements Statistiques, Attaques {
         ajouterEffet(new Absorption(Integer.MAX_VALUE, special.bonusVolDeVie()));
     }
 }
+
+    /** Immunite passive aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant toute la duree du combat. A appeler explicitement depuis
+     *  reinitialiserPourCombat() (comme le bonus de vol de vie ci-dessus) par les personnages
+     *  qui en beneficient nativement — ex: ennemis de rang SS/SSS/UR des chapitres normaux et
+     *  Elite. N'est jamais applique par defaut a tous les PersonnageBase. */
+    protected void appliquerImmuniteControlePassive() {
+        ajouterEffet(new ImmuniteControle(99));
+    }
 
     public boolean getSpecialeUtilisee() { return this.specialeUtilisee; }
     public void setSpecialeUtilisee(boolean valeur) { this.specialeUtilisee = valeur; }

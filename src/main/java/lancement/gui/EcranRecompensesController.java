@@ -43,6 +43,7 @@ public class EcranRecompensesController {
         GuiVisuels.afficherExplicationPremiereVisite(ctx, "Recompenses", "Récompenses");
         ctx.gestionnaireRecompenses.mettreAJourPointageMois();
         ctx.gestionnaireRecompenses.mettreAJourConnexion();
+        ctx.gestionnaireRecompenses.mettreAJourJourTempsJeu();
         rafraichir();
     }
 
@@ -56,7 +57,8 @@ public class EcranRecompensesController {
             cartes.add(carteRecompense("☾", "Récompense des 7 jours (jour " + gr.getJourConnexion() + "/7)",
                     disponibleConnexion(), this::menuConnexion));
         }
-        cartes.add(carteRecompense("⏱", "Récompense quotidienne", gr.peutReclamer30min(), this::menuQuotidienne));
+        cartes.add(carteRecompense("⏱", "Récompense quotidienne (" + gr.getMinutesJoueesAujourdhui() + " min jouées)",
+                disponibleTemps(), this::menuQuotidienne));
         recompensesBox.getChildren().setAll(cartes);
     }
 
@@ -82,6 +84,14 @@ public class EcranRecompensesController {
         if (gr.estTerminee()) return false;
         for (int jour = 1; jour <= 7; jour++) {
             if (gr.estJourDisponible(jour)) return true;
+        }
+        return false;
+    }
+
+    private boolean disponibleTemps() {
+        GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
+        for (int i = 0; i < GestionnaireRecompenses.SEUILS_TEMPS_MINUTES.length; i++) {
+            if (gr.estTempsDisponible(i)) return true;
         }
         return false;
     }
@@ -267,28 +277,27 @@ public class EcranRecompensesController {
         rafraichir();
     }
 
-    // ── Récompense quotidienne (paliers de temps) ───────────────────────────
+    // ── Récompense quotidienne (paliers de temps de jeu cumulé) ─────────────
+    private static final String[] NOMS_PALIERS_TEMPS = {"30 minutes", "1 heure", "2 heures", "4 heures"};
+
     private void menuQuotidienne() {
         GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
-        List<Palier> paliers = List.of(
-                new Palier("30 minutes", gr.peutReclamer30min() ? "[Disponible]" : "[" + gr.getTempsRestant30min() + "]",
-                        "2 Petite(s) Potion(s) d'Énergie, 10 Carte(s) d'Or Lv.1", gr.peutReclamer30min()),
-                new Palier("1 heure", "[Bientôt disponible]", "À définir", false),
-                new Palier("2 heures", "[Bientôt disponible]", "À définir", false),
-                new Palier("4 heures", "[Bientôt disponible]", "À définir", false)
-        );
-
-        Palier choisi = GuiVisuels.choisirParmiCartes("Récompense quotidienne", paliers, this::cartePalier);
-        if (choisi == null) return;
-
-        if (choisi.libelle().equals("30 minutes")) {
-            if (!choisi.disponible()) return;
-            info("Récompense quotidienne", gr.reclamer30min(ctx.inventaire));
-            ctx.sauvegarde.sauvegarder(ctx);
-            rafraichir();
-        } else {
-            info(choisi.libelle(), "Bientôt disponible.");
+        List<Palier> paliers = new ArrayList<>();
+        for (int i = 0; i < NOMS_PALIERS_TEMPS.length; i++) {
+            String etat = gr.isTempsReclame(i) ? "[Réclamé]"
+                    : gr.estTempsDisponible(i) ? "[Disponible]"
+                    : "[" + gr.getMinutesJoueesAujourdhui() + " / " + GestionnaireRecompenses.SEUILS_TEMPS_MINUTES[i] + " min]";
+            paliers.add(new Palier(NOMS_PALIERS_TEMPS[i], etat, gr.afficherRecompenseTemps(i), gr.estTempsDisponible(i)));
         }
+
+        Palier choisi = GuiVisuels.choisirParmiCartes(
+                "Récompense quotidienne (" + gr.getMinutesJoueesAujourdhui() + " min jouées aujourd'hui)", paliers, this::cartePalier);
+        if (choisi == null || !choisi.disponible()) return;
+
+        int index = paliers.indexOf(choisi);
+        info("Récompense quotidienne", gr.reclamerTemps(index, ctx.inventaire, ctx.joueur));
+        ctx.sauvegarde.sauvegarder(ctx);
+        rafraichir();
     }
 
     @FXML

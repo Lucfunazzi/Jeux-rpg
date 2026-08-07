@@ -28,10 +28,45 @@ public enum CompagnonsType {
     PANTHERE_LILY(
         "Panthère Lily",
         200_000,     // coût par niveau × palier → moyenne ~1 000 000 or par upgrade
-        -1,          // pas d'évolution suivante (pour l'instant)
+        4_000_000,   // coût d'évolution vers Lector
        1500,  2000,  750, 1200,
         500,  1000,  250,  400
-    );                                                          // niv.10 → ATK 6000 | PV 11000 | DEF 3000 | VIT 4800
+    ),                                                          // niv.10 → ATK 6000 | PV 11000 | DEF 3000 | VIT 4800
+    LECTOR(
+        "Lector",
+        400_000,     // coût par niveau × palier → moyenne ~2 000 000 or par upgrade
+        8_000_000,   // coût d'évolution vers Frosh
+       2800,  3800, 1400, 2200,
+        900,  1800,  450,  700
+    ),                                                          // niv.10 → ATK 11100 | PV 20000 | DEF 5450 | VIT 8500
+    FROSH(
+        "Frosh",
+        800_000,     // coût par niveau × palier → moyenne ~4 000 000 or par upgrade
+        16_000_000,  // coût d'évolution vers Bébé Igneel
+       5200,  7000, 2600, 4000,
+       1600,  3200,  800, 1200
+    ),                                                          // niv.10 → ATK 19600 | PV 35800 | DEF 9800 | VIT 14800
+    BEBE_IGNEEL(
+        "Bébé Igneel",
+        1_600_000,   // coût par niveau × palier → moyenne ~8 000 000 or par upgrade
+        32_000_000,  // coût d'évolution vers Bébé Grandine
+       9500, 13000, 4800, 7200,
+       3000,  6000, 1500, 2200
+    ),                                                          // niv.10 → ATK 36500 | PV 67000 | DEF 18300 | VIT 27000
+    BEBE_GRANDINE(
+        "Bébé Grandine",
+        3_200_000,   // coût par niveau × palier → moyenne ~16 000 000 or par upgrade
+        64_000_000,  // coût d'évolution vers Bébé Metalicana
+      17500, 24000, 8800,13000,
+       5500, 11000, 2800, 4000
+    ),                                                          // niv.10 → ATK 67000 | PV 123000 | DEF 34000 | VIT 49000
+    BEBE_METALICANA(
+        "Bébé Metalicana",
+        6_400_000,   // coût par niveau × palier → moyenne ~32 000 000 or par upgrade
+        -1,          // pas d'évolution suivante (pour l'instant)
+      32000, 44000,16000,24000,
+      10000, 20000, 5000, 7500
+    );                                                          // niv.10 → ATK 122000 | PV 224000 | DEF 61000 | VIT 91500
 
     public final String nom;
     public final int    coutParNiveau;

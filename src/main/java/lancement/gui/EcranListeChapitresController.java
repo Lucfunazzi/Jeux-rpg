@@ -1,17 +1,13 @@
 package lancement.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -88,13 +84,10 @@ public class EcranListeChapitresController {
         entrer.setOnAction(e -> ouvrirStages(e, ligne));
         boutons.getChildren().add(entrer);
 
-        boolean unCoffreDispo = ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 1)
-                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 2)
-                || ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), 3);
-        if (unCoffreDispo) {
+        if (GuiVisuels.unCoffreChapitreDisponible(ctx, ligne)) {
             Button coffres = new Button("Coffres disponibles !");
             coffres.getStyleClass().add("menu-bouton");
-            coffres.setOnAction(e -> ouvrirCoffres(ligne));
+            coffres.setOnAction(e -> GuiVisuels.ouvrirCoffresChapitre(ctx, ligne, this::rafraichir));
             boutons.getChildren().add(coffres);
         }
 
@@ -127,71 +120,6 @@ public class EcranListeChapitresController {
         }
     }
 
-    private void ouvrirCoffres(LigneChapitre ligne) {
-        GestionnaireEtoiles ge = ctx.gestionnaireEtoiles;
-        String[] labelsRecomp = ligne.elite()
-            ? new String[] { "30 coupons", "50 coupons", "100 coupons" }
-            : new String[] {
-                "2x Parchemin Tirage Ordinaire",
-                "5x Parchemin Tirage Ordinaire, 1x " + Equipement.CristalTranscendance.NOM,
-                "1x Parchemin Tirage Elite, 1x " + Equipement.ParcheminAscension.NOM
-            };
-
-        List<Integer> options = new ArrayList<>();
-        for (int i = 1; i <= 3; i++) {
-            if (ge.coffreDisponible(ligne.numeroChapitre(), ligne.elite(), i)) options.add(i);
-        }
-
-        if (options.isEmpty()) { info("Coffres", "Aucun coffre disponible pour l'instant."); return; }
-
-        Integer choix = GuiVisuels.choisirParmiCartes("Coffres - " + ligne.label(), options,
-                i -> carteCoffre(ge, i, labelsRecomp[i - 1]));
-        if (choix == null) return;
-
-        int numeroCoffre = choix;
-        GestionnaireEtoiles.RecompenseCoffre recomp =
-                ge.reclamerCoffre(ligne.numeroChapitre(), ligne.elite(), numeroCoffre, ctx.inventaire);
-        if (recomp == null) { info("Coffres", "Ce coffre n'est pas disponible."); return; }
-
-        StringBuilder message = new StringBuilder(switch (recomp.type()) {
-            case PARCHEMIN_ORDINAIRE -> {
-                ctx.menuTirage.setParcheminOrdinaire(ctx.menuTirage.getParcheminOrdinaire() + recomp.quantite());
-                yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Ordinaire !\nTotal : " + ctx.menuTirage.getParcheminOrdinaire();
-            }
-            case PARCHEMIN_ELITE -> {
-                ctx.menuTirage.setParcheminElite(ctx.menuTirage.getParcheminElite() + recomp.quantite());
-                yield "+ " + recomp.quantite() + " Parchemin(s) de Tirage Elite !\nTotal : " + ctx.menuTirage.getParcheminElite();
-            }
-            case COUPONS -> {
-                ctx.joueur.ajouterCoupons(recomp.quantite());
-                yield "+ " + recomp.quantite() + " coupons !\nTotal : " + ctx.joueur.getCoupons();
-            }
-        });
-        for (GestionnaireEtoiles.ItemBonus b : recomp.itemsBonus()) {
-            message.append("\n+ ").append(b.quantite()).append("x ").append(b.nom());
-        }
-
-        ctx.sauvegarde.sauvegarder(ctx);
-        info("Coffres", message.toString());
-        rafraichir();
-    }
-
-    private Node carteCoffre(GestionnaireEtoiles ge, int numero, String recompense) {
-        Label nom = new Label("Coffre " + numero);
-        nom.getStyleClass().add("item-nom");
-        Label detail = new Label(ge.getSeuilCoffre(numero) + " étoiles → " + recompense);
-        detail.getStyleClass().add("item-detail");
-        detail.setWrapText(true);
-        detail.setMaxWidth(260);
-
-        VBox texte = new VBox(2, nom, detail);
-        HBox carte = new HBox(texte);
-        carte.setAlignment(Pos.CENTER_LEFT);
-        carte.getStyleClass().add("carte-item");
-        carte.setPrefWidth(300);
-        return carte;
-    }
-
     @FXML
     private void onRetour(ActionEvent event) {
         onRetour.run();
@@ -207,18 +135,5 @@ public class EcranListeChapitresController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void info(String titre, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
-        alert.setTitle(titre);
-        alert.setHeaderText(null);
-        styliser(alert);
-        alert.showAndWait();
-    }
-
-    private void styliser(Dialog<?> dialog) {
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
-        dialog.getDialogPane().getStyleClass().add("root-menu");
     }
 }

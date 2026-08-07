@@ -4,8 +4,8 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Immunite de controle — protege la cible contre Etourdissement, Paralysie, Sommeil
- * et Petrification pendant N tours (n'affecte pas les autres effets negatifs comme
+ * Immunite de controle — protege la cible contre Etourdissement, Paralysie, Sommeil,
+ * Petrification et Gel pendant N tours (n'affecte pas les autres effets negatifs comme
  * les DoT ou les debuffs de stats — contrairement a Immunite qui bloque tout).
  */
 public class ImmuniteControle implements Effet {

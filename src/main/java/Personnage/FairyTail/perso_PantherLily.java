@@ -42,7 +42,8 @@ public class perso_PantherLily extends PersonnageBase {
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Panther Lily frappe " + cible.getNom() + " de sa Grande Épée !");
-        Combat.attaquer(this, cible, log);
+        double degats = this.getAttaque() * 1.30;
+        Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
 
     @Override
@@ -50,7 +51,9 @@ public class perso_PantherLily extends PersonnageBase {
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Panther Lily active son Battle Mode et grandit !");
         Combat.appliquerEffet(this, new BuffAttaque(0.20, 2), log);
-        double degats = this.getAttaque() * 1.20;
+        Combat.appliquerEffet(this, new BuffTauxCritique(0.10, 2), log);
+        Combat.appliquerEffet(this, new BuffDegatCritique(0.10, 2), log);
+        double degats = this.getAttaque() * 1.50;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
     }
 
@@ -62,20 +65,20 @@ public class perso_PantherLily extends PersonnageBase {
         if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.00) * multiplicateurRage;
+                double degats = (this.getAttaque() * 1.40) * multiplicateurRage;
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
-        Combat.appliquerEffet(this, new BuffVitesse(0.10, 2), log);
+        Combat.appliquerEffet(this, new ContreAttaque(2, 0.10), log);
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Frappe de la Grande Épée — Inflige 100% ATK.");
+        System.out.println("Frappe de la Grande Épée — Inflige 130% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Battle Mode — Augmente son ATK de 20% pendant 2 tours et inflige 120% ATK.");
+        System.out.println("Battle Mode — Augmente son ATK de 20% son taux critique et degats critiques de 10% pendant 2 tours et inflige 150% ATK.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Trancheur Titanesque — Inflige 100% ATK (bonus selon la Rage) à tous les ennemis. et augmente sa vitesse de 10% pendants 2 tours");
+        System.out.println("Trancheur Titanesque — Inflige 140% ATK (bonus selon la Rage) à tous les ennemis. et se mets contre attaque de 10% pendants 2 tours");
     }
 }

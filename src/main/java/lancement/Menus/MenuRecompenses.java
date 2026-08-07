@@ -8,8 +8,7 @@ import java.util.Scanner;
 /**
  * Menu Récompenses — regroupe les différents systèmes de récompenses du jeu :
  * récompenses de niveau, pointage du mois, connexion 7 jours, et récompense
- * quotidienne (paliers de temps). Le contenu de la récompense quotidienne
- * n'est défini que pour le palier 30 minutes ; les autres restent à venir.
+ * quotidienne (paliers de temps de jeu cumulé, voir GestionnaireRecompenses/SuiviTempsJeu).
  */
 public class MenuRecompenses {
 
@@ -17,6 +16,7 @@ public class MenuRecompenses {
         GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
         gr.mettreAJourPointageMois();
         gr.mettreAJourConnexion();
+        gr.mettreAJourJourTempsJeu();
 
         boolean retour = false;
         while (!retour) {
@@ -187,26 +187,32 @@ public class MenuRecompenses {
         ctx.sauvegarde.sauvegarder(ctx);
     }
 
-    // ── Récompense quotidienne (paliers de temps) ───────────────────────────
+    // ── Récompense quotidienne (paliers de temps de jeu cumulé) ─────────────
+    private static final String[] NOMS_PALIERS_TEMPS = {"30 minutes", "1 heure", "2 heures", "4 heures"};
+
     private void menuQuotidienne(GameContext ctx, Scanner scanner) {
         GestionnaireRecompenses gr = ctx.gestionnaireRecompenses;
         boolean retour = false;
         while (!retour) {
-            System.out.println("\n--- Recompense quotidienne ---");
-            System.out.println("1. 30 minutes  [" + gr.getTempsRestant30min() + "]");
-            System.out.println("2. 1 heure  [Bientot disponible]");
-            System.out.println("3. 2 heures  [Bientot disponible]");
-            System.out.println("4. 4 heures  [Bientot disponible]");
+            System.out.println("\n--- Recompense quotidienne (" + gr.getMinutesJoueesAujourdhui() + " min jouees aujourd'hui) ---");
+            for (int i = 0; i < NOMS_PALIERS_TEMPS.length; i++) {
+                String etat = gr.isTempsReclame(i) ? "[Reclame]"
+                        : gr.estTempsDisponible(i) ? "[Disponible]"
+                        : "[" + gr.getMinutesJoueesAujourdhui() + " / " + GestionnaireRecompenses.SEUILS_TEMPS_MINUTES[i] + " min]";
+                System.out.println((i + 1) + ". " + NOMS_PALIERS_TEMPS[i] + "  " + etat + "  " + gr.afficherRecompenseTemps(i));
+            }
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
 
-            switch (scanner.nextLine().trim()) {
-                case "1" -> { System.out.println(gr.reclamer30min(ctx.inventaire)); ctx.sauvegarde.sauvegarder(ctx); }
-                case "2" -> System.out.println("[Recompense quotidienne (1 h)] Bientot disponible.");
-                case "3" -> System.out.println("[Recompense quotidienne (2 h)] Bientot disponible.");
-                case "4" -> System.out.println("[Recompense quotidienne (4 h)] Bientot disponible.");
-                case "0" -> retour = true;
-                default  -> System.out.println("Choix invalide.");
+            String choix = scanner.nextLine().trim();
+            if (choix.equals("0")) { retour = true; continue; }
+            try {
+                int index = Integer.parseInt(choix) - 1;
+                if (index < 0 || index >= NOMS_PALIERS_TEMPS.length) { System.out.println("Choix invalide."); continue; }
+                System.out.println(gr.reclamerTemps(index, ctx.inventaire, ctx.joueur));
+                ctx.sauvegarde.sauvegarder(ctx);
+            } catch (NumberFormatException e) {
+                System.out.println("Choix invalide.");
             }
         }
     }

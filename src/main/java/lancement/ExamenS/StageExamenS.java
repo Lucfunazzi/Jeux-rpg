@@ -22,11 +22,14 @@ public class StageExamenS {
         this.numero  = numero;
         this.ennemis = ennemis;
 
-        // Meme equipement fantome que les ennemis de chapitre (lancement.Stage), sinon ces
-        // ennemis n'ont ni equipement, ni pierres, ni compagnons/creatures/rang comme le joueur
-        // et paraissent beaucoup trop faibles malgre leur mise a niveau.
+        // Equipement fantome, sinon ces ennemis n'ont ni equipement, ni pierres, ni
+        // compagnons/creatures/rang comme le joueur et paraissent beaucoup trop faibles malgre
+        // leur mise a niveau. Fonction dediee (plafond A) plutot que rareteEnnemiPourNiveau : le
+        // niveau ici vaut le numero d'etage (1 a 65) et n'est pas rattache a la progression
+        // narrative des chapitres — utiliser l'echelle des chapitres ferait exploser les stats
+        // des etages 45+ avec des raretes S/SS/SSS/UR hors de propos ici.
         for (PersonnageBase e : ennemis) {
-            EquipementFactory.equiperSetStandard(e, EquipementFactory.rareteEnnemiPourNiveau(e.getNiveau()));
+            EquipementFactory.equiperSetStandard(e, EquipementFactory.rareteEnnemiPourEtageExamenS(e.getNiveau()));
         }
     }
 

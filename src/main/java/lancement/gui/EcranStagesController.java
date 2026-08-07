@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -18,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lancement.GameContext;
+import lancement.Chapitres.CourbeChapitres;
 
 public class EcranStagesController {
 
@@ -28,13 +30,63 @@ public class EcranStagesController {
     @FXML private Label titreLabel;
     @FXML private VBox statsBox;
     @FXML private VBox stagesBox;
+    @FXML private HBox navigationChapitreBox;
+    @FXML private Button flecheGaucheButton;
+    @FXML private Button flecheDroiteButton;
+    @FXML private Button coffresButton;
 
     public void initData(GameContext ctx, LigneChapitre ligne, Runnable onRetour) {
         this.ctx = ctx;
         this.ligne = ligne;
         this.onRetour = onRetour;
         titreLabel.setText(ligne.label().toUpperCase());
+        configurerNavigationChapitre();
         rafraichir();
+    }
+
+    /** Fleches gauche/droite pour changer de chapitre normal sans repasser par la liste — pas
+     *  de sens pour les Chapitres Elite (qui restent accessibles via EcranListeChapitres). */
+    private void configurerNavigationChapitre() {
+        if (ligne.elite()) {
+            navigationChapitreBox.setVisible(false);
+            navigationChapitreBox.setManaged(false);
+            return;
+        }
+        navigationChapitreBox.setVisible(true);
+        navigationChapitreBox.setManaged(true);
+
+        int numero = ligne.numeroChapitre();
+        flecheGaucheButton.setDisable(numero <= 1);
+
+        boolean chapitreSuivantExiste = numero < CourbeChapitres.NB_CHAPITRES_VISIBLES;
+        boolean chapitreSuivantDeverrouille = chapitreSuivantExiste
+                && EcranHistoireController.construireLigneChapitre(ctx, numero + 1).deverrouille();
+        flecheDroiteButton.setDisable(!chapitreSuivantDeverrouille);
+    }
+
+    @FXML
+    private void onChapitrePrecedent(ActionEvent event) {
+        allerVersChapitre((Stage) flecheGaucheButton.getScene().getWindow(), ligne.numeroChapitre() - 1);
+    }
+
+    @FXML
+    private void onChapitreSuivant(ActionEvent event) {
+        allerVersChapitre((Stage) flecheDroiteButton.getScene().getWindow(), ligne.numeroChapitre() + 1);
+    }
+
+    private void allerVersChapitre(Stage stage, int numero) {
+        try {
+            FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranStages.fxml");
+            EcranStagesController controller = loader.getController();
+            controller.initData(ctx, EcranHistoireController.construireLigneChapitre(ctx, numero), onRetour);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void onCoffres(ActionEvent event) {
+        GuiVisuels.ouvrirCoffresChapitre(ctx, ligne, this::rafraichir);
     }
 
     private void rafraichir() {
@@ -53,6 +105,10 @@ public class EcranStagesController {
         for (int i = 1; i <= 10; i++) {
             stagesBox.getChildren().add(carteStage(i, reussis[i], debloques[i]));
         }
+
+        boolean coffreDispo = GuiVisuels.unCoffreChapitreDisponible(ctx, ligne);
+        coffresButton.setVisible(coffreDispo);
+        coffresButton.setManaged(coffreDispo);
     }
 
     private Node carteStage(int numero, boolean reussi, boolean debloque) {
@@ -112,6 +168,7 @@ public class EcranStagesController {
         }
 
         List<PersonnageBase> avant = new ArrayList<>(ctx.personnagesRecruites);
+        List<lancement.Titre> titresAvant = new ArrayList<>(ctx.gestionnaireTitres.getTitresObtenus());
         lancement.Stage.ResultatStage resultat = ligne.lancerStage().apply(ctx, numero);
         if (resultat == null) {
             info("Stage", "Impossible de lancer ce stage pour le moment.");
@@ -119,12 +176,17 @@ public class EcranStagesController {
         }
         List<PersonnageBase> nouveauxRecrues = new ArrayList<>(ctx.personnagesRecruites);
         nouveauxRecrues.removeAll(avant);
+        List<lancement.Titre> nouveauxTitres = new ArrayList<>(ctx.gestionnaireTitres.getTitresObtenus());
+        nouveauxTitres.removeAll(titresAvant);
 
         try {
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranCombat.fxml");
             EcranCombatController controller = loader.getController();
             controller.initCombat(resultat.etatInitial, resultat.evenements, resultat.victoire, v -> {
                 Runnable suite = () -> {
+                    for (lancement.Titre titre : nouveauxTitres) {
+                        annoncerTitre(titre);
+                    }
                     if (resultat.recompenses != null) {
                         annoncerRecompenses(resultat.recompenses);
                     }
@@ -195,6 +257,37 @@ public class EcranStagesController {
         alert.setTitle("Recompenses");
         alert.setHeaderText("Victoire !");
         alert.getDialogPane().setContent(texte);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("root-menu");
+        alert.showAndWait();
+    }
+
+    /** Grande annonce quand un titre est debloque pour la premiere fois (typiquement en
+     *  terminant un chapitre Elite) — traitement visuel plus imposant que les autres popups. */
+    private void annoncerTitre(lancement.Titre titre) {
+        Label couronne = new Label("🏆");
+        couronne.setStyle("-fx-font-size: 48px;");
+
+        Label nom = new Label(titre.getNom());
+        nom.setWrapText(true);
+        nom.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #f2c14e; -fx-text-alignment: center;");
+
+        Label description = new Label(titre.getDescription());
+        description.setWrapText(true);
+        description.setStyle("-fx-font-size: 15px; -fx-text-fill: #cfd8e3; -fx-text-alignment: center;");
+
+        Label bonus = new Label("+" + (int) (titre.getBonusStatsPourcentage() * 100) + "% à toutes les stats de l'équipe une fois équipé");
+        bonus.setWrapText(true);
+        bonus.setStyle("-fx-font-size: 13px; -fx-text-fill: #7ed9a3; -fx-text-alignment: center;");
+
+        VBox contenu = new VBox(10, couronne, nom, description, bonus);
+        contenu.setAlignment(Pos.CENTER);
+        contenu.setMaxWidth(360);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Titre obtenu !");
+        alert.setHeaderText("★ NOUVEAU TITRE ★");
+        alert.getDialogPane().setContent(contenu);
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/fxml/style.css").toExternalForm());
         alert.getDialogPane().getStyleClass().add("root-menu");
         alert.showAndWait();

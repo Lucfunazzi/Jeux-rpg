@@ -48,8 +48,13 @@ public class perso_Rogue extends PersonnageBase {
             degats *= 1.40;
             log.add("La cible est marquee ! Rogue dechire les ombres pour +40% de degats !");
         }
+        double degatsTotaux = degats;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        Combat.appliquerEffet(this, this, new ContreAttaque(2, 0.60), log);
+        Combat.appliquerEffet(this, this, new ContreAttaque(2, 0.20), log);
+        double soin = degatsTotaux * 0.50;
+        if (soin > 0) {
+            this.recevoirSoin(soin, log);
+        }
     }
 
     @Override
@@ -70,8 +75,13 @@ public class perso_Rogue extends PersonnageBase {
             degats *= 1.50;
             log.add("Lumiere et Ombre fusionnent ! Degats multiplies par 1.5 sur la cible marquee !");
         }
+        double degatsTotaux = degats;
         Combat.appliquerDegatsAvecLog(this, cible, degats, log);
         Combat.appliquerEffet(this, this, new Invincibilite(1), log);
+        double soin = degatsTotaux * 0.30;
+        if (soin > 0) {
+            this.recevoirSoin(soin, log);
+        }
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant()) {
                 Combat.appliquerEffet(this, allie, new BuffTauxEsquive(0.10, 2), log);
@@ -88,7 +98,8 @@ public class perso_Rogue extends PersonnageBase {
     public void descriptionAttaqueSpeciale() {
         System.out.println("Tranchant des tenebres — Inflige 140% ATK a la cible. "
                 + "Si la cible est Marquee : +40% degats. "
-                + "Rogue gagne Contre-Attaque a 60% pendant 2 tours.");
+                + "Rogue gagne Contre-Attaque a 20% pendant 2 tours."
+                + "Se soigne de 50% des dégats totaux");
     }
 
     @Override
@@ -97,6 +108,7 @@ public class perso_Rogue extends PersonnageBase {
                 + "Si la cible est Marquee : degats multiplies par 1.5. "
                 + "Rogue devient invincible 1 tour. "
                 + "Toute l'equipe gagne +10% esquive pendant 2 tours. "
-                + "Puissance augmentee par la Rage.");
+                + "Puissance augmentee par la Rage."
+                + "Se soigne de 30% des dégats totaux");
     }
 }

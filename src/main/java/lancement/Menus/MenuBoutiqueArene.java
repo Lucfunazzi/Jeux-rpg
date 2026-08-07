@@ -1,36 +1,42 @@
 package lancement.Menus;
 
 import lancement.GameContext;
-import Personnage.PersonnageBase;
-import Personnage.FairyTail.*;
 import lancement.Gestionnaires.AreneData;
 import lancement.Gestionnaires.GestionnaireArene;
+import lancement.Gestionnaires.GestionnaireEtoilesPerso;
 import java.util.Scanner;
 
+/**
+ * Boutique de l'arene : vend des FRAGMENTS de personnages (et non plus le personnage entier
+ * d'un coup) contre des points boutique. Les fragments achetes rejoignent le meme pool que les
+ * fragments gagnes ailleurs (quetes, Sceau de Rang...) et se consomment ensuite normalement
+ * depuis l'Inventaire : recrutement une fois le seuil atteint (GestionnaireEtoilesPerso), puis
+ * montee en etoiles pour les personnages deja recrutes.
+ */
 public class MenuBoutiqueArene {
 
-    // ── Catalogue ─────────────────────────────────────────────────────────
-
-    private static final int PRIX_BISKA  = 3_500;
-    private static final int PRIX_ARZAK  = 3_500;
-    private static final int PRIX_EVERGREEN = 12_500;
-    private static final int PRIX_BIXROW = 12_500;
-    private static final int PRIX_FREED = 12_500;
-
-    private static final int PRIX_STING = 50_000;
-    private static final int PRIX_ROGUE = 50_000;
-
-    /** Catalogue accessible depuis l'exterieur (ex: interface graphique) sous forme {nom, rarete, prix}. */
+    // ── Catalogue : {nom, rarete} ────────────────────────────────────────
     public static java.util.List<Object[]> getCatalogue() {
         return java.util.List.of(
-            new Object[]{"Bisca",     "C", PRIX_BISKA},
-            new Object[]{"Alzack",    "C", PRIX_ARZAK},
-            new Object[]{"Evergreen", "A", PRIX_EVERGREEN},
-            new Object[]{"Bickslow",  "A", PRIX_BIXROW},
-            new Object[]{"Freed",     "A", PRIX_FREED},
-            new Object[]{"Sting",     "S", PRIX_STING},
-            new Object[]{"Rogue",     "S", PRIX_ROGUE}
+            new Object[]{"Bisca",     "C"},
+            new Object[]{"Alzack",    "C"},
+            new Object[]{"Evergreen", "A"},
+            new Object[]{"Bickslow",  "A"},
+            new Object[]{"Freed",     "A"},
+            new Object[]{"Sting",     "S"},
+            new Object[]{"Rogue",     "S"}
         );
+    }
+
+    /** Prix en points boutique d'arene d'1 fragment, selon la rarete du personnage. */
+    public static int prixFragment(String rarete) {
+        return switch (rarete) {
+            case "C" -> 20;
+            case "B" -> 50;
+            case "A" -> 150;
+            case "S" -> 300;
+            default  -> 800; // SS (et rangs superieurs a venir)
+        };
     }
 
     private final GameContext       ctx;
@@ -46,7 +52,7 @@ public class MenuBoutiqueArene {
         this.gestionnaireArene = gestionnaireArene;
     }
 
-    // ── Point d'entrée ────────────────────────────────────────────────────
+    // ── Point d'entrée (console) ────────────────────────────────────────────
 
     public void afficher() {
         boolean continuer = true;
@@ -54,111 +60,71 @@ public class MenuBoutiqueArene {
     }
 
     private boolean afficherMenu() {
+        var catalogue = getCatalogue();
         System.out.println("\n╔══════════════════════════════════════╗");
         System.out.println("║       🏪  BOUTIQUE DE L'ARÈNE        ║");
         System.out.println("╚══════════════════════════════════════╝");
         System.out.println("  Points boutique disponibles : "
                          + joueurArene.getPointsBoutique() + " pts");
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        System.out.println("  PERSONNAGES");
-        afficherLigne("1", "Bisca",     "C", PRIX_BISKA,  dejaRecruté("Bisca"));
-        afficherLigne("2", "Alzack",    "C", PRIX_ARZAK,  dejaRecruté("Alzack"));
-        afficherLigne("3", "Evergreen", "A", PRIX_EVERGREEN, dejaRecruté("Evergreen"));
-        afficherLigne("4", "Bickslow",  "A", PRIX_BIXROW, dejaRecruté("Bickslow"));
-        afficherLigne("5", "Freed",     "A", PRIX_FREED, dejaRecruté("Freed"));
-        afficherLigne("6", "Sting",     "S", PRIX_STING, dejaRecruté("Sting"));
-        afficherLigne("7", "Rogue",     "S", PRIX_ROGUE, dejaRecruté("Rogue"));
+        System.out.println("  FRAGMENTS DE PERSONNAGES");
+        for (int i = 0; i < catalogue.size(); i++) {
+            Object[] entree = catalogue.get(i);
+            afficherLigne(String.valueOf(i + 1), (String) entree[0], (String) entree[1]);
+        }
         System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
         System.out.println("  [0] Retour");
         System.out.print("  Choix : ");
 
-        return switch (scanner.nextLine().trim()) {
-            case "1" -> { acheterPersonnage("Bisca",     PRIX_BISKA);  yield true; }
-            case "2" -> { acheterPersonnage("Alzack",    PRIX_ARZAK);  yield true; }
-            case "3" -> { acheterPersonnage("Evergreen", PRIX_EVERGREEN);  yield true; }
-            case "4" -> { acheterPersonnage("Bickslow",  PRIX_BIXROW);  yield true; }
-            case "5" -> { acheterPersonnage("Freed",     PRIX_FREED);  yield true; }
-            case "6" -> { acheterPersonnage("Sting",     PRIX_STING);  yield true; }
-            case "7" -> { acheterPersonnage("Rogue",     PRIX_ROGUE);  yield true; }
-            case "0" -> false;
-            default  -> { System.out.println("  Choix invalide."); yield true; }
-        };
+        String choix = scanner.nextLine().trim();
+        if (choix.equals("0")) return false;
+
+        int index;
+        try { index = Integer.parseInt(choix) - 1; }
+        catch (NumberFormatException e) { System.out.println("  Choix invalide."); return true; }
+        if (index < 0 || index >= catalogue.size()) { System.out.println("  Choix invalide."); return true; }
+
+        Object[] entree = catalogue.get(index);
+        String nom    = (String) entree[0];
+        String rarete = (String) entree[1];
+        System.out.print("  Combien de fragments acheter (" + prixFragment(rarete) + " pts/fragment) ? ");
+        int quantite;
+        try { quantite = Integer.parseInt(scanner.nextLine().trim()); }
+        catch (NumberFormatException e) { System.out.println("  Quantite invalide."); return true; }
+
+        System.out.println(acheterFragments(nom, rarete, quantite));
+        return true;
     }
 
-    // ── Affichage d'une ligne catalogue ───────────────────────────────────
-
-    private void afficherLigne(String index, String nom, String rarete,
-                                int prix, boolean possede) {
-        String statut = possede ? "✔ Déjà recruté" : prix + " pts";
-        System.out.printf("  [%s] %-10s │ Rang %s │ %s%n",
-            index, nom, rarete, statut);
+    private void afficherLigne(String index, String nom, String rarete) {
+        int qte = GestionnaireEtoilesPerso.getFragments(ctx.inventaire, nom);
+        System.out.printf("  [%s] %-10s │ Rang %s │ %d pts/fragment │ %d fragments possedes%n",
+            index, nom, rarete, prixFragment(rarete), qte);
     }
 
-    // ── Achat d'un personnage ─────────────────────────────────────────────
-
-    private void acheterPersonnage(String nom, int prix) {
-        if (dejaRecruté(nom)) {
-            System.out.println("  Tu as déjà recruté " + nom + " !");
-            return;
-        }
-
-        if (joueurArene.getPointsBoutique() < prix) {
-            int manque = prix - joueurArene.getPointsBoutique();
-            System.out.println("  Points insuffisants ! Il te manque "
-                             + manque + " pts pour recruter " + nom + ".");
-            return;
-        }
-
-        // Confirmation
-        System.out.println("\n  Recruter " + nom + " pour " + prix
-                         + " points boutique ? (1 : Oui / 2 : Non)");
-        System.out.print("  Choix : ");
-        if (!scanner.nextLine().trim().equals("1")) {
-            System.out.println("  Achat annulé.");
-            return;
-        }
-
-        System.out.println(executerAchat(nom, prix));
-    }
+    // ── Achat de fragments ────────────────────────────────────────────────
 
     /**
-     * Deduit les points et recrute le personnage si les conditions sont remplies
-     * (pas deja recrute, points suffisants). Retourne le message resultat.
-     * Reutilisable par la console et l'interface graphique (sans le prompt de confirmation,
-     * a gerer cote appelant).
+     * Achete {@code quantite} fragments de {@code nom} au prix unitaire de sa rarete. Retourne
+     * le message resultat. Reutilisable par la console et l'interface graphique.
      */
-    public String executerAchat(String nom, int prix) {
-        if (dejaRecruté(nom)) return "Tu as deja recrute " + nom + " !";
-        if (joueurArene.getPointsBoutique() < prix) {
-            int manque = prix - joueurArene.getPointsBoutique();
-            return "Points insuffisants ! Il te manque " + manque + " pts pour recruter " + nom + ".";
+    public String acheterFragments(String nom, String rarete, int quantite) {
+        if (quantite <= 0) return "Quantite invalide.";
+
+        int coutTotal = prixFragment(rarete) * quantite;
+        if (joueurArene.getPointsBoutique() < coutTotal) {
+            int manque = coutTotal - joueurArene.getPointsBoutique();
+            return "Points insuffisants ! Il te manque " + manque
+                    + " pts pour " + quantite + " fragment(s) de " + nom + ".";
         }
 
-        joueurArene.setPointsBoutique(joueurArene.getPointsBoutique() - prix);
-
-        PersonnageBase perso = switch (nom) {
-            case "Bisca" -> new perso_Biska();
-            case "Alzack" -> new perso_Arzak();
-            case "Evergreen"  -> new perso_Evergreen();
-            case "Bickslow"  -> new perso_Bixrow();
-            case "Freed" -> new perso_Freed();
-            case "Sting" -> new perso_Sting();
-            case "Rogue" -> new perso_Rogue();
-            default       -> null;
-        };
-
-        if (perso == null) return "Erreur : personnage introuvable.";
-
-        ctx.personnagesRecruites.add(perso);
+        joueurArene.setPointsBoutique(joueurArene.getPointsBoutique() - coutTotal);
+        GestionnaireEtoilesPerso.ajouterFragments(ctx.inventaire, nom, quantite);
         gestionnaireArene.uploaderRangJoueur(joueurArene);
         ctx.sauvegarde.sauvegarder(ctx);
-        return nom + " a rejoint ton equipe !\nPoints boutique restants : " + joueurArene.getPointsBoutique() + " pts";
-    }
 
-    // ── Utilitaire ────────────────────────────────────────────────────────
-
-    public boolean dejaRecruté(String nom) {
-        return ctx.personnagesRecruites.stream()
-                .anyMatch(p -> p.getNom().equals(nom));
+        return "+" + quantite + " fragment(s) de " + nom + " ! (-" + coutTotal + " pts)\n"
+                + "Points boutique restants : " + joueurArene.getPointsBoutique() + " pts\n"
+                + "Rendez-vous dans l'Inventaire (section Fragments) pour recruter ou monter en étoiles.";
     }
 }

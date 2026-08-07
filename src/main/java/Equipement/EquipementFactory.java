@@ -164,11 +164,35 @@ public class EquipementFactory {
         };
     }
 
-    /** Rareté d'équipement fantôme appropriée pour un ennemi de ce niveau (calée sur ce que le joueur peut réellement obtenir à ce stade). */
+    /** Rareté d'équipement fantôme appropriée pour un ennemi de ce niveau (calée sur ce que le
+     *  joueur peut réellement obtenir à ce stade). Plafonnait auparavant à A des le niveau 35
+     *  et n'evoluait plus jamais : un boss cense etre narrativement SSS/UR (Hades, Acnologia...)
+     *  portait donc le meme equipement fantome qu'un ennemi du Chapitre 3 Elite. Les paliers
+     *  ci-dessous suivent la progression reelle des chapitres (CourbeChapitres) pour que
+     *  l'equipement continue de monter jusqu'aux Chapitres Elite. */
     public static Equipement.Rarete rareteEnnemiPourNiveau(int niveau) {
         if (niveau < 11) return Equipement.Rarete.C;   // Chapitre 1
-        if (niveau < 35) return Equipement.Rarete.B;   // Chapitre 1 Elite / 2 / 2 Elite / 3
-        return Equipement.Rarete.A;                     // Chapitre 3 Elite (rang A par synthèse de fragments)
+        if (niveau < 35) return Equipement.Rarete.B;   // Chapitre 1 Elite / 2 / 2 Elite / 3 / 4 / 5
+        if (niveau < 45) return Equipement.Rarete.A;   // Chapitre 6 / 7
+        if (niveau < 52) return Equipement.Rarete.S;   // Chapitre 8 / 9
+        if (niveau < 61) return Equipement.Rarete.SS;  // Chapitre 10 / 11 / 12
+        if (niveau < 64) return Equipement.Rarete.SSS; // Chapitre 13
+        return Equipement.Rarete.UR;                     // Chapitres Elite (64+)
+    }
+
+    /**
+     * Rareté d'équipement fantôme pour les ennemis de l'Examen de Rang S, selon leur niveau
+     * (= numéro d'étage, 1 à 65 — voir GestionnaireExamenS.NB_STAGES). Reprend le plafond
+     * historique de rareteEnnemiPourNiveau (avant son extension pour suivre les Chapitres 8+) :
+     * l'Examen S n'est pas rattaché à la progression narrative des chapitres et ne doit pas
+     * hériter des paliers S/SS/SSS/UR désormais réservés à ces chapitres, sous peine de faire
+     * exploser les stats des ennemis fantômes dès l'étage 45 (régression constatée à l'étage 65,
+     * qui recevait UR — la rareté maximale du jeu — au lieu du plafond A d'avant).
+     */
+    public static Equipement.Rarete rareteEnnemiPourEtageExamenS(int niveau) {
+        if (niveau < 11) return Equipement.Rarete.C;
+        if (niveau < 35) return Equipement.Rarete.B;
+        return Equipement.Rarete.A;
     }
 
     /**

@@ -65,13 +65,14 @@ public class EnnemiCapricorn extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Capricorn déchaîne l'Ultime Discipline !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
-            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "DPS") != null ? "DPS" : "Tank";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                double degats = (this.getAttaque() * 2.00) * multiplicateurRage;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
         }
     }
 
@@ -82,6 +83,6 @@ public class EnnemiCapricorn extends PersonnageBase {
         System.out.println("Danse du Combattant — Inflige 120% ATK puis 60% ATK supplémentaires.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ultime Discipline — Inflige 200% ATK (bonus selon la Rage) au DPS ennemi (ou au Tank).");
+        System.out.println("Ultime Discipline — Inflige 200% ATK (bonus selon la Rage) à tous les DPS ennemis (ou au Tank).");
     }
 }

@@ -40,6 +40,14 @@ public class EnnemiDeliora_passe extends PersonnageBase {
         initialiserVieMax();
     }
 
+    /** Rang SS : immunise aux effets de controle (Etourdissement, Paralysie, Sommeil,
+     *  Petrification, Gel) pendant tout le combat. */
+    @Override
+    public void reinitialiserPourCombat() {
+        super.reinitialiserPourCombat();
+        appliquerImmuniteControlePassive();
+    }
+
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee, List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add(this.nom + " frappe " + cible.getNom() + " de son poing devastateur !");

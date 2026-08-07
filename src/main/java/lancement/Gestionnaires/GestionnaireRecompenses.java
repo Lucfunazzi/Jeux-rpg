@@ -19,7 +19,6 @@ import Personnage.FairyTail.perso_Yukino;
 import Personnage.PersonnageBase;
 import lancement.GameContext;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -300,20 +299,20 @@ public class GestionnaireRecompenses {
     private static final int[] POINTS_PAR_PALIER = {1000, 3000, 8000, 12000, 16000};
 
     /** Cristaux de Transcendance offerts par palier (2/5/14/21 jours + dernier jour du mois). */
-    private static final int[] CRISTAUX_PAR_PALIER = {1, 2, 4, 10, 0};
+    private static final int[] PARCHEMIN_ABILITES = {2, 5, 10, 15, 30};
 
     public int recompenseMois(int index) { return POINTS_PAR_PALIER[index]; }
 
     public String afficherRecompenseMois(int index) {
         String base = POINTS_PAR_PALIER[index] + " points du mois";
-        int cristaux = CRISTAUX_PAR_PALIER[index];
-        return cristaux > 0 ? base + ", " + cristaux + "x " + CristalTranscendance.NOM : base;
+        int parchemin_abilites = PARCHEMIN_ABILITES[index];
+        return parchemin_abilites > 0 ? base + ", " + parchemin_abilites + "x " + ParcheminAptitude.PETITE: base;
     }
 
     public String reclamerMois(int index, Personnage_principale joueur, Inventaire inventaire) {
         pointsMois += POINTS_PAR_PALIER[index];
-        int cristaux = CRISTAUX_PAR_PALIER[index];
-        if (cristaux > 0) inventaire.ajouterMateriau(CristalTranscendance.NOM, cristaux);
+        int parchemin_abilites = PARCHEMIN_ABILITES[index];
+        if (parchemin_abilites > 0) inventaire.ajouterMateriau(ParcheminAptitude.PETITE.nom,1);
         moisReclame[index] = true;
         return "Palier " + getPaliersMois()[index] + " jours reclame ! " + afficherRecompenseMois(index)
                 + " ! (Total points du mois : " + pointsMois + ")";
@@ -328,10 +327,15 @@ public class GestionnaireRecompenses {
     /** Prix (en points) d'un fragment de personnage pour la boutique du mois, selon la rarete. */
     public static int prixFragmentBoutiqueMois(String rarete) {
         return switch (rarete) {
-            case "C" -> 50;
-            case "B" -> 100;
-            case "A" -> 200;
-            default  -> 500; // S, SS, UR
+            case "C" -> 30;
+            case "B" -> 60;
+            case "A" -> 100;
+            case "S" -> 200;
+            case "SS" -> 400;
+            case "SSS" -> 600;
+            case "UR" -> 1000;
+                
+            default  -> 500; 
         };
     }
 
@@ -401,10 +405,10 @@ public class GestionnaireRecompenses {
 
     public String afficherRecompenseJour(int jour) {
         return switch (jour) {
-            case 1 -> "100 Carte(s) d'Or Lv.1, 2 Potion(s) d'Energie";
+            case 1 -> "100 Carte(s) d'Or Lv.1, 2x Petite Potion(s) d'Energie";
             case 2 -> QUANTITE_PARCHEMIN_JOUR2 + "x " + MATERIAU_PARCHEMIN_JOUR2 + ", 100 Cartes d'or Lv.1, 2x Petite Potion d'Energie";
-            case 3 -> "3 Potion d'Energie simple, 100 carte d'or lv.2, 5x " + GestionnaireChasseTresor.PARCHEMIN_S;
-            case 4 -> "1 " + BoiteEquipement.A.nom + ", 20 cartes d'or lv.3, 2 grandes potions d'energies";
+            case 3 -> "3x petites Potion d'Energie , 100 carte d'or lv.1, 5x " + GestionnaireChasseTresor.PARCHEMIN_S;
+            case 4 -> "1 " + BoiteEquipement.A.nom + ", 50 cartes d'or lv.2, 2 simples potions d'energies";
             case 5 -> "4x " + BOITE_PIERRE_LV4 + ", 100 carte d'or lv3, 3x " + MATERIAU_AFFINAGE;
             case 6 -> "30 carte d'or lv.5, 10x " + GestionnaireChasseTresor.PARCHEMIN_S + ", 10x " + FriandiseFamilier.MOYENNE.nom;
             default -> "Coffre de personnage [S] au choix : " + String.join(" / ", CHOIX_COFFRE_RANG_S);
@@ -416,7 +420,7 @@ public class GestionnaireRecompenses {
         switch (jour) {
             case 1 -> {
                 inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
-                inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
             }
             case 2 -> {
                 inventaire.ajouterMateriau(MATERIAU_PARCHEMIN_JOUR2, QUANTITE_PARCHEMIN_JOUR2);
@@ -425,13 +429,13 @@ public class GestionnaireRecompenses {
             }
             case 3 -> {
                 inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 3);
-                inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 100);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 100);
                 inventaire.ajouterMateriau(GestionnaireChasseTresor.PARCHEMIN_S, 5);
             }
             case 4 -> {
                 inventaire.ajouterMateriau(BoiteEquipement.A.nom, 1);
-                inventaire.ajouterCartesOr(CarteOr.NIVEAU_3, 20);
-                inventaire.ajouterMateriau(PotionEnergie.GRANDE.nom, 2);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 50);
+                inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
             }
             case 5 -> {
                 inventaire.ajouterMateriau(BOITE_PIERRE_LV4, 4);
@@ -474,30 +478,91 @@ public class GestionnaireRecompenses {
     public void setJourReclame(boolean[] v)               { this.jourReclame = redimensionner(v, 7); }
     public void setTerminee(boolean t)                    { this.terminee = t; }
 
-    // ── Récompense quotidienne (paliers de temps) ───────────────────────────
-    // Reclamable une seule fois par jour calendaire (pas un simple cooldown de 30 min,
-    // sinon elle est repetable indefiniment dans la meme journee).
-    private LocalDateTime derniereReclamation30min;
+    // ── Récompense quotidienne (paliers de temps de jeu cumulé) ─────────────
+    // Chaque palier se debloque quand le temps reellement passe dans l'app AUJOURD'HUI
+    // (cumule sur plusieurs sessions, incremente par SuiviTempsJeu pendant que l'app tourne)
+    // atteint son seuil. Reinitialise a minuit (nouveau jour calendaire).
+    public static final int[] SEUILS_TEMPS_MINUTES = {30, 60, 120, 240};
 
-    public boolean peutReclamer30min() {
-        return derniereReclamation30min == null
-                || !derniereReclamation30min.toLocalDate().equals(LocalDate.now());
+    private int       minutesJoueesAujourdhui = 0;
+    private LocalDate dernierJourTempsJeu;
+    private boolean[] tempsReclame = new boolean[SEUILS_TEMPS_MINUTES.length];
+
+    /** À appeler à chaque ouverture de l'écran Récompenses : reinitialise le compteur si on a
+     *  change de jour calendaire depuis la derniere fois (sans ajouter de temps). */
+    public void mettreAJourJourTempsJeu() {
+        LocalDate aujourdhui = LocalDate.now();
+        if (dernierJourTempsJeu == null || !dernierJourTempsJeu.equals(aujourdhui)) {
+            minutesJoueesAujourdhui = 0;
+            tempsReclame            = new boolean[SEUILS_TEMPS_MINUTES.length];
+            dernierJourTempsJeu     = aujourdhui;
+        }
     }
 
-    public String getTempsRestant30min() {
-        return peutReclamer30min() ? "Disponible" : "Revient demain";
+    /** À appeler regulierement par SuiviTempsJeu pendant que l'application est ouverte. */
+    public void ajouterMinutesJeu(int minutes) {
+        mettreAJourJourTempsJeu();
+        minutesJoueesAujourdhui += minutes;
     }
 
-    public String reclamer30min(Inventaire inventaire) {
-        if (!peutReclamer30min()) return "Pas encore disponible (" + getTempsRestant30min() + ").";
-        inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
-        inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 10);
-        derniereReclamation30min = LocalDateTime.now();
-        return "Recompense (30 min) reclamee ! 2 Petite(s) Potion(s) d'Energie, 10 Carte(s) d'Or Lv.1";
+    public int getMinutesJoueesAujourdhui() { return minutesJoueesAujourdhui; }
+
+    public boolean estTempsDisponible(int index) {
+        return minutesJoueesAujourdhui >= SEUILS_TEMPS_MINUTES[index] && !tempsReclame[index];
     }
 
-    public LocalDateTime getDerniereReclamation30min()          { return derniereReclamation30min; }
-    public void setDerniereReclamation30min(LocalDateTime d)    { this.derniereReclamation30min = d; }
+    public boolean isTempsReclame(int index) { return tempsReclame[index]; }
+
+    public String afficherRecompenseTemps(int index) {
+        return switch (index) {
+            case 0 -> "1x " + PotionEnergie.PETITE.nom + ", 10x " + CarteOr.NIVEAU_1.nom;
+            case 1 -> "2x " + PotionEnergie.PETITE.nom + ", 20x " + CarteOr.NIVEAU_1.nom + ", 20 coupons";
+            case 2 -> "1x " + PotionEnergie.MOYENNE.nom + ", 30x " + CarteOr.NIVEAU_2.nom
+                    + ", 1x " + lancement.Menus.MenuExamenS.nomBoite(1) + ", 3x " + ParcheminAptitude.PETITE.nom + ", 50 coupons";
+            case 3 -> "2x " + PotionEnergie.MOYENNE.nom + ", 50x " + CarteOr.NIVEAU_3.nom
+                    + ", 2x " + lancement.Menus.MenuExamenS.nomBoite(2) + ", 10x " + ParcheminAptitude.PETITE.nom + ", 100 coupons";
+            default -> "";
+        };
+    }
+
+    public String reclamerTemps(int index, Inventaire inventaire,Personnage_principale joueur) {
+        if (!estTempsDisponible(index)) {
+            return "Pas encore disponible (" + minutesJoueesAujourdhui + " / " + SEUILS_TEMPS_MINUTES[index] + " min jouees aujourd'hui).";
+        }
+        switch (index) {
+            case 0 -> {
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 1);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 10);
+            }
+            case 1 -> {
+                inventaire.ajouterMateriau(PotionEnergie.PETITE.nom, 2);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_1, 20);
+                joueur.ajouterCoupons(20);
+            }
+            case 2 -> {
+                inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 1);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_2, 30);
+                inventaire.ajouterMateriau(lancement.Menus.MenuExamenS.nomBoite(1), 1);
+                inventaire.ajouterMateriau(ParcheminAptitude.PETITE.nom, 3);
+                joueur.ajouterCoupons(50);
+            }
+            case 3 -> {
+                inventaire.ajouterMateriau(PotionEnergie.MOYENNE.nom, 2);
+                inventaire.ajouterCartesOr(CarteOr.NIVEAU_3, 50);
+                inventaire.ajouterMateriau(lancement.Menus.MenuExamenS.nomBoite(2), 2);
+                inventaire.ajouterMateriau(ParcheminAptitude.PETITE.nom, 10);
+                joueur.ajouterCoupons(100);
+            }
+        }
+        tempsReclame[index] = true;
+        return "Palier " + SEUILS_TEMPS_MINUTES[index] + " min reclame ! " + afficherRecompenseTemps(index);
+    }
+
+    public LocalDate getDernierJourTempsJeu()          { return dernierJourTempsJeu; }
+    public void setDernierJourTempsJeu(LocalDate d)    { this.dernierJourTempsJeu = d; }
+    public void setMinutesJoueesAujourdhui(int m)      { this.minutesJoueesAujourdhui = m; }
+    public boolean[] getTempsReclame()                 { return tempsReclame; }
+    public void setTempsReclame(boolean[] v)           { this.tempsReclame = redimensionner(v, SEUILS_TEMPS_MINUTES.length); }
 
     // ── Utilitaire ────────────────────────────────────────────────────────
     private boolean[] redimensionner(boolean[] v, int taille) {

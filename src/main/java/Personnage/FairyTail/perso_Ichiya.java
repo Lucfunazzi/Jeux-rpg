@@ -49,7 +49,7 @@ public class perso_Ichiya extends PersonnageBase {
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Ichiya diffuse son Parfum Max sur toute l'équipe !");
-        double soin = this.getAttaque() * 0.50;
+        double soin = this.getAttaque() * 0.70;
         for (PersonnageBase allie : equipeAlliee) {
             if (allie.estVivant()) {
                 Combat.appliquerEffet(this, allie, new BuffAttaque(0.15, 2), log);
@@ -81,7 +81,7 @@ public class perso_Ichiya extends PersonnageBase {
         System.out.println("Parfum de Poing — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Parfum Max — Augmente l'ATK de toute l'équipe de 15% et soigne l'equipe de 50% de l'attaque pendant 2 tours (purifie 2 effets négatifs sur chacun).");
+        System.out.println("Parfum Max — Augmente l'ATK de toute l'équipe de 15% et soigne l'equipe de 70% de l'attaque pendant 2 tours (purifie 2 effets négatifs sur chacun).");
     }
     @Override public void descriptionAttaqueUltime() {
         System.out.println("Orbe du Parfum Masculin — Soigne l'allié le plus exposé de 130% ATK (purifie 3 effets négatifs) et augmente la vitesse de l'équipe de 15% pendant 2 tours.");

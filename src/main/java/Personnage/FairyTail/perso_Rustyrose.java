@@ -85,9 +85,9 @@ public class perso_Rustyrose extends PersonnageBase {
         System.out.println("Coup de Carte — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Création Vivante : Golem — Se protège d'un bouclier (10% PV max) et inflige 120% ATK. a tout les ennemis");
+        System.out.println("Création Vivante : Golem — Se protège d'un bouclier (20% PV max) et inflige 120% ATK. a tout les ennemis réduit la vitesses de tout les ennemis de 15%");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Ceci Met Fin à Tout — Inflige 115% ATK (bonus selon la Rage) à tous les ennemis. inflige brulure pendants 2 tours aux adversaires et s'applique regeneration de 5% pendants 2 tours");
+        System.out.println("Ceci Met Fin à Tout — Inflige 115% ATK (bonus selon la Rage) à tous les ennemis. inflige brulure pendants 2 tours aux adversaires et s'applique regeneration de 5% pendants 2 tours, se soigne de 10% des degats totaux infligés");
     }
 }

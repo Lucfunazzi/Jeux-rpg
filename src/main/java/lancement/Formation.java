@@ -127,21 +127,15 @@ public class Formation {
     }
 
     // ── Combativite (puissance totale de la formation) ────────────────────
-    /** Puissance d'un personnage : combinaison ponderee de ses stats de combat. */
-    public static int getPuissance(PersonnageBase p) {
-        return (int) Math.round(
-                p.getAttaque()  * 2.0
-              + p.getDefense()  * 1.5
-              + p.getVitesse()  * 1.0
-              + p.getVieMax()   * 0.1
-        );
-    }
-
-    /** Somme des puissances de tous les membres de la formation actuelle. */
+    /** Somme des combativites (PersonnageBase.getCombativite(), meme formule que l'Arene, le
+     *  Donjon et l'Examen de Rang S) de tous les membres de la formation actuelle. Utilise
+     *  auparavant un bareme different (getPuissance, PV*0.1/DEF*1.5) propre a cet ecran, ce qui
+     *  faisait diverger le chiffre affiche au menu principal de celui affiche partout ailleurs
+     *  pour la meme equipe. */
     public int getCombativite() {
-        int total = 0;
-        for (PersonnageBase p : getEquipe()) total += getPuissance(p);
-        return total;
+        double total = 0;
+        for (PersonnageBase p : getEquipe()) total += p.getCombativite();
+        return (int) Math.round(total);
     }
 
     // ── Utilitaires ───────────────────────────────────────────────────────

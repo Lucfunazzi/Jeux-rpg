@@ -253,8 +253,10 @@ public class SauvegardeData {
     public String    recompensesDernierJourConnexion = null;
     public boolean[] recompensesJourReclame          = null;
     public boolean   recompensesTerminee              = false;
-    public String    recompensesDerniereReclamation30min = null;
     public int       recompensesPointsMois             = 0;
+    public int       recompensesMinutesJoueesAujourdhui = 0;
+    public String    recompensesDernierJourTempsJeu    = null;
+    public boolean[] recompensesTempsReclame           = null;
 
     // ── Coupons ───────────────────────────────────────────────────────────
     public int coupons = 0;

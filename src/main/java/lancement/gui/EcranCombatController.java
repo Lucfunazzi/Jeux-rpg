@@ -181,7 +181,7 @@ public class EcranCombatController {
         INFOS_EFFETS.put("ContreAttaque",     new EffetInfo("Riposte automatiquement en cas d'attaque.", true, "#e08b3d"));
         INFOS_EFFETS.put("Absorption",        new EffetInfo("Vole des PV en infligeant des degats.", true, "#9b6fe0"));
         INFOS_EFFETS.put("Immunite",          new EffetInfo("Bloque les prochains effets negatifs.", true, "#cfd8e3"));
-        INFOS_EFFETS.put("ImmuniteControle",  new EffetInfo("Bloque Etourdissement, Paralysie, Sommeil et Petrification.", true, "#cfd8e3"));
+        INFOS_EFFETS.put("ImmuniteControle",  new EffetInfo("Bloque Etourdissement, Paralysie, Sommeil, Petrification et Gel.", true, "#cfd8e3"));
 
         // Debuffs — fleche vers le bas
         INFOS_EFFETS.put("Poison",           new EffetInfo("Perd des PV chaque tour (empire en stacks).", false, "#5a8f3d"));
@@ -622,6 +622,8 @@ public class EcranCombatController {
                 afficherNombreFlottant(cartes[i].conteneur, "Esquive !", "#f2c14e", false);
             } else if (evt.lignes.stream().anyMatch(l -> l.contains(apres.nom + " bloque ! Degats reduits a "))) {
                 afficherNombreFlottant(cartes[i].conteneur, "Bloque !", "#5bc8e8", false, -30);
+            } else if (evt.lignes.stream().anyMatch(l -> l.contains(apres.nom + " resiste aux effets de controle"))) {
+                afficherNombreFlottant(cartes[i].conteneur, "Immunise !", "#cfd8e3", false);
             }
         }
 

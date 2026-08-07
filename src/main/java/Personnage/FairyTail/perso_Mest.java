@@ -41,18 +41,31 @@ public class perso_Mest extends PersonnageBase {
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Mest apparaît derrière " + cible.getNom() + " et frappe !");
-        Combat.attaquer(this, cible, log);
+        log.add("Mest apparaît derrière les ennemis les plus offensifs et frappe !");
+        List<PersonnageBase> cibles = equipeEnnemie.stream()
+                .filter(PersonnageBase::estVivant)
+                .sorted(java.util.Comparator.comparingDouble(PersonnageBase::getAttaque).reversed())
+                .limit(2)
+                .toList();
+        for (PersonnageBase c : cibles) {
+            double degats = this.getAttaque() * 1.00;
+            Combat.appliquerDegatsAvecLog(this, c, degats, log);
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Mest brouille l'esprit de " + cible.getNom() + " — Manipulation de Mémoire !");
-        double degats = this.getAttaque() * 1.25;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        PersonnageBase cibleReelle = equipeEnnemie.stream()
+                .filter(PersonnageBase::estVivant)
+                .max(java.util.Comparator.comparingDouble(PersonnageBase::getAttaque))
+                .orElse(null);
+        if (cibleReelle == null) return;
+        log.add("Mest brouille l'esprit de " + cibleReelle.getNom() + " — Manipulation de Mémoire !");
+        double degats = this.getAttaque() * 1.60;
+        boolean touche = Combat.appliquerDegatsAvecLog(this, cibleReelle, degats, log);
         if (touche) {
-            Combat.appliquerEffet(this, cible, new Confusion(2), log);
+            Combat.appliquerEffet(this, cibleReelle, new Confusion(2), log);
         }
     }
 
@@ -66,15 +79,20 @@ public class perso_Mest extends PersonnageBase {
                 Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
             }
         }
+        for (PersonnageBase allie : equipeAlliee) {
+            if (allie.estVivant() && allie.getRole().equals("Support")) {
+                Combat.appliquerEffet(this, allie, new BuffVitesse(1.00, 2), log);
+            }
+        }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Frappe Téléportée — Inflige 100% ATK.");
+        System.out.println("Frappe Téléportée — Inflige 100% ATK à deux ennemis avec le plus d'attaques.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Manipulation de Mémoire — Inflige 125% ATK et confond la cible pendant 2 tours.");
+        System.out.println("Manipulation de Mémoire — Inflige 160% ATK et confond la cible avec le plus d'attaque pendant 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Vision du Conseil — Inflige 85% ATK à tous les ennemis.");
+        System.out.println("Vision du Conseil — Inflige 85% ATK à tous les ennemis et augmente la vitesse des support de 100% pendants 2 tours.");
     }
 }

@@ -58,13 +58,14 @@ public class perso_Loki extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Loki libère un Impact Regulus dévastateur !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 2.30) * multiplicateurRage;
-            Combat.appliquerDegatsAvecLog(this, cible, degats, log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "DPS") != null ? "DPS" : "Tank";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        double degats = (this.getAttaque() * 2.30) * multiplicateurRage;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+            }
         }
     }
 
@@ -72,9 +73,9 @@ public class perso_Loki extends PersonnageBase {
         System.out.println("Poing de Regulus — Inflige 100% ATK.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Lion Brillant — Augmente son ATK de 20% pendant 2 tours et inflige 120% ATK.");
+        System.out.println("Lion Brillant — inflige 150% ATK aux dps et aux suppots et inflige aveuglement a 20%.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Impact Regulus — Inflige 230% ATK (bonus selon la Rage) au DPS ennemi (ou au Tank).");
+        System.out.println("Impact Regulus — Inflige 230% ATK  à tous les DPS ennemis et inflige fragilité de 15% pendants 2 tours.");
     }
 }

@@ -7,6 +7,7 @@ import Equipement.FragmentEquipement;
 import Equipement.GestionnaireFragments;
 import Equipement.Inventaire;
 import Equipement.Materiau;
+import Equipement.ParcheminAptitude;
 import Equipement.ParcheminXP;
 import Equipement.BoiteGuilde;
 import Equipement.BoiteEquipement;
@@ -66,7 +67,11 @@ public class EcranInventaireController {
     /** Onglet de rareté actif dans la section Équipements (premier onglet = C par défaut). */
     private Equipement.Rarete ongletEquipementActif = Equipement.Rarete.C;
 
-    @FXML private VBox contenuBox;
+    @FXML private VBox equipementsBox;
+    @FXML private VBox fragmentsBox;
+    @FXML private VBox materiauxBox;
+    @FXML private VBox consommablesBox;
+    @FXML private VBox pierresBox;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -74,27 +79,30 @@ public class EcranInventaireController {
         rafraichir();
     }
 
+    /** Un onglet par categorie (comme la Boutique) au lieu d'un unique long scroll : sinon
+     *  l'ecran devenait bien trop grand une fois tous les types d'objets accumules. */
     private void rafraichir() {
         Inventaire inv = ctx.inventaire;
-        contenuBox.getChildren().clear();
 
-        contenuBox.getChildren().add(titreSection("Équipements (" + inv.getStacks().size() + ")"));
-        contenuBox.getChildren().add(ongletsRarete());
+        // ── Onglet Équipements ──────────────────────────────────────────────
+        equipementsBox.getChildren().clear();
+        equipementsBox.getChildren().add(titreSection("Équipements (" + inv.getStacks().size() + ")"));
+        equipementsBox.getChildren().add(ongletsRarete());
         List<Inventaire.StackEquipement> stacksFiltres = new ArrayList<>();
         for (Inventaire.StackEquipement s : inv.getStacks()) {
             if (s.getEquipement().getRarete() == ongletEquipementActif) stacksFiltres.add(s);
         }
         if (stacksFiltres.isEmpty()) {
-            contenuBox.getChildren().add(texteVide("Aucun équipement de rareté " + ongletEquipementActif + "."));
+            equipementsBox.getChildren().add(texteVide("Aucun équipement de rareté " + ongletEquipementActif + "."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (Inventaire.StackEquipement s : stacksFiltres) {
                 grille.getChildren().add(carteEquipement(s));
             }
-            contenuBox.getChildren().add(grille);
+            equipementsBox.getChildren().add(grille);
         }
 
-        // Fragments (personnages + équipements) regroupés dans leur propre section
+        // ── Onglet Fragments (personnages + équipements) ────────────────────
         List<Materiau> fragments = new ArrayList<>();
         List<Materiau> autresMateriaux = new ArrayList<>();
         for (var m : inv.getMateriaux()) {
@@ -108,9 +116,10 @@ public class EcranInventaireController {
             }
         }
 
-        contenuBox.getChildren().add(titreSection("Fragments (" + fragments.size() + ")"));
+        fragmentsBox.getChildren().clear();
+        fragmentsBox.getChildren().add(titreSection("Fragments (" + fragments.size() + ")"));
         if (fragments.isEmpty()) {
-            contenuBox.getChildren().add(texteVide("Aucun fragment."));
+            fragmentsBox.getChildren().add(texteVide("Aucun fragment."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (var m : fragments) {
@@ -120,12 +129,14 @@ public class EcranInventaireController {
                     grille.getChildren().add(carteFragmentEquipement(m.getNom()));
                 }
             }
-            contenuBox.getChildren().add(grille);
+            fragmentsBox.getChildren().add(grille);
         }
 
-        contenuBox.getChildren().add(titreSection("Matériaux (" + autresMateriaux.size() + ")"));
+        // ── Onglet Matériaux ─────────────────────────────────────────────────
+        materiauxBox.getChildren().clear();
+        materiauxBox.getChildren().add(titreSection("Matériaux (" + autresMateriaux.size() + ")"));
         if (autresMateriaux.isEmpty()) {
-            contenuBox.getChildren().add(texteVide("Aucun matériau."));
+            materiauxBox.getChildren().add(texteVide("Aucun matériau."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (var m : autresMateriaux) {
@@ -140,21 +151,25 @@ public class EcranInventaireController {
                     grille.getChildren().add(carteCoffreGuilde(m.getQuantite()));
                 } else if (trouverBoiteEquipement(m.getNom()) != null) {
                     grille.getChildren().add(carteBoiteEquipement(trouverBoiteEquipement(m.getNom()), m.getQuantite()));
+                } else if (trouverParcheminAptitude(m.getNom()) != null) {
+                    grille.getChildren().add(carteParcheminAptitude(trouverParcheminAptitude(m.getNom()), m.getQuantite()));
                 } else {
                     grille.getChildren().add(carteSimple("◆", m.getNom(), "x" + m.getQuantite()));
                 }
             }
-            contenuBox.getChildren().add(grille);
+            materiauxBox.getChildren().add(grille);
         }
 
-        contenuBox.getChildren().add(titreSection("Consommables"));
+        // ── Onglet Consommables ──────────────────────────────────────────────
+        consommablesBox.getChildren().clear();
+        consommablesBox.getChildren().add(titreSection("Consommables"));
         boolean aucunePotion = true;
         for (PotionEnergie p : PotionEnergie.values()) {
             if (inv.getQuantiteMateriau(p.nom) > 0) { aucunePotion = false; break; }
         }
         boolean aucunConso = inv.getParchemins().isEmpty() && inv.getCartesOr().isEmpty() && aucunePotion;
         if (aucunConso) {
-            contenuBox.getChildren().add(texteVide("Aucun consommable."));
+            consommablesBox.getChildren().add(texteVide("Aucun consommable."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (var s : inv.getParchemins()) {
@@ -167,18 +182,20 @@ public class EcranInventaireController {
                 int qte = inv.getQuantiteMateriau(p.nom);
                 if (qte > 0) grille.getChildren().add(cartePotionEnergie(p, qte));
             }
-            contenuBox.getChildren().add(grille);
+            consommablesBox.getChildren().add(grille);
         }
 
-        contenuBox.getChildren().add(titreSection("Pierres (" + inv.getPierres().size() + ")"));
+        // ── Onglet Pierres ───────────────────────────────────────────────────
+        pierresBox.getChildren().clear();
+        pierresBox.getChildren().add(titreSection("Pierres (" + inv.getPierres().size() + ")"));
         if (inv.getPierres().isEmpty()) {
-            contenuBox.getChildren().add(texteVide("Aucune pierre."));
+            pierresBox.getChildren().add(texteVide("Aucune pierre."));
         } else {
             FlowPane grille = new FlowPane(10, 10);
             for (var s : inv.getPierres()) {
                 grille.getChildren().add(cartePierre(s));
             }
-            contenuBox.getChildren().add(grille);
+            pierresBox.getChildren().add(grille);
         }
     }
 
@@ -344,6 +361,27 @@ public class EcranInventaireController {
     private BoiteEquipement trouverBoiteEquipement(String nomMateriau) {
         for (BoiteEquipement b : BoiteEquipement.values()) if (b.nom.equals(nomMateriau)) return b;
         return null;
+    }
+
+    /** Carte pour un Parchemin d'Aptitude. Clic -> utilise directement 1 exemplaire sur le
+     *  personnage principal (+points de talent dans son arbre de competences). */
+    private Node carteParcheminAptitude(ParcheminAptitude palier, int quantite) {
+        Node ligne = carteSimple("📜", palier.nom, "x" + quantite + "  (+" + palier.points + " points de talent)");
+        ligne.setCursor(Cursor.HAND);
+        ligne.setOnMouseClicked(ev -> utiliserParcheminAptitude(palier));
+        return ligne;
+    }
+
+    private ParcheminAptitude trouverParcheminAptitude(String nomMateriau) {
+        for (ParcheminAptitude p : ParcheminAptitude.values()) if (p.nom.equals(nomMateriau)) return p;
+        return null;
+    }
+
+    private void utiliserParcheminAptitude(ParcheminAptitude palier) {
+        String message = ctx.joueur.utiliserParcheminAptitude(ctx.inventaire, palier);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Parchemin d'Aptitude", message);
+        rafraichir();
     }
 
     private void ouvrirBoitesEquipement(BoiteEquipement boite) {

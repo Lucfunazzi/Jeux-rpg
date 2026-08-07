@@ -66,17 +66,18 @@ public class perso_Hughes extends PersonnageBase {
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
         log.add("Hughes invoque sa Poupée Titan !");
-        PersonnageBase cible = Combat.cibleParRole(equipeEnnemie, "Tank");
-        if (cible == null) cible = Combat.cibleParRole(equipeEnnemie, "DPS");
-        if (cible != null && cible.estVivant()) {
-            double multiplicateurRage = 1.0;
-            if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
-            double degats = (this.getAttaque() * 1.25) * multiplicateurRage;
-            boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-            double chanceConfusion = 0.20;
-            if (cible.aEffet(ReductionVitesse.class)) chanceConfusion += 0.15;
-            if (touche && Math.random() < chanceConfusion) {
-                Combat.appliquerEffet(this, cible, new Confusion(2), log);
+        String roleCible = Combat.cibleParRole(equipeEnnemie, "Tank") != null ? "Tank" : "DPS";
+        double multiplicateurRage = 1.0;
+        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        double degats = (this.getAttaque() * 1.25) * multiplicateurRage;
+        for (PersonnageBase ennemi : equipeEnnemie) {
+            if (ennemi.estVivant() && ennemi.getRole().equals(roleCible)) {
+                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                double chanceConfusion = 0.20;
+                if (ennemi.aEffet(ReductionVitesse.class)) chanceConfusion += 0.15;
+                if (touche && Math.random() < chanceConfusion) {
+                    Combat.appliquerEffet(this, ennemi, new Confusion(2), log);
+                }
             }
         }
     }
@@ -88,6 +89,6 @@ public class perso_Hughes extends PersonnageBase {
         System.out.println("Légion de Poupées — Inflige 75% ATK à tous les ennemis et reduit la defense de 2 ennemis aleatoire de 10% .");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Poupée Titan — Inflige 125% ATK (bonus selon la Rage) au DPS ennemi (ou au DPS) et a 20% d'inflige confusion pendants 2 tours.");
+        System.out.println("Poupée Titan — Inflige 125% ATK (bonus selon la Rage) au Tank ennemi (ou à tous les DPS ennemis) et a 20% de chance d'infliger confusion pendant 2 tours par cible touchée.");
     }
 }
