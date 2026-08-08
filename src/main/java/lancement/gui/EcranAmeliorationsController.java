@@ -134,7 +134,23 @@ public class EcranAmeliorationsController {
             ligne.setAlignment(Pos.CENTER);
             contenu.getChildren().add(ligne);
         }
+
+        Button boutonAutoPierres = new Button("Équiper pierres (auto)");
+        boutonAutoPierres.getStyleClass().add("menu-bouton");
+        boutonAutoPierres.setOnAction(e -> onAutoEquiperPierres());
+        contenu.getChildren().add(boutonAutoPierres);
+
         equipementBox.getChildren().setAll(contenu);
+    }
+
+    /** Equipe automatiquement les pierres prioritaires du role du personnage selectionne
+     *  (voir GestionnaireEquipement.autoEquiperPierres) sur toutes ses pieces portees. */
+    private void onAutoEquiperPierres() {
+        String resultat = lancement.Gestionnaires.GestionnaireEquipement.autoEquiperPierres(personnageSelectionne, ctx.inventaire);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Équiper pierres (auto)", resultat);
+        rafraichirEquipement();
+        rafraichirPanneauDroit();
     }
 
     private Node carteSlot(Equipement.Slot slot) {
@@ -307,7 +323,11 @@ public class EcranAmeliorationsController {
         boutonFusionner.getStyleClass().add("menu-bouton");
         boutonFusionner.setOnAction(e -> onFusionnerPierres());
 
-        HBox boutonsPierres = new HBox(10, boutonPierres, boutonFusionner);
+        Button boutonFusionAuto = new Button("Fusion auto");
+        boutonFusionAuto.getStyleClass().add("menu-bouton");
+        boutonFusionAuto.setOnAction(e -> onFusionAutomatique());
+
+        HBox boutonsPierres = new HBox(10, boutonPierres, boutonFusionner, boutonFusionAuto);
         boutonsPierres.setAlignment(Pos.CENTER);
 
         mettreAJourValeursFort(equip);
@@ -338,6 +358,46 @@ public class EcranAmeliorationsController {
                 ? "Fusion reussie ! Nouvelle pierre : " + new Pierre(choisi.getType(), choisi.getNiveau() + 1)
                 : resultat);
         rafraichirPanneauDroit();
+    }
+
+    /** Fusionne en masse : le joueur choisit un niveau cible, et toutes les paires de pierres
+     *  disponibles au niveau juste en-dessous (tous types confondus) sont fusionnees vers ce
+     *  niveau (voir Inventaire.fusionnerAutomatiquement). */
+    private void onFusionAutomatique() {
+        List<Integer> ciblesEligibles = new ArrayList<>();
+        for (int niveauCible = 2; niveauCible <= Pierre.NIVEAU_MAX; niveauCible++) {
+            int niveauSource = niveauCible - 1;
+            for (Pierre.Type type : Pierre.Type.values()) {
+                if (ctx.inventaire.getQuantitePierre(type, niveauSource) >= 2) {
+                    ciblesEligibles.add(niveauCible);
+                    break;
+                }
+            }
+        }
+
+        if (ciblesEligibles.isEmpty()) {
+            info("Fusion auto", "Aucune paire de pierres identiques en stock pour fusionner automatiquement.");
+            return;
+        }
+
+        Integer niveauCible = GuiVisuels.choisirParmiCartes("Fusion auto — niveau cible", ciblesEligibles,
+                this::carteNiveauFusionAuto);
+        if (niveauCible == null) return;
+
+        String resultat = ctx.inventaire.fusionnerAutomatiquement(niveauCible);
+        ctx.sauvegarde.sauvegarder(ctx);
+        info("Fusion auto", resultat);
+        rafraichirPanneauDroit();
+    }
+
+    private Node carteNiveauFusionAuto(Integer niveauCible) {
+        Label nom = new Label("Niv." + (niveauCible - 1) + " → Niv." + niveauCible);
+        nom.getStyleClass().add("item-nom");
+        VBox carte = new VBox(nom);
+        carte.setAlignment(Pos.CENTER);
+        carte.getStyleClass().add("carte-item");
+        carte.setPrefWidth(220);
+        return carte;
     }
 
     private Node cartePierreFusion(Inventaire.StackPierre s) {

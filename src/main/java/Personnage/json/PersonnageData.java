@@ -1,9 +1,7 @@
 package Personnage.json;
 
-import java.util.List;
-
 /**
- * Représente un personnage complet désérialisé depuis un fichier JSON.
+ * Represente un personnage minimal (stats seulement), pour construire des PersonnageJson de test.
  */
 public class PersonnageData {
     public String nom;
@@ -13,7 +11,6 @@ public class PersonnageData {
     public String univers;    // "Naruto", "DragonBallZ", "FairyTail"
 
     public StatsData stats;
-    public List<AttaqueData> attaques;
 
     public static class StatsData {
         public double vie        = 500;

@@ -172,10 +172,12 @@ public class SauvegardeJoueur {
             case "Gray"           -> new perso_Gray();
             case "Jubia"          -> new perso_Jubia_4elements();
             case "Lucy"           -> new perso_Lucy();
+            case "Lucy intermagie" -> new perso_Lucy_intermagie();
             case "Natsu"          -> new perso_Natsu();
             case "Wendy"          -> new perso_Wendy();
             // Rang S+
             case "Erza"           -> new perso_Erza();
+            case "Brain"          -> new perso_Brain();
             case "Mirajane"       -> new perso_Mirajane();
             case "Natsu Etherion" -> new perso_Natsu_Etherion();
             case "Rogue"          -> new perso_Rogue();

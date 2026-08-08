@@ -46,11 +46,12 @@ public class StageDonjon {
         this.recompensePierres  = recompensePierres;
         this.recompenseParchemin = recompenseParchemin;
 
-        // Equipement fantome selon la difficulte : Normal = C, Difficile = B, Extreme = A.
+        // Equipement fantome selon la difficulte : Facile = C, Moyen = B, Difficile = A.
         Equipement.Rarete rarete = switch (difficulte) {
-            case NORMAL    -> Equipement.Rarete.C;
-            case DIFFICILE -> Equipement.Rarete.B;
-            case EXTREME   -> Equipement.Rarete.A;
+            case FACILE    -> Equipement.Rarete.C;
+            case MOYEN -> Equipement.Rarete.B;
+            case DIFFICILE   -> Equipement.Rarete.A;
+            case EXTREME -> Equipement.Rarete.S;
         };
         for (PersonnageBase e : ennemis) {
             EquipementFactory.equiperSetStandard(e, rarete);
@@ -224,9 +225,10 @@ public class StageDonjon {
 
     public String getNomDifficulte() {
         return switch (difficulte) {
-            case NORMAL   -> "Normal";
+            case FACILE   -> "Facile";
+            case MOYEN -> "Moyen";
             case DIFFICILE -> "Difficile";
-            case EXTREME  -> "Extreme";
+            case EXTREME -> "Extreme";
         };
     }
 

@@ -144,6 +144,9 @@ public class EcranAreneAdversairesController {
             return;
         }
 
+        GestionnaireArene.appliquerCompagnonAdversaire(
+                equipeAdverse, MenuArene.rangJoueurPourRangArene(adversaire.getRang()));
+
         for (PersonnageBase p : equipeJoueur)  p.reinitialiserPourCombat();
         for (PersonnageBase p : equipeAdverse) p.reinitialiserPourCombat();
 

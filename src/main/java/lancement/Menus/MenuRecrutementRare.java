@@ -17,6 +17,7 @@ import Personnage.FairyTail.perso_Lucy;
 import Personnage.FairyTail.perso_Jubia_4elements;
 import Personnage.FairyTail.perso_Wendy;
 import Equipement.Inventaire;
+import Personnage.FairyTail.perso_Lucy_intermagie;
 import lancement.Gestionnaires.GestionnaireChasseTresor;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -40,6 +41,7 @@ public class MenuRecrutementRare {
     public static final int COUT_RECRUTEMENT_GRAY = 30;  // Parchemin A -> Gray [A] (memes valeurs que Natsu, rang A)
 
     public static final int COUT_RECRUTEMENT_LUCY  = 30;  // Parchemin A -> Lucy [A] (memes valeurs que Natsu/Gray, pas d'evolution)
+    public static final int COUT_EVOLUTION_LUCY = 65;
     public static final int COUT_RECRUTEMENT_JUBIA  = 30;  // Parchemin A -> Jubia [A] (memes valeurs que Natsu/Gray, pas d'evolution)
     public static final int COUT_RECRUTEMENT_WENDY  = 30;  // Parchemin A -> Wendy [A] (memes valeurs que Natsu/Gray, pas d'evolution)
 
@@ -59,6 +61,7 @@ public class MenuRecrutementRare {
     // ── Niveaux requis ────────────────────────────────────────────────────
     public static final int NIVEAU_REQUIS_NATSU_GRAY            = 30;  // Recrutement Natsu / Gray
     public static final int NIVEAU_REQUIS_EVOLUTION_NATSU       = 40;  // Evolution Natsu Etherion (evolution de Gray pas encore implementee)
+    public static final int NIVEAU_REQUIS_EVOLUTION_LUCY = 40;
     public static final int NIVEAU_REQUIS_MIRAJANE_JELLAL           = 70;  // Recrutement Mirajane / Jellal
     public static final int NIVEAU_REQUIS_EVOLUTION_MIRAJANE_JELLAL = 80;  // Evolution Mirajane Halphas / Jellal Intermagie
     public static final int NIVEAU_REQUIS_ERZA                  = 85;  // Recrutement Erza (evolution niveau 95 pas encore implementee)
@@ -99,7 +102,22 @@ public class MenuRecrutementRare {
                         + " : " + possedeS + "/" + COUT_EVOLUTION_NATSU
                         + "  [EVOLUTION]  (niveau " + NIVEAU_REQUIS_EVOLUTION_NATSU + " requis)");
             }
-
+            
+            
+            // ── Lucy ───────────────────────────────────────────────────────
+            boolean lucyRecru = dejaRecruteParNom("Lucy", personnagesRecruites);
+            boolean lucyEvolue = dejaRecruteParNom("Lucy intermagie",personnagesRecruites);
+            
+            System.out.println();
+            System.out.println("[ Lucy ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
+            System.out.println(" 12. Lucy [A]  — " + PARCHEMIN_A
+                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_LUCY
+                    + (lucyRecru || lucyEvolue ? "  [DEJA RECRUTE]" : ""));
+            if (lucyRecru){
+                System.out.println(" 13. Lucy intermagie [S]  — " + PARCHEMIN_S
+                        + " : " + possedeS + "/" + COUT_EVOLUTION_LUCY
+                        + "  [EVOLUTION]  (niveau " + NIVEAU_REQUIS_EVOLUTION_LUCY + " requis)");
+            }
             // ── Gray ───────────────────────────────────────────────────────
             boolean grayRecru = dejaRecruteParNom("Gray", personnagesRecruites);
 
@@ -176,21 +194,14 @@ public class MenuRecrutementRare {
                     + " : " + possedeSS + "/" + COUT_HADES
                     + (hadesRecru ? "  [DEJA RECRUTE]" : ""));
 
-            // ── Lucy ───────────────────────────────────────────────────────
-            boolean lucyRecru = dejaRecruteParNom("Lucy", personnagesRecruites);
-
-            System.out.println();
-            System.out.println("[ Lucy ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
-            System.out.println(" 12. Lucy [A]  — " + PARCHEMIN_A
-                    + " : " + possedeA + "/" + COUT_RECRUTEMENT_LUCY
-                    + (lucyRecru ? "  [DEJA RECRUTE]" : ""));
+            
 
             // ── Jubia ──────────────────────────────────────────────────────
             boolean jubiaRecru = dejaRecruteParNom("Jubia", personnagesRecruites);
 
             System.out.println();
             System.out.println("[ Jubia ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
-            System.out.println(" 13. Jubia [A]  — " + PARCHEMIN_A
+            System.out.println(" 14. Jubia [A]  — " + PARCHEMIN_A
                     + " : " + possedeA + "/" + COUT_RECRUTEMENT_JUBIA
                     + (jubiaRecru ? "  [DEJA RECRUTE]" : ""));
 
@@ -199,7 +210,7 @@ public class MenuRecrutementRare {
 
             System.out.println();
             System.out.println("[ Wendy ]  (niveau " + NIVEAU_REQUIS_NATSU_GRAY + " requis)");
-            System.out.println(" 14. Wendy [A]  — " + PARCHEMIN_A
+            System.out.println(" 15. Wendy [A]  — " + PARCHEMIN_A
                     + " : " + possedeA + "/" + COUT_RECRUTEMENT_WENDY
                     + (wendyRecru ? "  [DEJA RECRUTE]" : ""));
 
@@ -262,14 +273,18 @@ public class MenuRecrutementRare {
                     else tenterRecrutementHades(ctx, scanner);
                 }
                 case 12 -> {
-                    if (lucyRecru) System.out.println("Lucy est deja dans vos allies !");
+                    if (lucyRecru || lucyEvolue) System.out.println("Lucy est deja dans vos allies !");
                     else tenterRecrutementLucy(ctx, scanner);
                 }
-                case 13 -> {
+                case 13 ->{
+                    if (!lucyRecru) System.out.println("Vous devez d'abord recruter Lucy [A]");
+                    else tenterEvolutionLucy(ctx,scanner);
+                }
+                case 14 -> {
                     if (jubiaRecru) System.out.println("Jubia est deja dans vos allies !");
                     else tenterRecrutementJubia(ctx, scanner);
                 }
-                case 14 -> {
+                case 15 -> {
                     if (wendyRecru) System.out.println("Wendy est deja dans vos allies !");
                     else tenterRecrutementWendy(ctx, scanner);
                 }
@@ -354,6 +369,26 @@ public class MenuRecrutementRare {
 
         System.out.println(">> " + recruterLucy(ctx));
     }
+    
+     private void tenterEvolutionLucy(GameContext ctx, Scanner scanner) {
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_LUCY) {
+            System.out.println("Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_LUCY + " !");
+            return;
+        }
+        int possede = ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_EVOLUTION_LUCY) {
+            System.out.println("Parchemins insuffisants : "
+                    + possede + "/" + COUT_EVOLUTION_LUCY + " " + PARCHEMIN_S);
+            return;
+        }
+        System.out.println("Evoluer Lucy [A] vers Lucy intermagie [S] pour "
+                + COUT_EVOLUTION_LUCY + " " + PARCHEMIN_S + " ?");
+        System.out.println("ATTENTION : Lucy [A] sera remplacee definitivement. (1 : Oui / 2 : Non)");
+        if (!scanner.nextLine().trim().equals("1")) return;
+
+        System.out.println(evoluerLucy(ctx));
+    }
+
 
     // ── Recrutement Jubia A ───────────────────────────────────────────────
     private void tenterRecrutementJubia(GameContext ctx, Scanner scanner) {
@@ -650,6 +685,30 @@ public class MenuRecrutementRare {
         ctx.sauvegarde.sauvegarder(ctx);
 
         return "Natsu a evolue en Natsu Etherion [S] !\nNatsu Etherion est desormais disponible dans votre formation.";
+    }
+    public String evoluerLucy(GameContext ctx){
+        if (ctx.joueur.getNiveau() < NIVEAU_REQUIS_EVOLUTION_LUCY){
+            return "Cette evolution se debloque au niveau " + NIVEAU_REQUIS_EVOLUTION_LUCY + " ! ";
+        }
+        int possede =ctx.inventaire.getQuantiteMateriau(PARCHEMIN_S);
+        if (possede < COUT_EVOLUTION_LUCY){
+        return "Parchemins insuffisants : " + possede + "/" + COUT_EVOLUTION_LUCY + " " + PARCHEMIN_S;
+    }
+        
+        PersonnageBase LucyRecrut = null;
+        for (PersonnageBase p : ctx.personnagesRecruites){
+            if (p.getNom().equals("Lucy")) {LucyRecrut = p; break;}
+        }
+        if (LucyRecrut == null) return "Erreur : Lucy introuvable dans les recrues";
+        
+        ctx.formation.retirerPersonnage(LucyRecrut);
+        ctx.personnagesRecruites.remove(LucyRecrut);
+        ctx.inventaire.retirerMateriau(PARCHEMIN_S,COUT_EVOLUTION_LUCY);
+        perso_Lucy_intermagie LucyS = new perso_Lucy_intermagie();
+        while (LucyS.getNiveau() < LucyRecrut.getNiveau()) LucyS.monterDeNiveau();
+        ctx.personnagesRecruites.add(LucyS);
+        ctx.sauvegarde.sauvegarder(ctx);
+        return "Lucy a evolue en Lucy intermagie [S] !\nLucy intermagie est desormais disponible dans votre formation";
     }
 
     /** Tente de recruter Mirajane [S]. */

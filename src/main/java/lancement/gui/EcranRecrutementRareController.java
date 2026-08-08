@@ -53,6 +53,7 @@ public class EcranRecrutementRareController {
         boolean natsuS = MenuRecrutementRare.dejaRecruteParNom("Natsu Etherion", ctx.personnagesRecruites);
         boolean natsuGrayVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY;
         boolean evoNatsuVerrouille  = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU;
+        boolean evoLucyVerrouille = niveauJoueur < MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_NATSU;
 
         boutonsBox.getChildren().add(titreSection("Natsu"));
         boutonsBox.getChildren().add(carteRecrutementRare("Natsu", "Natsu", "A", possedeA,
@@ -77,7 +78,12 @@ public class EcranRecrutementRareController {
         boutonsBox.getChildren().add(carteRecrutementRare("Lucy", "Lucy", "A", possedeA,
                 MenuRecrutementRare.COUT_RECRUTEMENT_LUCY, lucyRecru,
                 natsuGrayVerrouille, MenuRecrutementRare.NIVEAU_REQUIS_NATSU_GRAY, this::confirmerEtRecruterLucy));
-
+        if (lucyRecru){
+            boutonsBox.getChildren().add(carteRecrutementRare("Lucy intermagie ( évolution)", "Lucy intermagie", "S", possedeS,
+                    MenuRecrutementRare.COUT_EVOLUTION_LUCY,false,
+                    evoLucyVerrouille,MenuRecrutementRare.NIVEAU_REQUIS_EVOLUTION_LUCY, this::confirmerEtEvoluerLucy));
+            
+        }
         boolean jubiaRecru = MenuRecrutementRare.dejaRecruteParNom("Jubia", ctx.personnagesRecruites);
 
         boutonsBox.getChildren().add(titreSection("Jubia"));
@@ -255,6 +261,7 @@ public class EcranRecrutementRareController {
         info("Recrutement Rare", menuRecrutementRare.evoluerNatsu(ctx));
         rafraichir();
     }
+    
 
     private void confirmerEtRecruterGray() {
         if (!confirmer("Recruter Gray [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_GRAY + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
@@ -267,7 +274,12 @@ public class EcranRecrutementRareController {
         info("Recrutement Rare", menuRecrutementRare.recruterLucy(ctx));
         rafraichir();
     }
-
+    
+    private void confirmerEtEvoluerLucy(){
+        if (!confirmer ("Evoluer Lucy [A] vers Lucy intermagie [S] pour " + MenuRecrutementRare.COUT_EVOLUTION_LUCY + " " + MenuRecrutementRare.PARCHEMIN_S + 
+                " ?\nATTENTION : Lucy[A] sera remplace definitivement.")) return;
+        info("recrutement Rare",menuRecrutementRare.evoluerLucy(ctx));
+    }
     private void confirmerEtRecruterJubia() {
         if (!confirmer("Recruter Jubia [A] pour " + MenuRecrutementRare.COUT_RECRUTEMENT_JUBIA + " " + MenuRecrutementRare.PARCHEMIN_A + " ?")) return;
         info("Recrutement Rare", menuRecrutementRare.recruterJubia(ctx));

@@ -53,7 +53,8 @@ public class EcranDifficulteDonjonController {
 
     private Node carteDifficulte(Difficulte diff) {
         int niveauRequis = switch (diff) {
-            case NORMAL    -> 1;
+            case FACILE    -> 1;
+            case MOYEN     -> MenuDonjon.NIV_MOYEN;
             case DIFFICILE -> MenuDonjon.NIV_DIFFICILE;
             case EXTREME   -> MenuDonjon.NIV_EXTREME;
         };

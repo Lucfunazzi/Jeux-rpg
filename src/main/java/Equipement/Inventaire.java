@@ -287,6 +287,40 @@ public class Inventaire {
         return "OK";
     }
 
+    /**
+     * Fusionne automatiquement, pour chaque type de pierre, toutes les paires disponibles au
+     * niveau (niveauCible - 1) vers niveauCible (repete synthetiserPierre tant qu'il reste au
+     * moins 2 pierres de ce niveau pour ce type).
+     * @return un recapitulatif des fusions effectuees, ou un message si rien n'a ete fusionne.
+     */
+    public String fusionnerAutomatiquement(int niveauCible) {
+        if (niveauCible < 2 || niveauCible > Pierre.NIVEAU_MAX) {
+            return "Niveau cible invalide.";
+        }
+        int niveauSource = niveauCible - 1;
+        StringBuilder detail = new StringBuilder();
+        int totalFusions = 0;
+
+        for (Pierre.Type type : Pierre.Type.values()) {
+            int fusions = 0;
+            while (getQuantitePierre(type, niveauSource) >= 2) {
+                synthetiserPierre(type, niveauSource);
+                fusions++;
+            }
+            if (fusions > 0) {
+                detail.append("  ").append(new Pierre(type, niveauCible).getNomType())
+                        .append(" : ").append(fusions).append(" fusion(s) -> +")
+                        .append(fusions).append(" pierre(s) Niv.").append(niveauCible).append("\n");
+                totalFusions += fusions;
+            }
+        }
+
+        if (totalFusions == 0) {
+            return "Aucune pierre Niv." + niveauSource + " en quantite suffisante (2+) pour fusionner vers Niv." + niveauCible + ".";
+        }
+        return totalFusions + " fusion(s) effectuee(s) vers Niv." + niveauCible + " :\n" + detail.toString().trim();
+    }
+
     // ── Cristal de Transcendance ──────────────────────────────────────────
     /** Reroll le type d'une pierre du stock (meme niveau). Consomme 1 Cristal de Transcendance. */
     public String utiliserCristalTranscendanceStock(Pierre.Type typeActuel, int niveau, Pierre.Type nouveauType) {

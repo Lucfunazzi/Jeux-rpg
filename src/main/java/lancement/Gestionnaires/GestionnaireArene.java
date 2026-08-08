@@ -11,6 +11,7 @@ import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lancement.RangJoueur;
 
 public class GestionnaireArene {
 
@@ -317,6 +318,42 @@ public class GestionnaireArene {
     public void appliquerDefaite(AreneData joueur) {
         joueur.ajouterPointsBoutique(100);
         System.out.println("  +100 points de boutique malgré la défaite.");
+    }
+
+    // ── Compagnon adverse (par rang) ────────────────────────────────────────
+
+    /**
+     * Attribue a l'equipe adverse un compagnon (meme mecanique que CompagnonsType/
+     * GestionnaireCompagnons cote joueur, applique directement via les setters de
+     * PersonnageBase) selon le rang RangJoueur de l'adversaire :
+     *   C : aucun compagnon. B : Happy. A : Carla ou Panthere Lily (au hasard).
+     *   S : Panthere Lily ou Bebe Igneel. SS : Bebe Igneel ou Bebe Grandine.
+     *   SSS : Bebe Grandine ou Bebe Metalicana. UR : Bebe Metalicana, niveau 10 fixe.
+     * Le niveau est tire aleatoirement entre 1 et 10 pour tous les rangs sauf UR (toujours 10).
+     * A appeler AVANT reinitialiserPourCombat() (getVieMax() lit deja le bonus PV du compagnon).
+     */
+    public static void appliquerCompagnonAdversaire(List<PersonnageBase> equipeAdverse, RangJoueur.Rang rang) {
+        if (equipeAdverse.isEmpty() || rang == RangJoueur.Rang.C) return;
+
+        Random rng = new Random();
+        CompagnonsType type;
+        int niveau;
+        switch (rang) {
+            case B   -> { type = CompagnonsType.HAPPY;                                                          niveau = 1 + rng.nextInt(10); }
+            case A   -> { type = rng.nextBoolean() ? CompagnonsType.CARLA         : CompagnonsType.PANTHERE_LILY;   niveau = 1 + rng.nextInt(10); }
+            case S   -> { type = rng.nextBoolean() ? CompagnonsType.PANTHERE_LILY : CompagnonsType.BEBE_IGNEEL;     niveau = 1 + rng.nextInt(10); }
+            case SS  -> { type = rng.nextBoolean() ? CompagnonsType.BEBE_IGNEEL   : CompagnonsType.BEBE_GRANDINE;   niveau = 1 + rng.nextInt(10); }
+            case SSS -> { type = rng.nextBoolean() ? CompagnonsType.BEBE_GRANDINE : CompagnonsType.BEBE_METALICANA; niveau = 1 + rng.nextInt(10); }
+            default  -> { type = CompagnonsType.BEBE_METALICANA;                                                 niveau = 10; } // UR
+        }
+
+        double atk = type.getATK(niveau), pv = type.getPV(niveau), def = type.getDEF(niveau), vit = type.getVIT(niveau);
+        for (PersonnageBase p : equipeAdverse) {
+            p.setBonusCompagnonsATK(atk);
+            p.setBonusCompagnonsDEF(def);
+            p.setBonusCompagnonsPV(pv);
+            p.setBonusCompagnonsVIT(vit);
+        }
     }
 
     public AreneData getOuCreerJoueur(String userId, String pseudo,

@@ -14,18 +14,18 @@ public class perso_Zero extends PersonnageBase {
     public perso_Zero() {
         this.nom    = "Zero";
         this.type   = "Elementaliste";
-        this.role   = "DPS";
+        this.role   = "Support";
         this.rarete = "SS";
         this.niveau = 1;
         double mult = 1.75;
-        this.vie     = 700 * mult;
-        this.attaque = 324 * mult;
-        this.defense = 155 * mult;
-        this.vitesse = 161 * mult;
-        this.taux_critiques    = 0.18;
-        this.degat_critiques   = 1.40;
+        this.vie     = 680 * mult;
+        this.attaque = 260 * mult;
+        this.defense = 150 * mult;
+        this.vitesse = 160 * mult;
+        this.taux_critiques    = 0.10;
+        this.degat_critiques   = 1.30;
         this.taux_precisions   = 110.00;
-        this.taux_esquives     = 0.12;
+        this.taux_esquives     = 0.08;
         this.taux_blocage      = 0.08;
         this.reduction_blocage = 0.12;
         this.degats_renvoi     = 0.80;
@@ -34,51 +34,72 @@ public class perso_Zero extends PersonnageBase {
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{"Souffle des Ténèbres", "Cauchemar", "Néant Absolu"};
+        return new String[]{"Barrière de Particules Magiques", "Manipulation Mentale", "Drain Magique Absolu"};
     }
 
     @Override
     public void attaqueBase(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                             List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Zero enveloppe " + cible.getNom() + " d'un Souffle des Ténèbres !");
-        Combat.attaquer(this, cible, log);
+        log.add("Zero projette des Particules Magiques sur " + cible.getNom() + " !");
+        for (PersonnageBase ennemi : equipeEnnemie){
+            if (ennemi.estVivant()){
+                double degats =this.getAttaque() *1.00;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (Math.random() < 0.30){
+                    Combat.appliquerEffet(ennemi, new Sommeil(2), log);
+                }
+                
+            }
+        }
     }
 
     @Override
     public void attaqueSpeciale(PersonnageBase cible, List<PersonnageBase> equipeAlliee,
                                 List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Zero plonge " + cible.getNom() + " dans un Cauchemar sans fin !");
-        double degats = this.getAttaque() * 2.30;
-        boolean touche = Combat.appliquerDegatsAvecLog(this, cible, degats, log);
-        if (touche) {
-            Combat.appliquerEffet(this, cible, new Silence(2), log);
+        log.add("Brain envahit l'esprit de " + cible.getNom() + " — Manipulation Mentale !");
+        for(PersonnageBase ennemi : equipeEnnemie){
+            if (ennemi.estVivant()){
+                double degats = this.getAttaque() *1.00;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                if (Math.random() < 0.30){
+                    Combat.appliquerEffet(ennemi, new Silence(2), log);
+                } 
+            }
+        }
+                
+        for (PersonnageBase al : equipeAlliee) if (al.estVivant()){
+            al.ajouterRage(30);
         }
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> equipeAlliee,
                               List<PersonnageBase> equipeEnnemie, List<String> log) {
-        log.add("Zero ouvre le Néant Absolu — la lumière elle-même s'efface !");
-        double multiplicateurRage = 1.0;
-        if (this.getRage() > 100) multiplicateurRage += (this.getRage() - 100) / 100.0;
+        log.add("Brain draine la magie de toute l'équipe ennemie !");
+        double degatsTotaux = 0;
         for (PersonnageBase ennemi : equipeEnnemie) {
             if (ennemi.estVivant()) {
-                double degats = (this.getAttaque() * 1.75) * multiplicateurRage;
-                boolean touche = Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
-                if (touche) {
-                    Combat.appliquerEffet(this, ennemi, new ReductionDefense(0.20, 2), log);
-                }
+                double degats = this.getAttaque() * 1.00;
+                Combat.appliquerDegatsAvecLog(this, ennemi, degats, log);
+                degatsTotaux += degats;
             }
+        }
+        for (PersonnageBase al : equipeAlliee) if (al.estVivant()){
+            al.ajouterRage(30);
+        }
+        double soin = degatsTotaux * 0.30;
+        if (soin > 0) {
+            this.recevoirSoin(soin, log);
         }
     }
 
     @Override public void descriptionAttaqueBase() {
-        System.out.println("Souffle des Ténèbres — Inflige 100% ATK.");
+        System.out.println("Barrière de Particules Magiques — Inflige 100% ATK à tout les ennemis et à 30% d'infliger sommeil à toutes l'équipes pendants 2 tours.");
     }
     @Override public void descriptionAttaqueSpeciale() {
-        System.out.println("Cauchemar — Inflige 230% ATK et réduit la cible au silence pendant 2 tours.");
+        System.out.println("Manipulation Mentale — Inflige 100% ATK à tout les ennemis et donne 30 de rage a tout les alliées et à 30% de silences les ennemis pendants 2 tours.");
     }
     @Override public void descriptionAttaqueUltime() {
-        System.out.println("Néant Absolu — Inflige 175% ATK (bonus selon la Rage) à tous les ennemis et réduit leur défense de 20% pendant 2 tours.");
+        System.out.println("Drain Magique Absolu — Inflige 125% ATK à tous les ennemis et se soigne de 30% des dégâts infligés et donne 30 de rage a tout les alliée.");
     }
 }

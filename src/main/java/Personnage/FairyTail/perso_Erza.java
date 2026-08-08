@@ -14,7 +14,7 @@ public class perso_Erza extends PersonnageBase {
         this.role = "Tank";
         this.rarete = "S";
         this.niveau = 1;
-        double multiplicateurRarete = 1.50;
+        double multiplicateurRarete = 1.70;
         this.vie = 1200 * multiplicateurRarete;
         this.attaque = 145 * multiplicateurRarete;
         this.defense = 250 * multiplicateurRarete;

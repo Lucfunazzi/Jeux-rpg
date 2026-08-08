@@ -4,17 +4,11 @@ import Personnage.PersonnageBase;
 import java.util.List;
 
 /**
- * Personnage entièrement piloté par les données JSON.
- * Le comportement de toutes ses attaques est délégué à MoteurAttaque.
- *
- * Usage :
- *   PersonnageBase gaara = ChargeurPersonnage.charger("Naruto/gaara.json");
+ * Personnage minimal construit depuis PersonnageData (stats seulement, sans attaques
+ * scriptees). Sert de fixture de test pour exercer PersonnageBase/Combat avec des stats
+ * arbitraires sans passer par une vraie classe perso_*.
  */
 public class PersonnageJson extends PersonnageBase {
-
-    private final AttaqueData attaqueBaseData;
-    private final AttaqueData attaqueSpecialeData;
-    private final AttaqueData attaqueUltimeData;
 
     public PersonnageJson(PersonnageData data) {
         this.nom      = data.nom;
@@ -39,15 +33,10 @@ public class PersonnageJson extends PersonnageBase {
         this.degats_renvoi     = data.stats.degatsRenvoi;
 
         initialiserVieMax();
-
-        // Récupérer les trois attaques
-        attaqueBaseData     = trouverAttaque(data, "BASE");
-        attaqueSpecialeData = trouverAttaque(data, "SPECIALE");
-        attaqueUltimeData   = trouverAttaque(data, "ULTIME");
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // ATTAQUES — déléguées au MoteurAttaque
+    // ATTAQUES — sans effet : PersonnageJson ne sert qu'a exercer les stats/formules.
     // ─────────────────────────────────────────────────────────────────────────
 
     @Override
@@ -55,8 +44,6 @@ public class PersonnageJson extends PersonnageBase {
                             List<PersonnageBase> allies,
                             List<PersonnageBase> ennemis,
                             List<String> log) {
-        if (attaqueBaseData != null)
-            MoteurAttaque.executerBase(attaqueBaseData, this, cible, allies, ennemis, log);
     }
 
     @Override
@@ -64,59 +51,34 @@ public class PersonnageJson extends PersonnageBase {
                                 List<PersonnageBase> allies,
                                 List<PersonnageBase> ennemis,
                                 List<String> log) {
-        if (attaqueSpecialeData != null)
-            MoteurAttaque.executerSpeciale(attaqueSpecialeData, this, cible, allies, ennemis, log);
     }
 
     @Override
     public void attaqueUltime(List<PersonnageBase> allies,
                               List<PersonnageBase> ennemis,
                               List<String> log) {
-        if (attaqueUltimeData != null)
-            MoteurAttaque.executerUltime(attaqueUltimeData, this, allies, ennemis, log);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // DESCRIPTIONS
-    // ─────────────────────────────────────────────────────────────────────────
 
     @Override
     public String[] getNomsAttaques() {
-        return new String[]{
-            attaqueBaseData     != null ? attaqueBaseData.nom     : "?",
-            attaqueSpecialeData != null ? attaqueSpecialeData.nom : "?",
-            attaqueUltimeData   != null ? attaqueUltimeData.nom   : "?"
-        };
+        return new String[]{"?", "?", "?"};
     }
 
     @Override
     public void descriptionAttaqueBase() {
-        if (attaqueBaseData != null)
-            System.out.println(attaqueBaseData.nom + " — " + attaqueBaseData.description);
     }
 
     @Override
     public void descriptionAttaqueSpeciale() {
-        if (attaqueSpecialeData != null)
-            System.out.println(attaqueSpecialeData.nom + " — " + attaqueSpecialeData.description);
     }
 
     @Override
     public void descriptionAttaqueUltime() {
-        if (attaqueUltimeData != null)
-            System.out.println(attaqueUltimeData.nom + " — " + attaqueUltimeData.description);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     // UTILITAIRES
     // ─────────────────────────────────────────────────────────────────────────
-
-    private static AttaqueData trouverAttaque(PersonnageData data, String type) {
-        if (data.attaques == null) return null;
-        for (AttaqueData a : data.attaques)
-            if (type.equalsIgnoreCase(a.type)) return a;
-        return null;
-    }
 
     /**
      * Multiplicateurs identiques à ceux utilisés dans les classes Java existantes.

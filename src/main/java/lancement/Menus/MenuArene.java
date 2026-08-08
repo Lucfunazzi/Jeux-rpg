@@ -201,6 +201,9 @@ public class MenuArene {
             return;
         }
 
+        lancement.Gestionnaires.GestionnaireArene.appliquerCompagnonAdversaire(
+                equipeAdverse, rangJoueurPourRangArene(adversaire.getRang()));
+
         // Réinitialiser les deux équipes avant le combat
         for (PersonnageBase p : equipeJoueur)  p.reinitialiserPourCombat();
         for (PersonnageBase p : equipeAdverse) p.reinitialiserPourCombat();
@@ -305,7 +308,7 @@ public class MenuArene {
     /** Rang de classement d'arene (1 = meilleur, 100 = pire) -> rang C..UR du faux PP, utilise
      *  pour son rang affiche final, son equipement fantome et ses arbres de competences
      *  debloques. */
-    private static RangJoueur.Rang rangJoueurPourRangArene(int rangArene) {
+    public static RangJoueur.Rang rangJoueurPourRangArene(int rangArene) {
         if (rangArene >= 80) return RangJoueur.Rang.C;
         if (rangArene >= 65) return RangJoueur.Rang.B;
         if (rangArene >= 30) return RangJoueur.Rang.A;
