@@ -9,7 +9,7 @@ import java.time.LocalDate;
  */
 public class GestionnaireExamenS {
 
-    public static final int NB_STAGES = 65;
+    public static final int NB_STAGES = 75;
     public static final int NIVEAU_REQUIS = 15;
 
     private boolean[] dejaReussi     = new boolean[NB_STAGES + 1]; // index 1..10, permanent

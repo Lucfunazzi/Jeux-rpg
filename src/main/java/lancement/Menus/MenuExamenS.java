@@ -363,6 +363,57 @@ public class MenuExamenS {
                 for (String nom : List.of("Erza", "Natsu Etherion", "Lucy", "Gray", "Wendy"))
                     ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
             }
+            
+            case 66 -> {
+                for (String nom :List.of("Wendy","Natsu","Rogue","Sting","Gajeel"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom),stage));
+            }
+            
+            case 67 -> {
+                for (String nom:List.of("Sugarboy","Byro","Panther Lily","Hughes"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom),stage));
+                  ennemis.add(new EnnemiMage3Soigneur(stage));
+                    
+            }
+            
+             case 68 -> {
+                for (String nom : List.of("Mirajane", "Lucy intermagie", "Rustyrose", "Ultear","Yukino"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+                
+            }
+            case 69 -> {
+                for (String nom : List.of("Erza Knightwalker", "Bluenote", "Loki", "Brain", "Meredy"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 70 -> {
+                for (String nom : List.of("Natsu Etherion", "Lucy intermagie", "Vivaldus", "Jubia (phantom Lord)", "Azuma"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 71 -> {
+                for (String nom : List.of("Rustyrose", "Hades", "Capricorn", "Meredy", "Zancrow"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 72 -> {
+                for (String nom : List.of("Jubia (phantom Lord)", "Gray", "Eve", "Leon", "Ichiya"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            case 73 -> {
+                for (String nom : List.of("Jellal", "Erza", "Ikaruga", "Shaw", "Miliana"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom), stage));
+            }
+            
+            case 74 -> {
+                for (String nom :List.of("Angel","Lucy intermagie","Yukino","Kana","Azuma"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom),stage));
+            }
+            
+            case 75 -> {
+                for (String nom:List.of("Kawazu","Yamaru","Bluenote","Elfman","Brain"))
+                    ennemis.add(monterAuNiveau(ctx.sauvegarde.creerPersonnageParNom(nom),stage));
+                  
+                    
+            }
+
 
             default -> { }
         }

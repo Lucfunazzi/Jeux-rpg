@@ -1,6 +1,10 @@
 package lancement.gui;
 
 import java.io.IOException;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,20 +15,36 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lancement.GameContext;
+import lancement.Gestionnaires.CompagnonsType;
 import lancement.Gestionnaires.GestionnaireCompagnons;
 import lancement.Gestionnaires.GestionnaireCompagnons.ResultatCompagnon;
 
 public class EcranCompagnonsController {
+
+    /** Frames du battement d'ailes de Happy (voles sur place), chargees une seule fois. */
+    private static final Image[] HAPPY_FRAMES_VOL = {
+        new Image(EcranCompagnonsController.class.getResourceAsStream("/images/compagnons/happy_vol_1.png")),
+        new Image(EcranCompagnonsController.class.getResourceAsStream("/images/compagnons/happy_vol_2.png")),
+        new Image(EcranCompagnonsController.class.getResourceAsStream("/images/compagnons/happy_vol_3.png")),
+        new Image(EcranCompagnonsController.class.getResourceAsStream("/images/compagnons/happy_vol_4.png")),
+    };
 
     private GameContext ctx;
 
     @FXML private VBox compagnonBox;
     @FXML private VBox orBox;
     @FXML private VBox actionBox;
+
+    /** Animations du sprite en cours (battement d'ailes + oscillation haut/bas), a stopper avant d'en recreer. */
+    private Timeline    animationBattement;
+    private TranslateTransition animationVol;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
@@ -33,6 +53,7 @@ public class EcranCompagnonsController {
     }
 
     private void rafraichir() {
+        arreterAnimationSprite();
         GestionnaireCompagnons gc = ctx.gestionnaireCompagnons;
 
         Label nomLabel = new Label(gc.getType().nom);
@@ -51,10 +72,13 @@ public class EcranCompagnonsController {
                 bonusLabel);
         texte.setAlignment(Pos.CENTER);
 
-        VBox carte = new VBox(texte);
+        VBox carte = new VBox(10, texte);
         carte.setAlignment(Pos.CENTER);
         carte.getStyleClass().add("carte-item-joueur");
         carte.setPrefWidth(300);
+        if (gc.getType() == CompagnonsType.HAPPY) {
+            carte.getChildren().add(0, creerSpriteHappyAnime());
+        }
         compagnonBox.getChildren().setAll(carte);
 
         orBox.getChildren().setAll(
@@ -78,6 +102,38 @@ public class EcranCompagnonsController {
             carteAction.setOnMouseClicked(null);
         }
         actionBox.getChildren().setAll(carteAction);
+    }
+
+    /** Sprite de Happy qui vole sur place : battement d'ailes (4 frames) + oscillation haut/bas. */
+    private Node creerSpriteHappyAnime() {
+        ImageView vue = new ImageView(HAPPY_FRAMES_VOL[0]);
+        vue.setPreserveRatio(true);
+        vue.setFitHeight(90);
+        vue.setSmooth(false); // garde le pixel art net, sans flou de redimensionnement
+
+        animationBattement = new Timeline(
+                new KeyFrame(Duration.ZERO,        e -> vue.setImage(HAPPY_FRAMES_VOL[0])),
+                new KeyFrame(Duration.millis(120),  e -> vue.setImage(HAPPY_FRAMES_VOL[1])),
+                new KeyFrame(Duration.millis(240),  e -> vue.setImage(HAPPY_FRAMES_VOL[2])),
+                new KeyFrame(Duration.millis(360),  e -> vue.setImage(HAPPY_FRAMES_VOL[3])),
+                new KeyFrame(Duration.millis(480)));
+        animationBattement.setCycleCount(Timeline.INDEFINITE);
+        animationBattement.play();
+
+        animationVol = new TranslateTransition(Duration.millis(700), vue);
+        animationVol.setByY(-8);
+        animationVol.setCycleCount(TranslateTransition.INDEFINITE);
+        animationVol.setAutoReverse(true);
+        animationVol.setInterpolator(Interpolator.EASE_BOTH);
+        animationVol.play();
+
+        return vue;
+    }
+
+    /** Stoppe les animations en cours avant de reconstruire l'ecran (sinon elles s'accumulent en arriere-plan). */
+    private void arreterAnimationSprite() {
+        if (animationBattement != null) animationBattement.stop();
+        if (animationVol != null)       animationVol.stop();
     }
 
     /** Variante de GuiVisuels.creerCarteChoix() avec une icone. */
@@ -120,6 +176,7 @@ public class EcranCompagnonsController {
 
     @FXML
     private void onRetour(ActionEvent event) {
+        arreterAnimationSprite();
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             FXMLLoader loader = Navigation.changerEcran(stage, "/fxml/EcranMenuPrincipal.fxml");

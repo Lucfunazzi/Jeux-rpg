@@ -144,7 +144,7 @@
     -fx-border-radius: 10;
     -fx-border-width: 2;
     -fx-border-color: transparent;
-    -fx-padding: 10;
+    -fx-padding: 6;
 }
 
 .carte-combat-tank {
@@ -242,6 +242,15 @@
     -fx-font-weight: bold;
     -fx-text-fill: #9a9ac0;
     -fx-padding: 4 0 0 4;
+}
+
+/* Fond de la scene de combat : ciel de crepuscule, gradins, sol d'arene — en degrade CSS pur
+   (pas de bitmap) pour rester net a n'importe quelle taille de fenetre. */
+.arene-fond {
+    -fx-background-color: linear-gradient(to bottom,
+        #23233a 0%, #2f3050 27%,
+        #4b4a5e 27%, #5f5d70 45%,
+        #8a7452 45%, #a68d5f 58%, #6e5a38 100%);
 }
 
 .vs-badge {

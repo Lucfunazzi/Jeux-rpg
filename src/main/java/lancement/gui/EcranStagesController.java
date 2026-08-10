@@ -195,7 +195,7 @@ public class EcranStagesController {
                     }
                     retourStages(stage);
                 };
-                String cheminVideo = v ? cheminVideoFinStage(ligne.numeroChapitre(), numero) : null;
+                String cheminVideo = v ? cheminVideoFinStage(ligne.numeroChapitre(), numero, ligne.elite()) : null;
                 if (cheminVideo != null) {
                     jouerVideoFinStage(stage, cheminVideo, suite);
                 } else {
@@ -208,9 +208,11 @@ public class EcranStagesController {
     }
 
     /** Chemin classpath de la cinematique de fin de stage, ou null si aucune video n'est
-     *  associee a ce stage (le jeu enchaine alors directement sur les recompenses). */
-    private String cheminVideoFinStage(int numeroChapitre, int numero) {
-        if (numeroChapitre == 1) {
+     *  associee a ce stage (le jeu enchaine alors directement sur les recompenses). Ces
+     *  cinematiques appartiennent a l'histoire du Chapitre 1 normal : le variant Elite rejoue
+     *  les memes stages avec des ennemis plus forts, sans repeter la narration. */
+    private String cheminVideoFinStage(int numeroChapitre, int numero, boolean elite) {
+        if (numeroChapitre == 1 && !elite) {
             return switch (numero) {
                 case 1  -> "/video/chapitre1/introp_stage1_chap1.mp4";
                 case 2  -> "/video/chapitre1/chapitre1_stage2.mp4";

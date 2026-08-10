@@ -18,6 +18,7 @@ public class Combat {
         public final String nom;
         public final String role;
         public final String rarete;
+        public final int niveau;
         public final double vie;
         public final double vieMax;
         public final double rage;
@@ -30,6 +31,7 @@ public class Combat {
             this.nom        = p.getNom();
             this.role       = p.getRole();
             this.rarete     = p.getRarete();
+            this.niveau     = p.getNiveau();
             this.vie        = Math.max(0, p.getVie());
             this.vieMax     = p.getVieMax();
             this.rage       = p.getRage();

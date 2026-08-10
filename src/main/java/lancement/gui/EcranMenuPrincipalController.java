@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -27,6 +28,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -57,10 +59,13 @@ public class EcranMenuPrincipalController {
     @FXML private VBox boutonsBox;
     @FXML private ScrollPane menuScrollPane;
     @FXML private Pane tutorielOverlay;
+    @FXML private StackPane racineMenu;
+    @FXML private ImageView fondImage;
 
     public void initData(GameContext ctx) {
         this.ctx = ctx;
         lancement.Gestionnaires.SuiviTempsJeu.demarrer(ctx);
+        remplirFondCouvrant(fondImage, racineMenu);
 
         statsBox.getChildren().setAll(
                 GuiVisuels.creerFicheStat("♚", ctx.joueur.getNom(), "Niv. " + ctx.joueur.getNiveau()),
@@ -114,6 +119,26 @@ public class EcranMenuPrincipalController {
         ajouterSection("Modes & Défis", modes);
 
         Platform.runLater(this::verifierTutoriel);
+    }
+
+    /** Fait remplir le fond d'ecran par l'image en "cover" (recadree, jamais deformee, jamais de
+     *  bande vide) : recalcule un viewport sur l'image source a chaque redimensionnement de la
+     *  fenetre, plutot qu'un simple fitWidth/fitHeight qui etirerait ou letterboxerait l'image. */
+    private void remplirFondCouvrant(ImageView vue, Region conteneur) {
+        Runnable maj = () -> {
+            double w = conteneur.getWidth(), h = conteneur.getHeight();
+            if (w <= 0 || h <= 0 || vue.getImage() == null) return;
+            double imgW = vue.getImage().getWidth(), imgH = vue.getImage().getHeight();
+            double echelle = Math.max(w / imgW, h / imgH);
+            double vw = Math.min(imgW, w / echelle);
+            double vh = Math.min(imgH, h / echelle);
+            vue.setViewport(new Rectangle2D((imgW - vw) / 2, (imgH - vh) / 2, vw, vh));
+            vue.setFitWidth(w);
+            vue.setFitHeight(h);
+        };
+        conteneur.widthProperty().addListener((o, a, b) -> maj.run());
+        conteneur.heightProperty().addListener((o, a, b) -> maj.run());
+        maj.run();
     }
 
     private record BoutonDef(String libelle, EventHandler<ActionEvent> action) {}
